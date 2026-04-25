@@ -7,184 +7,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #08090d;
-            --card: #10131a;
-            --card2: #161b26;
-            --border: #1e2535;
-            --text: #e8eaf0;
-            --muted: #5a6480;
-            --accent: #e63946;
-            --yellow: #f4b942;
-            --green: #3dd68c;
-            --blue: #4a90d9;
+            --bg: #08090d; --card: #10131a; --card2: #161b26; --border: #1e2535;
+            --text: #e8eaf0; --muted: #5a6480; --accent: #e63946;
+            --yellow: #f4b942; --green: #3dd68c; --blue: #4a90d9;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px 15px 60px;
-            background-image: 
-                radial-gradient(ellipse 60% 40% at 50% -10%, rgba(230,57,70,0.12) 0%, transparent 70%),
-                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.02) 39px, rgba(255,255,255,0.02) 40px);
+            background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif;
+            min-height: 100vh; display: flex; justify-content: center; padding: 20px 15px 60px;
+            background-image: radial-gradient(ellipse 60% 40% at 50% -10%, rgba(230,57,70,0.12) 0%, transparent 70%);
         }
-
         .container { width: 100%; max-width: 440px; }
-
         .header { text-align: center; padding: 30px 0 24px; }
-        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 3px; line-height: 1; color: white; }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 3px; color: white; }
         .logo span { color: var(--accent); }
-        .badge { display: inline-block; margin-top: 8px; padding: 3px 12px; background: rgba(230,57,70,0.1); border: 1px solid rgba(230,57,70,0.3); border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase; }
-
-        .card { background: var(--card); border-radius: 16px; padding: 22px; border: 1px solid var(--border); margin-bottom: 14px; position: relative; overflow: hidden; }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.6; }
-
+        .card { background: var(--card); border-radius: 16px; padding: 22px; border: 1px solid var(--border); margin-bottom: 14px; position: relative; }
         label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
-        label:first-child { margin-top: 0; }
-
-        select { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card2); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6480' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; transition: border-color 0.2s; }
-        select:focus { outline: none; border-color: var(--accent); }
-        select:disabled { opacity: 0.4; cursor: not-allowed; }
-
+        select { width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card2); color: var(--text); appearance: none; cursor: pointer; }
         .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .vs-divider { display: flex; align-items: center; justify-content: center; margin: 4px 0; color: var(--muted); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; gap: 10px; }
+        .vs-divider { display: flex; align-items: center; justify-content: center; margin: 4px 0; color: var(--muted); font-family: 'Bebas Neue', sans-serif; gap: 10px; }
         .vs-divider::before, .vs-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-        .calc-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; margin-top: 18px; cursor: pointer; transition: transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(230,57,70,0.3); position: relative; overflow: hidden; }
-        .calc-btn:hover { box-shadow: 0 6px 28px rgba(230,57,70,0.5); transform: translateY(-1px); }
-
-        .loading-state { text-align: center; padding: 30px; color: var(--muted); font-size: 0.85rem; }
+        .calc-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; margin-top: 18px; cursor: pointer; box-shadow: 0 4px 20px rgba(230,57,70,0.3); }
+        .market-header { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent); margin: 20px 0 10px; letter-spacing: 1px; border-left: 3px solid var(--accent); padding-left: 10px; }
+        .market-card { background: var(--card); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; border: 1px solid var(--border); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; }
+        .line-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; color: white; line-height: 1; }
+        .line-label small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.6rem; color: var(--muted); }
+        .bar-bg { background: rgba(255,255,255,0.05); height: 7px; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .bar-fill { height: 100%; width: 0%; transition: width 1s ease-out; }
+        .pct-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; text-align: right; }
+        .hidden { display: none; }
         .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        .context-bar { display: flex; gap: 8px; margin-bottom: 14px; }
-        .ctx-chip { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 0.72rem; color: var(--muted); text-align: center; }
-        .ctx-chip b { display: block; color: var(--text); font-size: 1rem; margin-top: 2px; }
-
-        .market-header { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--accent); margin: 15px 0 8px; letter-spacing: 1px; text-transform: uppercase; }
-
-        .market-card { background: var(--card); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; border: 1px solid var(--border); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 14px; }
-        .market-card.high { border-color: rgba(61,214,140,0.3); }
-        .market-card.mid { border-color: rgba(244,185,66,0.25); }
-        .market-card.low { border-color: rgba(230,57,70,0.2); }
-
-        .line-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; line-height: 1; color: white; letter-spacing: 1px; min-width: 48px; }
-        .line-label small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 1px; }
-
-        .bar-wrap { flex: 1; }
-        .bar-bg { background: rgba(255,255,255,0.05); height: 7px; border-radius: 4px; overflow: hidden; margin-bottom: 5px; }
-        .bar-fill { height: 100%; border-radius: 4px; width: 0%; transition: width 0.9s cubic-bezier(0.4,0,0.2,1); }
-        .bar-sub { font-size: 0.68rem; color: var(--muted); }
-
-        .pct-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; line-height: 1; text-align: right; min-width: 58px; }
-
-        .verdict-card { background: var(--card); border-radius: 16px; padding: 22px 20px; border: 1px solid var(--border); margin-top: 6px; text-align: center; }
-        .verdict-title { font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; letter-spacing: 3px; color: var(--muted); margin-bottom: 14px; }
-        .lambda-display { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; color: white; letter-spacing: 2px; }
-        .lambda-display small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--muted); letter-spacing: 1px; font-weight: 600; margin-top: 2px; }
-
-        .disclaimer { text-align: center; color: var(--muted); font-size: 0.65rem; margin-top: 20px; line-height: 1.6; opacity: 0.6; }
-        .hidden { display: none; }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fadeUp 0.4s ease-out forwards; }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo">Corner<span>IQ</span> Pro</div>
-        <div class="badge">⚡ Motor Poisson v2.5</div>
     </div>
 
     <div class="card">
         <label>Liga / Competencia</label>
         <select id="league-select"></select>
-
         <div class="vs-divider">VS</div>
-
         <div class="team-grid">
-            <div class="team-col">
-                <label>🏠 Local</label>
-                <select id="home-team" disabled><option value="">— Liga —</option></select>
-            </div>
-            <div class="team-col">
-                <label>✈️ Visitante</label>
-                <select id="away-team" disabled><option value="">— Liga —</option></select>
-            </div>
+            <div class="team-col"><label>🏠 Local</label><select id="home-team" disabled></select></div>
+            <div class="team-col"><label>✈️ Visitante</label><select id="away-team" disabled></select></div>
         </div>
-
         <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
     </div>
 
     <div id="results" class="hidden">
-        <div id="loading-indicator" class="card loading-state">
-            <div class="spinner"></div>
-            Procesando modelos estadísticos (Córners & Goles HT)…
-        </div>
+        <div id="loading-indicator" class="card" style="text-align:center;"><div class="spinner"></div>Analizando Data Histórica...</div>
         <div id="output" class="hidden">
-            <div id="context-bar-container"></div>
-            
-            <div class="market-header">🎯 Mercado de Córners (Full Time)</div>
+            <div class="market-header">📊 Mercado de Córners</div>
             <div id="markets-container"></div>
-            
             <div class="market-header">⚽ Goles Primer Tiempo (HT)</div>
             <div id="goals-ht-container"></div>
-
-            <div id="verdict-container"></div>
-            <p class="disclaimer">Modelo estadístico basado en distribución de Poisson.<br>No constituye asesoramiento de apuestas.</p>
         </div>
     </div>
 </div>
 
 <script>
 const LIGAS = {
-    "PL":  { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", leagueAvg: 10.1, goalHtAvg: 1.2, teams: ["Manchester City FC","Arsenal FC","Liverpool FC","Aston Villa FC","Tottenham Hotspur FC","Chelsea FC","Newcastle United FC","Manchester United FC","West Ham United FC","Crystal Palace FC","Brighton & Hove Albion FC","AFC Bournemouth","Fulham FC","Wolverhampton Wanderers FC","Everton FC","Brentford FC","Nottingham Forest FC","Leicester City FC","Ipswich Town FC","Southampton FC"] },
-    "CL":  { name: "🇪🇺 Champions League", leagueAvg: 9.8, goalHtAvg: 1.3, teams: ["Real Madrid CF","Manchester City FC","FC Bayern München","PSG","Arsenal FC","Inter Milano","FC Barcelona","Borussia Dortmund","Atlético de Madrid","Juventus FC","AC Milan","Bayer 04 Leverkusen","Aston Villa FC","RB Leipzig","PSV Eindhoven","Sporting CP"] },
-    "BL1": { name: "🇩🇪 Bundesliga", leagueAvg: 9.8, goalHtAvg: 1.4, teams: ["FC Bayern München","Borussia Dortmund","Bayer 04 Leverkusen","RB Leipzig","VfB Stuttgart","Eintracht Frankfurt","SC Freiburg","TSG Hoffenheim","SV Werder Bremen","1. FC Heidenheim 1846","FC Augsburg","VfL Wolfsburg","1. FSV Mainz 05","Borussia Mönchengladbach","1. FC Union Berlin","VfL Bochum 1848","FC St. Pauli","Holstein Kiel"] },
-    "PD":  { name: "🇪🇸 La Liga", leagueAvg: 9.5, goalHtAvg: 1.1, teams: ["Real Madrid CF","FC Barcelona","Atlético de Madrid","Girona FC","Real Sociedad","Athletic Club","Real Betis","Valencia CF","Sevilla FC","Villarreal CF","CA Osasuna","Getafe CF","RC Celta de Vigo","RCD Mallorca","Rayo Vallecano","UD Las Palmas","Deportivo Alavés","CD Leganés","Real Valladolid CF","RCD Espanyol de Barcelona","Levante UD","Real Oviedo"] },
-    "SA":  { name: "🇮🇹 Serie A", leagueAvg: 9.0, goalHtAvg: 1.0, teams: ["Inter Milano","AC Milan","Juventus FC","Atalanta BC","AS Roma","SS Lazio","SSC Napoli","ACF Fiorentina","Torino FC","Bologna FC 1909","Genoa CFC","AC Monza","Hellas Verona FC","US Lecce","Udinese Calcio","Cagliari Calcio","Empoli FC","Parma Calcio 1913","Como 1907","Venezia FC"] },
-    "BSA": { name: "🇧🇷 Brasileirão Serie A", leagueAvg: 9.4, goalHtAvg: 1.0, teams: ["Palmeiras","Flamengo","Botafogo","Atlético Mineiro","São Paulo","Internacional","Fluminense","Grêmio","Cruzeiro","Fortaleza","Red Bull Bragantino","Athletico Paranaense","Vasco da Gama","Corinthians","Bahia","Cuiabá","Vitória","Juventude","Criciúma","Atlético Goianiense"] }
+    "PL":  { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", avgC: 10.1, avgG: 1.15, teams: ["Manchester City FC","Arsenal FC","Liverpool FC","Aston Villa FC","Tottenham Hotspur FC","Chelsea FC","Newcastle United FC","Manchester United FC","West Ham United FC","Crystal Palace FC","Brighton & Hove Albion FC","AFC Bournemouth","Fulham FC","Wolverhampton Wanderers FC","Everton FC","Brentford FC","Nottingham Forest FC","Leicester City FC","Ipswich Town FC","Southampton FC"] },
+    "CL":  { name: "🇪🇺 Champions League", avgC: 9.8, avgG: 1.25, teams: ["Real Madrid CF","Manchester City FC","FC Bayern München","PSG","Arsenal FC","Inter Milano","FC Barcelona","Borussia Dortmund","Atlético de Madrid","Juventus FC","AC Milan","Bayer 04 Leverkusen","Aston Villa FC","RB Leipzig","PSV Eindhoven","Sporting CP"] },
+    "BL1": { name: "🇩🇪 Bundesliga", avgC: 9.8, avgG: 1.35, teams: ["FC Bayern München","Borussia Dortmund","Bayer 04 Leverkusen","RB Leipzig","VfB Stuttgart","Eintracht Frankfurt","SC Freiburg","TSG Hoffenheim","SV Werder Bremen","1. FC Heidenheim 1846","FC Augsburg","VfL Wolfsburg","1. FSV Mainz 05","Borussia Mönchengladbach","1. FC Union Berlin","VfL Bochum 1848","FC St. Pauli","Holstein Kiel"] },
+    "PD":  { name: "🇪🇸 La Liga", avgC: 9.5, avgG: 1.05, teams: ["Real Madrid CF","FC Barcelona","Atlético de Madrid","Girona FC","Real Sociedad","Athletic Club","Real Betis","Valencia CF","Sevilla FC","Villarreal CF","CA Osasuna","Getafe CF","RC Celta de Vigo","RCD Mallorca","Rayo Vallecano","UD Las Palmas","Deportivo Alavés","CD Leganés","Real Valladolid CF","RCD Espanyol de Barcelona","Levante UD","Real Oviedo"] },
+    "SA":  { name: "🇮🇹 Serie A", avgC: 9.0, avgG: 1.0, teams: ["Inter Milano","AC Milan","Juventus FC","Atalanta BC","AS Roma","SS Lazio","SSC Napoli","ACF Fiorentina","Torino FC","Bologna FC 1909","Genoa CFC","AC Monza","Hellas Verona FC","US Lecce","Udinese Calcio","Cagliari Calcio","Empoli FC","Parma Calcio 1913","Como 1907","Venezia FC"] },
+    "FL1": { name: "🇫🇷 Ligue 1", avgC: 9.3, avgG: 1.1, teams: ["Paris Saint-Germain","AS Monaco FC","Stade Brestois 29","Lille OSC","OGC Nice","Olympique Lyonnais","RC Lens","Olympique de Marseille","Stade de Reims","Stade Rennais FC","Toulouse FC","Montpellier HSC","RC Strasbourg Alsace","Le Havre AC","FC Nantes","Angers SCO","AJ Auxerre","AS Saint-Étienne"] },
+    "DED": { name: "🇳🇱 Eredivisie", avgC: 9.6, avgG: 1.3, teams: ["PSV Eindhoven","Feyenoord","FC Twente","AZ Alkmaar","Ajax","NEC Nijmegen","FC Utrecht","Sparta Rotterdam","Go Ahead Eagles","Fortuna Sittard","sc Heerenveen","PEC Zwolle","Almere City FC","Heracles Almelo","RKC Waalwijk","Willem II","NAC Breda","FC Groningen"] },
+    "PPL": { name: "🇵🇹 Primeira Liga", avgC: 9.1, avgG: 1.0, teams: ["Sporting CP","SL Benfica","FC Porto","SC Braga","Vitória SC","Moreirense FC","FC Arouca","FC Famalicão","Casa Pia AC","SC Farense","Rio Ave FC","Gil Vicente FC","GD Estoril Praia","Estrela da Amadora","Boavista FC","CD Santa Clara","CD Nacional","AVS Futebol SAD"] },
+    "BSA": { name: "🇧🇷 Brasileirão Serie A", avgC: 9.4, avgG: 0.95, teams: ["Palmeiras","Flamengo","Botafogo","Atlético Mineiro","São Paulo","Internacional","Fluminense","Grêmio","Cruzeiro","Fortaleza","Red Bull Bragantino","Athletico Paranaense","Vasco da Gama","Corinthians","Bahia","Cuiabá","Vitória","Juventude","Criciúma","Atlético Goianiense"] },
+    "ELC": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", avgC: 9.7, avgG: 1.1, teams: ["Leeds United","Burnley FC","Sheffield United","Luton Town","West Bromwich Albion","Norwich City","Hull City","Middlesbrough FC","Coventry City","Preston North End","Sunderland AFC","Swansea City","Watford FC","Bristol City","Queens Park Rangers","Stoke City","Sheffield Wednesday","Blackburn Rovers","Plymouth Argyle","Portsmouth FC","Derby County","Oxford United","Millwall FC","Cardiff City"] },
+    "WC":  { name: "🌍 FIFA World Cup", avgC: 9.2, avgG: 1.0, teams: ["Argentina","Francia","Brasil","España","Inglaterra","Alemania","Portugal","Italia","Países Bajos","Croacia","Uruguay","Bélgica","Colombia","Marruecos","Japón","Senegal","Estados Unidos","México","Suiza","Corea del Sur"] },
+    "EC":  { name: "🇪🇺 Euro Championship", avgC: 9.0, avgG: 0.95, teams: ["España","Inglaterra","Francia","Alemania","Portugal","Italia","Países Bajos","Suiza","Turquía","Austria","Bélgica","Dinamarca","Rumania","Eslovaquia","Georgia","Eslovenia","Ucrania","Polonia","República Checa","Escocia","Hungría","Croacia","Albania","Serbia"] }
 };
 
-const CORNER_POWER = {
-    "Manchester City FC": { home: 7.8, away: 6.8, gHt: 0.8 },
-    "Liverpool FC": { home: 7.4, away: 6.1, gHt: 0.75 },
-    "Arsenal FC": { home: 7.0, away: 5.9, gHt: 0.7 },
-    "Real Madrid CF": { home: 6.6, away: 5.7, gHt: 0.75 },
-    "FC Barcelona": { home: 6.4, away: 5.5, gHt: 0.8 },
-    "FC Bayern München": { home: 7.2, away: 6.2, gHt: 0.9 },
-    "Levante UD": { home: 5.4, away: 4.5, gHt: 0.5 },
-    "Real Oviedo": { home: 5.1, away: 4.2, gHt: 0.45 }
+const POWER = {
+    "Manchester City FC": { c: 7.3, g: 0.8 }, "Arsenal FC": { c: 6.8, g: 0.7 },
+    "Real Madrid CF": { c: 6.5, g: 0.75 }, "FC Barcelona": { c: 6.3, g: 0.8 },
+    "Levante UD": { c: 5.2, g: 0.4 }, "Real Oviedo": { c: 4.8, g: 0.35 }
 };
 
-function poissonOver(lambda, threshold) {
-    const k = Math.floor(threshold);
-    let cdf = 0;
-    let term = Math.exp(-lambda);
-    for (let i = 0; i <= k; i++) {
-        cdf += term;
-        term *= lambda / (i + 1);
-    }
+function poisson(l, k) {
+    let cdf = 0, term = Math.exp(-l);
+    for (let i = 0; i <= k; i++) { cdf += term; term *= l / (i + 1); }
     return Math.min(98, Math.max(2, (1 - cdf) * 100));
 }
 
-function getPower(team, role, type, avg) {
-    const data = CORNER_POWER[team];
-    if (type === 'corner') {
-        return data ? data[role] : (role === 'home' ? avg * 0.55 : avg * 0.45);
-    } else {
-        return data ? data.gHt : (avg / 2);
-    }
-}
-
-// UI LOGIC
 const lSel = document.getElementById('league-select');
 const hSel = document.getElementById('home-team');
 const aSel = document.getElementById('away-team');
@@ -195,94 +106,58 @@ window.onload = () => {
     for (let code in LIGAS) lSel.add(new Option(LIGAS[code].name, code));
 };
 
-lSel.onchange = async () => {
+lSel.onchange = () => {
     const code = lSel.value;
     if (!code) return;
-    hSel.innerHTML = aSel.innerHTML = '<option>Cargando…</option>';
-    try {
-        const res = await fetch(`https://api.football-data.org/v4/competitions/${code}/teams`, {
-            headers: { 'X-Auth-Token': 'eaaa85924d5646b7afc2aa622e887f5c' }
-        });
-        const data = await res.json();
-        let teams = data.teams.map(t => t.name);
-        if (code === 'PD') {
-            if (!teams.includes('Levante UD')) teams.push('Levante UD');
-            if (!teams.includes('Real Oviedo')) teams.push('Real Oviedo');
-        }
-        fillSelects(teams);
-    } catch { fillSelects(LIGAS[code].teams); }
+    hSel.innerHTML = aSel.innerHTML = '<option value="">— Seleccionar —</option>';
+    LIGAS[code].teams.sort().forEach(t => {
+        hSel.add(new Option(t, t));
+        aSel.add(new Option(t, t));
+    });
     hSel.disabled = aSel.disabled = false;
 };
 
-function fillSelects(teams) {
-    hSel.innerHTML = aSel.innerHTML = '<option value="">— Seleccionar —</option>';
-    [...new Set(teams)].sort().forEach(name => {
-        hSel.add(new Option(name, name));
-        aSel.add(new Option(name, name));
-    });
-}
-
 btn.onclick = () => {
-    const home = hSel.value;
-    const away = aSel.value;
-    if (!home || !away || home === away) return;
-
-    const league = LIGAS[lSel.value];
-    const lambdaCorners = getPower(home, 'home', 'corner', league.leagueAvg) + getPower(away, 'away', 'corner', league.leagueAvg);
-    const lambdaGoalsHt = getPower(home, 'home', 'goal', league.goalHtAvg) + getPower(away, 'away', 'goal', league.goalHtAvg);
+    if (!hSel.value || !aSel.value || hSel.value === aSel.value) return;
+    const liga = LIGAS[lSel.value];
+    
+    // Cálculo de Lambdas (Media esperada)
+    const getL = (team, type, base) => POWER[team] ? POWER[team][type] : (base / 2);
+    const lamC = getL(hSel.value, 'c', liga.avgC) + getL(aSel.value, 'c', liga.avgC);
+    const lamG = getL(hSel.value, 'g', liga.avgG) + getL(aSel.value, 'g', liga.avgG);
 
     document.getElementById('results').classList.remove('hidden');
-    document.getElementById('loading-indicator').classList.remove('hidden');
     document.getElementById('output').classList.add('hidden');
-
+    
     setTimeout(() => {
         document.getElementById('loading-indicator').classList.add('hidden');
-        renderOutput(home, away, lambdaCorners, lambdaGoalsHt);
         document.getElementById('output').classList.remove('hidden');
-        animateBars();
+        
+        // Render Córners
+        let cHtml = '';
+        [7.5, 8.5, 9.5, 10.5].forEach(line => cHtml += renderCard(line, poisson(lamC, Math.floor(line)), 'CÓRNERS'));
+        document.getElementById('markets-container').innerHTML = cHtml;
+
+        // Render Goles HT
+        let gHtml = '';
+        [0.5, 1.5].forEach(line => gHtml += renderCard(line, poisson(lamG, Math.floor(line)), 'GOLES HT'));
+        document.getElementById('goals-ht-container').innerHTML = gHtml;
+        
+        // Animación de barras
+        setTimeout(() => { document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.w + '%'); }, 100);
     }, 800);
 };
 
-function renderOutput(home, away, lC, lG) {
-    // Render Chips
-    document.getElementById('context-bar-container').innerHTML = `
-        <div class="context-bar animate-in">
-            <div class="ctx-chip">Córners λ<b>${lC.toFixed(1)}</b></div>
-            <div class="ctx-chip">Goles HT λ<b>${lG.toFixed(1)}</b></div>
-        </div>`;
-
-    // Render Corner Markets
-    let cHtml = '';
-    [7.5, 8.5, 9.5, 10.5].forEach(line => {
-        const p = poissonOver(lC, line);
-        cHtml += createMarketCard(line, p, 'OVER');
-    });
-    document.getElementById('markets-container').innerHTML = cHtml;
-
-    // Render HT Goal Markets
-    let gHtml = '';
-    [0.5, 1.5].forEach(line => {
-        const p = poissonOver(lG, line);
-        gHtml += createMarketCard(line, p, 'OVER HT');
-    });
-    document.getElementById('goals-ht-container').innerHTML = gHtml;
-}
-
-function createMarketCard(line, prob, label) {
-    const color = prob > 60 ? 'var(--green)' : prob > 40 ? 'var(--yellow)' : 'var(--accent)';
+function renderCard(line, prob, label) {
+    const color = prob > 65 ? 'var(--green)' : prob > 40 ? 'var(--yellow)' : 'var(--accent)';
     return `
-        <div class="market-card animate-in">
+        <div class="market-card">
             <div class="line-label">+${line}<small>${label}</small></div>
             <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" style="background:${color}; width:${prob}%"></div></div>
-                <div class="bar-sub">Probabilidad Estadística</div>
+                <div class="bar-bg"><div class="bar-fill" data-w="${prob}" style="background:${color}"></div></div>
             </div>
             <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%</div>
         </div>`;
-}
-
-function animateBars() {
-    // Implementación de animación si fuera necesario
 }
 </script>
 </body>
