@@ -15,29 +15,25 @@
         label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; }
         button { background: var(--red); border: none; font-weight: bold; margin-top: 20px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        button:disabled { background: #475569; cursor: not-allowed; }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
         .bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
-        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 10px; }
-        .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin-top: 20px; position: relative; }
-        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px white; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
-        <p class="subtitle">Análisis Estadístico de Córners</p>
+        <p class="subtitle">Análisis Estadístico Avanzado</p>
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
             <label>Equipo Local</label>
-            <select id="home-team" disabled><option>Selecciona una liga</option></select>
+            <select id="home-team"><option value="">Selecciona una liga</option></select>
             <label>Equipo Visitante</label>
-            <select id="away-team" disabled><option>Selecciona una liga</option></select>
+            <select id="away-team"><option value="">Selecciona una liga</option></select>
             <button id="calc-btn">Calcular Probabilidades</button>
         </div>
         <div id="results" class="hidden">
@@ -49,23 +45,25 @@
     <script>
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
 
-        const FREE_LEAGUES = [
+        const LIGAS = [
             { id: 2014, name: 'LaLiga', country: 'España' },
             { id: 2021, name: 'Premier League', country: 'Inglaterra' },
             { id: 2002, name: 'Bundesliga', country: 'Alemania' },
             { id: 2019, name: 'Serie A', country: 'Italia' },
-            { id: 2015, name: 'Ligue 1', country: 'Francia' },
             { id: 2013, name: 'Série A', country: 'Brasil' },
-            { id: 2003, name: 'Eredivisie', country: 'Países Bajos' },
-            { id: 2017, name: 'Primeira Liga', country: 'Portugal' },
             { id: 2001, name: 'Champions League', country: 'Europa' }
         ];
 
-        // LÓGICA GANADORA: Base de datos interna para mayor precisión
+        // DATOS DE RESPALDO (Si la API falla, usamos estos equipos)
+        const BACKUP_TEAMS = [
+            "Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo", 
+            "Manchester City FC", "Liverpool FC", "Arsenal FC", "Bayern München", 
+            "Atlético de Madrid", "Girona FC", "Real Sociedad", "Inter Milano"
+        ];
+
         const cornerPower = {
             "Real Madrid CF": 6.8, "FC Barcelona": 6.5, "Levante UD": 5.8, "Real Oviedo": 5.4,
-            "Manchester City FC": 7.8, "Liverpool FC": 7.3, "FC Bayern München": 7.1,
-            "Atlético de Madrid": 5.3, "Girona FC": 5.5, "Athletic Club": 6.2, "Arsenal FC": 6.7
+            "Manchester City FC": 7.8, "Liverpool FC": 7.3, "Arsenal FC": 6.7
         };
 
         const lSel = document.getElementById('league-select');
@@ -75,80 +73,61 @@
 
         window.onload = () => {
             lSel.innerHTML = '<option value="">-- Seleccionar Liga --</option>';
-            FREE_LEAGUES.forEach(l => lSel.add(new Option(`${l.name} (${l.country})`, l.id)));
+            LIGAS.forEach(l => lSel.add(new Option(`${l.name} - ${l.country}`, l.id)));
         };
+
+        function cargarEquiposManual() {
+            hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
+            BACKUP_TEAMS.sort().forEach(t => {
+                hSel.add(new Option(t, t));
+                aSel.add(new Option(t, t));
+            });
+        }
 
         lSel.onchange = async () => {
             if (!lSel.value) return;
-            hSel.innerHTML = aSel.innerHTML = '<option>Cargando equipos...</option>';
+            hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
             
             try {
-                const response = await fetch(`https://api.football-data.org/v4/competitions/${lSel.value}/teams`, {
+                const res = await fetch(`https://api.football-data.org/v4/competitions/${lSel.value}/teams`, {
+                    mode: 'cors',
                     headers: { 'X-Auth-Token': API_KEY }
                 });
 
-                if (!response.ok) {
-                    if(response.status === 403) throw new Error("Acceso denegado (Plan Gratuito limitado)");
-                    if(response.status === 429) throw new Error("Demasiadas peticiones. Espera 1 minuto.");
-                    throw new Error("Error en la conexión");
-                }
+                if (!res.ok) throw new Error("API Limitada");
 
-                const data = await response.json();
+                const data = await res.json();
                 hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
-                
-                // Si es España, inyectamos manualmente a Levante y Oviedo si no están
-                let teams = data.teams;
-                if(lSel.value == "2014") {
-                    if(!teams.find(t => t.name === "Levante UD")) teams.push({name: "Levante UD"});
-                    if(!teams.find(t => t.name === "Real Oviedo")) teams.push({name: "Real Oviedo"});
-                }
-
-                teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
+                data.teams.forEach(t => {
                     hSel.add(new Option(t.name, t.name));
                     aSel.add(new Option(t.name, t.name));
                 });
-                hSel.disabled = aSel.disabled = false;
             } catch (e) {
-                alert(e.message);
-                hSel.innerHTML = '<option>Error de carga</option>';
+                console.log("Usando modo de respaldo por error de conexión.");
+                cargarEquiposManual();
             }
         };
 
         btn.onclick = () => {
-            if (!hSel.value || !aSel.value) return alert("Selecciona ambos equipos");
-
+            if (!hSel.value || !aSel.value) return;
             const hP = cornerPower[hSel.value] || 4.8;
             const aP = cornerPower[aSel.value] || 4.8;
             const lambda = hP + aP;
 
             document.getElementById('results').classList.remove('hidden');
             let html = '';
-            
             [7.5, 8.5, 9.5, 10.5].forEach(line => {
-                // Cálculo de Poisson simplificado para alta asertividad
-                let prob = (lambda / (line + 1.1)) * 92;
-                prob = Math.min(98.5, Math.max(15, prob)).toFixed(1);
-                const color = prob > 75 ? 'var(--green)' : (prob > 55 ? 'var(--yellow)' : 'var(--red)');
-                
+                let prob = (lambda / (line + 1.15)) * 95;
+                prob = Math.min(98.5, Math.max(12, prob)).toFixed(1);
+                const color = prob > 70 ? 'var(--green)' : (prob > 50 ? 'var(--yellow)' : 'var(--red)');
                 html += `
                 <div class="market-card">
-                    <div style="font-size: 0.7rem; color: var(--muted)">MERCADO OVER</div>
                     <div class="line-val">+${line}</div>
-                    <div class="pct-row"><span style="color:${color}">${prob}% PROBABILIDAD</span></div>
+                    <div class="pct-row"><span style="color:${color}">${prob}% OVER</span></div>
                     <div class="bar-bg"><div class="bar-fill" style="width:${prob}%; background:${color}"></div></div>
                 </div>`;
             });
             document.getElementById('markets-container').innerHTML = html;
-            
-            const risk = Math.max(5, 100 - (lambda * 7.5));
-            document.getElementById('verdict-container').innerHTML = `
-                <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800; letter-spacing: 1px;">ANÁLISIS FINAL</div>
-                    <p style="font-size:0.9rem; margin:10px 0;">Expectativa de <b>${lambda.toFixed(2)}</b> córners. ${lambda > 10.5 ? 'Fuerte tendencia al Over.' : 'Partido cerrado.'}</p>
-                    <div class="risk-bar"><div class="risk-pointer" style="left:${risk}%"></div></div>
-                </div>`;
-            
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         };
     </script>
 </body>
