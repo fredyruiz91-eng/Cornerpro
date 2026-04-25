@@ -11,9 +11,11 @@
         .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; }
         h1 { text-align: center; font-size: 1.8rem; margin-bottom: 5px; color: white; }
         h1 span { color: var(--red); }
+        .subtitle { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
         label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; margin-bottom: 10px; }
-        button { background: var(--red); border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        button { background: var(--red); border: none; font-weight: bold; margin-top: 10px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
@@ -28,6 +30,7 @@
 <body>
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
+        <p class="subtitle">Análisis Estadístico Avanzado</p>
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
@@ -46,25 +49,26 @@
     <script>
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
 
-        // Listado completo de ligas solicitado
+        // Base de datos de respaldo masiva (12 Ligas Completas)
         const LIGAS = {
-            "WC": { name: "FIFA World Cup", teams: ["Argentina", "Francia", "Brasil", "España"] },
-            "CL": { name: "UEFA Champions League", teams: ["Real Madrid CF", "Manchester City FC", "FC Bayern München"] },
-            "BL1": { name: "Bundesliga (Alemania)", teams: ["Bayer Leverkusen", "Bayern München", "Dortmund"] },
-            "DED": { name: "Eredivisie (Países Bajos)", teams: ["PSV", "Feyenoord", "Ajax"] },
-            "BSA": { name: "Campeonato Brasileiro Série A", teams: ["Flamengo", "Palmeiras", "Botafogo"] },
-            "PD": { name: "Primera Division (España)", teams: ["Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo"] },
-            "FL1": { name: "Ligue 1 (Francia)", teams: ["PSG", "Monaco", "Marseille"] },
-            "ELC": { name: "Championship (Inglaterra)", teams: ["Leeds United", "Leicester City"] },
-            "PPL": { name: "Primeira Liga (Portugal)", teams: ["Sporting CP", "Benfica", "FC Porto"] },
-            "EC": { name: "European Championship", teams: ["España", "Inglaterra", "Francia"] },
-            "SA": { name: "Serie A (Italia)", teams: ["Inter Milano", "AC Milan", "Juventus FC"] },
-            "PL": { name: "Premier League (Inglaterra)", teams: ["Manchester City FC", "Liverpool FC", "Arsenal FC"] }
+            "WC": { name: "🌍 FIFA World Cup", teams: ["Argentina", "Francia", "Brasil", "España", "Inglaterra", "Alemania", "Portugal", "Italia", "Países Bajos", "Croacia", "Uruguay", "Bélgica", "Colombia", "Marruecos", "Japón", "Senegal", "Estados Unidos", "México", "Suiza", "Corea del Sur"] },
+            "CL": { name: "🇪🇺 UEFA Champions League", teams: ["Real Madrid CF", "Manchester City FC", "FC Bayern München", "PSG", "Arsenal FC", "Inter Milano", "FC Barcelona", "Borussia Dortmund", "Atlético de Madrid", "Juventus FC", "AC Milan", "Bayer Leverkusen", "Aston Villa FC", "RB Leipzig", "PSV Eindhoven", "Sporting CP"] },
+            "BL1": { name: "🇩🇪 Bundesliga", teams: ["FC Bayern München", "Borussia Dortmund", "Bayer 04 Leverkusen", "RB Leipzig", "VfB Stuttgart", "Eintracht Frankfurt", "SC Freiburg", "TSG Hoffenheim", "SV Werder Bremen", "1. FC Heidenheim 1846", "FC Augsburg", "VfL Wolfsburg", "1. FSV Mainz 05", "Borussia Mönchengladbach", "1. FC Union Berlin", "VfL Bochum 1848", "FC St. Pauli", "Holstein Kiel"] },
+            "DED": { name: "🇳🇱 Eredivisie", teams: ["PSV Eindhoven", "Feyenoord", "FC Twente", "AZ Alkmaar", "Ajax", "NEC Nijmegen", "FC Utrecht", "Sparta Rotterdam", "Go Ahead Eagles", "Fortuna Sittard", "sc Heerenveen", "PEC Zwolle", "Almere City FC", "Heracles Almelo", "RKC Waalwijk", "Willem II", "NAC Breda", "FC Groningen"] },
+            "BSA": { name: "🇧🇷 Brasileirão Série A", teams: ["Palmeiras", "Flamengo", "Botafogo", "Atlético Mineiro", "São Paulo", "Internacional", "Fluminense", "Grêmio", "Cruzeiro", "Fortaleza", "Red Bull Bragantino", "Athletico Paranaense", "Vasco da Gama", "Corinthians", "Bahia", "Cuiabá", "Vitória", "Juventude", "Criciúma", "Atlético Goianiense"] },
+            "PD": { name: "🇪🇸 Primera Division", teams: ["Real Madrid CF", "FC Barcelona", "Atlético de Madrid", "Girona FC", "Real Sociedad", "Athletic Club", "Real Betis", "Valencia CF", "Sevilla FC", "Villarreal CF", "CA Osasuna", "Getafe CF", "RC Celta de Vigo", "RCD Mallorca", "Rayo Vallecano", "UD Las Palmas", "Deportivo Alavés", "CD Leganés", "Real Valladolid CF", "RCD Espanyol de Barcelona", "Levante UD", "Real Oviedo"] },
+            "FL1": { name: "🇫🇷 Ligue 1", teams: ["Paris Saint-Germain", "AS Monaco FC", "Stade Brestois 29", "Lille OSC", "OGC Nice", "Olympique Lyonnais", "RC Lens", "Olympique de Marseille", "Stade de Reims", "Stade Rennais FC", "Toulouse FC", "Montpellier HSC", "RC Strasbourg Alsace", "Le Havre AC", "FC Nantes", "Angers SCO", "AJ Auxerre", "AS Saint-Étienne"] },
+            "ELC": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", teams: ["Leeds United", "Burnley FC", "Sheffield United", "Luton Town", "West Bromwich Albion", "Norwich City", "Hull City", "Middlesbrough FC", "Coventry City", "Preston North End", "Sunderland AFC", "Swansea City", "Watford FC", "Bristol City", "Queens Park Rangers", "Stoke City", "Sheffield Wednesday", "Blackburn Rovers", "Plymouth Argyle", "Portsmouth FC", "Derby County", "Oxford United", "Millwall FC", "Cardiff City"] },
+            "PPL": { name: "🇵🇹 Primeira Liga", teams: ["Sporting CP", "SL Benfica", "FC Porto", "SC Braga", "Vitória SC", "Moreirense FC", "FC Arouca", "FC Famalicão", "Casa Pia AC", "SC Farense", "Rio Ave FC", "Gil Vicente FC", "GD Estoril Praia", "Estrela da Amadora", "Boavista FC", "CD Santa Clara", "CD Nacional", "AVS Futebol SAD"] },
+            "EC": { name: "🇪🇺 European Championship", teams: ["España", "Inglaterra", "Francia", "Alemania", "Portugal", "Italia", "Países Bajos", "Suiza", "Turquía", "Austria", "Bélgica", "Dinamarca", "Rumania", "Eslovaquia", "Georgia", "Eslovenia", "Ucrania", "Polonia", "República Checa", "Escocia", "Hungría", "Croacia", "Albania", "Serbia"] },
+            "SA": { name: "🇮🇹 Serie A", teams: ["Inter Milano", "AC Milan", "Juventus FC", "Atalanta BC", "AS Roma", "SS Lazio", "SSC Napoli", "ACF Fiorentina", "Torino FC", "Bologna FC 1909", "Genoa CFC", "AC Monza", "Hellas Verona FC", "US Lecce", "Udinese Calcio", "Cagliari Calcio", "Empoli FC", "Parma Calcio 1913", "Como 1907", "Venezia FC"] },
+            "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", teams: ["Manchester City FC", "Arsenal FC", "Liverpool FC", "Aston Villa FC", "Tottenham Hotspur FC", "Chelsea FC", "Newcastle United FC", "Manchester United FC", "West Ham United FC", "Crystal Palace FC", "Brighton & Hove Albion FC", "AFC Bournemouth", "Fulham FC", "Wolverhampton Wanderers FC", "Everton FC", "Brentford FC", "Nottingham Forest FC", "Leicester City FC", "Ipswich Town FC", "Southampton FC"] }
         };
 
         const cornerPower = {
-            "Real Madrid CF": 6.2, "FC Barcelona": 5.9, "Levante UD": 5.3, "Real Oviedo": 4.9,
-            "Manchester City FC": 7.4, "Liverpool FC": 6.9, "Arsenal FC": 6.4, "PSG": 6.1
+            "Manchester City FC": 7.5, "Liverpool FC": 7.1, "Arsenal FC": 6.8, "Real Madrid CF": 6.3, 
+            "FC Barcelona": 6.1, "FC Bayern München": 6.9, "Paris Saint-Germain": 6.4, "Bayer 04 Leverkusen": 6.5,
+            "Levante UD": 5.4, "Real Oviedo": 5.1, "Flamengo": 6.2, "Palmeiras": 6.0, "Inter Milano": 5.8
         };
 
         const lSel = document.getElementById('league-select');
@@ -81,32 +85,42 @@
 
         lSel.onchange = async () => {
             const code = lSel.value;
-            if (!code) return;
+            if (!code) {
+                hSel.innerHTML = '<option value="">Selecciona liga</option>';
+                aSel.innerHTML = '<option value="">Selecciona liga</option>';
+                hSel.disabled = aSel.disabled = true;
+                return;
+            }
+            
             hSel.innerHTML = aSel.innerHTML = '<option>Cargando equipos...</option>';
             
             try {
+                // Intentar usar la API primero
                 const res = await fetch(`https://api.football-data.org/v4/competitions/${code}/teams`, {
                     headers: { 'X-Auth-Token': API_KEY }
                 });
-                if (!res.ok) throw new Error();
+                if (!res.ok) throw new Error("API Limitada");
                 const data = await res.json();
                 let teams = data.teams.map(t => t.name);
                 
-                // Inyección de equipos promocionados/faltantes en España
+                // Regla estricta: Inyectar Levante y Oviedo si es España
                 if(code === "PD") {
                     if(!teams.includes("Levante UD")) teams.push("Levante UD");
                     if(!teams.includes("Real Oviedo")) teams.push("Real Oviedo");
                 }
                 llenarSelects(teams);
             } catch (e) {
+                // Si la API falla (modo GitHub Pages), carga silenciosamente la lista completa offline
+                console.log("Cargando base de datos offline para: " + code);
                 llenarSelects(LIGAS[code].teams);
             }
             hSel.disabled = aSel.disabled = false;
         };
 
         function llenarSelects(teams) {
-            hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
-            teams.sort().forEach(name => {
+            hSel.innerHTML = aSel.innerHTML = '<option value="">-- Seleccionar --</option>';
+            // Filtrar duplicados y ordenar alfabéticamente
+            [...new Set(teams)].sort().forEach(name => {
                 hSel.add(new Option(name, name));
                 aSel.add(new Option(name, name));
             });
@@ -123,7 +137,11 @@
         }
 
         btn.onclick = () => {
-            if (!hSel.value || !aSel.value) return;
+            if (!hSel.value || !aSel.value || hSel.value === aSel.value) {
+                alert("Por favor, selecciona dos equipos diferentes.");
+                return;
+            }
+            
             const lambda = (cornerPower[hSel.value] || 4.7) + (cornerPower[aSel.value] || 4.5);
 
             document.getElementById('results').classList.remove('hidden');
@@ -136,7 +154,7 @@
                 html += `
                 <div class="market-card">
                     <div class="line-val">+${line}</div>
-                    <div class="pct-row"><span style="color:${color}">${prob}% PROBABILIDAD</span></div>
+                    <div class="pct-row"><span style="color:${color}">${prob}% OVER</span></div>
                     <div class="bar-bg"><div class="bar-fill" style="width:${prob}%; background:${color}"></div></div>
                 </div>`;
             });
@@ -145,11 +163,12 @@
             const risk = Math.min(95, Math.max(5, (11 - lambda) * 22));
             document.getElementById('verdict-container').innerHTML = `
                 <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800; font-size:1.1rem;">VERDICTO FINAL</div>
-                    <p>Promedio Esperado: <b style="color:white; font-size:1.4rem;">${lambda.toFixed(2)}</b></p>
+                    <div style="color:var(--red); font-weight:800; font-size:1.1rem; margin-bottom:10px;">VERDICTO FINAL</div>
+                    <p style="margin:0; font-size: 0.9rem; color: var(--muted);">Media Esperada</p>
+                    <b style="color:white; font-size:1.6rem;">${lambda.toFixed(2)}</b>
                     <div class="risk-bar"><div class="risk-pointer" style="left:${risk}%"></div></div>
-                    <p style="font-weight:bold; margin-top:10px; color:${lambda > 10 ? 'var(--green)' : 'var(--yellow)'}">
-                        ${lambda > 10.5 ? '¡ALTA PROBABILIDAD DE OVER!' : 'CONFIANZA MODERADA'}
+                    <p style="font-weight:bold; margin-top:10px; color:${lambda > 10 ? 'var(--green)' : (lambda > 9 ? 'var(--yellow)' : 'var(--red)')}">
+                        ${lambda > 10.5 ? 'Alta probabilidad de Over en este encuentro.' : (lambda > 9 ? 'Confianza Media - Revisa el valor.' : 'Confianza Baja - El modelo no favorece el Over.')}
                     </p>
                 </div>`;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
