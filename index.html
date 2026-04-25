@@ -135,6 +135,44 @@
             background: var(--border);
         }
 
+        /* ── TOGGLE MERCADO ── */
+        .market-toggle {
+            display: flex;
+            background: var(--card2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 18px;
+            gap: 4px;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 10px 8px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toggle-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 2px 12px rgba(230,57,70,0.35);
+        }
+        .toggle-btn.active.goal-mode {
+            background: #2563eb;
+            box-shadow: 0 2px 12px rgba(37,99,235,0.35);
+        }
+        .calc-btn.goal-mode {
+            background: #2563eb;
+            box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+        }
+        .calc-btn.goal-mode:hover { box-shadow: 0 6px 28px rgba(37,99,235,0.5); }
+
         /* ── BUTTON ── */
         .calc-btn {
             width: 100%;
@@ -406,6 +444,10 @@
     </div>
 
     <div class="card">
+        <div class="market-toggle">
+            <button class="toggle-btn active" id="btn-corners" onclick="setMode('corners')">⬡ CÓRNERS</button>
+            <button class="toggle-btn" id="btn-goals" onclick="setMode('goals')">⚽ GOLES 1T</button>
+        </div>
         <label>Liga / Competencia</label>
         <select id="league-select"></select>
 
@@ -535,8 +577,57 @@ const CORNER_POWER = {
     "São Paulo":                     { home: 5.7, away: 4.8 },
 };
 
-// ─────────────────────────────────────────────
-// POISSON ITERATIVO — Sin recursión, numéricamente estable
+// ── Goal Power 1er Tiempo: goles esperados en primer tiempo home / away ──
+// Media de goles 1T por equipo: aprox 0.55–0.85
+const GOAL_POWER_1T = {
+    "Manchester City FC":         { home: 0.88, away: 0.74 },
+    "Liverpool FC":               { home: 0.85, away: 0.71 },
+    "Arsenal FC":                 { home: 0.82, away: 0.68 },
+    "Chelsea FC":                 { home: 0.75, away: 0.62 },
+    "Tottenham Hotspur FC":       { home: 0.74, away: 0.61 },
+    "Aston Villa FC":             { home: 0.72, away: 0.60 },
+    "Newcastle United FC":        { home: 0.70, away: 0.58 },
+    "Manchester United FC":       { home: 0.67, away: 0.55 },
+    "Brighton & Hove Albion FC":  { home: 0.71, away: 0.60 },
+    "West Ham United FC":         { home: 0.64, away: 0.53 },
+    "Crystal Palace FC":          { home: 0.58, away: 0.47 },
+    "AFC Bournemouth":            { home: 0.60, away: 0.49 },
+    "Fulham FC":                  { home: 0.62, away: 0.51 },
+    "Wolverhampton Wanderers FC": { home: 0.60, away: 0.49 },
+    "Everton FC":                 { home: 0.57, away: 0.46 },
+    "Brentford FC":               { home: 0.63, away: 0.52 },
+    "Nottingham Forest FC":       { home: 0.58, away: 0.47 },
+    "Leicester City FC":          { home: 0.60, away: 0.49 },
+    "Ipswich Town FC":            { home: 0.54, away: 0.43 },
+    "Southampton FC":             { home: 0.52, away: 0.41 },
+    "Real Madrid CF":             { home: 0.84, away: 0.70 },
+    "FC Barcelona":               { home: 0.82, away: 0.68 },
+    "Atlético de Madrid":         { home: 0.71, away: 0.59 },
+    "PSG":                        { home: 0.86, away: 0.72 },
+    "Paris Saint-Germain":        { home: 0.86, away: 0.72 },
+    "FC Bayern München":          { home: 0.90, away: 0.76 },
+    "Borussia Dortmund":          { home: 0.78, away: 0.65 },
+    "Bayer 04 Leverkusen":        { home: 0.80, away: 0.67 },
+    "RB Leipzig":                 { home: 0.77, away: 0.64 },
+    "Inter Milano":               { home: 0.76, away: 0.63 },
+    "AC Milan":                   { home: 0.74, away: 0.61 },
+    "Juventus FC":                { home: 0.70, away: 0.58 },
+    "SSC Napoli":                 { home: 0.73, away: 0.60 },
+    "Atalanta BC":                { home: 0.75, away: 0.62 },
+    "PSV Eindhoven":              { home: 0.82, away: 0.68 },
+    "Feyenoord":                  { home: 0.79, away: 0.65 },
+    "Ajax":                       { home: 0.77, away: 0.63 },
+    "Sporting CP":                { home: 0.78, away: 0.64 },
+    "SL Benfica":                 { home: 0.76, away: 0.62 },
+    "FC Porto":                   { home: 0.74, away: 0.61 },
+    "Flamengo":                   { home: 0.80, away: 0.66 },
+    "Palmeiras":                  { home: 0.78, away: 0.64 },
+    "Botafogo":                   { home: 0.72, away: 0.59 },
+    "Atlético Mineiro":           { home: 0.74, away: 0.61 },
+};
+
+// Modo activo: 'corners' | 'goals'
+let activeMode = 'corners'; — Sin recursión, numéricamente estable
 // ─────────────────────────────────────────────
 function poissonOver(lambda, threshold) {
     // P(X > floor(threshold)) usando CDF iterativa
@@ -557,10 +648,39 @@ function poissonOver(lambda, threshold) {
 function getTeamPower(teamName, role, leagueAvg) {
     const data = CORNER_POWER[teamName];
     if (data) return data[role];
-    // Fallback dinámico: distribuir leagueAvg según rol
     return role === 'home'
-        ? (leagueAvg / 2) * 1.10   // local ~10% más
-        : (leagueAvg / 2) * 0.90;  // visitante ~10% menos
+        ? (leagueAvg / 2) * 1.10
+        : (leagueAvg / 2) * 0.90;
+}
+
+function getGoalPower1T(teamName, role, leagueAvg) {
+    const data = GOAL_POWER_1T[teamName];
+    if (data) return data[role];
+    // Fallback: media de goles 1T en liga ÷ 2 equipos, ajuste local/visitante
+    const leagueGoalAvg1T = (leagueAvg / 10) * 1.35; // estimado proporcional
+    return role === 'home'
+        ? leagueGoalAvg1T * 1.10
+        : leagueGoalAvg1T * 0.90;
+}
+
+function setMode(mode) {
+    activeMode = mode;
+    const btnC = document.getElementById('btn-corners');
+    const btnG = document.getElementById('btn-goals');
+    const calcBtn = document.getElementById('calc-btn');
+    if (mode === 'corners') {
+        btnC.className = 'toggle-btn active';
+        btnG.className = 'toggle-btn';
+        calcBtn.className = 'calc-btn';
+        calcBtn.textContent = 'CALCULAR PROBABILIDADES';
+    } else {
+        btnC.className = 'toggle-btn';
+        btnG.className = 'toggle-btn active goal-mode';
+        calcBtn.className = 'calc-btn goal-mode';
+        calcBtn.textContent = 'CALCULAR GOLES 1T';
+    }
+    // Ocultar resultados previos al cambiar modo
+    document.getElementById('results').classList.add('hidden');
 }
 
 function colorForProb(p) {
@@ -632,12 +752,19 @@ btn.onclick = () => {
     if (!home || !away) { alert('Selecciona ambos equipos.'); return; }
     if (home === away)  { alert('Los equipos deben ser diferentes.'); return; }
 
-    const league   = LIGAS[leagueCode];
+    const league    = LIGAS[leagueCode];
     const leagueAvg = league ? league.leagueAvg : 9.5;
 
-    const homePower = getTeamPower(home, 'home', leagueAvg);
-    const awayPower = getTeamPower(away, 'away', leagueAvg);
-    const lambda    = parseFloat((homePower + awayPower).toFixed(2));
+    let lambda;
+    if (activeMode === 'goals') {
+        const homePower = getGoalPower1T(home, 'home', leagueAvg);
+        const awayPower = getGoalPower1T(away, 'away', leagueAvg);
+        lambda = parseFloat((homePower + awayPower).toFixed(2));
+    } else {
+        const homePower = getTeamPower(home, 'home', leagueAvg);
+        const awayPower = getTeamPower(away, 'away', leagueAvg);
+        lambda = parseFloat((homePower + awayPower).toFixed(2));
+    }
 
     // Mostrar resultados con loading breve
     const resultsEl = document.getElementById('results');
@@ -650,7 +777,7 @@ btn.onclick = () => {
 
     setTimeout(() => {
         loadingEl.classList.add('hidden');
-        renderOutput(home, away, lambda, leagueAvg);
+        renderOutput(home, away, lambda, leagueAvg, activeMode);
         outputEl.classList.remove('hidden');
 
         // Animar barras tras inserción en DOM
@@ -660,17 +787,27 @@ btn.onclick = () => {
     }, 600);
 };
 
-function renderOutput(home, away, lambda, leagueAvg) {
+function renderOutput(home, away, lambda, leagueAvg, mode) {
+    const isGoals = mode === 'goals';
+    const accentColor = isGoals ? '#2563eb' : 'var(--accent)';
+
     // ── Context chips ──
+    const homeVal = isGoals
+        ? getGoalPower1T(home, 'home', leagueAvg).toFixed(2)
+        : getTeamPower(home, 'home', leagueAvg).toFixed(1);
+    const awayVal = isGoals
+        ? getGoalPower1T(away, 'away', leagueAvg).toFixed(2)
+        : getTeamPower(away, 'away', leagueAvg).toFixed(1);
+
     document.getElementById('context-bar-container').innerHTML = `
         <div class="context-bar animate-in">
-            <div class="ctx-chip">🏠 ${home.split(' ').slice(-1)[0]}<b>${getTeamPower(home,'home',leagueAvg).toFixed(1)}</b></div>
-            <div class="ctx-chip">λ<b>${lambda}</b></div>
-            <div class="ctx-chip">✈️ ${away.split(' ').slice(-1)[0]}<b>${getTeamPower(away,'away',leagueAvg).toFixed(1)}</b></div>
+            <div class="ctx-chip">🏠 ${home.split(' ').slice(-1)[0]}<b>${homeVal}</b></div>
+            <div class="ctx-chip">${isGoals ? '⚽' : 'λ'}<b>${lambda}</b></div>
+            <div class="ctx-chip">✈️ ${away.split(' ').slice(-1)[0]}<b>${awayVal}</b></div>
         </div>`;
 
-    // ── Líneas fijas estándar de mercado ──
-    const lines = [7.5, 8.5, 9.5, 10.5];
+    // ── Líneas según modo ──
+    const lines = isGoals ? [0.5, 1.5, 2.5, 3.5] : [7.5, 8.5, 9.5, 10.5];
 
     let marketsHTML = '';
     lines.forEach((line, i) => {
@@ -696,30 +833,51 @@ function renderOutput(home, away, lambda, leagueAvg) {
     });
     document.getElementById('markets-container').innerHTML = marketsHTML;
 
-    // ── Gauge: 0% = lambda baja (4), 100% = lambda alta (14) ──
-    const gaugePos = Math.min(95, Math.max(5, ((lambda - 4) / 10) * 100));
+    // ── Gauge y veredicto ──
+    let gaugePos, verdictClass, verdictMsg, lambdaLabel;
 
-    let verdictClass, verdictMsg;
-    if (lambda >= 11) {
-        verdictClass = 'high';
-        verdictMsg   = '🟢 Alta probabilidad de Over — modelo favorable';
-    } else if (lambda >= 9.5) {
-        verdictClass = 'mid';
-        verdictMsg   = '🟡 Confianza media — revisa valor antes de apostar';
+    if (isGoals) {
+        // Goles 1T: rango 0.5 – 2.5
+        gaugePos = Math.min(95, Math.max(5, ((lambda - 0.5) / 2) * 100));
+        lambdaLabel = 'MEDIA ESPERADA GOLES 1T';
+        if (lambda >= 1.6) {
+            verdictClass = 'high'; verdictMsg = '🟢 Partido abierto — alta probabilidad de gol en 1T';
+        } else if (lambda >= 1.1) {
+            verdictClass = 'mid';  verdictMsg = '🟡 Confianza media — el gol en 1T es posible';
+        } else {
+            verdictClass = 'low';  verdictMsg = '🔴 Partido cerrado — poco probable gol en 1T';
+        }
+        // Stats: Over 0.5, Over 1.5, Over 2.5
+        const s1 = poissonOver(lambda, 0.5).toFixed(0);
+        const s2 = poissonOver(lambda, 1.5).toFixed(0);
+        const s3 = poissonOver(lambda, 2.5).toFixed(0);
+        var statsHTML = `
+            <div class="stat-box"><div class="val">${s1}%</div><div class="lbl">Over 0.5</div></div>
+            <div class="stat-box"><div class="val">${s2}%</div><div class="lbl">Over 1.5</div></div>
+            <div class="stat-box"><div class="val">${s3}%</div><div class="lbl">Over 2.5</div></div>`;
     } else {
-        verdictClass = 'low';
-        verdictMsg   = '🔴 Partido cerrado — el modelo no favorece el Over';
+        gaugePos = Math.min(95, Math.max(5, ((lambda - 4) / 10) * 100));
+        lambdaLabel = 'MEDIA ESPERADA DE CÓRNERS';
+        if (lambda >= 11) {
+            verdictClass = 'high'; verdictMsg = '🟢 Alta probabilidad de Over — modelo favorable';
+        } else if (lambda >= 9.5) {
+            verdictClass = 'mid';  verdictMsg = '🟡 Confianza media — revisa valor antes de apostar';
+        } else {
+            verdictClass = 'low';  verdictMsg = '🔴 Partido cerrado — el modelo no favorece el Over';
+        }
+        const s1 = poissonOver(lambda, 9).toFixed(0);
+        const s2 = poissonOver(lambda, 10).toFixed(0);
+        const s3 = poissonOver(lambda, 11).toFixed(0);
+        var statsHTML = `
+            <div class="stat-box"><div class="val">${s1}%</div><div class="lbl">Over 9</div></div>
+            <div class="stat-box"><div class="val">${s2}%</div><div class="lbl">Over 10</div></div>
+            <div class="stat-box"><div class="val">${s3}%</div><div class="lbl">Over 11</div></div>`;
     }
 
-    // Estadísticas adicionales
-    const pOver9  = poissonOver(lambda, 9);
-    const pOver10 = poissonOver(lambda, 10);
-    const pOver11 = poissonOver(lambda, 11);
-
     document.getElementById('verdict-container').innerHTML = `
-        <div class="verdict-card animate-in" style="animation-delay:0.32s; opacity:0;">
+        <div class="verdict-card animate-in" style="animation-delay:0.32s; opacity:0; border-left-color:${accentColor}">
             <div class="verdict-title">VEREDICTO DEL MODELO</div>
-            <div class="lambda-display">${lambda}<small>MEDIA ESPERADA DE CÓRNERS</small></div>
+            <div class="lambda-display">${lambda}<small>${lambdaLabel}</small></div>
             <div class="gauge-wrap">
                 <div class="gauge-labels"><span>BAJO</span><span>MEDIO</span><span>ALTO</span></div>
                 <div class="gauge-bar">
@@ -727,23 +885,9 @@ function renderOutput(home, away, lambda, leagueAvg) {
                 </div>
             </div>
             <div class="verdict-text ${verdictClass}">${verdictMsg}</div>
-            <div class="stats-row">
-                <div class="stat-box">
-                    <div class="val">${pOver9.toFixed(0)}%</div>
-                    <div class="lbl">Over 9</div>
-                </div>
-                <div class="stat-box">
-                    <div class="val">${pOver10.toFixed(0)}%</div>
-                    <div class="lbl">Over 10</div>
-                </div>
-                <div class="stat-box">
-                    <div class="val">${pOver11.toFixed(0)}%</div>
-                    <div class="lbl">Over 11</div>
-                </div>
-            </div>
+            <div class="stats-row">${statsHTML}</div>
         </div>`;
 
-    // Animar puntero del gauge después del render
     requestAnimationFrame(() => {
         setTimeout(() => {
             const ptr = document.getElementById('gauge-ptr');
