@@ -20,20 +20,23 @@
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
         .bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
+        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 10px; text-align: center;}
+        .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin-top: 20px; position: relative; }
+        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px white; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
-        <p class="subtitle">Análisis Estadístico Avanzado</p>
+        <p class="subtitle">Análisis Estadístico de Córners</p>
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
             <label>Equipo Local</label>
-            <select id="home-team"><option value="">Selecciona una liga</option></select>
+            <select id="home-team"><option value="">Selecciona liga</option></select>
             <label>Equipo Visitante</label>
-            <select id="away-team"><option value="">Selecciona una liga</option></select>
+            <select id="away-team"><option value="">Selecciona liga</option></select>
             <button id="calc-btn">Calcular Probabilidades</button>
         </div>
         <div id="results" class="hidden">
@@ -44,26 +47,21 @@
 
     <script>
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
-
         const LIGAS = [
             { id: 2014, name: 'LaLiga', country: 'España' },
             { id: 2021, name: 'Premier League', country: 'Inglaterra' },
             { id: 2002, name: 'Bundesliga', country: 'Alemania' },
             { id: 2019, name: 'Serie A', country: 'Italia' },
+            { id: 2015, name: 'Ligue 1', country: 'Francia' },
             { id: 2013, name: 'Série A', country: 'Brasil' },
             { id: 2001, name: 'Champions League', country: 'Europa' }
         ];
 
-        // DATOS DE RESPALDO (Si la API falla, usamos estos equipos)
-        const BACKUP_TEAMS = [
-            "Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo", 
-            "Manchester City FC", "Liverpool FC", "Arsenal FC", "Bayern München", 
-            "Atlético de Madrid", "Girona FC", "Real Sociedad", "Inter Milano"
-        ];
-
+        // Ajuste de "Poder de Córners" para evitar inflar los resultados
         const cornerPower = {
-            "Real Madrid CF": 6.8, "FC Barcelona": 6.5, "Levante UD": 5.8, "Real Oviedo": 5.4,
-            "Manchester City FC": 7.8, "Liverpool FC": 7.3, "Arsenal FC": 6.7
+            "Real Madrid CF": 6.2, "FC Barcelona": 5.9, "Levante UD": 5.1, "Real Oviedo": 4.9,
+            "Manchester City FC": 7.1, "Liverpool FC": 6.8, "Arsenal FC": 6.2, "Girona FC": 5.4,
+            "Atlético de Madrid": 4.8, "Bayern München": 6.5, "Inter Milano": 5.7
         };
 
         const lSel = document.getElementById('league-select');
@@ -76,58 +74,70 @@
             LIGAS.forEach(l => lSel.add(new Option(`${l.name} - ${l.country}`, l.id)));
         };
 
-        function cargarEquiposManual() {
-            hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
-            BACKUP_TEAMS.sort().forEach(t => {
-                hSel.add(new Option(t, t));
-                aSel.add(new Option(t, t));
-            });
-        }
-
         lSel.onchange = async () => {
             if (!lSel.value) return;
             hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
-            
             try {
                 const res = await fetch(`https://api.football-data.org/v4/competitions/${lSel.value}/teams`, {
-                    mode: 'cors',
                     headers: { 'X-Auth-Token': API_KEY }
                 });
-
-                if (!res.ok) throw new Error("API Limitada");
-
                 const data = await res.json();
                 hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
-                data.teams.forEach(t => {
+                
+                let teams = data.teams;
+                if(lSel.value == "2014") {
+                    if(!teams.find(t => t.name.includes("Levante"))) teams.push({name: "Levante UD"});
+                    if(!teams.find(t => t.name.includes("Oviedo"))) teams.push({name: "Real Oviedo"});
+                }
+
+                teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
                     hSel.add(new Option(t.name, t.name));
                     aSel.add(new Option(t.name, t.name));
                 });
             } catch (e) {
-                console.log("Usando modo de respaldo por error de conexión.");
-                cargarEquiposManual();
+                hSel.innerHTML = '<option>Error de API</option>';
             }
         };
 
         btn.onclick = () => {
             if (!hSel.value || !aSel.value) return;
-            const hP = cornerPower[hSel.value] || 4.8;
-            const aP = cornerPower[aSel.value] || 4.8;
-            const lambda = hP + aP;
+            const hP = cornerPower[hSel.value] || 4.5;
+            const aP = cornerPower[aSel.value] || 4.5;
+            const lambda = hP + aP; // Promedio esperado real
 
             document.getElementById('results').classList.remove('hidden');
             let html = '';
+            
             [7.5, 8.5, 9.5, 10.5].forEach(line => {
-                let prob = (lambda / (line + 1.15)) * 95;
-                prob = Math.min(98.5, Math.max(12, prob)).toFixed(1);
-                const color = prob > 70 ? 'var(--green)' : (prob > 50 ? 'var(--yellow)' : 'var(--red)');
+                // Nueva lógica de probabilidad más estricta
+                let factor = line === 7.5 ? 0.95 : (line === 8.5 ? 0.88 : (line === 9.5 ? 0.78 : 0.65));
+                let prob = (lambda / (line + 0.5)) * factor * 100;
+                prob = Math.min(94.5, Math.max(10, prob)).toFixed(1);
+                
+                const color = prob > 75 ? 'var(--green)' : (prob > 55 ? 'var(--yellow)' : 'var(--red)');
                 html += `
                 <div class="market-card">
                     <div class="line-val">+${line}</div>
-                    <div class="pct-row"><span style="color:${color}">${prob}% OVER</span></div>
+                    <div class="pct-row"><span style="color:${color}">${prob}% PROBABILIDAD</span></div>
                     <div class="bar-bg"><div class="bar-fill" style="width:${prob}%; background:${color}"></div></div>
                 </div>`;
             });
             document.getElementById('markets-container').innerHTML = html;
+            
+            // Sección de Veredicto Inferior
+            const riskPos = Math.min(95, Math.max(5, (10.5 - lambda) * 20));
+            document.getElementById('verdict-container').innerHTML = `
+                <div class="verdict-card">
+                    <div style="color:var(--red); font-weight:800; font-size:1.1rem; letter-spacing:1px;">VERDICTO MAESTRO</div>
+                    <p style="margin:10px 0; font-size:0.95rem;">Promedio Esperado: <b>${lambda.toFixed(2)}</b> córners.</p>
+                    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:5px;">INDICADOR DE RIESGO</div>
+                    <div class="risk-bar"><div class="risk-pointer" style="left:${100 - riskPos}%"></div></div>
+                    <p style="margin-top:15px; color:${lambda > 10 ? 'var(--green)' : 'var(--yellow)'}; font-weight:bold;">
+                        ${lambda > 10.5 ? '¡ALTA PROBABILIDAD DE OVER!' : (lambda > 8.5 ? 'CONFIANZA MEDIA - LÍNEA MODERADA' : 'CUIDADO: PARTIDO CERRADO')}
+                    </p>
+                </div>`;
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         };
     </script>
 </body>
