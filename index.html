@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CornerIQ Pro - Predictor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CornerIQ <span>Pro</span></h1>
+            <p>Análisis Estadístico de Córners</p>
+        </header>
 
+        <div class="card">
+            <div class="input-group">
+                <label>Selecciona la Liga:</label>
+                <select id="league-select">
+                    <option value="">Cargando ligas...</option>
+                </select>
+            </div>
+
+            <div class="teams-grid">
+                <div class="input-group">
+                    <label>Equipo Local:</label>
+                    <select id="home-team" disabled><option>Esperando liga...</option></select>
+                </div>
+                <div class="input-group">
+                    <label>Equipo Visitante:</label>
+                    <select id="away-team" disabled><option>Esperando liga...</option></select>
+                </div>
+            </div>
+
+            <button id="calculate-btn">CALCULAR PROBABILIDAD</button>
+        </div>
+
+        <div id="results" class="results-card hidden"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
