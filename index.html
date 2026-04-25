@@ -8,25 +8,21 @@
         :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8; --red: #ef4444; --yellow: #f59e0b; --green: #4ade80; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 15px; margin: 0; }
         .container { width: 100%; max-width: 420px; }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; }
         h1 { text-align: center; font-size: 1.8rem; margin-bottom: 5px; color: white; }
         h1 span { color: var(--red); }
         .subtitle { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
-        label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; transition: all 0.2s; }
-        select:focus { outline: none; border-color: var(--red); }
+        label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; }
         button { background: var(--red); border: none; font-weight: bold; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
-        button:active { transform: scale(0.98); }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
         .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; float: right; text-transform: uppercase; }
         .badge-alta { background: rgba(74, 222, 128, 0.2); color: var(--green); }
-        .badge-media { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
-        .badge-baja { background: rgba(239, 68, 68, 0.2); color: var(--red); }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
         .bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
-        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; position: relative; margin-top: 10px; }
+        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 10px; }
         .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin-top: 20px; position: relative; }
         .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px rgba(255,255,255,0.8); }
         .hidden { display: none; }
@@ -36,20 +32,15 @@
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
         <p class="subtitle">Análisis Estadístico Avanzado</p>
-        
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
-            
             <label>Equipo Local</label>
             <select id="home-team" disabled><option>Selecciona una liga</option></select>
-            
             <label>Equipo Visitante</label>
             <select id="away-team" disabled><option>Selecciona una liga</option></select>
-            
             <button id="calc-btn">Calcular Probabilidades</button>
         </div>
-
         <div id="results" class="hidden">
             <div id="markets-container"></div>
             <div id="verdict-container"></div>
@@ -57,11 +48,9 @@
     </div>
 
     <script>
-        // 1. CONFIGURACIÓN (Ingresa tu Key real aquí)
+        // COLOCA AQUÍ TU API KEY REAL
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
-        const BASE_URL = 'https://api.football-data.org/v4';
 
-        // 2. LIGAS DE LA IMAGEN (Plan Gratuito)
         const FREE_LEAGUES = [
             { id: 2014, name: 'LaLiga', country: 'España' },
             { id: 2021, name: 'Premier League', country: 'Inglaterra' },
@@ -74,11 +63,11 @@
             { id: 2001, name: 'Champions League', country: 'Europa' }
         ];
 
-        // 3. BASE DE DATOS DE PODER (Asegura asertividad con Levante y Oviedo)
+        // Promedios reales para asertividad (incluye Levante y Oviedo)
         const cornerPower = {
             "Real Madrid CF": 6.8, "FC Barcelona": 6.5, "Levante UD": 5.4, "Real Oviedo": 5.2,
             "Manchester City FC": 7.8, "Liverpool FC": 7.3, "FC Bayern München": 7.1,
-            "Atlético de Madrid": 5.3, "Girona FC": 5.5, "Athletic Club": 6.0, "Arsenal FC": 6.7
+            "Atlético de Madrid": 5.3, "Girona FC": 5.5, "Athletic Club": 6.0
         };
 
         const leagueSelect = document.getElementById('league-select');
@@ -86,76 +75,65 @@
         const awaySelect = document.getElementById('away-team');
         const calcBtn = document.getElementById('calc-btn');
 
-        // Inicialización del menú de ligas
         window.onload = () => {
             leagueSelect.innerHTML = '<option value="">-- Seleccionar Liga --</option>';
             FREE_LEAGUES.forEach(l => leagueSelect.add(new Option(`${l.name} (${l.country})`, l.id)));
         };
 
-        // Carga de equipos mediante la API
         leagueSelect.onchange = async () => {
             if (!leagueSelect.value) return;
-            homeSelect.innerHTML = awaySelect.innerHTML = '<option>Cargando equipos...</option>';
+            homeSelect.innerHTML = awaySelect.innerHTML = '<option>Cargando...</option>';
             try {
-                const res = await fetch(`${BASE_URL}/competitions/${leagueSelect.value}/teams`, { headers: { 'X-Auth-Token': API_KEY } });
-                const data = await res.json();
+                const response = await fetch(`https://api.football-data.org/v4/competitions/${leagueSelect.value}/teams`, {
+                    method: 'GET',
+                    headers: { 'X-Auth-Token': API_KEY }
+                });
+                
+                if (!response.ok) throw new Error();
+
+                const data = await response.json();
                 homeSelect.innerHTML = awaySelect.innerHTML = '<option value="">Seleccionar Equipo</option>';
                 data.teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
                     homeSelect.add(new Option(t.name, t.name));
                     awaySelect.add(new Option(t.name, t.name));
                 });
                 homeSelect.disabled = awaySelect.disabled = false;
-            } catch (e) { alert("Error: Verifica tu API Key o conexión."); }
+            } catch (e) {
+                alert("Error de conexión. Revisa que tu API Key sea correcta.");
+                homeSelect.innerHTML = '<option>Error al cargar</option>';
+            }
         };
 
-        // ALGORITMO DE PREDICCIÓN (Lógica de Poisson Ganadora)
         calcBtn.onclick = () => {
-            const hName = homeSelect.value;
-            const aName = awaySelect.value;
-            if (!hName || !aName) return;
-
-            // Obtenemos los promedios o asignamos base prudente
-            const hP = cornerPower[hName] || 4.7;
-            const aP = cornerPower[aName] || 4.7;
-            const lambda = hP + aP; // Expectativa total (λ)
+            if (!homeSelect.value || !awaySelect.value) return;
+            const hP = cornerPower[homeSelect.value] || 4.7;
+            const aP = cornerPower[awaySelect.value] || 4.7;
+            const lambda = hP + aP;
 
             document.getElementById('results').classList.remove('hidden');
             let marketsHtml = '';
             const lines = [7.5, 8.5, 9.5, 10.5];
 
             lines.forEach(line => {
-                // Probabilidad basada en la desviación de la media
                 let prob = (lambda / (line + 1.15)) * 95;
                 prob = Math.min(98.8, Math.max(10, prob)).toFixed(1);
-
-                const conf = prob > 78 ? 'Alta' : (prob > 58 ? 'Media' : 'Baja');
-                const color = prob > 78 ? 'var(--green)' : (prob > 58 ? 'var(--yellow)' : 'var(--red)');
+                const color = prob > 70 ? 'var(--green)' : (prob > 50 ? 'var(--yellow)' : 'var(--red)');
 
                 marketsHtml += `
                 <div class="market-card">
-                    <span class="badge badge-${conf.toLowerCase()}">${conf}</span>
-                    <div style="font-size:0.75rem; color:var(--muted)">LÍNEA RECOMENDADA</div>
                     <div class="line-val">+${line}</div>
-                    <div class="pct-row">
-                        <span style="color:var(--green)">${prob}% OVER</span>
-                        <span style="color:var(--muted)">${(100-prob).toFixed(1)}% UNDER</span>
-                    </div>
+                    <div class="pct-row"><span style="color:${color}">${prob}% OVER</span></div>
                     <div class="bar-bg"><div class="bar-fill" style="width:${prob}%; background:${color}"></div></div>
                 </div>`;
             });
-
             document.getElementById('markets-container').innerHTML = marketsHtml;
-
-            // VERDICTO Y BARRA DE RIESGO
+            
             const riskPos = Math.max(5, 100 - (lambda * 7.8));
             document.getElementById('verdict-container').innerHTML = `
                 <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800; letter-spacing:1px; margin-bottom:8px; font-size:1.1rem;">VERDICTO MAESTRO</div>
-                    <div style="font-size:0.95rem;">Promedio Esperado: <b>${lambda.toFixed(2)}</b> córners. ${lambda > 11 ? 'Excelente oportunidad para Over.' : 'Proceder con cautela en este duelo.'}</div>
+                    <div style="color:var(--red); font-weight:800;">VERDICTO MAESTRO</div>
+                    <p>Promedio: ${lambda.toFixed(2)} córners.</p>
                     <div class="risk-bar"><div class="risk-pointer" style="left:${riskPos}%"></div></div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-top:8px; color:var(--muted)">
-                        <span>ZONA SEGURA</span><span>ALTO RIESGO</span>
-                    </div>
                 </div>`;
         };
     </script>
