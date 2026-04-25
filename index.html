@@ -140,7 +140,7 @@ btn.onclick = () => {
 
         // Render Goles HT
         let gHtml = '';
-        [0.5, 1.5].forEach(line => gHtml += renderCard(line, poisson(lamG, Math.floor(line)), 'GOLES HT'));
+        [0.5].forEach(line => gHtml += renderCard(line, poisson(lamG, Math.floor(line)), 'GOLES HT'));
         document.getElementById('goals-ht-container').innerHTML = gHtml;
         
         // Animación de barras
