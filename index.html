@@ -3,46 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CornerIQ Pro</title>
-    <link rel="stylesheet" href="style.css">
+    <title>CornerIQ Pro - Predictor</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --green: #4ade80;
+            --blue: #38bdf8;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { width: 100%; max-width: 450px; }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #334155;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-size: 1.8rem; margin: 0 0 5px; }
+        .subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+        label { display: block; margin: 12px 0 6px; color: var(--muted); font-size: 0.85rem; font-weight: 600; }
+        
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            border: 1px solid #475569;
+            background: #334155;
+            color: white;
+            outline: none;
+        }
+
+        button {
+            background: var(--red);
+            border: none;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        /* Estilo de Tarjetas de Mercado (Imagen Derecha) */
+        .market-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        .market-header { display: flex; justify-content: space-between; align-items: center; }
+        .market-title { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .badge-baja { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+        .badge-media { background: rgba(245, 158, 11, 0.2); color: var(--yellow); }
+        .badge-alta { background: rgba(74, 222, 128, 0.2); color: var(--green); }
+
+        .line-val { font-size: 2rem; font-weight: 800; margin: 5px 0; color: var(--yellow); }
+        .line-val.baja { color: var(--red); }
+
+        .pct-row { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; }
+        .pct-over { color: var(--green); }
+        .pct-under { color: var(--muted); }
+
+        .bar-bg { background: #334155; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 0.8s ease-out; }
+
+        .best-label { position: absolute; bottom: 12px; right: 16px; color: var(--blue); font-size: 0.65rem; font-weight: bold; }
+
+        /* Estilo Veredicto (Imagen Izquierda) */
+        .verdict-card {
+            background: #111827;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            border: 1px solid #374151;
+        }
+
+        .verdict-dot { width: 35px; height: 35px; background: var(--red); border-radius: 50%; position: absolute; right: 20px; top: 20px; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
+        .verdict-status { font-weight: 800; font-size: 1.1rem; }
+        .verdict-desc { color: var(--muted); font-size: 0.9rem; margin: 10px 0 20px; line-height: 1.4; }
+
+        .risk-bar { height: 4px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 2px; position: relative; }
+        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -4px; transform: translateX(-50%); }
+
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>CornerIQ <span>Pro</span></h1>
-            <p>Análisis Estadístico de Córners</p>
-        </header>
+        <h1>Predictor de Corners ⚽</h1>
+        <p class="subtitle">Análisis Estadístico Avanzado</p>
 
         <div class="card">
-            <div class="input-group">
-                <label>Liga:</label>
-                <select id="league-select">
-                    <option value="">Cargando...</option>
-                </select>
-            </div>
-
-            <div class="teams-grid">
-                <div class="input-group">
-                    <label>Local:</label>
-                    <select id="home-team" disabled></select>
-                </div>
-                <div class="input-group">
-                    <label>Visitante:</label>
-                    <select id="away-team" disabled></select>
-                </div>
-            </div>
-
-            <button id="calculate-btn">CALCULAR</button>
+            <label>Liga</label>
+            <select id="league-select"><option>Cargando...</option></select>
+            <label>Equipo Local</label>
+            <select id="home-team" disabled></select>
+            <label>Equipo Visitante</label>
+            <select id="away-team" disabled></select>
+            <button id="calc-btn">Calcular Probabilidad</button>
         </div>
 
-        <div id="results-container" class="results-area hidden">
-            <div class="summary-bar">
-                <span>Promedio: <strong id="total-c-val">--</strong></span>
-            </div>
-            <div id="markets-area"></div>
-            <div id="verdict-area" class="verdict-card"></div>
+        <div id="results" class="hidden">
+            <div id="markets-container"></div>
+            <div id="verdict-container"></div>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const footballData = {
+            "España - LaLiga": [
+                { name: "Real Madrid", c: 6.4 }, { name: "FC Barcelona", c: 6.1 },
+                { name: "Atlético Madrid", c: 5.2 }, { name: "Girona FC", c: 4.9 },
+                { name: "Levante UD", c: 5.1 }, { name: "Real Oviedo", c: 4.8 }
+            ],
+            "Inglaterra - Premier": [
+                { name: "Man City", c: 7.2 }, { name: "Liverpool", c: 6.8 }, { name: "Arsenal", c: 6.5 }
+            ]
+        };
+
+        const leagueSelect = document.getElementById('league-select');
+        const homeSelect = document.getElementById('home-team');
+        const awaySelect = document.getElementById('away-team');
+        const calcBtn = document.getElementById('calc-btn');
+        const resultsDiv = document.getElementById('results');
+
+        function init() {
+            leagueSelect.innerHTML = '<option value="">Selecciona una liga</option>';
+            Object.keys(footballData).forEach(l => leagueSelect.add(new Option(l, l)));
+        }
+
+        leagueSelect.onchange = () => {
+            const teams = footballData[leagueSelect.value] || [];
+            homeSelect.innerHTML = awaySelect.innerHTML = '<option value="">Selecciona equipo</option>';
+            teams.forEach(t => {
+                homeSelect.add(new Option(t.name, t.c));
+                awaySelect.add(new Option(t.name, t.c));
+            });
+            homeSelect.disabled = awaySelect.disabled = false;
+        };
+
+        calcBtn.onclick = () => {
+            const h = parseFloat(homeSelect.value);
+            const a = parseFloat(awaySelect.value);
+            if (!h || !a) return;
+
+            const total = (h + a);
+            resultsDiv.classList.remove('hidden');
+
+            // Generar las 4 líneas solicitadas
+            const lines = [7.5, 8.5, 9.5, 10.5];
+            let marketsHtml = '';
+            
+            lines.forEach((line, index) => {
+                const probOver = Math.min(98.5, (total / (line + 1.2)) * 88).toFixed(1);
+                const probUnder = (100 - probOver).toFixed(1);
+                
+                let confidence = "Baja";
+                let badgeClass = "badge-baja";
+                let barClass = "var(--red)";
+                
+                if(probOver > 70) { confidence = "Alta"; badgeClass = "badge-alta"; barClass = "var(--green)"; }
+                else if(probOver > 50) { confidence = "Media"; badgeClass = "badge-media"; barClass = "var(--yellow)"; }
+
+                marketsHtml += `
+                    <div class="market-card">
+                        <div class="market-header">
+                            <span class="market-title">Mercado</span>
+                            <span class="badge ${badgeClass}">${confidence} ${confidence === 'Alta' ? '✅' : (confidence === 'Media' ? '⚠️' : '🚩')}</span>
+                        </div>
+                        <div class="line-val ${confidence === 'Baja' ? 'baja' : ''}">+${line}</div>
+                        <div class="pct-row">
+                            <span class="pct-over">${probOver}% OVER</span>
+                            <span class="pct-under">${probUnder}% UNDER</span>
+                        </div>
+                        <div class="bar-bg">
+                            <div class="bar-fill" style="width: ${probOver}%; background: ${barClass}"></div>
+                        </div>
+                        ${line === 7.5 ? '<span class="best-label">★ MEJOR LÍNEA</span>' : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('markets-container').innerHTML = marketsHtml;
+
+            // Veredicto Final (Estilo Imagen Izquierda)
+            const bestProb = Math.min(98.5, (total / 9.7) * 88).toFixed(1);
+            const riskPos = 100 - bestProb;
+
+            document.getElementById('verdict-container').innerHTML = `
+                <div class="verdict-card">
+                    <div class="verdict-dot"></div>
+                    <div class="verdict-status">CONFIANZA ${total > 11 ? 'ALTA' : 'BAJA'} — Over 8.5 • ${bestProb}%</div>
+                    <div class="verdict-desc">El modelo estadístico λ=${total.toFixed(2)} sugiere un análisis detallado. Revisa el valor antes de operar.</div>
+                    <div class="risk-bar">
+                        <div class="risk-pointer" style="left: ${riskPos}%"></div>
+                    </div>
+                </div>
+            `;
+        };
+
+        init();
+    </script>
 </body>
 </html>
