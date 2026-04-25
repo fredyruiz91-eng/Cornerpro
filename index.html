@@ -3,52 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predictor de Corners Pro</title>
+    <title>CornerIQ Pro</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Predictor de Corners ⚽</h1>
-            <p class="subtitle">Análisis Estadístico Avanzado</p>
+            <h1>CornerIQ <span>Pro</span></h1>
+            <p>Análisis Estadístico de Córners</p>
         </header>
 
-        <main class="card selector-card">
+        <div class="card">
             <div class="input-group">
-                <label for="league-select">Selecciona la Liga:</label>
+                <label>Liga:</label>
                 <select id="league-select">
-                    <option value="">Cargando ligas...</option>
+                    <option value="">Cargando...</option>
                 </select>
             </div>
 
             <div class="teams-grid">
                 <div class="input-group">
-                    <label for="home-team">Equipo Local:</label>
-                    <select id="home-team" disabled><option>Elige liga primero</option></select>
+                    <label>Local:</label>
+                    <select id="home-team" disabled></select>
                 </div>
                 <div class="input-group">
-                    <label for="away-team">Equipo Visitante:</label>
-                    <select id="away-team" disabled><option>Elige liga primero</option></select>
+                    <label>Visitante:</label>
+                    <select id="away-team" disabled></select>
                 </div>
             </div>
 
-            <button id="calculate-btn">CALCULAR PROBABILIDAD</button>
-        </main>
+            <button id="calculate-btn">CALCULAR</button>
+        </div>
 
-        <section id="results-container" class="results-area hidden">
-            
+        <div id="results-container" class="results-area hidden">
             <div class="summary-bar">
-                <span>Total Esperado: <strong id="total-c-val">--</strong> Córners</span>
+                <span>Promedio: <strong id="total-c-val">--</strong></span>
             </div>
-
-            <div class="markets-grid" id="markets-area">
-                </div>
-
-            <div class="verdict-card" id="verdict-area">
-                </div>
-
-        </section>
+            <div id="markets-area"></div>
+            <div id="verdict-area" class="verdict-card"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
