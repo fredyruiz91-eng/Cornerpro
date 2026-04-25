@@ -11,10 +11,9 @@
         .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; }
         h1 { text-align: center; font-size: 1.8rem; margin-bottom: 5px; color: white; }
         h1 span { color: var(--red); }
-        .subtitle { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
         label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; margin-bottom: 10px; }
-        button { background: var(--red); border: none; font-weight: bold; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
+        button { background: var(--red); border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
@@ -29,7 +28,6 @@
 <body>
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
-        <p class="subtitle">Análisis Estadístico Avanzado</p>
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
@@ -48,18 +46,25 @@
     <script>
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
 
+        // Listado completo de ligas solicitado
         const LIGAS = {
-            "2014": { name: "LaLiga", country: "España", teams: ["Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo", "Atlético de Madrid", "Girona FC", "Real Sociedad", "Athletic Club", "Real Betis", "Valencia CF", "Sevilla FC", "Villarreal CF"] },
-            "2021": { name: "Premier League", country: "Inglaterra", teams: ["Manchester City FC", "Liverpool FC", "Arsenal FC", "Aston Villa FC", "Tottenham Hotspur FC", "Chelsea FC", "Manchester United FC", "Newcastle United FC"] },
-            "2019": { name: "Serie A", country: "Italia", teams: ["Inter Milano", "AC Milan", "Juventus FC", "Atalanta BC", "AS Roma", "SS Lazio", "SSC Napoli", "ACF Fiorentina"] },
-            "2002": { name: "Bundesliga", country: "Alemania", teams: ["Bayer 04 Leverkusen", "FC Bayern München", "VfB Stuttgart", "RB Leipzig", "Borussia Dortmund"] },
-            "2013": { name: "Série A", country: "Brasil", teams: ["Palmeiras", "Flamengo", "Botafogo", "Atlético Mineiro", "São Paulo", "Fluminense"] }
+            "WC": { name: "FIFA World Cup", teams: ["Argentina", "Francia", "Brasil", "España"] },
+            "CL": { name: "UEFA Champions League", teams: ["Real Madrid CF", "Manchester City FC", "FC Bayern München"] },
+            "BL1": { name: "Bundesliga (Alemania)", teams: ["Bayer Leverkusen", "Bayern München", "Dortmund"] },
+            "DED": { name: "Eredivisie (Países Bajos)", teams: ["PSV", "Feyenoord", "Ajax"] },
+            "BSA": { name: "Campeonato Brasileiro Série A", teams: ["Flamengo", "Palmeiras", "Botafogo"] },
+            "PD": { name: "Primera Division (España)", teams: ["Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo"] },
+            "FL1": { name: "Ligue 1 (Francia)", teams: ["PSG", "Monaco", "Marseille"] },
+            "ELC": { name: "Championship (Inglaterra)", teams: ["Leeds United", "Leicester City"] },
+            "PPL": { name: "Primeira Liga (Portugal)", teams: ["Sporting CP", "Benfica", "FC Porto"] },
+            "EC": { name: "European Championship", teams: ["España", "Inglaterra", "Francia"] },
+            "SA": { name: "Serie A (Italia)", teams: ["Inter Milano", "AC Milan", "Juventus FC"] },
+            "PL": { name: "Premier League (Inglaterra)", teams: ["Manchester City FC", "Liverpool FC", "Arsenal FC"] }
         };
 
         const cornerPower = {
-            "Real Madrid CF": 6.1, "FC Barcelona": 5.8, "Levante UD": 5.3, "Real Oviedo": 4.9,
-            "Manchester City FC": 7.4, "Liverpool FC": 6.9, "Arsenal FC": 6.3, "Inter Milano": 5.5,
-            "Bayern München": 6.6, "Atlético de Madrid": 4.8
+            "Real Madrid CF": 6.2, "FC Barcelona": 5.9, "Levante UD": 5.3, "Real Oviedo": 4.9,
+            "Manchester City FC": 7.4, "Liverpool FC": 6.9, "Arsenal FC": 6.4, "PSG": 6.1
         };
 
         const lSel = document.getElementById('league-select');
@@ -69,34 +74,32 @@
 
         window.onload = () => {
             lSel.innerHTML = '<option value="">-- Seleccionar Liga --</option>';
-            for (let id in LIGAS) {
-                lSel.add(new Option(`${LIGAS[id].name} - ${LIGAS[id].country}`, id));
+            for (let code in LIGAS) {
+                lSel.add(new Option(LIGAS[code].name, code));
             }
         };
 
         lSel.onchange = async () => {
-            const leagueId = lSel.value;
-            if (!leagueId) return;
-            hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
+            const code = lSel.value;
+            if (!code) return;
+            hSel.innerHTML = aSel.innerHTML = '<option>Cargando equipos...</option>';
             
             try {
-                const res = await fetch(`https://api.football-data.org/v4/competitions/${leagueId}/teams`, {
+                const res = await fetch(`https://api.football-data.org/v4/competitions/${code}/teams`, {
                     headers: { 'X-Auth-Token': API_KEY }
                 });
                 if (!res.ok) throw new Error();
                 const data = await res.json();
+                let teams = data.teams.map(t => t.name);
                 
-                // Mezclar equipos de API con los manuales (Levante/Oviedo)
-                let teamsList = data.teams.map(t => t.name);
-                if(leagueId === "2014") {
-                    if(!teamsList.includes("Levante UD")) teamsList.push("Levante UD");
-                    if(!teamsList.includes("Real Oviedo")) teamsList.push("Real Oviedo");
+                // Inyección de equipos promocionados/faltantes en España
+                if(code === "PD") {
+                    if(!teams.includes("Levante UD")) teams.push("Levante UD");
+                    if(!teams.includes("Real Oviedo")) teams.push("Real Oviedo");
                 }
-                llenarSelects(teamsList);
+                llenarSelects(teams);
             } catch (e) {
-                // Si falla la API, usa SOLO los equipos de esa liga específica
-                console.log("Modo Offline para liga " + leagueId);
-                llenarSelects(LIGAS[leagueId].teams);
+                llenarSelects(LIGAS[code].teams);
             }
             hSel.disabled = aSel.disabled = false;
         };
@@ -121,9 +124,7 @@
 
         btn.onclick = () => {
             if (!hSel.value || !aSel.value) return;
-            const hP = cornerPower[hSel.value] || 4.6;
-            const aP = cornerPower[aSel.value] || 4.4;
-            const lambda = hP + aP;
+            const lambda = (cornerPower[hSel.value] || 4.7) + (cornerPower[aSel.value] || 4.5);
 
             document.getElementById('results').classList.remove('hidden');
             let html = '';
@@ -148,7 +149,7 @@
                     <p>Promedio Esperado: <b style="color:white; font-size:1.4rem;">${lambda.toFixed(2)}</b></p>
                     <div class="risk-bar"><div class="risk-pointer" style="left:${risk}%"></div></div>
                     <p style="font-weight:bold; margin-top:10px; color:${lambda > 10 ? 'var(--green)' : 'var(--yellow)'}">
-                        ${lambda > 10.5 ? 'TENDENCIA ALTA' : (lambda > 9 ? 'VALOR MODERADO' : 'RIESGO ALTO')}
+                        ${lambda > 10.5 ? '¡ALTA PROBABILIDAD DE OVER!' : 'CONFIANZA MODERADA'}
                     </p>
                 </div>`;
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
