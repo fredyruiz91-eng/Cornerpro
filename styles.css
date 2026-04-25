@@ -1,1 +1,22 @@
+body { background: #0f172a; color: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
+.container { width: 100%; max-width: 450px; }
+header { text-align: center; margin-bottom: 30px; }
+header h1 { font-size: 2.5rem; margin: 0; }
+header h1 span { color: #ef4444; }
+header p { color: #94a3b8; margin: 5px 0 0; }
 
+.card { background: #1e293b; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.input-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; color: #cbd5e1; font-weight: 600; }
+select { width: 100%; padding: 14px; background: #334155; border: 1px solid #475569; color: white; border-radius: 8px; font-size: 1rem; outline: none; }
+select:focus { border-color: #ef4444; }
+
+button { width: 100%; padding: 16px; margin-top: 10px; background: #ef4444; border: none; color: white; font-weight: 800; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+button:hover { background: #dc2626; }
+
+.results-card { margin-top: 25px; background: #334155; padding: 20px; border-radius: 12px; border-left: 6px solid #ef4444; animation: fadeIn 0.5s; }
+.hidden { display: none; }
+.metric { margin-top: 15px; }
+.pct { font-size: 2rem; color: #4ade80; font-weight: bold; display: block; margin-top: 5px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
