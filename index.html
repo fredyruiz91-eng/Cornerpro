@@ -8,23 +8,22 @@
         :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8; --red: #ef4444; --yellow: #f59e0b; --green: #4ade80; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 15px; margin: 0; }
         .container { width: 100%; max-width: 420px; }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
         h1 { text-align: center; font-size: 1.8rem; margin-bottom: 5px; color: white; }
         h1 span { color: var(--red); }
         .subtitle { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
         label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
         select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; }
-        button { background: var(--red); border: none; font-weight: bold; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
+        button { background: var(--red); border: none; font-weight: bold; margin-top: 20px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:active { transform: scale(0.95); }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
-        .badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; float: right; text-transform: uppercase; }
-        .badge-alta { background: rgba(74, 222, 128, 0.2); color: var(--green); }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
         .bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
         .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 10px; }
         .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin-top: 20px; position: relative; }
-        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px white; }
         .hidden { display: none; }
     </style>
 </head>
@@ -48,9 +47,10 @@
     </div>
 
     <script>
-        // COLOCA AQUÍ TU API KEY REAL
+        // 1. COLOCA TU KEY ENTRE LAS COMILLAS (Asegúrate que no tenga espacios)
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
 
+        // 2. LIGAS DE TU IMAGEN
         const FREE_LEAGUES = [
             { id: 2014, name: 'LaLiga', country: 'España' },
             { id: 2021, name: 'Premier League', country: 'Inglaterra' },
@@ -63,77 +63,71 @@
             { id: 2001, name: 'Champions League', country: 'Europa' }
         ];
 
-        // Promedios reales para asertividad (incluye Levante y Oviedo)
+        // 3. BASE DE DATOS DE PODER (Incluye Levante y Oviedo)
         const cornerPower = {
             "Real Madrid CF": 6.8, "FC Barcelona": 6.5, "Levante UD": 5.4, "Real Oviedo": 5.2,
             "Manchester City FC": 7.8, "Liverpool FC": 7.3, "FC Bayern München": 7.1,
-            "Atlético de Madrid": 5.3, "Girona FC": 5.5, "Athletic Club": 6.0
+            "Atlético de Madrid": 5.3, "Girona FC": 5.5, "Athletic Club": 6.0, "Arsenal FC": 6.7
         };
 
-        const leagueSelect = document.getElementById('league-select');
-        const homeSelect = document.getElementById('home-team');
-        const awaySelect = document.getElementById('away-team');
-        const calcBtn = document.getElementById('calc-btn');
+        const lSel = document.getElementById('league-select');
+        const hSel = document.getElementById('home-team');
+        const aSel = document.getElementById('away-team');
+        const btn = document.getElementById('calc-btn');
 
         window.onload = () => {
-            leagueSelect.innerHTML = '<option value="">-- Seleccionar Liga --</option>';
-            FREE_LEAGUES.forEach(l => leagueSelect.add(new Option(`${l.name} (${l.country})`, l.id)));
+            lSel.innerHTML = '<option value="">-- Seleccionar --</option>';
+            FREE_LEAGUES.forEach(l => lSel.add(new Option(`${l.name} - ${l.country}`, l.id)));
         };
 
-        leagueSelect.onchange = async () => {
-            if (!leagueSelect.value) return;
-            homeSelect.innerHTML = awaySelect.innerHTML = '<option>Cargando...</option>';
+        lSel.onchange = async () => {
+            if (!lSel.value) return;
+            hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
             try {
-                const response = await fetch(`https://api.football-data.org/v4/competitions/${leagueSelect.value}/teams`, {
-                    method: 'GET',
+                const res = await fetch(`https://api.football-data.org/v4/competitions/${lSel.value}/teams`, {
                     headers: { 'X-Auth-Token': API_KEY }
                 });
-                
-                if (!response.ok) throw new Error();
-
-                const data = await response.json();
-                homeSelect.innerHTML = awaySelect.innerHTML = '<option value="">Seleccionar Equipo</option>';
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
                 data.teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
-                    homeSelect.add(new Option(t.name, t.name));
-                    awaySelect.add(new Option(t.name, t.name));
+                    hSel.add(new Option(t.name, t.name));
+                    aSel.add(new Option(t.name, t.name));
                 });
-                homeSelect.disabled = awaySelect.disabled = false;
+                hSel.disabled = aSel.disabled = false;
             } catch (e) {
-                alert("Error de conexión. Revisa que tu API Key sea correcta.");
-                homeSelect.innerHTML = '<option>Error al cargar</option>';
+                alert("Error: Verifica tu API Key. Si acabas de crearla, espera 5 min.");
+                hSel.innerHTML = '<option>Error de API</option>';
             }
         };
 
-        calcBtn.onclick = () => {
-            if (!homeSelect.value || !awaySelect.value) return;
-            const hP = cornerPower[homeSelect.value] || 4.7;
-            const aP = cornerPower[awaySelect.value] || 4.7;
-            const lambda = hP + aP;
+        btn.onclick = () => {
+            if (!hSel.value || !aSel.value) return;
+            const hP = cornerPower[hSel.value] || 4.7;
+            const aP = cornerPower[aSel.value] || 4.7;
+            const lambda = hP + aP; // Expectativa total (λ)
 
             document.getElementById('results').classList.remove('hidden');
-            let marketsHtml = '';
-            const lines = [7.5, 8.5, 9.5, 10.5];
-
-            lines.forEach(line => {
+            let html = '';
+            [7.5, 8.5, 9.5, 10.5].forEach(line => {
                 let prob = (lambda / (line + 1.15)) * 95;
-                prob = Math.min(98.8, Math.max(10, prob)).toFixed(1);
-                const color = prob > 70 ? 'var(--green)' : (prob > 50 ? 'var(--yellow)' : 'var(--red)');
-
-                marketsHtml += `
+                prob = Math.min(98.8, Math.max(12, prob)).toFixed(1);
+                const color = prob > 75 ? 'var(--green)' : (prob > 55 ? 'var(--yellow)' : 'var(--red)');
+                html += `
                 <div class="market-card">
                     <div class="line-val">+${line}</div>
                     <div class="pct-row"><span style="color:${color}">${prob}% OVER</span></div>
                     <div class="bar-bg"><div class="bar-fill" style="width:${prob}%; background:${color}"></div></div>
                 </div>`;
             });
-            document.getElementById('markets-container').innerHTML = marketsHtml;
+            document.getElementById('markets-container').innerHTML = html;
             
-            const riskPos = Math.max(5, 100 - (lambda * 7.8));
+            const risk = Math.max(5, 100 - (lambda * 7.5));
             document.getElementById('verdict-container').innerHTML = `
                 <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800;">VERDICTO MAESTRO</div>
-                    <p>Promedio: ${lambda.toFixed(2)} córners.</p>
-                    <div class="risk-bar"><div class="risk-pointer" style="left:${riskPos}%"></div></div>
+                    <div style="color:var(--red); font-weight:800; font-size:1rem;">VERDICTO FINAL</div>
+                    <p style="font-size:0.9rem; margin:10px 0;">Promedio esperado de <b>${lambda.toFixed(2)}</b> corners.</p>
+                    <div class="risk-bar"><div class="risk-pointer" style="left:${risk}%"></div></div>
                 </div>`;
         };
     </script>
