@@ -8,14 +8,13 @@
         :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --muted: #94a3b8; --red: #ef4444; --yellow: #f59e0b; --green: #4ade80; }
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 15px; margin: 0; }
         .container { width: 100%; max-width: 420px; }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid #334155; margin-bottom: 15px; }
         h1 { text-align: center; font-size: 1.8rem; margin-bottom: 5px; color: white; }
         h1 span { color: var(--red); }
         .subtitle { text-align: center; color: var(--muted); font-size: 0.85rem; margin-bottom: 20px; }
         label { display: block; margin: 12px 0 5px; color: var(--muted); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
-        select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; }
-        button { background: var(--red); border: none; font-weight: bold; margin-top: 20px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        button:active { transform: scale(0.96); }
+        select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #334155; color: white; font-size: 1rem; margin-bottom: 10px; }
+        button { background: var(--red); border: none; font-weight: bold; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
         .market-card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #334155; }
         .line-val { font-size: 2rem; font-weight: 800; color: var(--yellow); margin: 5px 0; }
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
@@ -23,7 +22,7 @@
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
         .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 20px; text-align: center; border-left: 4px solid var(--red); }
         .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin: 20px 0; position: relative; }
-        .risk-pointer { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: -4px; transform: translateX(-50%); box-shadow: 0 0 10px white; transition: 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        .risk-pointer { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: -4px; transform: translateX(-50%); box-shadow: 0 0 10px white; transition: 0.8s ease-out; }
         .hidden { display: none; }
     </style>
 </head>
@@ -35,9 +34,9 @@
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
             <label>Equipo Local</label>
-            <select id="home-team"><option value="">Selecciona liga</option></select>
+            <select id="home-team" disabled><option value="">Selecciona liga</option></select>
             <label>Equipo Visitante</label>
-            <select id="away-team"><option value="">Selecciona liga</option></select>
+            <select id="away-team" disabled><option value="">Selecciona liga</option></select>
             <button id="calc-btn">Calcular Probabilidades</button>
         </div>
         <div id="results" class="hidden">
@@ -48,19 +47,19 @@
 
     <script>
         const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c'; 
-        const LIGAS = [
-            { id: 2014, name: 'LaLiga', country: 'España' },
-            { id: 2021, name: 'Premier League', country: 'Inglaterra' },
-            { id: 2002, name: 'Bundesliga', country: 'Alemania' },
-            { id: 2019, name: 'Serie A', country: 'Italia' },
-            { id: 2013, name: 'Série A', country: 'Brasil' }
-        ];
 
-        // DATOS INTERNOS DE PODER (Respaldo si falla la API)
+        const LIGAS = {
+            "2014": { name: "LaLiga", country: "España", teams: ["Real Madrid CF", "FC Barcelona", "Levante UD", "Real Oviedo", "Atlético de Madrid", "Girona FC", "Real Sociedad", "Athletic Club", "Real Betis", "Valencia CF", "Sevilla FC", "Villarreal CF"] },
+            "2021": { name: "Premier League", country: "Inglaterra", teams: ["Manchester City FC", "Liverpool FC", "Arsenal FC", "Aston Villa FC", "Tottenham Hotspur FC", "Chelsea FC", "Manchester United FC", "Newcastle United FC"] },
+            "2019": { name: "Serie A", country: "Italia", teams: ["Inter Milano", "AC Milan", "Juventus FC", "Atalanta BC", "AS Roma", "SS Lazio", "SSC Napoli", "ACF Fiorentina"] },
+            "2002": { name: "Bundesliga", country: "Alemania", teams: ["Bayer 04 Leverkusen", "FC Bayern München", "VfB Stuttgart", "RB Leipzig", "Borussia Dortmund"] },
+            "2013": { name: "Série A", country: "Brasil", teams: ["Palmeiras", "Flamengo", "Botafogo", "Atlético Mineiro", "São Paulo", "Fluminense"] }
+        };
+
         const cornerPower = {
             "Real Madrid CF": 6.1, "FC Barcelona": 5.8, "Levante UD": 5.3, "Real Oviedo": 4.9,
-            "Manchester City FC": 7.4, "Liverpool FC": 6.9, "Arsenal FC": 6.3, "Atlético de Madrid": 4.8,
-            "Bayern München": 6.6, "Inter Milano": 5.5, "Girona FC": 5.4
+            "Manchester City FC": 7.4, "Liverpool FC": 6.9, "Arsenal FC": 6.3, "Inter Milano": 5.5,
+            "Bayern München": 6.6, "Atlético de Madrid": 4.8
         };
 
         const lSel = document.getElementById('league-select');
@@ -70,53 +69,54 @@
 
         window.onload = () => {
             lSel.innerHTML = '<option value="">-- Seleccionar Liga --</option>';
-            LIGAS.forEach(l => lSel.add(new Option(`${l.name} - ${l.country}`, l.id)));
+            for (let id in LIGAS) {
+                lSel.add(new Option(`${LIGAS[id].name} - ${LIGAS[id].country}`, id));
+            }
         };
 
         lSel.onchange = async () => {
-            if (!lSel.value) return;
+            const leagueId = lSel.value;
+            if (!leagueId) return;
             hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
+            
             try {
-                const res = await fetch(`https://api.football-data.org/v4/competitions/${lSel.value}/teams`, {
+                const res = await fetch(`https://api.football-data.org/v4/competitions/${leagueId}/teams`, {
                     headers: { 'X-Auth-Token': API_KEY }
                 });
                 if (!res.ok) throw new Error();
                 const data = await res.json();
-                actualizarSelects(data.teams);
+                
+                // Mezclar equipos de API con los manuales (Levante/Oviedo)
+                let teamsList = data.teams.map(t => t.name);
+                if(leagueId === "2014") {
+                    if(!teamsList.includes("Levante UD")) teamsList.push("Levante UD");
+                    if(!teamsList.includes("Real Oviedo")) teamsList.push("Real Oviedo");
+                }
+                llenarSelects(teamsList);
             } catch (e) {
-                console.warn("API falló o bloqueada por CORS. Usando modo offline.");
-                actualizarSelects(Object.keys(cornerPower).map(name => ({name})));
+                // Si falla la API, usa SOLO los equipos de esa liga específica
+                console.log("Modo Offline para liga " + leagueId);
+                llenarSelects(LIGAS[leagueId].teams);
             }
+            hSel.disabled = aSel.disabled = false;
         };
 
-        function actualizarSelects(teams) {
+        function llenarSelects(teams) {
             hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
-            // Inyectar Levante y Oviedo si es España
-            if(lSel.value == "2014") {
-                if(!teams.find(t => t.name.includes("Levante"))) teams.push({name: "Levante UD"});
-                if(!teams.find(t => t.name.includes("Oviedo"))) teams.push({name: "Real Oviedo"});
-            }
-            teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
-                hSel.add(new Option(t.name, t.name));
-                aSel.add(new Option(t.name, t.name));
+            teams.sort().forEach(name => {
+                hSel.add(new Option(name, name));
+                aSel.add(new Option(name, name));
             });
         }
 
-        // LÓGICA DE POISSON PARA PREDICCIONES REALISTAS
-        function factorial(n) {
-            if (n === 0) return 1;
-            let res = 1;
-            for (let i = 2; i <= n; i++) res *= i;
-            return res;
-        }
+        function factorial(n) { return n <= 1 ? 1 : n * factorial(n - 1); }
 
-        function getPoissonProb(lambda, line) {
-            let k = Math.floor(line);
-            let cumulativeProb = 0;
-            for (let i = 0; i <= k; i++) {
-                cumulativeProb += (Math.pow(lambda, i) * Math.exp(-lambda)) / factorial(i);
+        function getPoisson(lambda, k) {
+            let prob = 0;
+            for (let i = 0; i <= Math.floor(k); i++) {
+                prob += (Math.pow(lambda, i) * Math.exp(-lambda)) / factorial(i);
             }
-            return (1 - cumulativeProb) * 100;
+            return (1 - prob) * 100;
         }
 
         btn.onclick = () => {
@@ -129,10 +129,9 @@
             let html = '';
             
             [7.5, 8.5, 9.5, 10.5].forEach(line => {
-                let prob = getPoissonProb(lambda, line);
-                prob = Math.min(98.5, Math.max(5, prob)).toFixed(1);
+                let prob = getPoisson(lambda, line);
+                prob = Math.min(98, Math.max(5, prob)).toFixed(1);
                 const color = prob > 70 ? 'var(--green)' : (prob > 45 ? 'var(--yellow)' : 'var(--red)');
-                
                 html += `
                 <div class="market-card">
                     <div class="line-val">+${line}</div>
@@ -142,20 +141,16 @@
             });
             document.getElementById('markets-container').innerHTML = html;
 
-            // PANEL DE VERDICTO FINAL
             const risk = Math.min(95, Math.max(5, (11 - lambda) * 22));
-            const colorVerdict = lambda > 10.5 ? 'var(--green)' : (lambda > 9 ? 'var(--yellow)' : 'var(--red)');
-
             document.getElementById('verdict-container').innerHTML = `
                 <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800; font-size:1.1rem; letter-spacing:1px;">VERDICTO FINAL</div>
-                    <p style="margin:10px 0; color:var(--muted)">Promedio Esperado: <b style="color:white; font-size:1.4rem;">${lambda.toFixed(2)}</b></p>
+                    <div style="color:var(--red); font-weight:800; font-size:1.1rem;">VERDICTO FINAL</div>
+                    <p>Promedio Esperado: <b style="color:white; font-size:1.4rem;">${lambda.toFixed(2)}</b></p>
                     <div class="risk-bar"><div class="risk-pointer" style="left:${risk}%"></div></div>
-                    <p style="color:${colorVerdict}; font-weight:bold; margin-top:10px; text-transform:uppercase;">
-                        ${lambda > 10.5 ? '¡Fuerte tendencia al Over!' : (lambda > 9 ? 'Valor moderado / Línea 8.5' : 'Riesgo Alto / Under')}
+                    <p style="font-weight:bold; margin-top:10px; color:${lambda > 10 ? 'var(--green)' : 'var(--yellow)'}">
+                        ${lambda > 10.5 ? 'TENDENCIA ALTA' : (lambda > 9 ? 'VALOR MODERADO' : 'RIESGO ALTO')}
                     </p>
                 </div>`;
-            
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         };
     </script>
