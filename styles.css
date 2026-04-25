@@ -1,25 +1,19 @@
-:root {
-    --bg-dark: #0f172a;
-    --card-bg: #1e293b;
-    --text-main: #f1f5f9;
-    --primary-red: #ef4444;
-    --accent-green: #4ade80;
-}
-
 body {
+    background-color: #0f172a !important;
+    color: #f1f5f9 !important;
     font-family: sans-serif;
-    background-color: var(--bg-dark);
-    color: var(--text-main);
     display: flex;
     justify-content: center;
     padding: 20px;
     margin: 0;
 }
 
-.container { width: 100%; max-width: 450px; }
+.container { width: 100%; max-width: 420px; }
+
+h1 span { color: #ef4444; }
 
 .card, .market-card, .verdict-card {
-    background-color: var(--card-bg);
+    background-color: #1e293b !important;
     padding: 20px;
     border-radius: 12px;
     margin-bottom: 15px;
@@ -28,20 +22,32 @@ body {
 
 select, button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     margin: 8px 0;
-    border-radius: 6px;
-    border: none;
+    border-radius: 8px;
+    background: #334155;
+    color: white;
+    border: 1px solid #475569;
 }
 
 button {
-    background-color: var(--primary-red);
-    color: white;
+    background: #ef4444 !important;
     font-weight: bold;
     cursor: pointer;
+    border: none;
 }
 
-.pct-over { color: var(--accent-green); font-weight: bold; }
-
-/* Ocultar inicialmente */
 .hidden { display: none; }
+
+.bar-container {
+    height: 8px;
+    background: #475569;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444, #4ade80);
+    border-radius: 4px;
+}
