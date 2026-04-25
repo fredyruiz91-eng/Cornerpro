@@ -20,16 +20,16 @@
         .pct-row { display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold; }
         .bar-bg { background: #334155; height: 8px; border-radius: 4px; margin: 10px 0; overflow: hidden; }
         .bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-in-out; }
-        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 10px; text-align: center;}
-        .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin-top: 20px; position: relative; }
-        .risk-pointer { width: 12px; height: 12px; background: white; border-radius: 50%; position: absolute; top: -3px; transform: translateX(-50%); box-shadow: 0 0 8px white; }
+        .verdict-card { background: #111827; border-radius: 16px; padding: 20px; border: 1px solid #374151; margin-top: 20px; text-align: center; }
+        .risk-bar { height: 6px; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); border-radius: 3px; margin: 20px 0; position: relative; }
+        .risk-pointer { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: -4px; transform: translateX(-50%); box-shadow: 0 0 10px white; transition: 0.5s ease-out; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>CornerIQ <span>Pro</span></h1>
-        <p class="subtitle">Análisis Estadístico de Córners</p>
+        <p class="subtitle">Análisis Estadístico Avanzado</p>
         <div class="card">
             <label>Liga (Competencia)</label>
             <select id="league-select"></select>
@@ -52,16 +52,14 @@
             { id: 2021, name: 'Premier League', country: 'Inglaterra' },
             { id: 2002, name: 'Bundesliga', country: 'Alemania' },
             { id: 2019, name: 'Serie A', country: 'Italia' },
-            { id: 2015, name: 'Ligue 1', country: 'Francia' },
-            { id: 2013, name: 'Série A', country: 'Brasil' },
-            { id: 2001, name: 'Champions League', country: 'Europa' }
+            { id: 2013, name: 'Série A', country: 'Brasil' }
         ];
 
-        // Ajuste de "Poder de Córners" para evitar inflar los resultados
+        // Valores de poder ajustados para promedios realistas
         const cornerPower = {
-            "Real Madrid CF": 6.2, "FC Barcelona": 5.9, "Levante UD": 5.1, "Real Oviedo": 4.9,
-            "Manchester City FC": 7.1, "Liverpool FC": 6.8, "Arsenal FC": 6.2, "Girona FC": 5.4,
-            "Atlético de Madrid": 4.8, "Bayern München": 6.5, "Inter Milano": 5.7
+            "Real Madrid CF": 6.1, "FC Barcelona": 5.8, "Levante UD": 5.2, "Real Oviedo": 4.8,
+            "Manchester City FC": 7.2, "Liverpool FC": 6.9, "Arsenal FC": 6.3, "Girona FC": 5.4,
+            "Atlético de Madrid": 4.7, "Bayern München": 6.5
         };
 
         const lSel = document.getElementById('league-select');
@@ -84,7 +82,8 @@
                 const data = await res.json();
                 hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar Equipo</option>';
                 
-                let teams = data.teams;
+                let teams = data.teams || [];
+                // Asegurar equipos específicos de Segunda si es España
                 if(lSel.value == "2014") {
                     if(!teams.find(t => t.name.includes("Levante"))) teams.push({name: "Levante UD"});
                     if(!teams.find(t => t.name.includes("Oviedo"))) teams.push({name: "Real Oviedo"});
@@ -95,26 +94,40 @@
                     aSel.add(new Option(t.name, t.name));
                 });
             } catch (e) {
-                hSel.innerHTML = '<option>Error de API</option>';
+                hSel.innerHTML = aSel.innerHTML = '<option value="">Error de Conexión</option>';
             }
         };
 
+        function getPoisson(lambda, k) {
+            let limit = k;
+            let prob = 0;
+            for (let i = 0; i <= limit; i++) {
+                prob += (Math.pow(lambda, i) * Math.exp(-lambda)) / factorial(i);
+            }
+            return (1 - prob) * 100;
+        }
+
+        function factorial(n) {
+            if (n === 0) return 1;
+            let res = 1;
+            for (let i = 2; i <= n; i++) res *= i;
+            return res;
+        }
+
         btn.onclick = () => {
             if (!hSel.value || !aSel.value) return;
-            const hP = cornerPower[hSel.value] || 4.5;
-            const aP = cornerPower[aSel.value] || 4.5;
-            const lambda = hP + aP; // Promedio esperado real
+            const hP = cornerPower[hSel.value] || 4.6;
+            const aP = cornerPower[aSel.value] || 4.4;
+            const lambda = hP + aP;
 
             document.getElementById('results').classList.remove('hidden');
             let html = '';
             
             [7.5, 8.5, 9.5, 10.5].forEach(line => {
-                // Nueva lógica de probabilidad más estricta
-                let factor = line === 7.5 ? 0.95 : (line === 8.5 ? 0.88 : (line === 9.5 ? 0.78 : 0.65));
-                let prob = (lambda / (line + 0.5)) * factor * 100;
-                prob = Math.min(94.5, Math.max(10, prob)).toFixed(1);
+                let prob = getPoisson(lambda, Math.floor(line));
+                prob = Math.min(98.5, Math.max(5, prob)).toFixed(1);
                 
-                const color = prob > 75 ? 'var(--green)' : (prob > 55 ? 'var(--yellow)' : 'var(--red)');
+                const color = prob > 70 ? 'var(--green)' : (prob > 45 ? 'var(--yellow)' : 'var(--red)');
                 html += `
                 <div class="market-card">
                     <div class="line-val">+${line}</div>
@@ -123,17 +136,21 @@
                 </div>`;
             });
             document.getElementById('markets-container').innerHTML = html;
-            
-            // Sección de Veredicto Inferior
-            const riskPos = Math.min(95, Math.max(5, (10.5 - lambda) * 20));
+
+            // Lógica de Riesgo para el Veredicto
+            const riskLevel = Math.min(100, Math.max(0, (11 - lambda) * 25));
+            const colorVerdict = lambda > 10.5 ? 'var(--green)' : (lambda > 9 ? 'var(--yellow)' : 'var(--red)');
+
             document.getElementById('verdict-container').innerHTML = `
                 <div class="verdict-card">
-                    <div style="color:var(--red); font-weight:800; font-size:1.1rem; letter-spacing:1px;">VERDICTO MAESTRO</div>
-                    <p style="margin:10px 0; font-size:0.95rem;">Promedio Esperado: <b>${lambda.toFixed(2)}</b> córners.</p>
-                    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:5px;">INDICADOR DE RIESGO</div>
-                    <div class="risk-bar"><div class="risk-pointer" style="left:${100 - riskPos}%"></div></div>
-                    <p style="margin-top:15px; color:${lambda > 10 ? 'var(--green)' : 'var(--yellow)'}; font-weight:bold;">
-                        ${lambda > 10.5 ? '¡ALTA PROBABILIDAD DE OVER!' : (lambda > 8.5 ? 'CONFIANZA MEDIA - LÍNEA MODERADA' : 'CUIDADO: PARTIDO CERRADO')}
+                    <div style="color:var(--red); font-weight:800; font-size:1.1rem; letter-spacing:1px;">VERDICTO FINAL</div>
+                    <p style="margin:10px 0;">Promedio Estimado: <b style="color:white; font-size:1.3rem;">${lambda.toFixed(2)}</b></p>
+                    <div style="font-size:0.75rem; color:var(--muted); text-transform:uppercase;">Escala de Riesgo</div>
+                    <div class="risk-bar">
+                        <div class="risk-pointer" style="left:${riskLevel}%"></div>
+                    </div>
+                    <p style="color:${colorVerdict}; font-weight:bold; margin-top:10px;">
+                        ${lambda > 10.5 ? 'ALTA PROBABILIDAD DE OVER' : (lambda > 9 ? 'PARTIDO CON VALOR MEDIO' : 'RIESGO ALTO - POCOS CÓRNERS')}
                     </p>
                 </div>`;
             
