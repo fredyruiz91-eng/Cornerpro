@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CornerIQ Pro - Predictor</title>
+    <title>Predictor de Corners Pro</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>CornerIQ <span>Pro</span></h1>
-            <p>Análisis Estadístico de Córners</p>
+            <h1>Predictor de Corners ⚽</h1>
+            <p class="subtitle">Análisis Estadístico Avanzado</p>
         </header>
 
-        <div class="card">
+        <main class="card selector-card">
             <div class="input-group">
-                <label>Selecciona la Liga:</label>
+                <label for="league-select">Selecciona la Liga:</label>
                 <select id="league-select">
                     <option value="">Cargando ligas...</option>
                 </select>
@@ -23,19 +24,31 @@
 
             <div class="teams-grid">
                 <div class="input-group">
-                    <label>Equipo Local:</label>
-                    <select id="home-team" disabled><option>Esperando liga...</option></select>
+                    <label for="home-team">Equipo Local:</label>
+                    <select id="home-team" disabled><option>Elige liga primero</option></select>
                 </div>
                 <div class="input-group">
-                    <label>Equipo Visitante:</label>
-                    <select id="away-team" disabled><option>Esperando liga...</option></select>
+                    <label for="away-team">Equipo Visitante:</label>
+                    <select id="away-team" disabled><option>Elige liga primero</option></select>
                 </div>
             </div>
 
             <button id="calculate-btn">CALCULAR PROBABILIDAD</button>
-        </div>
+        </main>
 
-        <div id="results" class="results-card hidden"></div>
+        <section id="results-container" class="results-area hidden">
+            
+            <div class="summary-bar">
+                <span>Total Esperado: <strong id="total-c-val">--</strong> Córners</span>
+            </div>
+
+            <div class="markets-grid" id="markets-area">
+                </div>
+
+            <div class="verdict-card" id="verdict-area">
+                </div>
+
+        </section>
     </div>
     <script src="script.js"></script>
 </body>
