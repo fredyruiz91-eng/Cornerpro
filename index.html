@@ -669,10 +669,8 @@ function renderOutput(home, away, lambda, leagueAvg) {
             <div class="ctx-chip">✈️ ${away.split(' ').slice(-1)[0]}<b>${getTeamPower(away,'away',leagueAvg).toFixed(1)}</b></div>
         </div>`;
 
-    // ── Líneas dinámicas centradas en lambda ──
-    // Redondeadas a .5 más cercano, 4 líneas progresivas
-    const baseLine = Math.round((lambda - 1.5) * 2) / 2;
-    const lines = [baseLine, baseLine + 1, baseLine + 2, baseLine + 3];
+    // ── Líneas fijas estándar de mercado ──
+    const lines = [7.5, 8.5, 9.5, 10.5];
 
     let marketsHTML = '';
     lines.forEach((line, i) => {
