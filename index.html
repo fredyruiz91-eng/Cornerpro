@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CornerIQ Pro - API Verificada</title>
+    <title>CornerIQ Pro - Fix Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,41 +14,39 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; padding: 20px; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 440px; }
-        .header { text-align: center; padding-bottom: 20px; }
-        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: white; }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; text-align: center; margin-bottom: 20px; color: white; }
         .logo span { color: var(--accent); }
         .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; }
-        label { display: block; margin: 10px 0 5px; color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; }
-        select, button, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card2); color: white; font-family: inherit; margin-bottom: 10px; }
-        .calc-btn { background: var(--accent); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; cursor: pointer; margin-top: 10px; }
+        label { display: block; margin: 10px 0 5px; color: var(--muted); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card2); color: white; font-family: inherit; cursor: pointer; }
+        .calc-btn { background: var(--accent); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; margin-top: 20px; }
         .market-card { background: var(--card2); padding: 15px; border-radius: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        .pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; }
-        .status-info { font-size: 0.65rem; color: var(--muted); text-align: center; margin-top: 5px; }
+        .pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--green); }
+        .status { font-size: 0.6rem; color: var(--muted); text-align: center; margin-top: 8px; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header"><div class="logo">Corner<span>IQ</span> Pro</div></div>
+    <div class="logo">Corner<span>IQ</span> Pro</div>
 
     <div class="card">
-        <label>COMPETICIÓN (ID ACTUALIZADO)</label>
+        <label>Liga</label>
         <select id="league-select"></select>
 
-        <div id="team-selectors">
-            <label>LOCAL</label>
-            <select id="home-team"></select>
-            <label>VISITANTE</label>
-            <select id="away-team"></select>
-        </div>
+        <label>Local</label>
+        <select id="home-team"></select>
 
-        <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
-        <div id="api-log" class="status-info">Estado: Listo</div>
+        <label>Visitante</label>
+        <select id="away-team"></select>
+
+        <button class="calc-btn" id="calc-btn">CALCULAR</button>
+        <div id="status" class="status">Cargando sistema...</div>
     </div>
 
     <div id="results" class="hidden">
-        <div id="output">
-            <h3 style="font-family: 'Bebas Neue'; color: var(--accent); margin-bottom: 10px;">Predicción</h3>
+        <div class="card">
+            <h3 style="font-family: 'Bebas Neue'; color: var(--accent);">Resultados</h3>
             <div id="markets"></div>
         </div>
     </div>
@@ -60,63 +58,59 @@ const BASE_URL = 'https://api.football-data.org/v4/';
 
 // LIGAS CON LOS IDs DE TU IMAGEN
 const LIGAS = {
-    "WC":  { name: "🌍 Copa Mundial", id: "WC", avgC: 9.2, avgG: 1.0 },
-    "CL":  { name: "🇪🇺 Champions League", id: "CL", avgC: 9.8, avgG: 1.25 },
-    "V1":  { name: "🇩🇪 Bundesliga", id: "V1", avgC: 9.8, avgG: 1.35 },
-    "DED": { name: "🇳🇱 Eredivisie", id: "DED", avgC: 9.6, avgG: 1.3 },
-    "EEB": { name: "🇧🇷 Brasileirão Serie A", id: "EEB", avgC: 9.4, avgG: 0.95 },
-    "PD":  { name: "🇪🇸 Primera División", id: "PD", avgC: 9.5, avgG: 1.05 },
-    "FL1": { name: "🇫🇷 Liga 1", id: "FL1", avgC: 9.3, avgG: 1.1 },
-    "ELC": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Campeonato (Championship)", id: "ELC", avgC: 9.7, avgG: 1.1 },
-    "PPL": { name: "🇵🇹 Primera Liga", id: "PPL", avgC: 9.1, avgG: 1.0 },
-    "CE":  { name: "🇪🇺 Eurocopa", id: "CE", avgC: 9.0, avgG: 0.95 },
-    "SA":  { name: "🇮🇹 Serie A", id: "SA", avgC: 9.0, avgG: 1.0 }
+    "PD":  { name: "🇪🇸 La Liga", id: "PD", avgC: 9.5, avgG: 1.05, teams: ["Real Madrid", "FC Barcelona", "Atlético Madrid", "Levante UD", "Real Oviedo", "Sevilla FC", "Valencia CF", "Villarreal CF"] },
+    "PL":  { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", id: "PL", avgC: 10.1, avgG: 1.15, teams: ["Man City", "Arsenal", "Liverpool", "Man United", "Chelsea", "Tottenham"] },
+    "V1":  { name: "🇩🇪 Bundesliga", id: "V1", avgC: 9.8, avgG: 1.35, teams: ["Bayern München", "Dortmund", "Leverkusen", "RB Leipzig"] },
+    "SA":  { name: "🇮🇹 Serie A", id: "SA", avgC: 9.0, avgG: 1.0, teams: ["Inter", "Milan", "Juventus", "Napoli", "Roma"] },
+    "EEB": { name: "🇧🇷 Brasileirão", id: "EEB", avgC: 9.4, avgG: 0.95, teams: ["Flamengo", "Palmeiras", "Botafogo", "Sao Paulo"] },
+    "CL":  { name: "🇪🇺 Champions League", id: "CL", avgC: 9.8, avgG: 1.25, teams: ["Real Madrid", "Man City", "Bayern", "PSG"] }
 };
 
 const lSel = document.getElementById('league-select');
 const hSel = document.getElementById('home-team');
 const aSel = document.getElementById('away-team');
-const log = document.getElementById('api-log');
+const status = document.getElementById('status');
 
+// 1. Iniciar App
 window.onload = () => {
     for (let code in LIGAS) lSel.add(new Option(LIGAS[code].name, code));
     loadTeams();
 };
 
+// 2. Cargar equipos (API con caída a Local)
 async function loadTeams() {
     const code = lSel.value;
-    log.innerText = "Estado: Consultando API...";
-    hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
+    status.innerText = "Conectando con API...";
     
     try {
         const response = await fetch(`${BASE_URL}competitions/${LIGAS[code].id}/teams`, {
             headers: { 'X-Auth-Token': API_KEY }
         });
 
-        if (!response.ok) throw new Error("Error en respuesta");
+        if (!response.ok) throw new Error("Acceso denegado");
 
         const data = await response.json();
-        hSel.innerHTML = aSel.innerHTML = '';
-        data.teams.sort((a,b) => a.name.localeCompare(b.name)).forEach(t => {
-            hSel.add(new Option(t.name, t.id));
-            aSel.add(new Option(t.name, t.id));
-        });
-        log.innerText = "Estado: Datos Live listos";
+        renderTeams(data.teams.map(t => t.name));
+        status.innerText = "Datos actualizados vía API";
 
     } catch (e) {
-        log.innerText = "Estado: Error o Límite API. Usando manual.";
-        // Si falla la API, permitimos que el usuario escriba o usamos genéricos
-        hSel.innerHTML = aSel.innerHTML = '';
-        const backups = ["Equipo A", "Equipo B", "Levante UD", "Real Oviedo"];
-        backups.forEach(t => {
-            hSel.add(new Option(t, t));
-            aSel.add(new Option(t, t));
-        });
+        console.warn("Usando datos de respaldo para " + code);
+        renderTeams(LIGAS[code].teams);
+        status.innerText = "Modo Local (API en espera o bloqueada)";
     }
 }
 
-lSel.addEventListener('change', loadTeams);
+function renderTeams(teamList) {
+    hSel.innerHTML = aSel.innerHTML = '';
+    teamList.sort().forEach(name => {
+        hSel.add(new Option(name, name));
+        aSel.add(new Option(name, name));
+    });
+}
 
+lSel.onchange = loadTeams;
+
+// 3. Cálculo
 document.getElementById('calc-btn').onclick = () => {
     const liga = LIGAS[lSel.value];
     const p85 = poisson(liga.avgC, 8);
