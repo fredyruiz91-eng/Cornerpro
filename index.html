@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CornerIQ Pro - Fix Final</title>
+    <title>CornerIQ Pro - Full Data</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,9 +19,10 @@
         .card { background: var(--card); border-radius: 16px; padding: 20px; border: 1px solid var(--border); margin-bottom: 15px; }
         label { display: block; margin: 10px 0 5px; color: var(--muted); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
         select, button { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--card2); color: white; font-family: inherit; cursor: pointer; }
-        .calc-btn { background: var(--accent); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; margin-top: 20px; }
-        .market-card { background: var(--card2); padding: 15px; border-radius: 10px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        .pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--green); }
+        .calc-btn { background: var(--accent); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; margin-top: 20px; color: white; }
+        .market-header { font-family: 'Bebas Neue', sans-serif; color: var(--accent); margin: 15px 0 5px; font-size: 1.1rem; border-left: 3px solid var(--accent); padding-left: 10px; }
+        .market-card { background: var(--card2); padding: 12px 15px; border-radius: 10px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; }
         .status { font-size: 0.6rem; color: var(--muted); text-align: center; margin-top: 8px; }
         .hidden { display: none; }
     </style>
@@ -40,14 +41,17 @@
         <label>Visitante</label>
         <select id="away-team"></select>
 
-        <button class="calc-btn" id="calc-btn">CALCULAR</button>
-        <div id="status" class="status">Cargando sistema...</div>
+        <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
+        <div id="status" class="status">Sistema Híbrido Activo</div>
     </div>
 
     <div id="results" class="hidden">
         <div class="card">
-            <h3 style="font-family: 'Bebas Neue'; color: var(--accent);">Resultados</h3>
-            <div id="markets"></div>
+            <div class="market-header">CÓRNERS TOTALES</div>
+            <div id="corners-markets"></div>
+            
+            <div class="market-header">GOLES 1ER TIEMPO</div>
+            <div id="goals-markets"></div>
         </div>
     </div>
 </div>
@@ -56,14 +60,31 @@
 const API_KEY = 'eaaa85924d5646b7afc2aa622e887f5c';
 const BASE_URL = 'https://api.football-data.org/v4/';
 
-// LIGAS CON LOS IDs DE TU IMAGEN
 const LIGAS = {
-    "PD":  { name: "🇪🇸 La Liga", id: "PD", avgC: 9.5, avgG: 1.05, teams: ["Real Madrid", "FC Barcelona", "Atlético Madrid", "Levante UD", "Real Oviedo", "Sevilla FC", "Valencia CF", "Villarreal CF"] },
-    "PL":  { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", id: "PL", avgC: 10.1, avgG: 1.15, teams: ["Man City", "Arsenal", "Liverpool", "Man United", "Chelsea", "Tottenham"] },
-    "V1":  { name: "🇩🇪 Bundesliga", id: "V1", avgC: 9.8, avgG: 1.35, teams: ["Bayern München", "Dortmund", "Leverkusen", "RB Leipzig"] },
-    "SA":  { name: "🇮🇹 Serie A", id: "SA", avgC: 9.0, avgG: 1.0, teams: ["Inter", "Milan", "Juventus", "Napoli", "Roma"] },
-    "EEB": { name: "🇧🇷 Brasileirão", id: "EEB", avgC: 9.4, avgG: 0.95, teams: ["Flamengo", "Palmeiras", "Botafogo", "Sao Paulo"] },
-    "CL":  { name: "🇪🇺 Champions League", id: "CL", avgC: 9.8, avgG: 1.25, teams: ["Real Madrid", "Man City", "Bayern", "PSG"] }
+    "PD": { 
+        name: "🇪🇸 La Liga", id: "PD", avgC: 9.5, avgG: 1.05, 
+        teams: ["Alavés", "Athletic Club", "Atlético Madrid", "FC Barcelona", "Celta Vigo", "Espanyol", "Getafe", "Girona", "Las Palmas", "Leganés", "Levante UD", "Mallorca", "Osasuna", "Rayo Vallecano", "Real Betis", "Real Madrid", "Real Oviedo", "Real Sociedad", "Sevilla FC", "Valencia CF", "Valladolid", "Villarreal"] 
+    },
+    "PL": { 
+        name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", id: "PL", avgC: 10.1, avgG: 1.15, 
+        teams: ["Arsenal", "Aston Villa", "Bournemouth", "Brentford", "Brighton", "Chelsea", "Crystal Palace", "Everton", "Fulham", "Ipswich Town", "Leicester City", "Liverpool", "Man City", "Man United", "Newcastle", "Nott'm Forest", "Southampton", "Tottenham", "West Ham", "Wolves"] 
+    },
+    "V1": { 
+        name: "🇩🇪 Bundesliga", id: "V1", avgC: 9.8, avgG: 1.35, 
+        teams: ["Bayer Leverkusen", "Bayern München", "Borussia Dortmund", "Eintracht Frankfurt", "Heidenheim", "Hoffenheim", "Holstein Kiel", "Mainz 05", "Mönchengladbach", "RB Leipzig", "SC Freiburg", "St. Pauli", "Stuttgart", "Union Berlin", "VfL Bochum", "VfL Wolfsburg", "Werder Bremen"] 
+    },
+    "SA": { 
+        name: "🇮🇹 Serie A", id: "SA", avgC: 9.0, avgG: 1.0, 
+        teams: ["Atalanta", "Bologna", "Cagliari", "Como", "Empoli", "Fiorentina", "Genoa", "Inter Milan", "Juventus", "Lazio", "Lecce", "Milan", "Monza", "Napoli", "Parma", "Roma", "Torino", "Udinese", "Venezia", "Verona"] 
+    },
+    "EEB": { 
+        name: "🇧🇷 Brasileirão", id: "EEB", avgC: 9.4, avgG: 0.95, 
+        teams: ["Athletico-PR", "Atlético-MG", "Bahia", "Botafogo", "Corinthians", "Criciúma", "Cruzeiro", "Cuiabá", "Flamengo", "Fluminense", "Fortaleza", "Grêmio", "Internacional", "Juventude", "Palmeiras", "RB Bragantino", "São Paulo", "Vasco da Gama", "Vitória"] 
+    },
+    "CL": { 
+        name: "🇪🇺 Champions League", id: "CL", avgC: 9.8, avgG: 1.25, 
+        teams: ["Real Madrid", "Man City", "Bayern München", "PSG", "Liverpool", "Inter Milan", "Arsenal", "Barcelona", "Bayer Leverkusen", "Dortmund", "Atletico Madrid", "Juventus", "AC Milan", "Benfica"] 
+    }
 };
 
 const lSel = document.getElementById('league-select');
@@ -71,32 +92,26 @@ const hSel = document.getElementById('home-team');
 const aSel = document.getElementById('away-team');
 const status = document.getElementById('status');
 
-// 1. Iniciar App
 window.onload = () => {
     for (let code in LIGAS) lSel.add(new Option(LIGAS[code].name, code));
     loadTeams();
 };
 
-// 2. Cargar equipos (API con caída a Local)
 async function loadTeams() {
     const code = lSel.value;
-    status.innerText = "Conectando con API...";
+    status.innerText = "Sincronizando con API...";
     
     try {
         const response = await fetch(`${BASE_URL}competitions/${LIGAS[code].id}/teams`, {
             headers: { 'X-Auth-Token': API_KEY }
         });
-
-        if (!response.ok) throw new Error("Acceso denegado");
-
+        if (!response.ok) throw new Error();
         const data = await response.json();
         renderTeams(data.teams.map(t => t.name));
-        status.innerText = "Datos actualizados vía API";
-
+        status.innerText = "Datos Actualizados (API)";
     } catch (e) {
-        console.warn("Usando datos de respaldo para " + code);
         renderTeams(LIGAS[code].teams);
-        status.innerText = "Modo Local (API en espera o bloqueada)";
+        status.innerText = "Datos de Respaldo (Local)";
     }
 }
 
@@ -110,16 +125,22 @@ function renderTeams(teamList) {
 
 lSel.onchange = loadTeams;
 
-// 3. Cálculo
 document.getElementById('calc-btn').onclick = () => {
     const liga = LIGAS[lSel.value];
-    const p85 = poisson(liga.avgC, 8);
-    const pHT = poisson(liga.avgG, 0);
-
     document.getElementById('results').classList.remove('hidden');
-    document.getElementById('markets').innerHTML = `
-        <div class="market-card"><span>+8.5 CÓRNERS</span><span class="pct">${p85.toFixed(0)}%</span></div>
-        <div class="market-card"><span>+0.5 GOLES HT</span><span class="pct">${pHT.toFixed(0)}%</span></div>
+
+    // Córners
+    let cHtml = '';
+    [7.5, 8.5, 9.5].forEach(line => {
+        const p = poisson(liga.avgC, Math.floor(line));
+        cHtml += `<div class="market-card"><span>+${line} Córners</span><span class="pct" style="color:${p > 60 ? 'var(--green)' : 'var(--yellow)'}">${p.toFixed(0)}%</span></div>`;
+    });
+    document.getElementById('corners-markets').innerHTML = cHtml;
+
+    // Goles HT
+    const pG = poisson(liga.avgG, 0);
+    document.getElementById('goals-markets').innerHTML = `
+        <div class="market-card"><span>+0.5 Goles HT</span><span class="pct" style="color:${pG > 60 ? 'var(--green)' : 'var(--yellow)'}">${pG.toFixed(0)}%</span></div>
     `;
 };
 
