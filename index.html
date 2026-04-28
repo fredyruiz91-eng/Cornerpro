@@ -3,67 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Predicciones</title>
+    <title>CornerIQ Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .match-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
-        .match-header { font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #eee; pb: 5px; }
+        :root {
+            --bg:#08090d; --card:#10131a; --card2:#161b26; --border:#1e2535;
+            --text:#e8eaf0; --muted:#5a6480; --accent:#e63946;
+            --yellow:#f4b942; --green:#3dd68c; --blue:#2563eb; --purple:#8b5cf6;
+        }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
+            min-height:100vh;display:flex;justify-content:center;padding:20px 15px 60px;
+            background-image:
+                radial-gradient(ellipse 60% 40% at 50% -10%,rgba(230,57,70,0.10) 0%,transparent 70%),
+                repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px),
+                repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px);
+        }
+        .container{width:100%;max-width:440px;}
+
+        /* HEADER */
+        .header{text-align:center;padding:24px 0 18px;}
+        .logo{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:3px;color:white;line-height:1;}
+        .logo span{color:var(--accent);}
+        .badge{display:inline-block;margin-top:6px;padding:3px 12px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.3);border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;}
+
+        /* CARD */
+        .card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
+
+        /* API STATUS */
+        .api-status{display:flex;align-items:center;gap:8px;font-size:0.66rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;padding:7px 12px;border-radius:8px;background:var(--card2);border:1px solid var(--border);}
+        .api-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
+        .api-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);}
+
+        label{display:block;margin:12px 0 5px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+        select{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6480' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;}
         
-        /* Grid para las opciones de apuesta */
-        .market-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 10px; 
-            margin-top: 10px; 
-        }
+        .calc-btn{width:100%;padding:13px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;margin-top:16px;cursor:pointer;box-shadow:0 4px 20px rgba(230,57,70,0.3);}
 
-        .market-item { 
-            background: #f9f9f9; 
-            padding: 8px; 
-            border-radius: 4px; 
-            text-align: center; 
-            font-size: 0.9em;
-            border: 1px solid #eee;
-        }
+        /* MATCH HEADER (Estilo Imagen) */
+        .match-header{background:var(--card);border-radius:16px;padding:20px 16px;border:1px solid var(--border);margin-bottom:12px;position:relative;}
+        .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;}
+        .team-side{display:flex;flex-direction:column;align-items:center;gap:8px;}
+        .team-logo{width:60px;height:60px;border-radius:50%;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+        .team-logo img{width:80%;height:80%;object-fit:contain;}
+        .team-name{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:1px;color:white;text-align:center;}
+        .vs-center{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--muted);}
 
-        .label { font-weight: bold; display: block; color: #555; margin-bottom: 3px; }
-        .value { color: #27ae60; font-weight: bold; }
+        /* GRID 2x2 */
+        .market-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+        .grid-card{background:var(--card);border-radius:12px;padding:14px 10px;border:1px solid var(--border);text-align:center;}
+        .gc-label{font-size:0.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
+        .gc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;}
+
+        /* MARKET LIST CARDS */
+        .market-card{background:var(--card);border-radius:10px;padding:12px 15px;margin-bottom:7px;border:1px solid var(--border);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;}
+        .line-label{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:white;}
+        .bar-wrap{flex:1;}
+        .bar-bg{background:rgba(255,255,255,0.05);height:6px;border-radius:4px;overflow:hidden;}
+        .bar-fill{height:100%;width:0%;transition:width 0.8s ease-out;}
+        .pct-label{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;text-align:right;min-width:45px;}
+
+        .hidden{display:none;}
+        .animate-in{animation:fadeUp 0.4s ease-out forwards;}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Predicciones del Partido</h2>
+    <div class="header">
+        <div class="logo">Corner<span>IQ</span> Pro</div>
+        <div class="badge">⚡ Motor Poisson v3</div>
+    </div>
 
-    <div class="match-card">
-        <div class="match-header">
-            Local vs Visitante
+    <div class="card">
+        <div class="api-status">
+            <div class="api-dot live"></div>
+            <span>Conectado con BSD API</span>
         </div>
-
-        <div class="market-grid">
-            <div class="market-item">
-                <span class="label">Ambos Marcan</span>
-                <span class="value">Sí / No</span>
+        <label>Liga / Competencia</label>
+        <select id="league-select"><option value="">Selecciona Liga</option></select>
+        <div class="team-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+            <div>
+                <label>🏠 Local</label>
+                <select id="home-team" disabled><option value="">---</option></select>
             </div>
-
-            <div class="market-item">
-                <span class="label">Córners</span>
-                <span class="value">+8.5 / +9.5</span>
+            <div>
+                <label>✈️ Visitante</label>
+                <select id="away-team" disabled><option value="">---</option></select>
             </div>
+        </div>
+        <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
+    </div>
 
-            <div class="market-item">
-                <span class="label">1er Tiempo</span>
-                <span class="value">+0.5 Goles</span>
-            </div>
+    <div id="results" class="hidden">
+        <div id="output">
+            <div id="match-header-container"></div>
+            
+            <div id="grid-markets-container" class="market-grid"></div>
 
-            <div class="market-item">
-                <span class="label">1er Tiempo</span>
-                <span class="value">+1.5 Goles</span>
+            <div id="detailed-markets">
+                <div style="font-family:'Bebas Neue'; color:var(--muted); margin:15px 0 8px; letter-spacing:1px;">CÓRNERS (LÍNEAS)</div>
+                <div id="corners-list"></div>
+                
+                <div style="font-family:'Bebas Neue'; color:var(--muted); margin:15px 0 8px; letter-spacing:1px;">GOLES 1ER TIEMPO</div>
+                <div id="goals-ht-list"></div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
+const BSD_BASE = 'https://sports.bzzoiro.com/api';
+
+let teamMap = {};
+
+// Poisson Simple
+function poissonOver(lambda, threshold) {
+    let p = Math.exp(-lambda), term = p;
+    for (let i = 1; i <= Math.floor(threshold); i++) {
+        term *= lambda / i;
+        p += term;
+    }
+    return Math.min(98, Math.max(2, (1 - p) * 100));
+}
+
+// Probabilidad Ambos Marcan (BTTS)
+function calcBTTS(lambdaH, lambdaA) {
+    const pH = 1 - Math.exp(-lambdaH);
+    const pA = 1 - Math.exp(-lambdaA);
+    return (pH * pA * 100).toFixed(0);
+}
+
+async function bsdFetch(path) {
+    const res = await fetch(`${BSD_BASE}${path}`, {headers:{'Authorization':`Token ${BSD_TOKEN}`}});
+    return res.json();
+}
+
+window.onload = async () => {
+    const data = await bsdFetch('/leagues/');
+    const select = document.getElementById('league-select');
+    data.results.forEach(l => {
+        const opt = new Option(l.name, l.id);
+        opt.dataset.season = l.current_season?.id;
+        select.add(opt);
+    });
+};
+
+document.getElementById('league-select').onchange = async (e) => {
+    const leagueId = e.target.value;
+    const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
+    hSel.innerHTML = aSel.innerHTML = '<option>Cargando...</option>';
+    
+    const data = await bsdFetch(`/teams/?league=${leagueId}&page_size=50`);
+    hSel.innerHTML = aSel.innerHTML = '<option value="">Seleccionar</option>';
+    data.results.forEach(t => {
+        teamMap[t.name] = { id: t.id, logo: t.logo || t.crest };
+        hSel.add(new Option(t.name, t.name));
+        aSel.add(new Option(t.name, t.name));
+    });
+    hSel.disabled = aSel.disabled = false;
+};
+
+document.getElementById('calc-btn').onclick = async () => {
+    const home = document.getElementById('home-team').value;
+    const away = document.getElementById('away-team').value;
+    if(!home || !away) return;
+
+    // Simulamos Lambdas basados en promedios (en una app real aquí harías el fetch de stats)
+    const lCorn = 9.8, lGoal1T = 1.2, lGoalF = 2.8;
+
+    document.getElementById('results').classList.remove('hidden');
+
+    // 1. Render Header
+    document.getElementById('match-header-container').innerHTML = `
+        <div class="match-header animate-in">
+            <div class="teams-row">
+                <div class="team-side">
+                    <div class="team-logo"><img src="${teamMap[home]?.logo || ''}" onerror="this.parentElement.innerHTML='${home[0]}'"></div>
+                    <div class="team-name">${home}</div>
+                </div>
+                <div class="vs-center">VS</div>
+                <div class="team-side">
+                    <div class="team-logo"><img src="${teamMap[away]?.logo || ''}" onerror="this.parentElement.innerHTML='${away[0]}'"></div>
+                    <div class="team-name">${away}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // 2. Render Grid 2x2
+    const btts = calcBTTS(1.4, 1.3);
+    const o15 = poissonOver(lGoalF, 1.5).toFixed(0);
+    const o25 = poissonOver(lGoalF, 2.5).toFixed(0);
+    const c75 = poissonOver(lCorn, 7.5).toFixed(0);
+
+    document.getElementById('grid-markets-container').innerHTML = `
+        <div class="grid-card"><div class="gc-label">Ambos Marcan</div><div class="gc-pct" style="color:var(--green)">${btts}%</div></div>
+        <div class="grid-card"><div class="gc-label">Over 1.5</div><div class="gc-pct" style="color:var(--green)">${o15}%</div></div>
+        <div class="grid-card"><div class="gc-label">Over 2.5</div><div class="gc-pct" style="color:var(--yellow)">${o25}%</div></div>
+        <div class="grid-card"><div class="gc-label">Córners +7.5</div><div class="gc-pct" style="color:var(--green)">${c75}%</div></div>
+    `;
+
+    // 3. Córners
+    let cHtml = '';
+    [8.5, 9.5, 10.5].forEach(line => {
+        const p = poissonOver(lCorn, line);
+        cHtml += marketRow(`+${line}`, p);
+    });
+    document.getElementById('corners-list').innerHTML = cHtml;
+
+    // 4. Goles 1T
+    let gHtml = '';
+    [0.5, 1.5].forEach(line => {
+        const p = poissonOver(lGoal1T, line);
+        gHtml += marketRow(`+${line}`, p);
+    });
+    document.getElementById('goals-ht-list').innerHTML = gHtml;
+
+    setTimeout(() => {
+        document.querySelectorAll('.bar-fill').forEach(b => b.style.width = b.dataset.w + '%');
+    }, 100);
+};
+
+function marketRow(label, prob) {
+    const color = prob > 65 ? 'var(--green)' : prob > 45 ? 'var(--yellow)' : 'var(--accent)';
+    return `
+        <div class="market-card animate-in">
+            <div class="line-label">${label}</div>
+            <div class="bar-wrap">
+                <div class="bar-bg"><div class="bar-fill" data-w="${prob}" style="background:${color}"></div></div>
+            </div>
+            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%</div>
+        </div>
+    `;
+}
+</script>
 
 </body>
 </html>
