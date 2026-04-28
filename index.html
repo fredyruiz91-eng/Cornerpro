@@ -663,7 +663,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             <span class="section-title">GOLES 1er TIEMPO</span>
             <span class="section-lambda">λ <span>${lambdaGoal}</span></span>
         </div>`;
-    [0.5,1.5,2.5,3.5].forEach((line,i)=>{
+    [0.5,1.5].forEach((line,i)=>{
         const prob=poissonOver(lambdaGoal,line),color=colorFor(prob),cls=cardClassFor(prob);
         goalHtml+=`
         <div class="market-card ${cls} animate-in" style="animation-delay:${(i+4)*0.06}s;opacity:0;">
@@ -707,10 +707,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         {label:'GOLES OVER 1.5', prob:over15, desc:`Alta probabilidad de partido con goles`, type:'goles'},
         {label:'GOLES OVER 2.5', prob:over25, desc:`Partido con 3+ goles`, type:'goles'},
         {label:'CÓRNERS OVER 7.5', prob:corn75, desc:`Partido intenso con muchos saques`, type:'corners'},
-        {label:'CÓRNERS OVER 8.5', prob:parseFloat(poissonOver(lambdaCorn,8.5).toFixed(0)), desc:`Corners abundantes`, type:'corners'},
-        {label:'CÓRNERS OVER 9.5', prob:parseFloat(poissonOver(lambdaCorn,9.5).toFixed(0)), desc:`Partido de alta presión`, type:'corners'},
         {label:'GOL 1T OVER 0.5', prob:parseFloat(poissonOver(lambdaGoal,0.5).toFixed(0)), desc:`Al menos un gol antes del descanso`, type:'ht'},
-        {label:'GOL 1T OVER 1.5', prob:parseFloat(poissonOver(lambdaGoal,1.5).toFixed(0)), desc:`2+ goles en el primer tiempo`, type:'ht'},
     ];
 
     const rec=buildRecommendation(allMarkets);
