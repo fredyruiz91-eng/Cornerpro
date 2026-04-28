@@ -68,7 +68,6 @@
         .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;}
         .team-side{display:flex;flex-direction:column;align-items:center;gap:8px;}
         .team-logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--card2),var(--border));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--text);letter-spacing:1px;overflow:hidden;position:relative;}
-        .team-logo img{width:100%;height:100%;object-fit:contain;border-radius:50%;}
         .team-logo .initials{font-size:1.1rem;}
         .team-name{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
         .form-dots{display:flex;gap:4px;justify-content:center;}
@@ -223,7 +222,7 @@ const LIGAS_OFFLINE = {
     "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:["Leeds United","Burnley FC","Sheffield United","Luton Town","West Bromwich Albion","Norwich City","Hull City","Middlesbrough FC","Coventry City","Preston North End","Sunderland AFC","Swansea City","Watford FC","Bristol City","QPR","Stoke City","Sheffield Wednesday","Blackburn Rovers","Plymouth Argyle","Portsmouth FC","Derby County","Oxford United","Millwall FC","Cardiff City"]}
 };
 
-// ── CORNER POWER (todos los equipos de las 9 ligas) ──
+// ── CORNER POWER ──
 const CORNER_POWER = {
     "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
     "Real Madrid CF":{home:6.6,away:5.7},"FC Barcelona":{home:6.4,away:5.5},"Atlético de Madrid":{home:5.8,away:4.9},"Girona FC":{home:5.6,away:4.7},"Real Sociedad":{home:5.4,away:4.5},"Athletic Club":{home:5.5,away:4.6},"Real Betis":{home:5.3,away:4.4},"Valencia CF":{home:5.1,away:4.2},"Sevilla FC":{home:5.2,away:4.3},"Villarreal CF":{home:5.0,away:4.2},"CA Osasuna":{home:4.9,away:4.0},"Getafe CF":{home:4.5,away:3.7},"RC Celta de Vigo":{home:5.0,away:4.1},"RCD Mallorca":{home:4.7,away:3.9},"Rayo Vallecano":{home:4.6,away:3.8},"UD Las Palmas":{home:4.8,away:4.0},"Deportivo Alavés":{home:4.7,away:3.9},"CD Leganés":{home:4.5,away:3.7},"Real Valladolid CF":{home:4.4,away:3.6},"RCD Espanyol de Barcelona":{home:4.8,away:4.0},"Levante UD":{home:5.4,away:4.5},"Real Oviedo":{home:5.1,away:4.2},
@@ -249,9 +248,7 @@ const GOAL_POWER_1T = {
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"Luton Town":{home:0.59,away:0.48},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Preston North End":{home:0.57,away:0.46},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46}
 };
 
-// ── FULL MATCH GOAL POWER (goles completos partido) ──
-// Aproximación: goals_full ≈ goals_1T * 2.1 (local) y * 2.0 (visitante)
-// Añadimos los equipos top con datos reales para mayor precisión
+// ── FULL MATCH GOAL POWER ──
 const GOAL_POWER_FULL = {
     "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},"Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},"Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},"Brighton & Hove Albion FC":{home:1.50,away:1.20},"West Ham United FC":{home:1.28,away:1.00},
     "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},"Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},
@@ -336,7 +333,6 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
             matches:finished.length,
             form,
             fromApi:true,
-            logoUrl:teamMap[teamName]?.logoUrl||null,
         };
         statsCache[key]=result;
         return result;
@@ -367,7 +363,7 @@ function poissonExact(lambda,k){
     return term;
 }
 
-// ── PROBABILIDADES DE RESULTADO (Bivariate Poisson) ──
+// ── PROBABILIDADES DE RESULTADO ──
 function calcResultProbs(lambdaH, lambdaA) {
     let pHome=0,pDraw=0,pAway=0;
     const maxG=10;
@@ -405,8 +401,6 @@ function initials(name){
 
 // ── RECOMENDACIÓN INTELIGENTE ──
 function buildRecommendation(markets) {
-    // markets = [{label, prob, type}]
-    // Filtramos solo los que tienen probabilidad alta
     const candidates = markets
         .filter(m => m.prob >= 55)
         .sort((a,b) => b.prob - a.prob);
@@ -488,7 +482,7 @@ lSel.onchange=async()=>{
         try{
             setApiStatus('live','🟢 Cargando equipos...');
             const data=await bsdFetch(`/teams/?league=${liga.bsdId}&page_size=50`);
-            const teams=(data.results||[]).map(t=>{teamMap[t.name]={bsdId:t.id,logoUrl:t.logo||t.crest||null};return t.name;});
+            const teams=(data.results||[]).map(t=>{teamMap[t.name]={bsdId:t.id};return t.name;});
             fillSelects(teams);
             setApiStatus('live',`🟢 BSD — ${liga.name}`);
             return;
@@ -531,7 +525,6 @@ document.getElementById('calc-btn').onclick=async()=>{
         awayStats=await getTeamStats(awayId,away,'away',seasonId);
     }
 
-    // Valores finales
     const homeCorn   = homeStats?.corners  ?? fallbackCorners(home,'home',leagueAvg);
     const awayCorn   = awayStats?.corners  ?? fallbackCorners(away,'away',leagueAvg);
     const homeGoal1T = homeStats?.goals1t  ?? fallbackGoals1T(home,'home',leagueAvg);
@@ -556,42 +549,33 @@ document.getElementById('calc-btn').onclick=async()=>{
 // ── RENDER COMPLETO ──
 function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg}){
 
-    // 1. DATA BADGE
     document.getElementById('data-source-container').innerHTML=
         `<div class="data-badge ${usedApi?'live-data':'offline-data'} animate-in">${usedApi?`🛰 BSD Live — ${matchInfo}`:`📦 Datos históricos — ${matchInfo}`}</div>`;
 
-    // 2. MATCH HEADER con logos, nombres y forma
     const homeForm=homeStats?.form||[];
     const awayForm=awayStats?.form||[];
-    const homeLogo=homeStats?.logoUrl||teamMap[home]?.logoUrl||null;
-    const awayLogo=awayStats?.logoUrl||teamMap[away]?.logoUrl||null;
 
     const formDots=(form)=>['w','w','w','w','w'].map((_,i)=>{
         const r=form[i]||'u';
         return `<div class="dot ${r}"></div>`;
     }).join('');
 
-    const logoHtml=(url,name)=>url
-        ?`<img src="${url}" alt="${name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="initials" style="display:none">${initials(name)}</span>`
-        :`<span class="initials">${initials(name)}</span>`;
-
     document.getElementById('match-header-container').innerHTML=`
         <div class="match-header animate-in">
             <div class="teams-row">
                 <div class="team-side">
-                    <div class="team-logo">${logoHtml(homeLogo,home)}</div>
+                    <div class="team-logo"><span class="initials">${initials(home)}</span></div>
                     <div class="team-name">${home.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
                     <div class="form-dots">${formDots(homeForm)}</div>
                 </div>
                 <div class="vs-center">VS</div>
                 <div class="team-side">
-                    <div class="team-logo">${logoHtml(awayLogo,away)}</div>
+                    <div class="team-logo"><span class="initials">${initials(away)}</span></div>
                     <div class="team-name">${away.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
                     <div class="form-dots">${formDots(awayForm)}</div>
                 </div>
             </div>`;
 
-    // 3. PROBABILIDADES DE RESULTADO
     const rp=calcResultProbs(lambdaH,lambdaA);
     const maxRP=Math.max(rp.home,rp.draw,rp.away);
     const rpColor=(v)=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
@@ -616,7 +600,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    // 4. GRID 2x2: AMBOS MARCAN + OVER 1.5 + OVER 2.5 + CÓRNERS +7.5
     const btts    = parseFloat(calcBTTS(lambdaH,lambdaA).toFixed(0));
     const over15  = parseFloat(poissonOver(lambdaH+lambdaA,1.5).toFixed(0));
     const over25  = parseFloat(poissonOver(lambdaH+lambdaA,2.5).toFixed(0));
@@ -636,7 +619,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             ${gridCard('CÓRNERS +7.5',corn75)}
         </div>`;
 
-    // 5. MERCADOS DETALLADOS: CÓRNERS + GOLES 1T
     let cornHtml=`
         <div class="section-header animate-in">
             <span class="section-icon">⬡</span>
@@ -677,7 +659,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
     });
     document.getElementById('all-markets-container').innerHTML=cornHtml+goalHtml;
 
-    // 6. VEREDICTOS x2
     const gc=gaugePos(lambdaCorn,4,14),gg=gaugePos(lambdaGoal,0.5,2.5);
     const vc=verdictFor(lambdaCorn,'corners'),vg=verdictFor(lambdaGoal,'goals');
     document.getElementById('verdict-container').innerHTML=`
@@ -698,8 +679,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    // 7. RECOMENDACIÓN DE VALOR
-    const lambdaFull = lambdaH+lambdaA;
     const allMarkets = [
         {label:`VICTORIA LOCAL (${rp.home}%)`, prob:rp.home, desc:`${home.split(' ').slice(-1)[0]} favorito en casa`, type:'resultado'},
         {label:`VICTORIA VISITANTE (${rp.away}%)`, prob:rp.away, desc:`${away.split(' ').slice(-1)[0]} favorito como visitante`, type:'resultado'},
@@ -726,7 +705,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         const pc=document.getElementById('ptr-corn'),pg=document.getElementById('ptr-goal');
         if(pc) pc.style.left=gc+'%';
         if(pg) pg.style.left=gg+'%';
-        // Animar barras de resultado
         document.querySelectorAll('.result-bar-fill[data-target]').forEach(b=>{b.style.width=b.dataset.target+'%';});
     },100));
 }
