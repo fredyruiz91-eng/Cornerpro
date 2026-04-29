@@ -278,8 +278,6 @@ const GOAL_POWER_1T = {
 };
 
 // ── FULL MATCH GOAL POWER (goles completos partido) ──
-// Aproximación: goals_full ≈ goals_1T * 2.1 (local) y * 2.0 (visitante)
-// Añadimos los equipos top con datos reales para mayor precisión
 const GOAL_POWER_FULL = {
     "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},"Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},"Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},"Brighton & Hove Albion FC":{home:1.50,away:1.20},"West Ham United FC":{home:1.28,away:1.00},
     "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},"Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},
@@ -326,7 +324,7 @@ function extractMatchStats(match, role) {
     return {corners,goals1t,goalsFull};
 }
 
-// ── OBTENER STATS + FORMA RECIENTE ──
+// ── OBTENER STATS CON PESOS TEMPORALES (UNIFICADO Y CORREGIDO) ──
 async function getTeamStats(teamId, teamName, role, seasonId) {
     const key=`${teamId}_${seasonId}_${role}`;
     if(statsCache[key]) return statsCache[key];
@@ -340,58 +338,11 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
                 ?(m.home_team_obj?.id===teamId||m.home_team===teamName)
                 :(m.away_team_obj?.id===teamId||m.away_team===teamName);
         }).slice(-MATCHES_TO_USE);
-        if(finished.length<3) return null;
-        let tC=0,nC=0,tG=0,nG=0,tGF=0,nGF=0;
-        const form=[];
-        finished.slice(-5).forEach(m=>{
-            const hs=Number(m.home_score||0),as=Number(m.away_score||0);
-            if(role==='home'){
-                if(hs>as) form.push('w'); else if(hs===as) form.push('d'); else form.push('l');
-            } else {
-                if(as>hs) form.push('w'); else if(as===hs) form.push('d'); else form.push('l');
-            }
-        });
-        finished.forEach(m=>{
-            const {corners,goals1t,goalsFull}=extractMatchStats(m,role);
-            if(corners!=null){tC+=Number(corners);nC++;}
-            if(goals1t!=null){tG+=Number(goals1t);nG++;}
-            if(goalsFull!=null){tGF+=Number(goalsFull);nGF++;}
-        });
-        const result={
-            corners:nC>0?tC/nC:null,
-            goals1t:nG>0?tG/nG:null,
-            goalsFull:nGF>0?tGF/nGF:null,
-            matches:finished.length,
-            form,
-            fromApi:true,
-            logoUrl:teamMap[teamName]?.logoUrl||null,
-        };
-        statsCache[key]=result;
-        return result;
-    } catch {return null;}
-}
-
-// ── OBTENER STATS CON PESOS TEMPORALES ──
-async function getTeamStats(teamId, teamName, role, seasonId) {
-    const key=`${teamId}_${seasonId}_${role}`;
-    if(statsCache[key]) return statsCache[key];
-    try {
-        const events=await bsdFetchAll(`/events/?team=${teamId}&season=${seasonId}&limit=200`);
-        const finished=events.filter(m=>{
-            const st=(m.status||'').toUpperCase();
-            const ok=['FT','FINISHED','AET','PEN','FULL_TIME'].includes(st)||st.includes('FT');
-            if(!ok) return false;
-            return role==='home'
-                ?(m.home_team_obj?.id===teamId||m.home_team===teamName)
-                :(m.away_team_obj?.id===teamId||m.away_team===teamName);
-        }).slice(-MATCHES_TO_USE);
+        
         if(finished.length<3) return null;
 
         // ── PESOS TEMPORALES: partido más reciente = peso mayor ──
-        // Decaimiento exponencial: w(i) = e^(0.1 * i), i=0 más antiguo
-        const n = finished.length;
         const weights = finished.map((_,i) => Math.exp(0.1 * i));
-        const wSum = weights.reduce((a,b)=>a+b,0);
 
         let tC=0,wC=0, tG=0,wG=0, tGF=0,wGF=0;
         const form=[];
@@ -414,12 +365,13 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
         });
 
         const result={
-            corners:  wC>0?tC/wC:null,
-            goals1t:  wG>0?tG/wG:null,
-            goalsFull:wGF>0?tGF/wGF:null,
-            matches:  finished.length,
+            corners:   wC>0?tC/wC:null,
+            goals1t:   wG>0?tG/wG:null,
+            goalsFull: wGF>0?tGF/wGF:null,
+            matches:   finished.length,
             form,
-            fromApi:  true,
+            fromApi:   true,
+            logoUrl:   teamMap[teamName]?.logoUrl||null, // ¡RECUPERADO PARA NO PERDER LOGOS!
         };
         statsCache[key]=result;
         return result;
@@ -430,33 +382,25 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
 function fallbackCorners(name, role, avg) {
     if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
     const base = role === 'home' ? avg / 2 * 1.10 : avg / 2 * 0.90;
-    // Cap: ningún equipo por debajo de 3.2 ni por encima de 8.0 córners
     return Math.min(8.0, Math.max(3.2, base));
 }
 
 function fallbackGoals1T(name, role, avg) {
     if (GOAL_POWER_1T[name]?.[role]) return GOAL_POWER_1T[name][role];
-    // Los goles en 1T son ~45% de los goles totales (no 50%)
-    // y la distribución es más comprimida — cap estricto
     const base = role === 'home'
-        ? (avg / 10) * 1.15 * 1.08   // ajustado: 1.15 en vez de 1.35
+        ? (avg / 10) * 1.15 * 1.08
         : (avg / 10) * 1.15 * 0.92;
-    // Cap: máx 0.90 goles/equipo en 1T (incluso equipos top rara vez superan esto)
     return Math.min(0.90, Math.max(0.30, base));
 }
 
 function fallbackGoalsFull(name, role, avg) {
     if (GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
-    // Ratio goles completo/1T histórico = ~2.2 (no 2.1)
     const g1t = fallbackGoals1T(name, role, avg);
     const full = role === 'home' ? g1t * 2.20 : g1t * 2.10;
-    // Cap: máx 2.10 goles/equipo por partido (incluso Bayern ronda 2.0)
     return Math.min(2.10, Math.max(0.60, full));
 }
 
 // ── REGRESIÓN A LA MEDIA ──
-// Blends team lambda con la media de liga para evitar sesgos por pocos partidos
-// Cuantos más partidos, más confiamos en el equipo (hasta 15 = 85% equipo)
 function regressionBlend(teamVal, leagueMean, nMatches) {
     const trust = Math.min(0.85, 0.40 + (nMatches / MATCHES_TO_USE) * 0.45);
     return teamVal * trust + leagueMean * (1 - trust);
@@ -477,28 +421,23 @@ function poissonOver(lambda,threshold){
     return Math.min(98,Math.max(2,(1-poissonProb(lambda,Math.floor(threshold)))*100));
 }
 
-// ── NEGBINOMIAL PARA CÓRNERS (mayor precisión que Poisson) ──
-// Córners tienen varianza > media → distribución Binomial Negativa
-// P(X=k) = C(k+r-1,k) * (r/(r+mu))^r * (mu/(r+mu))^k   donde r = overdispersion
+// ── NEGBINOMIAL PARA CÓRNERS ──
 function negBinExact(mu, r, k) {
-    // r = parámetro de dispersión (calibrado empíricamente para córners ≈ 6)
     const p = r / (r + mu);
     let logP = 0;
-    // log C(k+r-1, k) usando gamma approx
     for(let i=0;i<k;i++) logP += Math.log(r+i) - Math.log(i+1);
     logP += r*Math.log(p) + k*Math.log(1-p);
     return Math.exp(logP);
 }
 function negBinOver(mu, threshold) {
-    const r = 6; // overdispersion empírico para córners
+    const r = 6; 
     const k = Math.floor(threshold);
     let cdf = 0;
     for(let i=0;i<=k;i++) cdf += negBinExact(mu, r, i);
     return Math.min(98, Math.max(2, (1-cdf)*100));
 }
 
-// ── DIXON-COLES CORRECTION para resultados ──
-// Corrige la subestimación/sobreestimación de marcadores bajos (0-0, 1-0, 0-1, 1-1)
+// ── DIXON-COLES CORRECTION ──
 function dixonColesTau(x, y, lambdaH, lambdaA, rho) {
     if(x===0 && y===0) return 1 - lambdaH*lambdaA*rho;
     if(x===0 && y===1) return 1 + lambdaH*rho;
@@ -508,14 +447,12 @@ function dixonColesTau(x, y, lambdaH, lambdaA, rho) {
 }
 
 function calcResultProbs(lambdaH, lambdaA) {
-    // rho calibrado: correlación negativa típica en fútbol ≈ -0.13
     const rho = -0.13;
     let pHome=0, pDraw=0, pAway=0;
     const maxG = 10;
     for(let h=0;h<=maxG;h++){
         for(let a=0;a<=maxG;a++){
             let p = poissonExact(lambdaH,h) * poissonExact(lambdaA,a);
-            // Aplicar corrección Dixon-Coles solo a marcadores bajos
             if(h<=1 && a<=1) p *= dixonColesTau(h,a,lambdaH,lambdaA,rho);
             if(h>a) pHome+=p; else if(h===a) pDraw+=p; else pAway+=p;
         }
@@ -528,15 +465,10 @@ function calcResultProbs(lambdaH, lambdaA) {
     };
 }
 
-// ── BTTS con correlación ──
-// En vez de independencia pura, ajusta por correlación entre equipos
+// ── BTTS ──
 function calcBTTS(lambdaH, lambdaA){
-    // P(home scores) = 1 - P(home=0), ajustado con DC
     const rho = -0.13;
     const p00 = poissonExact(lambdaH,0) * poissonExact(lambdaA,0) * dixonColesTau(0,0,lambdaH,lambdaA,rho);
-    const p0x = (1 - Math.exp(-lambdaH)); // P(home >= 1)
-    const py0 = (1 - Math.exp(-lambdaA)); // P(away >= 1)
-    // BTTS = 1 - P(home=0) - P(away=0) + P(both=0)
     const btts = 1 - Math.exp(-lambdaH) - Math.exp(-lambdaA) + p00;
     return Math.min(98, Math.max(2, btts * 100));
 }
@@ -547,28 +479,20 @@ function cardClassFor(p){return p>=65?'high':p>=42?'mid':'low';}
 
 // ── RECOMENDACIÓN INTELIGENTE ──
 function buildRecommendation(markets) {
-    // Umbrales mínimos por tipo
     const thresholds = { resultado:55, btts:58, goles:62, corners:67, ht:62 };
-    // Margen mínimo sobre el umbral para que sea señal real
     const minMargin  = { resultado:10, btts:10, goles:10, corners: 8, ht:15 };
-    // Fiabilidad histórica del modelo por mercado
     const reliability = { corners:0.92, btts:0.88, goles:0.85, ht:0.82, resultado:0.78 };
 
-    // 1. Filtrar candidatos que superan umbral + margen mínimo
     const candidates = markets
         .filter(m => {
             const th = thresholds[m.type] || 55;
             const mg = minMargin[m.type] || 10;
-            return m.prob >= th + mg; // debe superar umbral + margen
+            return m.prob >= th + mg;
         })
         .map(m => {
-            // 2. Score base = prob × fiabilidad
             const baseScore = m.prob * (reliability[m.type] || 0.80);
-
-            // 3. Bonus de consenso: si otros mercados del mismo grupo también son altos
             const sameGroup = markets.filter(x => x.type === m.type && x !== m && x.prob >= 55);
             const consensusBonus = sameGroup.length * 1.5;
-
             return {...m, score: baseScore + consensusBonus};
         })
         .sort((a,b) => b.score - a.score);
@@ -696,14 +620,12 @@ document.getElementById('calc-btn').onclick=async()=>{
         awayStats=await getTeamStats(awayId,away,'away',seasonId);
     }
 
-    // Valores finales — con regresión a la media cuando vienen de API
     const homeMatchesC = homeStats?.matches || 0;
     const awayMatchesC = awayStats?.matches || 0;
-    const leagueCornerMean = leagueAvg / 2; // media por equipo
+    const leagueCornerMean = leagueAvg / 2;
     const leagueGoalMean   = (leagueAvg / 10) * 1.35;
     const leagueGoalFMean  = leagueAvg / 10 * 1.05;
 
-    // Córners: regresión a media de liga
     const rawHomeCorn = homeStats?.corners ?? fallbackCorners(home,'home',leagueAvg);
     const rawAwayCorn = awayStats?.corners ?? fallbackCorners(away,'away',leagueAvg);
     const homeCorn = homeStats?.fromApi
@@ -713,7 +635,6 @@ document.getElementById('calc-btn').onclick=async()=>{
         ? regressionBlend(rawAwayCorn, leagueCornerMean * 0.90, awayMatchesC)
         : rawAwayCorn;
 
-    // Goles 1T: regresión a media
     const rawHomeG1T = homeStats?.goals1t ?? fallbackGoals1T(home,'home',leagueAvg);
     const rawAwayG1T = awayStats?.goals1t ?? fallbackGoals1T(away,'away',leagueAvg);
     const homeGoal1T = homeStats?.fromApi
@@ -723,7 +644,6 @@ document.getElementById('calc-btn').onclick=async()=>{
         ? regressionBlend(rawAwayG1T, leagueGoalMean * 0.90, awayMatchesC)
         : rawAwayG1T;
 
-    // Goles completos: regresión a media
     const rawHomeGF = homeStats?.goalsFull ?? fallbackGoalsFull(home,'home',leagueAvg);
     const rawAwayGF = awayStats?.goalsFull ?? fallbackGoalsFull(away,'away',leagueAvg);
     const homeGoalF = homeStats?.fromApi
@@ -750,10 +670,8 @@ document.getElementById('calc-btn').onclick=async()=>{
 // ── RENDER COMPLETO ──
 function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg}){
 
-    // 1. DATA BADGE — eliminado por solicitud
     document.getElementById('data-source-container').innerHTML='';
 
-    // 2. MATCH HEADER
     const homeLogo=homeStats?.logoUrl||teamMap[home]?.logoUrl||null;
     const awayLogo=awayStats?.logoUrl||teamMap[away]?.logoUrl||null;
 
@@ -770,7 +688,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    // 3. PROBABILIDADES — 3 cajas: Visitante · Empate · Local
     const rp=calcResultProbs(lambdaH,lambdaA);
     const btts=parseFloat(calcBTTS(lambdaH,lambdaA).toFixed(0));
     const maxRP=Math.max(rp.home,rp.draw,rp.away);
@@ -792,15 +709,12 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    // 4. GRID 2 cols: OVER 1.5 + OVER 2.5
     const over15  = parseFloat(poissonOver(lambdaH+lambdaA,1.5).toFixed(0));
     const over25  = parseFloat(poissonOver(lambdaH+lambdaA,2.5).toFixed(0));
     const corn75  = parseFloat(poissonOver(lambdaCorn,7.5).toFixed(0));
 
-    // 4+5. TODOS LOS MERCADOS COMO MARKET CARDS: GOLES + AMBOS MARCAN + CÓRNERS + GOLES 1T
     const lambdaFull2 = lambdaH + lambdaA;
 
-    // Sección GOLES (Over 1.5 / Over 2.5) como market cards
     let golesFullHtml=`
         <div class="section-header animate-in">
             <span class="section-icon">⚽</span>
@@ -820,9 +734,8 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         </div>`;
     });
 
-    // AMBOS MARCAN como market card
     const bttsProb = btts;
-    const bttsBar = bttsProb; // usa el mismo valor como ancho de barra
+    const bttsBar = bttsProb;
     let bttsHtml=`
         <div class="section-divider"></div>
         <div class="section-header animate-in">
@@ -838,7 +751,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             <div class="pct-label" style="color:${colorFor(bttsProb)}">${bttsProb}%<small>SÍ</small></div>
         </div>`;
 
-    document.getElementById('grid-markets-container').innerHTML=''; // vaciar el grid antiguo
+    document.getElementById('grid-markets-container').innerHTML='';
 
     let cornHtml=`
         <div class="section-divider"></div>
@@ -881,10 +794,8 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
     });
     document.getElementById('all-markets-container').innerHTML=golesFullHtml+goalHtml+bttsHtml+cornHtml;
 
-    // 6. VEREDICTOS — eliminados por solicitud del usuario
     document.getElementById('verdict-container').innerHTML='';
 
-    // 7. RECOMENDACIÓN DE VALOR
     const lambdaFull = lambdaH+lambdaA;
     const allMarkets = [
         {label:`VICTORIA LOCAL (${rp.home}%)`, prob:rp.home, desc:`${home.split(' ').slice(-1)[0]} favorito en casa`, type:'resultado'},
