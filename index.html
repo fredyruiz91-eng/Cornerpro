@@ -426,13 +426,32 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
     } catch {return null;}
 }
 
-// ── FALLBACKS ──
-function fallbackCorners(name,role,avg){return CORNER_POWER[name]?.[role]??(role==='home'?avg/2*1.10:avg/2*0.90);}
-function fallbackGoals1T(name,role,avg){return GOAL_POWER_1T[name]?.[role]??(role==='home'?(avg/10)*1.35*1.10:(avg/10)*1.35*0.90);}
-function fallbackGoalsFull(name,role,avg){
-    if(GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
-    const g1t=fallbackGoals1T(name,role,avg);
-    return role==='home'?g1t*2.10:g1t*2.00;
+// ── FALLBACKS con caps realistas ──
+function fallbackCorners(name, role, avg) {
+    if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+    const base = role === 'home' ? avg / 2 * 1.10 : avg / 2 * 0.90;
+    // Cap: ningún equipo por debajo de 3.2 ni por encima de 8.0 córners
+    return Math.min(8.0, Math.max(3.2, base));
+}
+
+function fallbackGoals1T(name, role, avg) {
+    if (GOAL_POWER_1T[name]?.[role]) return GOAL_POWER_1T[name][role];
+    // Los goles en 1T son ~45% de los goles totales (no 50%)
+    // y la distribución es más comprimida — cap estricto
+    const base = role === 'home'
+        ? (avg / 10) * 1.15 * 1.08   // ajustado: 1.15 en vez de 1.35
+        : (avg / 10) * 1.15 * 0.92;
+    // Cap: máx 0.90 goles/equipo en 1T (incluso equipos top rara vez superan esto)
+    return Math.min(0.90, Math.max(0.30, base));
+}
+
+function fallbackGoalsFull(name, role, avg) {
+    if (GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
+    // Ratio goles completo/1T histórico = ~2.2 (no 2.1)
+    const g1t = fallbackGoals1T(name, role, avg);
+    const full = role === 'home' ? g1t * 2.20 : g1t * 2.10;
+    // Cap: máx 2.10 goles/equipo por partido (incluso Bayern ronda 2.0)
+    return Math.min(2.10, Math.max(0.60, full));
 }
 
 // ── REGRESIÓN A LA MEDIA ──
@@ -531,7 +550,7 @@ function buildRecommendation(markets) {
     // Umbrales mínimos por tipo
     const thresholds = { resultado:55, btts:58, goles:62, corners:67, ht:62 };
     // Margen mínimo sobre el umbral para que sea señal real
-    const minMargin  = { resultado:10, btts:10, goles:10, corners: 8, ht:10 };
+    const minMargin  = { resultado:10, btts:10, goles:10, corners: 8, ht:15 };
     // Fiabilidad histórica del modelo por mercado
     const reliability = { corners:0.92, btts:0.88, goles:0.85, ht:0.82, resultado:0.78 };
 
