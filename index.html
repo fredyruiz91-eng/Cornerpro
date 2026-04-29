@@ -879,7 +879,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
         </div>`;
     });
-    document.getElementById('all-markets-container').innerHTML=golesFullHtml+bttsHtml+cornHtml+goalHtml;
+    document.getElementById('all-markets-container').innerHTML=golesFullHtml+goalHtml+bttsHtml+cornHtml;
 
     // 6. VEREDICTOS — eliminados por solicitud del usuario
     document.getElementById('verdict-container').innerHTML='';
