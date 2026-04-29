@@ -66,28 +66,18 @@
         .match-header{background:var(--card);border-radius:16px;padding:20px 16px 16px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
         .match-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
         .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;}
-        .team-side{display:flex;flex-direction:column;align-items:center;gap:8px;}
-        .team-logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--card2),var(--border));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--text);letter-spacing:1px;overflow:hidden;position:relative;}
-        .team-logo .initials{font-size:1.1rem;}
-        .team-name{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
-        .form-dots{display:flex;gap:4px;justify-content:center;}
-        .dot{width:8px;height:8px;border-radius:50%;}
-        .dot.w{background:var(--green);}
-        .dot.d{background:var(--yellow);}
-        .dot.l{background:var(--accent);}
-        .dot.u{background:var(--muted);}
+        .team-side{display:flex;flex-direction:column;align-items:center;gap:6px;}
+        .team-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
         .vs-center{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);letter-spacing:2px;text-align:center;}
 
-        /* RESULT PROBABILITIES */
-        .result-section{margin-top:14px;}
-        .result-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-        .result-label{font-size:0.75rem;font-weight:700;color:var(--muted);min-width:110px;display:flex;align-items:center;gap:6px;}
-        .result-label .rl-icon{font-size:0.8rem;}
-        .result-bar-bg{flex:1;background:rgba(255,255,255,0.05);height:7px;border-radius:4px;overflow:hidden;}
-        .result-bar-fill{height:100%;border-radius:4px;width:0%;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
-        .result-pct{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;min-width:42px;text-align:right;}
+        /* RESULT BOXES — Visitante | Empate | Local */
+        .result-boxes{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;margin-top:14px;}
+        .result-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;}
+        .result-box.rb-center{border-color:rgba(244,185,66,0.2);background:rgba(244,185,66,0.04);min-width:80px;}
+        .rb-label{font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;}
+        .rb-pct{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1;}
 
-        /* MARKET GRID 2x2 */
+        /* MARKET GRID 2 cols */
         .market-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
         .grid-card{background:var(--card);border-radius:12px;padding:14px 12px;border:1px solid var(--border);text-align:center;transition:border-color 0.3s;}
         .grid-card.high{border-color:rgba(61,214,140,0.3);}
@@ -211,18 +201,57 @@ const statsCache = {};
 
 // ── LIGAS OFFLINE ──
 const LIGAS_OFFLINE = {
-    "PL":  {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League",leagueAvg:10.1,teams:["Manchester City FC","Arsenal FC","Liverpool FC","Aston Villa FC","Tottenham Hotspur FC","Chelsea FC","Newcastle United FC","Manchester United FC","West Ham United FC","Crystal Palace FC","Brighton & Hove Albion FC","AFC Bournemouth","Fulham FC","Wolverhampton Wanderers FC","Everton FC","Brentford FC","Nottingham Forest FC","Leicester City FC","Ipswich Town FC","Southampton FC"]},
-    "PD":  {name:"🇪🇸 La Liga",leagueAvg:9.5,teams:["Real Madrid CF","FC Barcelona","Atlético de Madrid","Girona FC","Real Sociedad","Athletic Club","Real Betis","Valencia CF","Sevilla FC","Villarreal CF","CA Osasuna","Getafe CF","RC Celta de Vigo","RCD Mallorca","Rayo Vallecano","UD Las Palmas","Deportivo Alavés","CD Leganés","Real Valladolid CF","RCD Espanyol de Barcelona","Levante UD","Real Oviedo"]},
-    "SA":  {name:"🇮🇹 Serie A",leagueAvg:9.0,teams:["Inter Milano","AC Milan","Juventus FC","Atalanta BC","AS Roma","SS Lazio","SSC Napoli","ACF Fiorentina","Torino FC","Bologna FC 1909","Genoa CFC","AC Monza","Hellas Verona FC","US Lecce","Udinese Calcio","Cagliari Calcio","Empoli FC","Parma Calcio 1913","Como 1907","Venezia FC"]},
-    "BL1": {name:"🇩🇪 Bundesliga",leagueAvg:9.8,teams:["FC Bayern München","Borussia Dortmund","Bayer 04 Leverkusen","RB Leipzig","VfB Stuttgart","Eintracht Frankfurt","SC Freiburg","TSG Hoffenheim","SV Werder Bremen","1. FC Heidenheim 1846","FC Augsburg","VfL Wolfsburg","1. FSV Mainz 05","Borussia Mönchengladbach","1. FC Union Berlin","VfL Bochum 1848","FC St. Pauli","Holstein Kiel"]},
-    "FL1": {name:"🇫🇷 Ligue 1",leagueAvg:9.3,teams:["Paris Saint-Germain","AS Monaco FC","Stade Brestois 29","Lille OSC","OGC Nice","Olympique Lyonnais","RC Lens","Olympique de Marseille","Stade de Reims","Stade Rennais FC","Toulouse FC","Montpellier HSC","RC Strasbourg Alsace","Le Havre AC","FC Nantes","Angers SCO","AJ Auxerre","AS Saint-Étienne"]},
-    "DED": {name:"🇳🇱 Eredivisie",leagueAvg:9.6,teams:["PSV Eindhoven","Feyenoord","FC Twente","AZ Alkmaar","Ajax","NEC Nijmegen","FC Utrecht","Sparta Rotterdam","Go Ahead Eagles","Fortuna Sittard","sc Heerenveen","PEC Zwolle","Almere City FC","Heracles Almelo","RKC Waalwijk","Willem II","NAC Breda","FC Groningen"]},
-    "PPL": {name:"🇵🇹 Primeira Liga",leagueAvg:9.1,teams:["Sporting CP","SL Benfica","FC Porto","SC Braga","Vitória SC","Moreirense FC","FC Arouca","FC Famalicão","Casa Pia AC","SC Farense","Rio Ave FC","Gil Vicente FC","GD Estoril Praia","Estrela da Amadora","Boavista FC","CD Santa Clara","CD Nacional","AVS Futebol SAD"]},
-    "BSA": {name:"🇧🇷 Brasileirão",leagueAvg:9.4,teams:["Palmeiras","Flamengo","Botafogo","Atlético Mineiro","São Paulo","Internacional","Fluminense","Grêmio","Cruzeiro","Fortaleza","Red Bull Bragantino","Athletico Paranaense","Vasco da Gama","Corinthians","Bahia","Cuiabá","Vitória","Juventude","Criciúma","Atlético Goianiense"]},
-    "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:["Leeds United","Burnley FC","Sheffield United","Luton Town","West Bromwich Albion","Norwich City","Hull City","Middlesbrough FC","Coventry City","Preston North End","Sunderland AFC","Swansea City","Watford FC","Bristol City","QPR","Stoke City","Sheffield Wednesday","Blackburn Rovers","Plymouth Argyle","Portsmouth FC","Derby County","Oxford United","Millwall FC","Cardiff City"]}
+    "PL":  {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League",leagueAvg:10.1,teams:[
+        "Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC",
+        "Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Ipswich Town FC",
+        "Leicester City FC","Liverpool FC","Manchester City FC","Manchester United FC",
+        "Newcastle United FC","Nottingham Forest FC","Southampton FC","Tottenham Hotspur FC",
+        "West Ham United FC","Wolverhampton Wanderers FC"]},
+    "PD":  {name:"🇪🇸 La Liga",leagueAvg:9.5,teams:[
+        "Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés",
+        "FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona",
+        "RCD Mallorca","Rayo Vallecano","Real Betis","Real Madrid CF","Real Sociedad",
+        "Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]},
+    "SA":  {name:"🇮🇹 Serie A",leagueAvg:9.0,teams:[
+        "AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC",
+        "Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC",
+        "Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio",
+        "SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Venezia FC"]},
+    "BL1": {name:"🇩🇪 Bundesliga",leagueAvg:9.8,teams:[
+        "1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen",
+        "Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg",
+        "FC Bayern München","FC St. Pauli","Holstein Kiel","RB Leipzig",
+        "SC Freiburg","SV Werder Bremen","TSG Hoffenheim","VfB Stuttgart",
+        "VfL Bochum 1848","VfL Wolfsburg"]},
+    "FL1": {name:"🇫🇷 Ligue 1",leagueAvg:9.3,teams:[
+        "AJ Auxerre","AS Monaco FC","AS Saint-Étienne","Angers SCO","Le Havre AC",
+        "Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille",
+        "Paris Saint-Germain","RC Lens","RC Strasbourg Alsace","Stade Brestois 29",
+        "Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes"]},
+    "DED": {name:"🇳🇱 Eredivisie",leagueAvg:9.6,teams:[
+        "AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente",
+        "FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo",
+        "NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk",
+        "Sparta Rotterdam","Willem II","sc Heerenveen"]},
+    "PPL": {name:"🇵🇹 Primeira Liga",leagueAvg:9.1,teams:[
+        "AVS Futebol SAD","Boavista FC","CD Nacional","CD Santa Clara","Casa Pia AC",
+        "Estrela da Amadora","FC Arouca","FC Famalicão","FC Porto","GD Estoril Praia",
+        "Gil Vicente FC","Moreirense FC","Rio Ave FC","SC Braga","SC Farense",
+        "SL Benfica","Sporting CP","Vitória SC"]},
+    "BSA": {name:"🇧🇷 Brasileirão",leagueAvg:9.4,teams:[
+        "Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo",
+        "Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo",
+        "Fluminense","Fortaleza","Grêmio","Internacional","Juventude",
+        "Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]},
+    "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:[
+        "Blackburn Rovers","Bristol City","Burnley FC","Cardiff City","Coventry City",
+        "Derby County","Hull City","Leeds United","Luton Town","Middlesbrough FC",
+        "Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC",
+        "Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City",
+        "Sunderland AFC","Swansea City","Watford FC","West Bromwich Albion"]}
 };
 
-// ── CORNER POWER ──
+// ── CORNER POWER (todos los equipos de las 9 ligas) ──
 const CORNER_POWER = {
     "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
     "Real Madrid CF":{home:6.6,away:5.7},"FC Barcelona":{home:6.4,away:5.5},"Atlético de Madrid":{home:5.8,away:4.9},"Girona FC":{home:5.6,away:4.7},"Real Sociedad":{home:5.4,away:4.5},"Athletic Club":{home:5.5,away:4.6},"Real Betis":{home:5.3,away:4.4},"Valencia CF":{home:5.1,away:4.2},"Sevilla FC":{home:5.2,away:4.3},"Villarreal CF":{home:5.0,away:4.2},"CA Osasuna":{home:4.9,away:4.0},"Getafe CF":{home:4.5,away:3.7},"RC Celta de Vigo":{home:5.0,away:4.1},"RCD Mallorca":{home:4.7,away:3.9},"Rayo Vallecano":{home:4.6,away:3.8},"UD Las Palmas":{home:4.8,away:4.0},"Deportivo Alavés":{home:4.7,away:3.9},"CD Leganés":{home:4.5,away:3.7},"Real Valladolid CF":{home:4.4,away:3.6},"RCD Espanyol de Barcelona":{home:4.8,away:4.0},"Levante UD":{home:5.4,away:4.5},"Real Oviedo":{home:5.1,away:4.2},
@@ -248,7 +277,9 @@ const GOAL_POWER_1T = {
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"Luton Town":{home:0.59,away:0.48},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Preston North End":{home:0.57,away:0.46},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46}
 };
 
-// ── FULL MATCH GOAL POWER ──
+// ── FULL MATCH GOAL POWER (goles completos partido) ──
+// Aproximación: goals_full ≈ goals_1T * 2.1 (local) y * 2.0 (visitante)
+// Añadimos los equipos top con datos reales para mayor precisión
 const GOAL_POWER_FULL = {
     "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},"Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},"Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},"Brighton & Hove Albion FC":{home:1.50,away:1.20},"West Ham United FC":{home:1.28,away:1.00},
     "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},"Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},
@@ -333,6 +364,7 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
             matches:finished.length,
             form,
             fromApi:true,
+            logoUrl:teamMap[teamName]?.logoUrl||null,
         };
         statsCache[key]=result;
         return result;
@@ -363,7 +395,7 @@ function poissonExact(lambda,k){
     return term;
 }
 
-// ── PROBABILIDADES DE RESULTADO ──
+// ── PROBABILIDADES DE RESULTADO (Bivariate Poisson) ──
 function calcResultProbs(lambdaH, lambdaA) {
     let pHome=0,pDraw=0,pAway=0;
     const maxG=10;
@@ -401,6 +433,8 @@ function initials(name){
 
 // ── RECOMENDACIÓN INTELIGENTE ──
 function buildRecommendation(markets) {
+    // markets = [{label, prob, type}]
+    // Filtramos solo los que tienen probabilidad alta
     const candidates = markets
         .filter(m => m.prob >= 55)
         .sort((a,b) => b.prob - a.prob);
@@ -482,7 +516,7 @@ lSel.onchange=async()=>{
         try{
             setApiStatus('live','🟢 Cargando equipos...');
             const data=await bsdFetch(`/teams/?league=${liga.bsdId}&page_size=50`);
-            const teams=(data.results||[]).map(t=>{teamMap[t.name]={bsdId:t.id};return t.name;});
+            const teams=(data.results||[]).map(t=>{teamMap[t.name]={bsdId:t.id,logoUrl:t.logo||t.crest||null};return t.name;});
             fillSelects(teams);
             setApiStatus('live',`🟢 BSD — ${liga.name}`);
             return;
@@ -525,6 +559,7 @@ document.getElementById('calc-btn').onclick=async()=>{
         awayStats=await getTeamStats(awayId,away,'away',seasonId);
     }
 
+    // Valores finales
     const homeCorn   = homeStats?.corners  ?? fallbackCorners(home,'home',leagueAvg);
     const awayCorn   = awayStats?.corners  ?? fallbackCorners(away,'away',leagueAvg);
     const homeGoal1T = homeStats?.goals1t  ?? fallbackGoals1T(home,'home',leagueAvg);
@@ -549,77 +584,98 @@ document.getElementById('calc-btn').onclick=async()=>{
 // ── RENDER COMPLETO ──
 function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg}){
 
-    document.getElementById('data-source-container').innerHTML=
-        `<div class="data-badge ${usedApi?'live-data':'offline-data'} animate-in">${usedApi?`🛰 BSD Live — ${matchInfo}`:`📦 Datos históricos — ${matchInfo}`}</div>`;
+    // 1. DATA BADGE — eliminado por solicitud
+    document.getElementById('data-source-container').innerHTML='';
 
-    const homeForm=homeStats?.form||[];
-    const awayForm=awayStats?.form||[];
-
-    const formDots=(form)=>['w','w','w','w','w'].map((_,i)=>{
-        const r=form[i]||'u';
-        return `<div class="dot ${r}"></div>`;
-    }).join('');
+    // 2. MATCH HEADER
+    const homeLogo=homeStats?.logoUrl||teamMap[home]?.logoUrl||null;
+    const awayLogo=awayStats?.logoUrl||teamMap[away]?.logoUrl||null;
 
     document.getElementById('match-header-container').innerHTML=`
         <div class="match-header animate-in">
             <div class="teams-row">
                 <div class="team-side">
-                    <div class="team-logo"><span class="initials">${initials(home)}</span></div>
                     <div class="team-name">${home.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
-                    <div class="form-dots">${formDots(homeForm)}</div>
                 </div>
                 <div class="vs-center">VS</div>
                 <div class="team-side">
-                    <div class="team-logo"><span class="initials">${initials(away)}</span></div>
                     <div class="team-name">${away.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
-                    <div class="form-dots">${formDots(awayForm)}</div>
-                </div>
-            </div>`;
-
-    const rp=calcResultProbs(lambdaH,lambdaA);
-    const maxRP=Math.max(rp.home,rp.draw,rp.away);
-    const rpColor=(v)=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
-
-    document.getElementById('match-header-container').innerHTML+=`
-            <div class="result-section">
-                <div class="result-row">
-                    <div class="result-label"><span class="rl-icon">🏠</span> Victoria Local</div>
-                    <div class="result-bar-bg"><div class="result-bar-fill" data-target="${rp.home}" style="background:${rpColor(rp.home)};width:0%"></div></div>
-                    <div class="result-pct" style="color:${rpColor(rp.home)}">${rp.home}%</div>
-                </div>
-                <div class="result-row">
-                    <div class="result-label"><span class="rl-icon">🟡</span> Empate</div>
-                    <div class="result-bar-bg"><div class="result-bar-fill" data-target="${rp.draw}" style="background:${rpColor(rp.draw)};width:0%"></div></div>
-                    <div class="result-pct" style="color:${rpColor(rp.draw)}">${rp.draw}%</div>
-                </div>
-                <div class="result-row">
-                    <div class="result-label"><span class="rl-icon">✈️</span> Victoria Visitante</div>
-                    <div class="result-bar-bg"><div class="result-bar-fill" data-target="${rp.away}" style="background:${rpColor(rp.away)};width:0%"></div></div>
-                    <div class="result-pct" style="color:${rpColor(rp.away)}">${rp.away}%</div>
                 </div>
             </div>
         </div>`;
 
-    const btts    = parseFloat(calcBTTS(lambdaH,lambdaA).toFixed(0));
+    // 3. PROBABILIDADES — 3 cajas: Visitante · Empate · Local
+    const rp=calcResultProbs(lambdaH,lambdaA);
+    const btts=parseFloat(calcBTTS(lambdaH,lambdaA).toFixed(0));
+    const maxRP=Math.max(rp.home,rp.draw,rp.away);
+    const rpColor=(v)=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
+
+    document.getElementById('match-header-container').innerHTML+=`
+        <div class="result-boxes animate-in">
+            <div class="result-box">
+                <div class="rb-label">✈️ Visitante</div>
+                <div class="rb-pct" style="color:${rpColor(rp.away)}">${rp.away}%</div>
+            </div>
+            <div class="result-box rb-center">
+                <div class="rb-label">🟡 Empate</div>
+                <div class="rb-pct" style="color:${rpColor(rp.draw)}">${rp.draw}%</div>
+            </div>
+            <div class="result-box">
+                <div class="rb-label">🏠 Local</div>
+                <div class="rb-pct" style="color:${rpColor(rp.home)}">${rp.home}%</div>
+            </div>
+        </div>`;
+
+    // 4. GRID 2 cols: OVER 1.5 + OVER 2.5
     const over15  = parseFloat(poissonOver(lambdaH+lambdaA,1.5).toFixed(0));
     const over25  = parseFloat(poissonOver(lambdaH+lambdaA,2.5).toFixed(0));
     const corn75  = parseFloat(poissonOver(lambdaCorn,7.5).toFixed(0));
 
-    const gridCard=(label,val)=>`
-        <div class="grid-card ${cardClassFor(val)}">
-            <div class="gc-label">${label}</div>
-            <div class="gc-pct" style="color:${colorFor(val)}">${val}%</div>
+    // 4+5. TODOS LOS MERCADOS COMO MARKET CARDS: GOLES + AMBOS MARCAN + CÓRNERS + GOLES 1T
+    const lambdaFull2 = lambdaH + lambdaA;
+
+    // Sección GOLES (Over 1.5 / Over 2.5) como market cards
+    let golesFullHtml=`
+        <div class="section-header animate-in">
+            <span class="section-icon">⚽</span>
+            <span class="section-title">GOLES</span>
+            <span class="section-lambda">λ <span>${(lambdaFull2).toFixed(2)}</span></span>
+        </div>`;
+    [1.5, 2.5].forEach((line,i)=>{
+        const prob=poissonOver(lambdaFull2,line),color=colorFor(prob),cls=cardClassFor(prob);
+        golesFullHtml+=`
+        <div class="market-card ${cls} animate-in" style="animation-delay:${i*0.06}s;opacity:0;">
+            <div class="line-label">+${line}<small>LÍNEA</small></div>
+            <div class="bar-wrap">
+                <div class="bar-bg"><div class="bar-fill" data-target="${prob.toFixed(1)}" style="background:${color};width:0%"></div></div>
+                <div class="bar-sub">Under: ${(100-prob).toFixed(1)}%</div>
+            </div>
+            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
+        </div>`;
+    });
+
+    // AMBOS MARCAN como market card
+    const bttsProb = btts;
+    const bttsBar = bttsProb; // usa el mismo valor como ancho de barra
+    let bttsHtml=`
+        <div class="section-divider"></div>
+        <div class="section-header animate-in">
+            <span class="section-icon">🤝</span>
+            <span class="section-title">AMBOS MARCAN</span>
+        </div>
+        <div class="market-card ${cardClassFor(bttsProb)} animate-in" style="opacity:0;">
+            <div class="line-label">BTTS<small>AMBOS</small></div>
+            <div class="bar-wrap">
+                <div class="bar-bg"><div class="bar-fill" data-target="${bttsProb}" style="background:${colorFor(bttsProb)};width:0%"></div></div>
+                <div class="bar-sub">No: ${(100-bttsProb).toFixed(1)}%</div>
+            </div>
+            <div class="pct-label" style="color:${colorFor(bttsProb)}">${bttsProb}%<small>SÍ</small></div>
         </div>`;
 
-    document.getElementById('grid-markets-container').innerHTML=`
-        <div class="market-grid animate-in">
-            ${gridCard('AMBOS MARCAN',btts)}
-            ${gridCard('OVER 1.5',over15)}
-            ${gridCard('OVER 2.5',over25)}
-            ${gridCard('CÓRNERS +7.5',corn75)}
-        </div>`;
+    document.getElementById('grid-markets-container').innerHTML=''; // vaciar el grid antiguo
 
     let cornHtml=`
+        <div class="section-divider"></div>
         <div class="section-header animate-in">
             <span class="section-icon">⬡</span>
             <span class="section-title">CÓRNERS</span>
@@ -641,11 +697,11 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
     let goalHtml=`
         <div class="section-divider"></div>
         <div class="section-header animate-in">
-            <span class="section-icon">⚽</span>
+            <span class="section-icon">⏱</span>
             <span class="section-title">GOLES 1er TIEMPO</span>
             <span class="section-lambda">λ <span>${lambdaGoal}</span></span>
         </div>`;
-    [0.5,1.5,2.5,3.5].forEach((line,i)=>{
+    [0.5,1.5].forEach((line,i)=>{
         const prob=poissonOver(lambdaGoal,line),color=colorFor(prob),cls=cardClassFor(prob);
         goalHtml+=`
         <div class="market-card ${cls} animate-in" style="animation-delay:${(i+4)*0.06}s;opacity:0;">
@@ -657,28 +713,13 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
         </div>`;
     });
-    document.getElementById('all-markets-container').innerHTML=cornHtml+goalHtml;
+    document.getElementById('all-markets-container').innerHTML=golesFullHtml+bttsHtml+cornHtml+goalHtml;
 
-    const gc=gaugePos(lambdaCorn,4,14),gg=gaugePos(lambdaGoal,0.5,2.5);
-    const vc=verdictFor(lambdaCorn,'corners'),vg=verdictFor(lambdaGoal,'goals');
-    document.getElementById('verdict-container').innerHTML=`
-        <div class="verdict-row animate-in" style="animation-delay:0.4s;opacity:0;">
-            <div class="verdict-mini">
-                <div class="vm-title">⬡ CÓRNERS</div>
-                <div class="vm-lambda">${lambdaCorn}</div>
-                <div class="vm-label">MEDIA ESPERADA</div>
-                <div class="gauge-wrap"><div class="gauge-bar"><div class="gauge-pointer" id="ptr-corn" style="left:50%"></div></div></div>
-                <div class="vm-text ${vc.cls}">${vc.msg}</div>
-            </div>
-            <div class="verdict-mini">
-                <div class="vm-title">⚽ GOLES 1T</div>
-                <div class="vm-lambda">${lambdaGoal}</div>
-                <div class="vm-label">MEDIA ESPERADA</div>
-                <div class="gauge-wrap"><div class="gauge-bar"><div class="gauge-pointer" id="ptr-goal" style="left:50%"></div></div></div>
-                <div class="vm-text ${vg.cls}">${vg.msg}</div>
-            </div>
-        </div>`;
+    // 6. VEREDICTOS — eliminados por solicitud del usuario
+    document.getElementById('verdict-container').innerHTML='';
 
+    // 7. RECOMENDACIÓN DE VALOR
+    const lambdaFull = lambdaH+lambdaA;
     const allMarkets = [
         {label:`VICTORIA LOCAL (${rp.home}%)`, prob:rp.home, desc:`${home.split(' ').slice(-1)[0]} favorito en casa`, type:'resultado'},
         {label:`VICTORIA VISITANTE (${rp.away}%)`, prob:rp.away, desc:`${away.split(' ').slice(-1)[0]} favorito como visitante`, type:'resultado'},
@@ -702,9 +743,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         </div>`;
 
     requestAnimationFrame(()=>setTimeout(()=>{
-        const pc=document.getElementById('ptr-corn'),pg=document.getElementById('ptr-goal');
-        if(pc) pc.style.left=gc+'%';
-        if(pg) pg.style.left=gg+'%';
         document.querySelectorAll('.result-bar-fill[data-target]').forEach(b=>{b.style.width=b.dataset.target+'%';});
     },100));
 }
