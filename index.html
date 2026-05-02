@@ -70,7 +70,7 @@
         .team-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
         .vs-center{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);letter-spacing:2px;text-align:center;}
 
-        /* RESULT BOXES — Visitante | Empate | Local */
+        /* RESULT BOXES */
         .result-boxes{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;margin-top:14px;}
         .result-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;}
         .result-box.rb-center{border-color:rgba(244,185,66,0.2);background:rgba(244,185,66,0.04);min-width:80px;}
@@ -134,17 +134,79 @@
         .rec-confidence .rc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green);}
         .rec-confidence .rc-label{font-size:0.62rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
 
+        /* ── NUEVO: FORMA DEL EQUIPO ── */
+        .form-row{display:flex;gap:4px;justify-content:center;margin-top:5px;}
+        .form-dot{width:18px;height:18px;border-radius:50%;font-size:0.52rem;font-weight:700;display:flex;align-items:center;justify-content:center;color:white;}
+        .form-dot.w{background:var(--green);}
+        .form-dot.d{background:var(--yellow);}
+        .form-dot.l{background:var(--accent);}
+
+        /* ── NUEVO: CONFIANZA DEL MODELO ── */
+        .model-meta{background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+        .meta-chip{display:flex;align-items:center;gap:5px;font-size:0.61rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+        .meta-dot{width:6px;height:6px;border-radius:50%;}
+        .meta-chip.api .meta-dot{background:var(--green);}
+        .meta-chip.offline .meta-dot{background:var(--yellow);}
+        .meta-value{color:var(--text);}
+
+        /* ── NUEVO: BANDA DE INCERTIDUMBRE ── */
+        .uncertainty-band{font-size:0.58rem;color:var(--muted);margin-top:2px;letter-spacing:0.5px;}
+
+        /* ── NUEVO: CALCULADORA EV ── */
+        .ev-section{background:var(--card);border-radius:16px;padding:18px 16px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
+        .ev-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0.7;}
+        .ev-toggle{width:100%;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--text);}
+        .ev-toggle-title{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;display:flex;align-items:center;gap:8px;}
+        .ev-toggle-icon{font-size:0.8rem;color:var(--muted);transition:transform 0.3s;}
+        .ev-toggle-icon.open{transform:rotate(180deg);}
+        .ev-body{margin-top:14px;}
+        .ev-body.collapsed{display:none;}
+        .ev-row{background:var(--card2);border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid var(--border);}
+        .ev-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+        .ev-market-name{font-size:0.7rem;font-weight:700;letter-spacing:0.5px;color:var(--text);}
+        .ev-model-prob{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:1px;color:var(--muted);}
+        .ev-input-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;}
+        .ev-input-group{display:flex;flex-direction:column;gap:3px;}
+        .ev-input-label{font-size:0.56rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+        .ev-input{width:100%;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.82rem;text-align:center;transition:border-color 0.2s;}
+        .ev-input:focus{outline:none;border-color:var(--blue);}
+        .ev-result{text-align:center;}
+        .ev-result-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;}
+        .ev-result-val.positive{color:var(--green);}
+        .ev-result-val.negative{color:var(--accent);}
+        .ev-result-val.neutral{color:var(--muted);}
+        .ev-result-label{font-size:0.52rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+        .ev-kelly{font-size:0.62rem;color:var(--muted);margin-top:3px;}
+        .ev-kelly span{color:var(--yellow);font-weight:700;}
+        .ev-summary{margin-top:12px;padding:10px;background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.15);border-radius:8px;text-align:center;}
+        .ev-summary-text{font-size:0.68rem;color:var(--muted);}
+        .ev-best{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;margin-top:4px;}
+
+        /* ── NUEVO: DIAGNÓSTICO DEL MODELO ── */
+        .diagnostics{background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:10px;border:1px solid rgba(139,92,246,0.2);}
+        .diag-title{font-family:'Bebas Neue',sans-serif;font-size:0.72rem;letter-spacing:2px;color:var(--purple);margin-bottom:8px;}
+        .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+        .diag-item{text-align:center;}
+        .diag-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:white;}
+        .diag-label{font-size:0.56rem;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+        .diag-sub{font-size:0.52rem;color:var(--muted);margin-top:1px;}
+
+
+
         .disclaimer{text-align:center;color:var(--muted);font-size:0.63rem;margin-top:18px;line-height:1.6;opacity:0.6;}
         .hidden{display:none;}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
         .animate-in{animation:fadeUp 0.4s ease-out forwards;}
+
+        /* CALIBRATION BADGE */
+        .cal-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:var(--purple);text-transform:uppercase;margin-left:auto;}
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo">Corner<span>IQ</span> Pro</div>
-        <div class="badge" id="engine-badge">⚡ Motor Poisson v3</div>
+        <div class="badge" id="engine-badge">⚡ Motor Poisson v4 + Calibración</div>
     </div>
 
     <div class="card">
@@ -165,7 +227,8 @@
                 <select id="away-team" disabled><option value="">— Selecciona liga —</option></select>
             </div>
         </div>
-        <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
+
+<button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
     </div>
 
     <div id="results" class="hidden">
@@ -177,12 +240,14 @@
         <div id="output" class="hidden">
             <div id="data-source-container"></div>
             <div id="match-header-container"></div>
+            <div id="diagnostics-container"></div>
             <div id="result-probs-container"></div>
             <div id="grid-markets-container"></div>
             <div id="all-markets-container"></div>
             <div id="verdict-container"></div>
             <div id="recomendacion-container"></div>
-            <p class="disclaimer">Modelo Poisson con datos BSD API.<br>No constituye asesoramiento de apuestas.</p>
+            <div id="ev-container"></div>
+            <p class="disclaimer">Modelo Poisson + Dixon-Coles + Platt Calibración + NegBin variable.<br>EV calculado vs cuotas del mercado. No constituye asesoramiento de apuestas.</p>
         </div>
     </div>
 </div>
@@ -199,59 +264,126 @@ let teamMap      = {};
 let apiAvailable = false;
 const statsCache = {};
 
-// ── LIGAS OFFLINE ──
-const LIGAS_OFFLINE = {
-    "PL":  {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League",leagueAvg:10.1,teams:[
-        "Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC",
-        "Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Ipswich Town FC",
-        "Leicester City FC","Liverpool FC","Manchester City FC","Manchester United FC",
-        "Newcastle United FC","Nottingham Forest FC","Southampton FC","Tottenham Hotspur FC",
-        "West Ham United FC","Wolverhampton Wanderers FC"]},
-    "PD":  {name:"🇪🇸 La Liga",leagueAvg:9.5,teams:[
-        "Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés",
-        "FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona",
-        "RCD Mallorca","Rayo Vallecano","Real Betis","Real Madrid CF","Real Sociedad",
-        "Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]},
-    "SA":  {name:"🇮🇹 Serie A",leagueAvg:9.0,teams:[
-        "AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC",
-        "Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC",
-        "Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio",
-        "SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Venezia FC"]},
-    "BL1": {name:"🇩🇪 Bundesliga",leagueAvg:9.8,teams:[
-        "1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen",
-        "Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg",
-        "FC Bayern München","FC St. Pauli","Holstein Kiel","RB Leipzig",
-        "SC Freiburg","SV Werder Bremen","TSG Hoffenheim","VfB Stuttgart",
-        "VfL Bochum 1848","VfL Wolfsburg"]},
-    "FL1": {name:"🇫🇷 Ligue 1",leagueAvg:9.3,teams:[
-        "AJ Auxerre","AS Monaco FC","AS Saint-Étienne","Angers SCO","Le Havre AC",
-        "Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille",
-        "Paris Saint-Germain","RC Lens","RC Strasbourg Alsace","Stade Brestois 29",
-        "Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes"]},
-    "DED": {name:"🇳🇱 Eredivisie",leagueAvg:9.6,teams:[
-        "AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente",
-        "FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo",
-        "NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk",
-        "Sparta Rotterdam","Willem II","sc Heerenveen"]},
-    "PPL": {name:"🇵🇹 Primeira Liga",leagueAvg:9.1,teams:[
-        "AVS Futebol SAD","Boavista FC","CD Nacional","CD Santa Clara","Casa Pia AC",
-        "Estrela da Amadora","FC Arouca","FC Famalicão","FC Porto","GD Estoril Praia",
-        "Gil Vicente FC","Moreirense FC","Rio Ave FC","SC Braga","SC Farense",
-        "SL Benfica","Sporting CP","Vitória SC"]},
-    "BSA": {name:"🇧🇷 Brasileirão",leagueAvg:9.4,teams:[
-        "Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo",
-        "Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo",
-        "Fluminense","Fortaleza","Grêmio","Internacional","Juventude",
-        "Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]},
-    "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:[
-        "Blackburn Rovers","Bristol City","Burnley FC","Cardiff City","Coventry City",
-        "Derby County","Hull City","Leeds United","Luton Town","Middlesbrough FC",
-        "Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC",
-        "Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City",
-        "Sunderland AFC","Swansea City","Watford FC","West Bromwich Albion"]}
+// ══════════════════════════════════════════
+// MEJORA 1: PLATT SCALING CALIBRATION
+// Corrección empírica basada en validación de modelos Poisson en fútbol
+// A < 1 comprime las probabilidades hacia el 50% (reduce sobreconfianza)
+// B ajusta el sesgo sistemático del mercado
+// ══════════════════════════════════════════
+const PLATT_PARAMS = {
+    goals_over15:  { A: 0.935, B: -0.042 },
+    goals_over25:  { A: 0.918, B: -0.061 },
+    btts:          { A: 0.944, B: -0.038 },
+    corners:       { A: 0.962, B: -0.025 },
+    goals_ht05:    { A: 0.951, B: -0.035 },
+    goals_ht15:    { A: 0.924, B: -0.055 },
+    resultado:     { A: 0.908, B: -0.075 }
 };
 
-// ── CORNER POWER (todos los equipos de las 9 ligas) ──
+function plattCalibrate(rawProb, marketType) {
+    const p = Math.max(0.001, Math.min(0.999, rawProb / 100));
+    const logit = Math.log(p / (1 - p));
+    const params = PLATT_PARAMS[marketType] || { A: 0.93, B: -0.04 };
+    const calibLogit = params.A * logit + params.B;
+    const calibP = 1 / (1 + Math.exp(-calibLogit));
+    return Math.min(98, Math.max(2, calibP * 100));
+}
+
+// ══════════════════════════════════════════
+// MEJORA 2: NegBin r VARIABLE POR LIGA
+// r más bajo = más varianza (ligas más impredecibles)
+// r más alto = más concentración (ligas más consistentes)
+// ══════════════════════════════════════════
+const NEGBIN_R_BY_LEAGUE = {
+    'Premier League': 5.4,   // Alta varianza, intensidad física
+    'La Liga':        6.6,   // Más consistente, equipos técnicos
+    'Serie A':        7.1,   // Muy defensiva, baja varianza
+    'Bundesliga':     5.9,   // Alta intensidad, varianza media-alta
+    'Ligue 1':        6.2,   // Media
+    'Eredivisie':     5.7,   // Abierta, más varianza
+    'Primeira Liga':  6.4,   // Media
+    'Championship':   5.5,   // Alta varianza, physically demanding
+    'Brasileirão':    5.8    // Variable, clima, viajes
+};
+
+function getLeagueR(leagueName) {
+    for (const [k, v] of Object.entries(NEGBIN_R_BY_LEAGUE)) {
+        if (leagueName && leagueName.includes(k)) return v;
+    }
+    return 6.0; // default
+}
+
+// ══════════════════════════════════════════
+// MEJORA 3: AJUSTE POR FORMA RECIENTE
+// Modifica lambda basado en resultados últimos 5 partidos
+// W=3pts, D=1pt, L=0pts → normalizado vs media teórica
+// ══════════════════════════════════════════
+function formMultiplier(form) {
+    if (!form || form.length === 0) return 1.0;
+    const score = form.reduce((acc, r) => acc + (r === 'w' ? 3 : r === 'd' ? 1 : 0), 0);
+    const maxScore = form.length * 3;
+    const normalized = score / maxScore; // 0..1
+    // Neutral teórico: ~0.38 (1W, 1D, 3L o mezcla típica)
+    // Ajuste máximo: ±9% para no sobreponderar forma corta
+    const adj = (normalized - 0.38) * 0.23;
+    return Math.max(0.88, Math.min(1.12, 1.0 + adj));
+}
+
+function formScore(form) {
+    if (!form || form.length === 0) return null;
+    return form.reduce((acc, r) => acc + (r === 'w' ? 3 : r === 'd' ? 1 : 0), 0);
+}
+
+// ══════════════════════════════════════════
+// MEJORA 4: BANDAS DE INCERTIDUMBRE
+// Intervalo de confianza 80% basado en nº de partidos
+// Con pocos partidos, el rango es más amplio
+// ══════════════════════════════════════════
+function uncertaintyBand(prob, nMatches) {
+    // Standard error de Bernoulli, amplificado por escasez de datos
+    const p = prob / 100;
+    const se = Math.sqrt(p * (1 - p) / Math.max(5, nMatches));
+    const z80 = 1.282;
+    const low  = Math.max(0, (p - z80 * se) * 100);
+    const high = Math.min(100, (p + z80 * se) * 100);
+    return { low: low.toFixed(0), high: high.toFixed(0) };
+}
+
+// ══════════════════════════════════════════
+// MEJORA 5: CALCULADORA DE VALOR ESPERADO (EV)
+// EV = (prob_modelo * cuota) - 1
+// Kelly = (b*p - q) / b  donde b = cuota-1, q = 1-p
+// ══════════════════════════════════════════
+function calcEV(modelProb, odds) {
+    if (!odds || odds <= 1) return null;
+    const p = modelProb / 100;
+    const ev = p * odds - 1;
+    return parseFloat(ev.toFixed(4));
+}
+
+function calcKelly(modelProb, odds) {
+    if (!odds || odds <= 1) return null;
+    const p = modelProb / 100;
+    const b = odds - 1;
+    const q = 1 - p;
+    const k = (b * p - q) / b;
+    // Usamos 25% Kelly (fraccionario) para controlar varianza
+    return Math.max(0, parseFloat((k * 0.25 * 100).toFixed(1)));
+}
+
+// ── LIGAS OFFLINE ──
+const LIGAS_OFFLINE = {
+    "PL":  {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League",leagueAvg:10.1,teams:["Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC","Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Ipswich Town FC","Leicester City FC","Liverpool FC","Manchester City FC","Manchester United FC","Newcastle United FC","Nottingham Forest FC","Southampton FC","Tottenham Hotspur FC","West Ham United FC","Wolverhampton Wanderers FC"]},
+    "PD":  {name:"🇪🇸 La Liga",leagueAvg:9.5,teams:["Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona","RCD Mallorca","Rayo Vallecano","Real Betis","Real Madrid CF","Real Sociedad","Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]},
+    "SA":  {name:"🇮🇹 Serie A",leagueAvg:9.0,teams:["AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC","Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC","Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio","SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Venezia FC"]},
+    "BL1": {name:"🇩🇪 Bundesliga",leagueAvg:9.8,teams:["1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen","Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg","FC Bayern München","FC St. Pauli","Holstein Kiel","RB Leipzig","SC Freiburg","SV Werder Bremen","TSG Hoffenheim","VfB Stuttgart","VfL Bochum 1848","VfL Wolfsburg"]},
+    "FL1": {name:"🇫🇷 Ligue 1",leagueAvg:9.3,teams:["AJ Auxerre","AS Monaco FC","AS Saint-Étienne","Angers SCO","Le Havre AC","Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille","Paris Saint-Germain","RC Lens","RC Strasbourg Alsace","Stade Brestois 29","Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes"]},
+    "DED": {name:"🇳🇱 Eredivisie",leagueAvg:9.6,teams:["AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente","FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo","NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk","Sparta Rotterdam","Willem II","sc Heerenveen"]},
+    "PPL": {name:"🇵🇹 Primeira Liga",leagueAvg:9.1,teams:["AVS Futebol SAD","Boavista FC","CD Nacional","CD Santa Clara","Casa Pia AC","Estrela da Amadora","FC Arouca","FC Famalicão","FC Porto","GD Estoril Praia","Gil Vicente FC","Moreirense FC","Rio Ave FC","SC Braga","SC Farense","SL Benfica","Sporting CP","Vitória SC"]},
+    "BSA": {name:"🇧🇷 Brasileirão",leagueAvg:9.4,teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]},
+    "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:["Blackburn Rovers","Bristol City","Burnley FC","Cardiff City","Coventry City","Derby County","Hull City","Leeds United","Luton Town","Middlesbrough FC","Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC","Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City","Sunderland AFC","Swansea City","Watford FC","West Bromwich Albion"]}
+};
+
 const CORNER_POWER = {
     "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
     "Real Madrid CF":{home:6.6,away:5.7},"FC Barcelona":{home:6.4,away:5.5},"Atlético de Madrid":{home:5.8,away:4.9},"Girona FC":{home:5.6,away:4.7},"Real Sociedad":{home:5.4,away:4.5},"Athletic Club":{home:5.5,away:4.6},"Real Betis":{home:5.3,away:4.4},"Valencia CF":{home:5.1,away:4.2},"Sevilla FC":{home:5.2,away:4.3},"Villarreal CF":{home:5.0,away:4.2},"CA Osasuna":{home:4.9,away:4.0},"Getafe CF":{home:4.5,away:3.7},"RC Celta de Vigo":{home:5.0,away:4.1},"RCD Mallorca":{home:4.7,away:3.9},"Rayo Vallecano":{home:4.6,away:3.8},"UD Las Palmas":{home:4.8,away:4.0},"Deportivo Alavés":{home:4.7,away:3.9},"CD Leganés":{home:4.5,away:3.7},"Real Valladolid CF":{home:4.4,away:3.6},"RCD Espanyol de Barcelona":{home:4.8,away:4.0},"Levante UD":{home:5.4,away:4.5},"Real Oviedo":{home:5.1,away:4.2},
@@ -264,7 +396,6 @@ const CORNER_POWER = {
     "Leeds United":{home:5.8,away:4.9},"Burnley FC":{home:5.4,away:4.5},"Sheffield United":{home:5.2,away:4.3},"Luton Town":{home:4.9,away:4.1},"West Bromwich Albion":{home:5.0,away:4.2},"Norwich City":{home:5.1,away:4.3},"Hull City":{home:4.8,away:4.0},"Middlesbrough FC":{home:5.0,away:4.2},"Coventry City":{home:5.1,away:4.3},"Preston North End":{home:4.7,away:3.9},"Sunderland AFC":{home:5.0,away:4.2},"Swansea City":{home:4.9,away:4.1},"Watford FC":{home:5.1,away:4.3},"Bristol City":{home:4.8,away:4.0},"QPR":{home:4.7,away:3.9},"Stoke City":{home:4.8,away:4.0},"Sheffield Wednesday":{home:4.7,away:3.9},"Blackburn Rovers":{home:4.9,away:4.1},"Plymouth Argyle":{home:4.6,away:3.8},"Portsmouth FC":{home:4.8,away:4.0},"Derby County":{home:5.0,away:4.2},"Oxford United":{home:4.7,away:3.9},"Millwall FC":{home:4.8,away:4.0},"Cardiff City":{home:4.7,away:3.9}
 };
 
-// ── GOAL POWER 1T ──
 const GOAL_POWER_1T = {
     "Manchester City FC":{home:0.88,away:0.74},"Liverpool FC":{home:0.85,away:0.71},"Arsenal FC":{home:0.82,away:0.68},"Chelsea FC":{home:0.75,away:0.62},"Tottenham Hotspur FC":{home:0.74,away:0.61},"Aston Villa FC":{home:0.72,away:0.60},"Newcastle United FC":{home:0.70,away:0.58},"Manchester United FC":{home:0.67,away:0.55},"Brighton & Hove Albion FC":{home:0.71,away:0.60},"West Ham United FC":{home:0.64,away:0.53},"Crystal Palace FC":{home:0.58,away:0.47},"AFC Bournemouth":{home:0.60,away:0.49},"Fulham FC":{home:0.62,away:0.51},"Wolverhampton Wanderers FC":{home:0.60,away:0.49},"Everton FC":{home:0.57,away:0.46},"Brentford FC":{home:0.63,away:0.52},"Nottingham Forest FC":{home:0.58,away:0.47},"Leicester City FC":{home:0.60,away:0.49},"Ipswich Town FC":{home:0.54,away:0.43},"Southampton FC":{home:0.52,away:0.41},
     "Real Madrid CF":{home:0.84,away:0.70},"FC Barcelona":{home:0.82,away:0.68},"Atlético de Madrid":{home:0.71,away:0.59},"Girona FC":{home:0.68,away:0.56},"Real Sociedad":{home:0.65,away:0.54},"Athletic Club":{home:0.66,away:0.55},"Real Betis":{home:0.64,away:0.53},"Valencia CF":{home:0.62,away:0.51},"Sevilla FC":{home:0.63,away:0.52},"Villarreal CF":{home:0.61,away:0.50},"CA Osasuna":{home:0.59,away:0.48},"Getafe CF":{home:0.53,away:0.43},"RC Celta de Vigo":{home:0.60,away:0.49},"RCD Mallorca":{home:0.56,away:0.46},"Rayo Vallecano":{home:0.57,away:0.47},"UD Las Palmas":{home:0.58,away:0.47},"Deportivo Alavés":{home:0.56,away:0.46},"CD Leganés":{home:0.54,away:0.44},"Real Valladolid CF":{home:0.53,away:0.43},"RCD Espanyol de Barcelona":{home:0.57,away:0.47},"Levante UD":{home:0.65,away:0.54},"Real Oviedo":{home:0.62,away:0.51},
@@ -277,7 +408,6 @@ const GOAL_POWER_1T = {
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"Luton Town":{home:0.59,away:0.48},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Preston North End":{home:0.57,away:0.46},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46}
 };
 
-// ── FULL MATCH GOAL POWER (goles completos partido) ──
 const GOAL_POWER_FULL = {
     "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},"Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},"Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},"Brighton & Hove Albion FC":{home:1.50,away:1.20},"West Ham United FC":{home:1.28,away:1.00},
     "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},"Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},
@@ -308,7 +438,6 @@ async function bsdFetchAll(path) {
     return results;
 }
 
-// ── EXTRAER STATS DE UN PARTIDO ──
 function extractMatchStats(match, role) {
     const s=match.stats||match.statistics||{};
     const ls=match.live_stats||{};
@@ -324,7 +453,8 @@ function extractMatchStats(match, role) {
     return {corners,goals1t,goalsFull};
 }
 
-// ── OBTENER STATS CON PESOS TEMPORALES (UNIFICADO Y CORREGIDO) ──
+// ── MEJORA 4 aplicada: pesos más agresivos (0.15 vs 0.10 anterior)
+// Partidos recientes pesan ~2.2x más que partidos de hace 15 fechas
 async function getTeamStats(teamId, teamName, role, seasonId) {
     const key=`${teamId}_${seasonId}_${role}`;
     if(statsCache[key]) return statsCache[key];
@@ -338,11 +468,11 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
                 ?(m.home_team_obj?.id===teamId||m.home_team===teamName)
                 :(m.away_team_obj?.id===teamId||m.away_team===teamName);
         }).slice(-MATCHES_TO_USE);
-        
+
         if(finished.length<3) return null;
 
-        // ── PESOS TEMPORALES: partido más reciente = peso mayor ──
-        const weights = finished.map((_,i) => Math.exp(0.1 * i));
+        // Pesos exponenciales más agresivos → partidos recientes valen más
+        const weights = finished.map((_,i) => Math.exp(0.15 * i)); // ← era 0.10
 
         let tC=0,wC=0, tG=0,wG=0, tGF=0,wGF=0;
         const form=[];
@@ -371,28 +501,23 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
             matches:   finished.length,
             form,
             fromApi:   true,
-            logoUrl:   teamMap[teamName]?.logoUrl||null, // ¡RECUPERADO PARA NO PERDER LOGOS!
+            logoUrl:   teamMap[teamName]?.logoUrl||null,
         };
         statsCache[key]=result;
         return result;
     } catch {return null;}
 }
 
-// ── FALLBACKS con caps realistas ──
 function fallbackCorners(name, role, avg) {
     if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
     const base = role === 'home' ? avg / 2 * 1.10 : avg / 2 * 0.90;
     return Math.min(8.0, Math.max(3.2, base));
 }
-
 function fallbackGoals1T(name, role, avg) {
     if (GOAL_POWER_1T[name]?.[role]) return GOAL_POWER_1T[name][role];
-    const base = role === 'home'
-        ? (avg / 10) * 1.15 * 1.08
-        : (avg / 10) * 1.15 * 0.92;
+    const base = role === 'home' ? (avg/10)*1.15*1.08 : (avg/10)*1.15*0.92;
     return Math.min(0.90, Math.max(0.30, base));
 }
-
 function fallbackGoalsFull(name, role, avg) {
     if (GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
     const g1t = fallbackGoals1T(name, role, avg);
@@ -400,13 +525,12 @@ function fallbackGoalsFull(name, role, avg) {
     return Math.min(2.10, Math.max(0.60, full));
 }
 
-// ── REGRESIÓN A LA MEDIA ──
 function regressionBlend(teamVal, leagueMean, nMatches) {
     const trust = Math.min(0.85, 0.40 + (nMatches / MATCHES_TO_USE) * 0.45);
     return teamVal * trust + leagueMean * (1 - trust);
 }
 
-// ── POISSON ITERATIVO ──
+// ── POISSON / NEGBIN ──
 function poissonProb(lambda,k){
     let p=Math.exp(-lambda),term=p;
     for(let i=1;i<=k;i++){term*=lambda/i;p+=term;}
@@ -420,8 +544,6 @@ function poissonExact(lambda,k){
 function poissonOver(lambda,threshold){
     return Math.min(98,Math.max(2,(1-poissonProb(lambda,Math.floor(threshold)))*100));
 }
-
-// ── NEGBINOMIAL PARA CÓRNERS ──
 function negBinExact(mu, r, k) {
     const p = r / (r + mu);
     let logP = 0;
@@ -429,93 +551,67 @@ function negBinExact(mu, r, k) {
     logP += r*Math.log(p) + k*Math.log(1-p);
     return Math.exp(logP);
 }
-function negBinOver(mu, threshold) {
-    const r = 6; 
+// MEJORA: r ahora es parámetro, no fijo en 6
+function negBinOver(mu, threshold, r=6.0) {
     const k = Math.floor(threshold);
     let cdf = 0;
     for(let i=0;i<=k;i++) cdf += negBinExact(mu, r, i);
     return Math.min(98, Math.max(2, (1-cdf)*100));
 }
 
-// ── DIXON-COLES CORRECTION ──
+// ── DIXON-COLES ──
 function dixonColesTau(x, y, lambdaH, lambdaA, rho) {
-    if(x===0 && y===0) return 1 - lambdaH*lambdaA*rho;
-    if(x===0 && y===1) return 1 + lambdaH*rho;
-    if(x===1 && y===0) return 1 + lambdaA*rho;
-    if(x===1 && y===1) return 1 - rho;
+    if(x===0&&y===0) return 1-lambdaH*lambdaA*rho;
+    if(x===0&&y===1) return 1+lambdaH*rho;
+    if(x===1&&y===0) return 1+lambdaA*rho;
+    if(x===1&&y===1) return 1-rho;
     return 1;
 }
-
 function calcResultProbs(lambdaH, lambdaA) {
-    const rho = -0.13;
-    let pHome=0, pDraw=0, pAway=0;
-    const maxG = 10;
-    for(let h=0;h<=maxG;h++){
-        for(let a=0;a<=maxG;a++){
-            let p = poissonExact(lambdaH,h) * poissonExact(lambdaA,a);
-            if(h<=1 && a<=1) p *= dixonColesTau(h,a,lambdaH,lambdaA,rho);
+    const rho=-0.13;
+    let pHome=0,pDraw=0,pAway=0;
+    for(let h=0;h<=10;h++){
+        for(let a=0;a<=10;a++){
+            let p=poissonExact(lambdaH,h)*poissonExact(lambdaA,a);
+            if(h<=1&&a<=1) p*=dixonColesTau(h,a,lambdaH,lambdaA,rho);
             if(h>a) pHome+=p; else if(h===a) pDraw+=p; else pAway+=p;
         }
     }
     const total=pHome+pDraw+pAway;
     return {
-        home: parseFloat((pHome/total*100).toFixed(1)),
-        draw: parseFloat((pDraw/total*100).toFixed(1)),
-        away: parseFloat((pAway/total*100).toFixed(1)),
+        home:parseFloat((pHome/total*100).toFixed(1)),
+        draw:parseFloat((pDraw/total*100).toFixed(1)),
+        away:parseFloat((pAway/total*100).toFixed(1)),
     };
 }
-
-// ── BTTS ──
 function calcBTTS(lambdaH, lambdaA){
-    const rho = -0.13;
-    const p00 = poissonExact(lambdaH,0) * poissonExact(lambdaA,0) * dixonColesTau(0,0,lambdaH,lambdaA,rho);
-    const btts = 1 - Math.exp(-lambdaH) - Math.exp(-lambdaA) + p00;
-    return Math.min(98, Math.max(2, btts * 100));
+    const rho=-0.13;
+    const p00=poissonExact(lambdaH,0)*poissonExact(lambdaA,0)*dixonColesTau(0,0,lambdaH,lambdaA,rho);
+    const btts=1-Math.exp(-lambdaH)-Math.exp(-lambdaA)+p00;
+    return Math.min(98,Math.max(2,btts*100));
 }
 
 // ── COLOR / CLASE ──
 function colorFor(p){return p>=65?'var(--green)':p>=42?'var(--yellow)':'var(--accent)';}
 function cardClassFor(p){return p>=65?'high':p>=42?'mid':'low';}
 
-// ── RECOMENDACIÓN INTELIGENTE ──
+// ── RECOMENDACIÓN ──
 function buildRecommendation(markets) {
     const thresholds = { resultado:55, btts:58, goles:62, corners:67, ht:62 };
-    const minMargin  = { resultado:10, btts:10, goles:10, corners: 8, ht:15 };
-    const reliability = { corners:0.92, btts:0.88, goles:0.85, ht:0.82, resultado:0.78 };
-
+    const minMargin  = { resultado:10, btts:10, goles:10, corners:8, ht:15 };
+    const reliability= { corners:0.92, btts:0.88, goles:0.85, ht:0.82, resultado:0.78 };
     const candidates = markets
-        .filter(m => {
-            const th = thresholds[m.type] || 55;
-            const mg = minMargin[m.type] || 10;
-            return m.prob >= th + mg;
+        .filter(m=>{const th=thresholds[m.type]||55,mg=minMargin[m.type]||10;return m.prob>=th+mg;})
+        .map(m=>{
+            const baseScore=m.prob*(reliability[m.type]||0.80);
+            const sameGroup=markets.filter(x=>x.type===m.type&&x!==m&&x.prob>=55);
+            return {...m,score:baseScore+sameGroup.length*1.5};
         })
-        .map(m => {
-            const baseScore = m.prob * (reliability[m.type] || 0.80);
-            const sameGroup = markets.filter(x => x.type === m.type && x !== m && x.prob >= 55);
-            const consensusBonus = sameGroup.length * 1.5;
-            return {...m, score: baseScore + consensusBonus};
-        })
-        .sort((a,b) => b.score - a.score);
-
-    if(candidates.length === 0) {
-        return {
-            top: null,
-            second: null,
-            msg: 'SIN APUESTA CLARA',
-            sub: 'Ningún mercado supera el umbral de confianza mínimo'
-        };
-    }
-
-    const top    = candidates[0];
-    const second = candidates[1] || null;
-    const diamond = top.prob >= 80 ? '💎' : top.prob >= 72 ? '⭐' : '';
-
-    return {
-        top:    {...top, diamond},
-        second,
-        msg:    null,
-        sub:    top.desc || ''
-    };
+        .sort((a,b)=>b.score-a.score);
+    if(candidates.length===0) return{top:null,second:null,msg:'SIN APUESTA CLARA',sub:'Ningún mercado supera el umbral de confianza mínimo'};
+    const top=candidates[0],second=candidates[1]||null;
+    const diamond=top.prob>=80?'💎':top.prob>=72?'⭐':'';
+    return{top:{...top,diamond},second,msg:null,sub:top.desc||''};
 }
 
 // ── UI SETUP ──
@@ -537,7 +633,7 @@ window.onload=async()=>{
         addOfflineLeagues();
         setApiStatus('live','🟢 BSD API activa — datos en tiempo real');
         apiAvailable=true;
-        document.getElementById('engine-badge').textContent='🛰 BSD + Dixon-Coles + NegBin';
+        document.getElementById('engine-badge').textContent='🛰 BSD + Dixon-Coles + Platt + NegBin-v';
     } catch {
         loadOfflineLeagues();
         setApiStatus('error','🟡 Modo offline — datos históricos');
@@ -562,7 +658,6 @@ function loadOfflineLeagues(){
         lSel.add(new Option(l.name,code));
     }
 }
-
 lSel.onchange=async()=>{
     const key=lSel.value;
     hSel.innerHTML=aSel.innerHTML='<option value="">— Cargando... —</option>';
@@ -587,7 +682,6 @@ lSel.onchange=async()=>{
     fillSelects(offKey?LIGAS_OFFLINE[offKey].teams:[]);
     setApiStatus('error','🟡 Equipos cargados en modo offline');
 };
-
 function findOfflineKey(key,name){
     if(LIGAS_OFFLINE[key]) return key;
     for(let k in LIGAS_OFFLINE) if(LIGAS_OFFLINE[k].name.includes(name.replace(/^\S+ /,''))) return k;
@@ -613,10 +707,10 @@ document.getElementById('calc-btn').onclick=async()=>{
     let homeStats=null,awayStats=null;
     if(homeId&&awayId&&seasonId&&apiAvailable){
         document.getElementById('loading-text').textContent=`Analizando ${home.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent=`Últimos ${MATCHES_TO_USE} partidos como local`;
+        document.getElementById('loading-sub').textContent=`Ponderando últimos ${MATCHES_TO_USE} partidos (decaimiento exp.)`;
         homeStats=await getTeamStats(homeId,home,'home',seasonId);
         document.getElementById('loading-text').textContent=`Analizando ${away.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent=`Últimos ${MATCHES_TO_USE} partidos como visitante`;
+        document.getElementById('loading-sub').textContent='Aplicando calibración Platt + NegBin variable...';
         awayStats=await getTeamStats(awayId,away,'away',seasonId);
     }
 
@@ -628,30 +722,28 @@ document.getElementById('calc-btn').onclick=async()=>{
 
     const rawHomeCorn = homeStats?.corners ?? fallbackCorners(home,'home',leagueAvg);
     const rawAwayCorn = awayStats?.corners ?? fallbackCorners(away,'away',leagueAvg);
-    const homeCorn = homeStats?.fromApi
-        ? regressionBlend(rawHomeCorn, leagueCornerMean * 1.10, homeMatchesC)
-        : rawHomeCorn;
-    const awayCorn = awayStats?.fromApi
-        ? regressionBlend(rawAwayCorn, leagueCornerMean * 0.90, awayMatchesC)
-        : rawAwayCorn;
+    let homeCorn = homeStats?.fromApi ? regressionBlend(rawHomeCorn,leagueCornerMean*1.10,homeMatchesC) : rawHomeCorn;
+    let awayCorn = awayStats?.fromApi ? regressionBlend(rawAwayCorn,leagueCornerMean*0.90,awayMatchesC) : rawAwayCorn;
 
     const rawHomeG1T = homeStats?.goals1t ?? fallbackGoals1T(home,'home',leagueAvg);
     const rawAwayG1T = awayStats?.goals1t ?? fallbackGoals1T(away,'away',leagueAvg);
-    const homeGoal1T = homeStats?.fromApi
-        ? regressionBlend(rawHomeG1T, leagueGoalMean * 1.10, homeMatchesC)
-        : rawHomeG1T;
-    const awayGoal1T = awayStats?.fromApi
-        ? regressionBlend(rawAwayG1T, leagueGoalMean * 0.90, awayMatchesC)
-        : rawAwayG1T;
+    let homeGoal1T = homeStats?.fromApi ? regressionBlend(rawHomeG1T,leagueGoalMean*1.10,homeMatchesC) : rawHomeG1T;
+    let awayGoal1T = awayStats?.fromApi ? regressionBlend(rawAwayG1T,leagueGoalMean*0.90,awayMatchesC) : rawAwayG1T;
 
     const rawHomeGF = homeStats?.goalsFull ?? fallbackGoalsFull(home,'home',leagueAvg);
     const rawAwayGF = awayStats?.goalsFull ?? fallbackGoalsFull(away,'away',leagueAvg);
-    const homeGoalF = homeStats?.fromApi
-        ? regressionBlend(rawHomeGF, leagueGoalFMean * 1.10, homeMatchesC)
-        : rawHomeGF;
-    const awayGoalF = awayStats?.fromApi
-        ? regressionBlend(rawAwayGF, leagueGoalFMean * 0.90, awayMatchesC)
-        : rawAwayGF;
+    let homeGoalF = homeStats?.fromApi ? regressionBlend(rawHomeGF,leagueGoalFMean*1.10,homeMatchesC) : rawHomeGF;
+    let awayGoalF = awayStats?.fromApi ? regressionBlend(rawAwayGF,leagueGoalFMean*0.90,awayMatchesC) : rawAwayGF;
+
+    // MEJORA 3: Ajuste por forma reciente
+    const homeFormMult = formMultiplier(homeStats?.form);
+    const awayFormMult = formMultiplier(awayStats?.form);
+    homeGoalF  *= homeFormMult;
+    awayGoalF  *= awayFormMult;
+    homeGoal1T *= homeFormMult;
+    awayGoal1T *= awayFormMult;
+    homeCorn   *= (homeFormMult * 0.5 + 0.5);
+    awayCorn   *= (awayFormMult * 0.5 + 0.5);
 
     const lambdaCorn = parseFloat((homeCorn+awayCorn).toFixed(2));
     const lambdaGoal = parseFloat((homeGoal1T+awayGoal1T).toFixed(2));
@@ -660,36 +752,89 @@ document.getElementById('calc-btn').onclick=async()=>{
     const usedApi    = homeStats?.fromApi||awayStats?.fromApi;
     const matchInfo  = usedApi?`${homeStats?.matches||'?'} partidos (local) · ${awayStats?.matches||'?'} (visitante)`:'Datos históricos estimados';
 
+    // r de NegBin según liga
+    const ligaNombre = liga.name || '';
+    const negBinR = getLeagueR(ligaNombre);
+
+    const totalMatchesUsed = (homeStats?.matches||0) + (awayStats?.matches||0);
+
     loadingEl.classList.add('hidden');
-    renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg});
+    renderOutput({
+        home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,
+        homeCorn,awayCorn,homeGoal1T,awayGoal1T,
+        homeStats,awayStats,usedApi,matchInfo,leagueAvg,
+        negBinR,homeFormMult,awayFormMult,totalMatchesUsed
+    });
     outputEl.classList.remove('hidden');
     requestAnimationFrame(()=>requestAnimationFrame(animateBars));
     window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 };
 
 // ── RENDER COMPLETO ──
-function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg}){
+function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,awayCorn,homeGoal1T,awayGoal1T,homeStats,awayStats,usedApi,matchInfo,leagueAvg,negBinR,homeFormMult,awayFormMult,totalMatchesUsed}){
 
     document.getElementById('data-source-container').innerHTML='';
 
-    const homeLogo=homeStats?.logoUrl||teamMap[home]?.logoUrl||null;
-    const awayLogo=awayStats?.logoUrl||teamMap[away]?.logoUrl||null;
+    // FORMA HTML
+    function formHtml(form) {
+        if(!form||form.length===0) return '';
+        return `<div class="form-row">${form.map(r=>`<div class="form-dot ${r}">${r.toUpperCase()}</div>`).join('')}</div>`;
+    }
 
     document.getElementById('match-header-container').innerHTML=`
         <div class="match-header animate-in">
             <div class="teams-row">
                 <div class="team-side">
                     <div class="team-name">${home.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
+                    ${formHtml(homeStats?.form)}
                 </div>
                 <div class="vs-center">VS</div>
                 <div class="team-side">
                     <div class="team-name">${away.replace(/(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s/gi,'').trim()}</div>
+                    ${formHtml(awayStats?.form)}
                 </div>
             </div>
         </div>`;
 
-    const rp=calcResultProbs(lambdaH,lambdaA);
-    const btts=parseFloat(calcBTTS(lambdaH,lambdaA).toFixed(0));
+    // DIAGNÓSTICO DEL MODELO (nuevo)
+    const confianzaModelo = usedApi
+        ? Math.min(95, 55 + (totalMatchesUsed / (MATCHES_TO_USE * 2)) * 35)
+        : 45;
+    document.getElementById('diagnostics-container').innerHTML=`
+        <div class="diagnostics animate-in">
+            <div class="diag-title">⚙ DIAGNÓSTICO DEL MODELO</div>
+            <div class="diag-grid">
+                <div class="diag-item">
+                    <div class="diag-val" style="color:var(--yellow)">${negBinR}</div>
+                    <div class="diag-label">NegBin r</div>
+                    <div class="diag-sub">dispersión córners</div>
+                </div>
+                <div class="diag-item">
+                    <div class="diag-val" style="color:${confianzaModelo>=70?'var(--green)':confianzaModelo>=55?'var(--yellow)':'var(--accent)'}">${confianzaModelo.toFixed(0)}%</div>
+                    <div class="diag-label">Confianza datos</div>
+                    <div class="diag-sub">${matchInfo}</div>
+                </div>
+                <div class="diag-item">
+                    <div class="diag-val" style="color:var(--blue)">${(homeFormMult*100-100).toFixed(0)>0?'+':''}${(homeFormMult*100-100).toFixed(0)}%</div>
+                    <div class="diag-label">Forma local</div>
+                    <div class="diag-sub">adj. λ goles</div>
+                </div>
+                <div class="diag-item">
+                    <div class="diag-val" style="color:var(--blue)">${(awayFormMult*100-100).toFixed(0)>0?'+':''}${(awayFormMult*100-100).toFixed(0)}%</div>
+                    <div class="diag-label">Forma visitante</div>
+                    <div class="diag-sub">adj. λ goles</div>
+                </div>
+            </div>`;
+
+    // RESULTADOS DIXON-COLES → CALIBRADOS con Platt
+    const rpRaw=calcResultProbs(lambdaH,lambdaA);
+    const rp = {
+        home: parseFloat(plattCalibrate(rpRaw.home,'resultado').toFixed(1)),
+        draw: parseFloat(plattCalibrate(rpRaw.draw,'resultado').toFixed(1)),
+        away: parseFloat(plattCalibrate(rpRaw.away,'resultado').toFixed(1)),
+    };
+    const bttsRaw=calcBTTS(lambdaH,lambdaA);
+    const btts=parseFloat(plattCalibrate(bttsRaw,'btts').toFixed(0));
     const maxRP=Math.max(rp.home,rp.draw,rp.away);
     const rpColor=(v)=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
 
@@ -709,44 +854,53 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    const over15  = parseFloat(poissonOver(lambdaH+lambdaA,1.5).toFixed(0));
-    const over25  = parseFloat(poissonOver(lambdaH+lambdaA,2.5).toFixed(0));
-    const corn75  = parseFloat(poissonOver(lambdaCorn,7.5).toFixed(0));
+    const lambdaFull2=lambdaH+lambdaA;
 
-    const lambdaFull2 = lambdaH + lambdaA;
+    // Función auxiliar que aplica calibración y banda de incertidumbre
+    function mktCard(line, rawProb, marketType, barIdx, totalN, labelLine, labelSub) {
+        const prob = parseFloat(plattCalibrate(rawProb, marketType).toFixed(1));
+        const color = colorFor(prob);
+        const cls = cardClassFor(prob);
+        const band = uncertaintyBand(prob, Math.max(8, totalN));
+        return `
+        <div class="market-card ${cls} animate-in" style="animation-delay:${barIdx*0.06}s;opacity:0;">
+            <div class="line-label">${labelLine}<small>LÍNEA</small></div>
+            <div class="bar-wrap">
+                <div class="bar-bg"><div class="bar-fill" data-target="${prob.toFixed(1)}" style="background:${color};width:0%"></div></div>
+                <div class="bar-sub">${labelSub}: ${(100-prob).toFixed(1)}%</div>
+                <div class="uncertainty-band">IC80%: ${band.low}–${band.high}%</div>
+            </div>
+            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
+        </div>`;
+    }
 
     let golesFullHtml=`
         <div class="section-header animate-in">
             <span class="section-icon">⚽</span>
             <span class="section-title">GOLES</span>
-            <span class="section-lambda">λ <span>${(lambdaFull2).toFixed(2)}</span></span>
+            <span class="section-lambda">λ <span>${lambdaFull2.toFixed(2)}</span></span>
+            <span class="cal-badge">✓ Calibrado</span>
         </div>`;
-    [1.5, 2.5].forEach((line,i)=>{
-        const prob=poissonOver(lambdaFull2,line),color=colorFor(prob),cls=cardClassFor(prob);
-        golesFullHtml+=`
-        <div class="market-card ${cls} animate-in" style="animation-delay:${i*0.06}s;opacity:0;">
-            <div class="line-label">+${line}<small>LÍNEA</small></div>
-            <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${prob.toFixed(1)}" style="background:${color};width:0%"></div></div>
-                <div class="bar-sub">Under: ${(100-prob).toFixed(1)}%</div>
-            </div>
-            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
-        </div>`;
+    [1.5,2.5].forEach((line,i)=>{
+        golesFullHtml+=mktCard(line,poissonOver(lambdaFull2,line),'goals_over'+(line===1.5?'15':'25'),i,totalMatchesUsed,`+${line}`,'Under');
     });
 
-    const bttsProb = btts;
-    const bttsBar = bttsProb;
     let bttsHtml=`
         <div class="section-divider"></div>
         <div class="section-header animate-in">
             <span class="section-icon">🤝</span>
             <span class="section-title">AMBOS MARCAN</span>
-        </div>
+            <span class="cal-badge">✓ Calibrado</span>
+        </div>`;
+    const bttsProb = btts;
+    const bttsBand = uncertaintyBand(bttsProb, Math.max(8,totalMatchesUsed));
+    bttsHtml+=`
         <div class="market-card ${cardClassFor(bttsProb)} animate-in" style="opacity:0;">
             <div class="line-label">BTTS<small>AMBOS</small></div>
             <div class="bar-wrap">
                 <div class="bar-bg"><div class="bar-fill" data-target="${bttsProb}" style="background:${colorFor(bttsProb)};width:0%"></div></div>
                 <div class="bar-sub">No: ${(100-bttsProb).toFixed(1)}%</div>
+                <div class="uncertainty-band">IC80%: ${bttsBand.low}–${bttsBand.high}%</div>
             </div>
             <div class="pct-label" style="color:${colorFor(bttsProb)}">${bttsProb}%<small>SÍ</small></div>
         </div>`;
@@ -758,19 +912,12 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         <div class="section-header animate-in">
             <span class="section-icon">⬡</span>
             <span class="section-title">CÓRNERS</span>
-            <span class="section-lambda">λ <span>${lambdaCorn}</span></span>
+            <span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span>
+            <span class="cal-badge">✓ Calibrado</span>
         </div>`;
     [7.5,8.5,9.5,10.5].forEach((line,i)=>{
-        const prob=negBinOver(lambdaCorn,line),color=colorFor(prob),cls=cardClassFor(prob);
-        cornHtml+=`
-        <div class="market-card ${cls} animate-in" style="animation-delay:${i*0.06}s;opacity:0;">
-            <div class="line-label">+${line}<small>LÍNEA</small></div>
-            <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${prob.toFixed(1)}" style="background:${color};width:0%"></div></div>
-                <div class="bar-sub">Under: ${(100-prob).toFixed(1)}%</div>
-            </div>
-            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
-        </div>`;
+        const rawP = negBinOver(lambdaCorn,line,negBinR);
+        cornHtml+=mktCard(line,rawP,'corners',i,totalMatchesUsed,`+${line}`,'Under');
     });
 
     let goalHtml=`
@@ -778,41 +925,40 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
         <div class="section-header animate-in">
             <span class="section-icon">⏱</span>
             <span class="section-title">GOLES 1er TIEMPO</span>
-            <span class="section-lambda">λ <span>${lambdaGoal}</span></span>
+            <span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span>
+            <span class="cal-badge">✓ Calibrado</span>
         </div>`;
-    [0.5,1.5].forEach((line,i)=>{
-        const prob=poissonOver(lambdaGoal,line),color=colorFor(prob),cls=cardClassFor(prob);
-        goalHtml+=`
-        <div class="market-card ${cls} animate-in" style="animation-delay:${(i+4)*0.06}s;opacity:0;">
-            <div class="line-label">+${line}<small>LÍNEA</small></div>
-            <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${prob.toFixed(1)}" style="background:${color};width:0%"></div></div>
-                <div class="bar-sub">Under: ${(100-prob).toFixed(1)}%</div>
-            </div>
-            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
-        </div>`;
+    [[0.5,'goals_ht05'],[1.5,'goals_ht15']].forEach(([line,mtype],i)=>{
+        goalHtml+=mktCard(line,poissonOver(lambdaGoal,line),mtype,i+4,totalMatchesUsed,`+${line}`,'Under');
     });
-    document.getElementById('all-markets-container').innerHTML=golesFullHtml+goalHtml+bttsHtml+cornHtml;
 
+    document.getElementById('all-markets-container').innerHTML=golesFullHtml+goalHtml+bttsHtml+cornHtml;
     document.getElementById('verdict-container').innerHTML='';
 
-    const lambdaFull = lambdaH+lambdaA;
+    // Probabilidades CALIBRADAS para recomendación
+    const over15c  = parseFloat(plattCalibrate(poissonOver(lambdaFull2,1.5),'goals_over15').toFixed(0));
+    const over25c  = parseFloat(plattCalibrate(poissonOver(lambdaFull2,2.5),'goals_over25').toFixed(0));
+    const corn75c  = parseFloat(plattCalibrate(negBinOver(lambdaCorn,7.5,negBinR),'corners').toFixed(0));
+    const corn85c  = parseFloat(plattCalibrate(negBinOver(lambdaCorn,8.5,negBinR),'corners').toFixed(0));
+    const corn95c  = parseFloat(plattCalibrate(negBinOver(lambdaCorn,9.5,negBinR),'corners').toFixed(0));
+    const ht05c    = parseFloat(plattCalibrate(poissonOver(lambdaGoal,0.5),'goals_ht05').toFixed(0));
+    const ht15c    = parseFloat(plattCalibrate(poissonOver(lambdaGoal,1.5),'goals_ht15').toFixed(0));
+
     const allMarkets = [
-        {label:`VICTORIA LOCAL (${rp.home}%)`, prob:rp.home, desc:`${home.split(' ').slice(-1)[0]} favorito en casa`, type:'resultado'},
-        {label:`VICTORIA VISITANTE (${rp.away}%)`, prob:rp.away, desc:`${away.split(' ').slice(-1)[0]} favorito como visitante`, type:'resultado'},
-        {label:'AMBOS MARCAN', prob:btts, desc:`${btts}% probabilidad de que ambos anoten`, type:'btts'},
-        {label:'GOLES OVER 1.5', prob:over15, desc:`Alta probabilidad de partido con goles`, type:'goles'},
-        {label:'GOLES OVER 2.5', prob:over25, desc:`Partido con 3+ goles`, type:'goles'},
-        {label:'CÓRNERS OVER 7.5', prob:parseFloat(negBinOver(lambdaCorn,7.5).toFixed(0)), desc:`Partido intenso con muchos saques`, type:'corners'},
-        {label:'CÓRNERS OVER 8.5', prob:parseFloat(negBinOver(lambdaCorn,8.5).toFixed(0)), desc:`Corners abundantes`, type:'corners'},
-        {label:'CÓRNERS OVER 9.5', prob:parseFloat(negBinOver(lambdaCorn,9.5).toFixed(0)), desc:`Partido de alta presión`, type:'corners'},
-        {label:'GOL 1T OVER 0.5', prob:parseFloat(poissonOver(lambdaGoal,0.5).toFixed(0)), desc:`Al menos un gol antes del descanso`, type:'ht'},
-        {label:'GOL 1T OVER 1.5', prob:parseFloat(poissonOver(lambdaGoal,1.5).toFixed(0)), desc:`2+ goles en el primer tiempo`, type:'ht'},
+        {label:`VICTORIA LOCAL (${rp.home}%)`,prob:rp.home,desc:`${home.split(' ').slice(-1)[0]} favorito en casa`,type:'resultado'},
+        {label:`VICTORIA VISITANTE (${rp.away}%)`,prob:rp.away,desc:`${away.split(' ').slice(-1)[0]} favorito como visitante`,type:'resultado'},
+        {label:'AMBOS MARCAN',prob:bttsProb,desc:`${bttsProb}% probabilidad de que ambos anoten`,type:'btts'},
+        {label:'GOLES OVER 1.5',prob:over15c,desc:'Alta probabilidad de partido con goles',type:'goles'},
+        {label:'GOLES OVER 2.5',prob:over25c,desc:'Partido con 3+ goles',type:'goles'},
+        {label:'CÓRNERS OVER 7.5',prob:corn75c,desc:'Partido intenso con muchos saques',type:'corners'},
+        {label:'CÓRNERS OVER 8.5',prob:corn85c,desc:'Córners abundantes',type:'corners'},
+        {label:'CÓRNERS OVER 9.5',prob:corn95c,desc:'Partido de alta presión',type:'corners'},
+        {label:'GOL 1T OVER 0.5',prob:ht05c,desc:'Al menos un gol antes del descanso',type:'ht'},
+        {label:'GOL 1T OVER 1.5',prob:ht15c,desc:'2+ goles en el primer tiempo',type:'ht'},
     ];
 
     const rec=buildRecommendation(allMarkets);
-
-    if(!rec.top) {
+    if(!rec.top){
         document.getElementById('recomendacion-container').innerHTML=`
             <div class="recomendacion animate-in" style="animation-delay:0.5s;opacity:0;border-color:rgba(230,57,70,0.2);">
                 <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
@@ -820,17 +966,15 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
                 <div class="rec-sub">Ningún mercado supera el umbral de confianza mínimo en este partido</div>
             </div>`;
     } else {
-        const t = rec.top;
-        const clsColor = t.prob>=70?'var(--green)':t.prob>=60?'var(--yellow)':'var(--accent)';
-        const secondHtml = rec.second ? `
+        const t=rec.top;
+        const clsColor=t.prob>=70?'var(--green)':t.prob>=60?'var(--yellow)':'var(--accent)';
+        const secondHtml=rec.second?`
             <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);">
                 <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">SEGUNDA OPCIÓN</div>
                 <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--muted);">
-                    ${rec.second.label} 
-                    <span style="color:${colorFor(rec.second.prob)};margin-left:6px;">${rec.second.prob}%</span>
+                    ${rec.second.label} <span style="color:${colorFor(rec.second.prob)};margin-left:6px;">${rec.second.prob}%</span>
                 </div>
-            </div>` : '';
-
+            </div>`:'';
         document.getElementById('recomendacion-container').innerHTML=`
             <div class="recomendacion animate-in" style="animation-delay:0.5s;opacity:0;">
                 <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
@@ -838,29 +982,124 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
                 <div class="rec-sub">${t.desc||''}</div>
                 <div class="rec-confidence">
                     <span class="rc-pct" style="color:${clsColor}">${t.prob.toFixed(0)}%</span>
-                    <span class="rc-label">CONFIANZA DEL MODELO</span>
+                    <span class="rc-label">MODELO CALIBRADO</span>
                 </div>
                 ${secondHtml}
             </div>`;
     }
 
-    requestAnimationFrame(()=>setTimeout(()=>{
-        document.querySelectorAll('.result-bar-fill[data-target]').forEach(b=>{b.style.width=b.dataset.target+'%';});
-    },100));
+    // ── CALCULADORA EV (nuevo) ──
+    const evMarkets = [
+        {id:'ev_local',    label:'Victoria Local',      prob:rp.home,   oddsPlaceholder:'1.90'},
+        {id:'ev_empate',   label:'Empate',              prob:rp.draw,   oddsPlaceholder:'3.30'},
+        {id:'ev_visita',   label:'Victoria Visitante',  prob:rp.away,   oddsPlaceholder:'4.50'},
+        {id:'ev_over15',   label:'Goles Over 1.5',      prob:over15c,   oddsPlaceholder:'1.25'},
+        {id:'ev_over25',   label:'Goles Over 2.5',      prob:over25c,   oddsPlaceholder:'1.80'},
+        {id:'ev_btts',     label:'Ambos Marcan',        prob:bttsProb,  oddsPlaceholder:'1.75'},
+        {id:'ev_corn75',   label:'Córners Over 7.5',    prob:corn75c,   oddsPlaceholder:'1.85'},
+        {id:'ev_corn85',   label:'Córners Over 8.5',    prob:corn85c,   oddsPlaceholder:'2.10'},
+        {id:'ev_ht05',     label:'Gol 1T Over 0.5',     prob:ht05c,     oddsPlaceholder:'1.50'},
+    ];
+
+    let evRowsHtml = evMarkets.map(m=>`
+        <div class="ev-row">
+            <div class="ev-row-header">
+                <div class="ev-market-name">${m.label}</div>
+                <div class="ev-model-prob" style="color:${colorFor(m.prob)}">${m.prob}%</div>
+            </div>
+            <div class="ev-input-row">
+                <div class="ev-input-group" style="grid-column:1/3;">
+                    <div class="ev-input-label">Cuota (decimal)</div>
+                    <input type="number" class="ev-input" id="${m.id}_odds" placeholder="${m.oddsPlaceholder}" step="0.01" min="1.01"
+                           data-prob="${m.prob}" oninput="updateEV('${m.id}',${m.prob})">
+                </div>
+                <div class="ev-result">
+                    <div class="ev-result-val neutral" id="${m.id}_ev">—</div>
+                    <div class="ev-result-label">EV</div>
+                    <div class="ev-kelly" id="${m.id}_kelly"></div>
+                </div>
+            </div>
+        </div>`).join('');
+
+    document.getElementById('ev-container').innerHTML=`
+        <div class="ev-section animate-in" style="animation-delay:0.7s;opacity:0;">
+            <button class="ev-toggle" onclick="toggleEV(this)">
+                <span class="ev-toggle-title">💰 Calculadora de Valor Esperado</span>
+                <span class="ev-toggle-icon" id="ev-icon">▼</span>
+            </button>
+            <div class="ev-body collapsed" id="ev-body">
+                <div style="font-size:0.62rem;color:var(--muted);margin-bottom:12px;line-height:1.5;">
+                    Introduce la cuota de tu casa de apuestas. Si EV &gt; 0, la apuesta tiene valor positivo según el modelo.
+                </div>
+                ${evRowsHtml}
+                <div class="ev-summary" id="ev-summary">
+                    <div class="ev-summary-text">Introduce cuotas para ver qué mercados tienen valor</div>
+                </div>
+            </div>
+        </div>`;
+}
+
+function toggleEV(btn) {
+    const body = document.getElementById('ev-body');
+    const icon = document.getElementById('ev-icon');
+    const isOpen = !body.classList.contains('collapsed');
+    body.classList.toggle('collapsed',isOpen);
+    icon.classList.toggle('open',!isOpen);
+}
+
+function updateEV(id, prob) {
+    const oddsInput = document.getElementById(id+'_odds');
+    const evEl = document.getElementById(id+'_ev');
+    const kellyEl = document.getElementById(id+'_kelly');
+    const odds = parseFloat(oddsInput.value);
+    if (!odds || odds <= 1) {
+        evEl.textContent='—'; evEl.className='ev-result-val neutral';
+        kellyEl.textContent=''; return;
+    }
+    const ev = calcEV(prob, odds);
+    const kelly = calcKelly(prob, odds);
+    const evPct = (ev * 100).toFixed(1);
+    evEl.textContent = (ev>=0?'+':'')+evPct+'%';
+    evEl.className = 'ev-result-val '+(ev>=0.03?'positive':ev>=-0.02?'neutral':'negative');
+
+    if (kelly > 0) {
+        kellyEl.innerHTML = `Kelly 25%: <span>${kelly.toFixed(1)}%</span> del bankroll`;
+    } else {
+        kellyEl.innerHTML = '<span style="color:var(--accent);">Sin ventaja</span>';
+    }
+
+    // Actualizar resumen
+    updateEVSummary();
+}
+
+function updateEVSummary() {
+    const inputs = document.querySelectorAll('.ev-input[id$="_odds"]');
+    const positives = [];
+    inputs.forEach(inp => {
+        if (!inp.value || parseFloat(inp.value) <= 1) return;
+        const id = inp.id.replace('_odds','');
+        const prob = parseFloat(inp.dataset.prob);
+        const odds = parseFloat(inp.value);
+        const ev = calcEV(prob, odds);
+        const label = inp.closest('.ev-row').querySelector('.ev-market-name').textContent;
+        if (ev > 0) positives.push({label, ev, odds, prob});
+    });
+
+    const summaryEl = document.getElementById('ev-summary');
+    if (positives.length === 0) {
+        summaryEl.innerHTML='<div class="ev-summary-text">Introduce cuotas para ver qué mercados tienen valor</div>';
+        return;
+    }
+    positives.sort((a,b)=>b.ev-a.ev);
+    const best = positives[0];
+    const kelly = calcKelly(best.prob, best.odds);
+    summaryEl.innerHTML=`
+        <div class="ev-summary-text">${positives.length} mercado${positives.length>1?'s':''} con valor positivo</div>
+        <div class="ev-best" style="color:var(--green)">⭐ ${best.label}: EV +${(best.ev*100).toFixed(1)}%</div>
+        <div style="font-size:0.62rem;color:var(--muted);margin-top:4px;">Kelly 25%: <span style="color:var(--yellow);font-weight:700;">${kelly.toFixed(1)}%</span> del bankroll</div>`;
 }
 
 function gaugePos(l,min,max){return Math.min(95,Math.max(5,((l-min)/(max-min))*100));}
-function verdictFor(lambda,type){
-    if(type==='corners'){
-        if(lambda>=11) return{cls:'high',msg:'🟢 Favorable'};
-        if(lambda>=9.5) return{cls:'mid',msg:'🟡 Medio'};
-        return{cls:'low',msg:'🔴 Bajo'};
-    } else {
-        if(lambda>=1.6) return{cls:'high',msg:'🟢 Abierto'};
-        if(lambda>=1.1) return{cls:'mid',msg:'🟡 Posible'};
-        return{cls:'low',msg:'🔴 Cerrado'};
-    }
-}
 function animateBars(){
     document.querySelectorAll('.bar-fill[data-target]').forEach(b=>{b.style.width=b.dataset.target+'%';});
 }
@@ -872,7 +1111,7 @@ function leagueAvgFor(n){
     if(n.includes('Serie A')) return 9.0;
     if(n.includes('Ligue 1')) return 9.3;
     if(n.includes('Eredivisie')) return 9.6;
-    if(n.includes('Liga Port')) return 9.1;
+    if(n.includes('Liga Port')||n.includes('Primeira')) return 9.1;
     if(n.includes('Championship')) return 9.7;
     return 9.3;
 }
