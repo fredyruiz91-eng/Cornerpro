@@ -134,7 +134,7 @@
         .rec-confidence .rc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green);}
         .rec-confidence .rc-label{font-size:0.62rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
 
-        /* ── NUEVO: CONFIANZA DEL MODELO ── */
+        /* MODEL META */
         .model-meta{background:var(--card2);border-radius:10px;padding:10px 14px;margin-bottom:8px;border:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
         .meta-chip{display:flex;align-items:center;gap:5px;font-size:0.61rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
         .meta-dot{width:6px;height:6px;border-radius:50%;}
@@ -142,10 +142,8 @@
         .meta-chip.offline .meta-dot{background:var(--yellow);}
         .meta-value{color:var(--text);}
 
-        /* ── NUEVO: BANDA DE INCERTIDUMBRE ── */
+        /* BANDA DE INCERTIDUMBRE */
         .uncertainty-band{font-size:0.58rem;color:var(--muted);margin-top:2px;letter-spacing:0.5px;}
-
-
 
         .disclaimer{text-align:center;color:var(--muted);font-size:0.63rem;margin-top:18px;line-height:1.6;opacity:0.6;}
         .hidden{display:none;}
@@ -218,9 +216,6 @@ const statsCache = {};
 
 // ══════════════════════════════════════════
 // MEJORA 1: PLATT SCALING CALIBRATION
-// Corrección empírica basada en validación de modelos Poisson en fútbol
-// A < 1 comprime las probabilidades hacia el 50% (reduce sobreconfianza)
-// B ajusta el sesgo sistemático del mercado
 // ══════════════════════════════════════════
 const PLATT_PARAMS = {
     goals_over15:  { A: 0.935, B: -0.042 },
@@ -243,19 +238,17 @@ function plattCalibrate(rawProb, marketType) {
 
 // ══════════════════════════════════════════
 // MEJORA 2: NegBin r VARIABLE POR LIGA
-// r más bajo = más varianza (ligas más impredecibles)
-// r más alto = más concentración (ligas más consistentes)
 // ══════════════════════════════════════════
 const NEGBIN_R_BY_LEAGUE = {
-    'Premier League': 5.4,   // Alta varianza, intensidad física
-    'La Liga':        6.6,   // Más consistente, equipos técnicos
-    'Serie A':        7.1,   // Muy defensiva, baja varianza
-    'Bundesliga':     5.9,   // Alta intensidad, varianza media-alta
-    'Ligue 1':        6.2,   // Media
-    'Eredivisie':     5.7,   // Abierta, más varianza
-    'Primeira Liga':  6.4,   // Media
-    'Championship':   5.5,   // Alta varianza, physically demanding
-    'Brasileirão':    5.8    // Variable, clima, viajes
+    'Premier League': 5.4,   
+    'La Liga':        6.6,   
+    'Serie A':        7.1,   
+    'Bundesliga':     5.9,   
+    'Ligue 1':        6.2,   
+    'Eredivisie':     5.7,   
+    'Primeira Liga':  6.4,   
+    'Championship':   5.5,   
+    'Brasileirão':    5.8    
 };
 
 function getLeagueR(leagueName) {
@@ -267,32 +260,20 @@ function getLeagueR(leagueName) {
 
 // ══════════════════════════════════════════
 // MEJORA 3: AJUSTE POR FORMA RECIENTE
-// Modifica lambda basado en resultados últimos 5 partidos
-// W=3pts, D=1pt, L=0pts → normalizado vs media teórica
 // ══════════════════════════════════════════
 function formMultiplier(form) {
     if (!form || form.length === 0) return 1.0;
     const score = form.reduce((acc, r) => acc + (r === 'w' ? 3 : r === 'd' ? 1 : 0), 0);
     const maxScore = form.length * 3;
-    const normalized = score / maxScore; // 0..1
-    // Neutral teórico: ~0.38 (1W, 1D, 3L o mezcla típica)
-    // Ajuste máximo: ±9% para no sobreponderar forma corta
+    const normalized = score / maxScore; 
     const adj = (normalized - 0.38) * 0.23;
     return Math.max(0.88, Math.min(1.12, 1.0 + adj));
 }
 
-function formScore(form) {
-    if (!form || form.length === 0) return null;
-    return form.reduce((acc, r) => acc + (r === 'w' ? 3 : r === 'd' ? 1 : 0), 0);
-}
-
 // ══════════════════════════════════════════
 // MEJORA 4: BANDAS DE INCERTIDUMBRE
-// Intervalo de confianza 80% basado en nº de partidos
-// Con pocos partidos, el rango es más amplio
 // ══════════════════════════════════════════
 function uncertaintyBand(prob, nMatches) {
-    // Standard error de Bernoulli, amplificado por escasez de datos
     const p = prob / 100;
     const se = Math.sqrt(p * (1 - p) / Math.max(5, nMatches));
     const z80 = 1.282;
@@ -300,7 +281,6 @@ function uncertaintyBand(prob, nMatches) {
     const high = Math.min(100, (p + z80 * se) * 100);
     return { low: low.toFixed(0), high: high.toFixed(0) };
 }
-
 
 // ── LIGAS OFFLINE ──
 const LIGAS_OFFLINE = {
@@ -340,7 +320,6 @@ const GOAL_POWER_1T = {
 };
 
 const GOAL_POWER_FULL = {
-    // ── PREMIER LEAGUE ──
     "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},
     "Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},
     "Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},
@@ -350,7 +329,6 @@ const GOAL_POWER_FULL = {
     "Everton FC":{home:1.20,away:0.90},"Brentford FC":{home:1.32,away:1.02},
     "Nottingham Forest FC":{home:1.22,away:0.92},"Leicester City FC":{home:1.26,away:0.96},
     "Ipswich Town FC":{home:1.14,away:0.84},"Southampton FC":{home:1.10,away:0.80},
-    // ── LA LIGA ──
     "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},
     "Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},
     "Girona FC":{home:1.42,away:1.09},"Real Sociedad":{home:1.36,away:1.05},"Valencia CF":{home:1.30,away:0.99},
@@ -360,7 +338,6 @@ const GOAL_POWER_FULL = {
     "Deportivo Alavés":{home:1.18,away:0.90},"CD Leganés":{home:1.14,away:0.86},
     "Real Valladolid CF":{home:1.12,away:0.84},"RCD Espanyol de Barcelona":{home:1.20,away:0.92},
     "Levante UD":{home:1.36,away:1.05},"Real Oviedo":{home:1.30,away:0.99},
-    // ── SERIE A ──
     "Inter Milano":{home:1.60,away:1.25},"AC Milan":{home:1.55,away:1.20},
     "Juventus FC":{home:1.45,away:1.15},"Atalanta BC":{home:1.65,away:1.30},"SSC Napoli":{home:1.55,away:1.22},
     "AS Roma":{home:1.40,away:1.08},"SS Lazio":{home:1.38,away:1.05},"ACF Fiorentina":{home:1.40,away:1.08},
@@ -370,7 +347,6 @@ const GOAL_POWER_FULL = {
     "Udinese Calcio":{home:1.16,away:0.88},"Cagliari Calcio":{home:1.14,away:0.86},
     "Empoli FC":{home:1.18,away:0.90},"Parma Calcio 1913":{home:1.20,away:0.92},
     "Como 1907":{home:1.26,away:0.96},"Venezia FC":{home:1.12,away:0.84},
-    // ── BUNDESLIGA ──
     "FC Bayern München":{home:2.00,away:1.60},"Borussia Dortmund":{home:1.65,away:1.30},
     "Bayer 04 Leverkusen":{home:1.70,away:1.35},"RB Leipzig":{home:1.60,away:1.28},
     "VfB Stuttgart":{home:1.52,away:1.17},"Eintracht Frankfurt":{home:1.47,away:1.13},
@@ -380,7 +356,6 @@ const GOAL_POWER_FULL = {
     "1. FSV Mainz 05":{home:1.28,away:0.98},"Borussia Mönchengladbach":{home:1.34,away:1.03},
     "1. FC Union Berlin":{home:1.18,away:0.90},"VfL Bochum 1848":{home:1.16,away:0.88},
     "FC St. Pauli":{home:1.20,away:0.92},"Holstein Kiel":{home:1.14,away:0.86},
-    // ── LIGUE 1 ──
     "Paris Saint-Germain":{home:1.90,away:1.55},"AS Monaco FC":{home:1.60,away:1.28},
     "Stade Brestois 29":{home:1.32,away:1.01},"Lille OSC":{home:1.47,away:1.13},
     "OGC Nice":{home:1.40,away:1.07},"Olympique Lyonnais":{home:1.42,away:1.09},
@@ -390,7 +365,6 @@ const GOAL_POWER_FULL = {
     "RC Strasbourg Alsace":{home:1.22,away:0.92},"Le Havre AC":{home:1.16,away:0.88},
     "FC Nantes":{home:1.20,away:0.90},"Angers SCO":{home:1.14,away:0.86},
     "AJ Auxerre":{home:1.16,away:0.88},"AS Saint-Étienne":{home:1.14,away:0.86},
-    // ── EREDIVISIE ──
     "PSV Eindhoven":{home:1.80,away:1.45},"Feyenoord":{home:1.70,away:1.38},"Ajax":{home:1.65,away:1.32},
     "FC Twente":{home:1.42,away:1.09},"AZ Alkmaar":{home:1.52,away:1.17},
     "NEC Nijmegen":{home:1.24,away:0.94},"FC Utrecht":{home:1.32,away:1.01},
@@ -399,7 +373,6 @@ const GOAL_POWER_FULL = {
     "PEC Zwolle":{home:1.16,away:0.88},"Almere City FC":{home:1.14,away:0.86},
     "Heracles Almelo":{home:1.18,away:0.90},"RKC Waalwijk":{home:1.12,away:0.84},
     "Willem II":{home:1.16,away:0.88},"NAC Breda":{home:1.20,away:0.92},"FC Groningen":{home:1.14,away:0.86},
-    // ── PRIMEIRA LIGA ──
     "Sporting CP":{home:1.65,away:1.30},"SL Benfica":{home:1.60,away:1.28},"FC Porto":{home:1.55,away:1.25},
     "SC Braga":{home:1.40,away:1.07},"Vitória SC":{home:1.28,away:0.98},"Moreirense FC":{home:1.18,away:0.90},
     "FC Arouca":{home:1.16,away:0.88},"FC Famalicão":{home:1.18,away:0.90},"Casa Pia AC":{home:1.22,away:0.92},
@@ -407,7 +380,6 @@ const GOAL_POWER_FULL = {
     "GD Estoril Praia":{home:1.18,away:0.90},"Estrela da Amadora":{home:1.14,away:0.86},
     "Boavista FC":{home:1.20,away:0.92},"CD Santa Clara":{home:1.16,away:0.88},
     "CD Nacional":{home:1.14,away:0.86},"AVS Futebol SAD":{home:1.12,away:0.84},
-    // ── BRASILEIRÃO ──
     "Flamengo":{home:1.70,away:1.35},"Palmeiras":{home:1.65,away:1.32},
     "Botafogo":{home:1.52,away:1.15},"Atlético Mineiro":{home:1.56,away:1.19},
     "São Paulo":{home:1.47,away:1.13},"Internacional":{home:1.40,away:1.07},
@@ -418,7 +390,6 @@ const GOAL_POWER_FULL = {
     "Bahia":{home:1.32,away:1.01},"Cuiabá":{home:1.18,away:0.90},
     "Vitória":{home:1.20,away:0.92},"Juventude":{home:1.16,away:0.88},
     "Criciúma":{home:1.14,away:0.86},"Atlético Goianiense":{home:1.16,away:0.90},
-    // ── CHAMPIONSHIP ──
     "Leeds United":{home:1.47,away:1.13},"Burnley FC":{home:1.36,away:1.05},
     "Sheffield United":{home:1.32,away:1.01},"West Bromwich Albion":{home:1.28,away:0.98},
     "Norwich City":{home:1.30,away:0.99},"Middlesbrough FC":{home:1.28,away:0.98},
@@ -467,8 +438,6 @@ function extractMatchStats(match, role) {
     return {corners,goals1t,goalsFull};
 }
 
-// ── MEJORA 4 aplicada: pesos más agresivos (0.15 vs 0.10 anterior)
-// Partidos recientes pesan ~2.2x más que partidos de hace 15 fechas
 async function getTeamStats(teamId, teamName, role, seasonId) {
     const key=`${teamId}_${seasonId}_${role}`;
     if(statsCache[key]) return statsCache[key];
@@ -485,8 +454,7 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
 
         if(finished.length<3) return null;
 
-        // Pesos exponenciales más agresivos → partidos recientes valen más
-        const weights = finished.map((_,i) => Math.exp(0.15 * i)); // ← era 0.10
+        const weights = finished.map((_,i) => Math.exp(0.15 * i));
 
         let tC=0,wC=0, tG=0,wG=0, tGF=0,wGF=0;
         const form=[];
@@ -522,18 +490,54 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
     } catch {return null;}
 }
 
+// ══════════════════════════════════════════
+// MEJORA 5: NORMALIZACIÓN Y BÚSQUEDA DIFUSA
+// Soluciona predicciones repetidas por nombres no coincidentes
+// ══════════════════════════════════════════
+function normalizeTeam(str) {
+    if (!str) return '';
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+              .toLowerCase()
+              .replace(/\b(fc|cf|sc|cd|ac|as|ss|rc|rb|afc|ud|us|1\.|05|04|1846|1848|1909)\b/g, '') 
+              .replace(/[^a-z0-9]/g, ''); 
+}
+
+function findDictVal(dict, name) {
+    if (dict[name]) return dict[name]; 
+    
+    const target = normalizeTeam(name);
+    if (!target) return null;
+    
+    for (let key in dict) {
+        if (normalizeTeam(key) === target) return dict[key];
+    }
+    
+    for (let key in dict) {
+        const kClean = normalizeTeam(key);
+        if (kClean.length > 3 && (kClean.includes(target) || target.includes(kClean))) {
+            return dict[key];
+        }
+    }
+    return null;
+}
+
 function fallbackCorners(name, role, avg) {
-    if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+    const data = findDictVal(CORNER_POWER, name);
+    if (data?.[role]) return data[role];
     const base = role === 'home' ? avg / 2 * 1.10 : avg / 2 * 0.90;
     return Math.min(8.0, Math.max(3.2, base));
 }
+
 function fallbackGoals1T(name, role, avg) {
-    if (GOAL_POWER_1T[name]?.[role]) return GOAL_POWER_1T[name][role];
+    const data = findDictVal(GOAL_POWER_1T, name);
+    if (data?.[role]) return data[role];
     const base = role === 'home' ? (avg/10)*1.15*1.08 : (avg/10)*1.15*0.92;
     return Math.min(0.90, Math.max(0.30, base));
 }
+
 function fallbackGoalsFull(name, role, avg) {
-    if (GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
+    const data = findDictVal(GOAL_POWER_FULL, name);
+    if (data?.[role]) return data[role];
     const g1t = fallbackGoals1T(name, role, avg);
     const full = role === 'home' ? g1t * 2.20 : g1t * 2.10;
     return Math.min(2.10, Math.max(0.60, full));
@@ -565,7 +569,6 @@ function negBinExact(mu, r, k) {
     logP += r*Math.log(p) + k*Math.log(1-p);
     return Math.exp(logP);
 }
-// MEJORA: r ahora es parámetro, no fijo en 6
 function negBinOver(mu, threshold, r=6.0) {
     const k = Math.floor(threshold);
     let cdf = 0;
@@ -749,7 +752,6 @@ document.getElementById('calc-btn').onclick=async()=>{
     let homeGoalF = homeStats?.fromApi ? regressionBlend(rawHomeGF,leagueGoalFMean*1.10,homeMatchesC) : rawHomeGF;
     let awayGoalF = awayStats?.fromApi ? regressionBlend(rawAwayGF,leagueGoalFMean*0.90,awayMatchesC) : rawAwayGF;
 
-    // MEJORA 3: Ajuste por forma reciente
     const homeFormMult = formMultiplier(homeStats?.form);
     const awayFormMult = formMultiplier(awayStats?.form);
     homeGoalF  *= homeFormMult;
@@ -766,10 +768,8 @@ document.getElementById('calc-btn').onclick=async()=>{
     const usedApi    = homeStats?.fromApi||awayStats?.fromApi;
     const matchInfo  = usedApi?`${homeStats?.matches||'?'} partidos (local) · ${awayStats?.matches||'?'} (visitante)`:'Datos históricos estimados';
 
-    // r de NegBin según liga
     const ligaNombre = liga.name || '';
     const negBinR = getLeagueR(ligaNombre);
-
     const totalMatchesUsed = (homeStats?.matches||0) + (awayStats?.matches||0);
 
     loadingEl.classList.add('hidden');
@@ -789,8 +789,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
 
     document.getElementById('data-source-container').innerHTML='';
 
-    // FORMA ELIMINADA
-
     document.getElementById('match-header-container').innerHTML=`
         <div class="match-header animate-in">
             <div class="teams-row">
@@ -804,13 +802,10 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
             </div>
         </div>`;
 
-    // DIAGNÓSTICO DEL MODELO (nuevo)
     const confianzaModelo = usedApi
         ? Math.min(95, 55 + (totalMatchesUsed / (MATCHES_TO_USE * 2)) * 35)
         : 45;
-    // DIAGNÓSTICO ELIMINADO
 
-    // RESULTADOS DIXON-COLES → CALIBRADOS con Platt
     const rpRaw=calcResultProbs(lambdaH,lambdaA);
     const rp = {
         home: parseFloat(plattCalibrate(rpRaw.home,'resultado').toFixed(1)),
@@ -840,7 +835,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
 
     const lambdaFull2=lambdaH+lambdaA;
 
-    // Función auxiliar que aplica calibración y banda de incertidumbre
     function mktCard(line, rawProb, marketType, barIdx, totalN, labelLine, labelSub) {
         const prob = parseFloat(plattCalibrate(rawProb, marketType).toFixed(1));
         const color = colorFor(prob);
@@ -919,7 +913,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeCorn,
     document.getElementById('all-markets-container').innerHTML=golesFullHtml+goalHtml+bttsHtml+cornHtml;
     document.getElementById('verdict-container').innerHTML='';
 
-    // Probabilidades CALIBRADAS para recomendación
     const over15c  = parseFloat(plattCalibrate(poissonOver(lambdaFull2,1.5),'goals_over15').toFixed(0));
     const over25c  = parseFloat(plattCalibrate(poissonOver(lambdaFull2,2.5),'goals_over25').toFixed(0));
     const corn75c  = parseFloat(plattCalibrate(negBinOver(lambdaCorn,7.5,negBinR),'corners').toFixed(0));
