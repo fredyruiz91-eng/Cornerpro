@@ -258,7 +258,6 @@ const NEGBIN_R_BY_LEAGUE = {
     'Eredivisie':     5.7,   // Abierta, más varianza
     'Primeira Liga':  6.4,   // Media
     'Championship':   5.5,   // Alta varianza, physically demanding
-    'Brasileirão':    5.8    // Variable, clima, viajes
 };
 
 function getLeagueR(leagueName) {
@@ -311,18 +310,14 @@ const LIGAS_OFFLINE = {
     "PD":  {name:"🇪🇸 La Liga",leagueAvg:9.5,teams:["Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona","RCD Mallorca","Rayo Vallecano","Real Betis","Real Madrid CF","Real Sociedad","Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]},
     "SA":  {name:"🇮🇹 Serie A",leagueAvg:9.0,teams:["AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC","Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC","Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio","SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Venezia FC"]},
     "BL1": {name:"🇩🇪 Bundesliga",leagueAvg:9.8,teams:["1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen","Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg","FC Bayern München","FC St. Pauli","Holstein Kiel","RB Leipzig","SC Freiburg","SV Werder Bremen","TSG Hoffenheim","VfB Stuttgart","VfL Bochum 1848","VfL Wolfsburg"]},
-    "BL2": {name:"🇩🇪 2. Bundesliga",leagueAvg:9.2,teams:["1. FC Kaiserslautern","1. FC Magdeburg","1. FC Nürnberg","Eintracht Braunschweig","FC Darmstadt 98","FC Schalke 04","Fortuna Düsseldorf","Hamburger SV","Hannover 96","Hertha BSC","Karlsruher SC","Preußen Münster","SC Paderborn 07","SSV Jahn Regensburg","SSV Ulm 1846","SV Elversberg","SV Wehen Wiesbaden","SpVgg Greuther Fürth"]},
     "FL1": {name:"🇫🇷 Ligue 1",leagueAvg:9.3,teams:["AJ Auxerre","AS Monaco FC","AS Saint-Étienne","Angers SCO","Le Havre AC","Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille","Paris Saint-Germain","RC Lens","RC Strasbourg Alsace","Stade Brestois 29","Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes"]},
     "DED": {name:"🇳🇱 Eredivisie",leagueAvg:9.6,teams:["AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente","FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo","NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk","Sparta Rotterdam","Willem II","sc Heerenveen"]},
-    "ED2": {name:"🇳🇱 Eerste Divisie",leagueAvg:9.3,teams:["ADO Den Haag","De Graafschap","Excelsior Rotterdam","FC Dordrecht","FC Eindhoven","FC Volendam","Jong Ajax","Jong AZ","Jong FC Twente","Jong FC Utrecht","Jong Feyenoord","Jong PSV","MVV Maastricht","Roda JC Kerkrade","SC Telstar","TOP Oss","VVV-Venlo","Jong NEC Nijmegen","Jong Almere City FC","SBV Vitesse"]},
     "PPL": {name:"🇵🇹 Primeira Liga",leagueAvg:9.1,teams:["AVS Futebol SAD","Boavista FC","CD Nacional","CD Santa Clara","Casa Pia AC","Estrela da Amadora","FC Arouca","FC Famalicão","FC Porto","GD Estoril Praia","Gil Vicente FC","Moreirense FC","Rio Ave FC","SC Braga","SC Farense","SL Benfica","Sporting CP","Vitória SC"]},
     "BSA": {name:"🇧🇷 Brasileirão",leagueAvg:9.4,teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]},
     "ELC": {name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship",leagueAvg:9.7,teams:["Blackburn Rovers","Bristol City","Burnley FC","Cardiff City","Coventry City","Derby County","Hull City","Leeds United","Luton Town","Middlesbrough FC","Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC","Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City","Sunderland AFC","Swansea City","Watford FC","West Bromwich Albion"]},
-    "MXL": {name:"🇲🇽 Liga MX",leagueAvg:8.5,teams:["América","Atlas FC","Atlético de San Luis","CF Pachuca","Club Necaxa","Club Tijuana","Cruz Azul","Deportivo Guadalajara","FC Juárez","León","Mazatlán FC","Monterrey","Puebla FC","Querétaro FC","Santos Laguna","Tigres UANL","Toluca FC","UNAM Pumas"]},
-    "MLS": {name:"🇺🇸 MLS",leagueAvg:9.0,teams:["Atlanta United FC","Austin FC","CF Montréal","Charlotte FC","Chicago Fire FC","Colorado Rapids","Columbus Crew","D.C. United","FC Cincinnati","FC Dallas","Houston Dynamo FC","Inter Miami CF","LA Galaxy","LAFC","Minnesota United FC","Nashville SC","New England Revolution","New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union","Portland Timbers","Real Salt Lake","San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City","St. Louis City SC","Toronto FC","Vancouver Whitecaps FC"]},
-    "ELI": {name:"🇳🇴 Eliteserien",leagueAvg:8.8,teams:["Aalesunds FK","Bodø/Glimt","Brann","FK Haugesund","FK Jerv","Fredrikstad FK","HamKam","KFUM Oslo","Kristiansund BK","Lillestrøm SK","Molde FK","Odds BK","Rosenborg BK","Sandefjord Fotball","Sarpsborg 08","Stabæk","Tromsø IL","Viking FK","Vålerenga FK"]},
-    "ALE": {name:"🇦🇺 A-League",leagueAvg:9.0,teams:["Adelaide United","Auckland FC","Brisbane Roar","Central Coast Mariners","MacArthur FC","Melbourne City","Melbourne Victory","Newcastle Jets","Perth Glory","Sydney FC","Wellington Phoenix","Western Sydney Wanderers","Western United"]}
-};
+    "JPL": {name:"🇧🇪 Jupiler Pro League",leagueAvg:9.2,teams:["Anderlecht","Club Brugge KV","KAA Gent","KRC Genk","Cercle Brugge KSV","Standard de Liège","R. Union Saint-Gilloise","KV Mechelen","STVV","Beerschot VA","OH Leuven","KV Kortrijk","Charleroi","KVC Westerlo","RFC Seraing","Zulte Waregem"]},
+    "MLS": {name:"🇺🇸 MLS",leagueAvg:9.0,teams:["Atlanta United FC","Austin FC","CF Montréal","Charlotte FC","Chicago Fire FC","Colorado Rapids","Columbus Crew","D.C. United","FC Cincinnati","FC Dallas","Houston Dynamo FC","Inter Miami CF","LA Galaxy","LAFC","Minnesota United FC","Nashville SC","New England Revolution","New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union","Portland Timbers","Real Salt Lake","San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City","St. Louis City SC","Toronto FC","Vancouver Whitecaps FC"]}
+    };
 
 const CORNER_POWER = {
     "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
@@ -334,19 +329,9 @@ const CORNER_POWER = {
     "Sporting CP":{home:6.3,away:5.4},"SL Benfica":{home:6.1,away:5.2},"FC Porto":{home:5.9,away:5.0},"SC Braga":{home:5.5,away:4.6},"Vitória SC":{home:5.0,away:4.2},"Moreirense FC":{home:4.7,away:3.9},"FC Arouca":{home:4.6,away:3.8},"FC Famalicão":{home:4.7,away:3.9},"Casa Pia AC":{home:4.8,away:4.0},"SC Farense":{home:4.5,away:3.7},"Rio Ave FC":{home:4.8,away:4.0},"Gil Vicente FC":{home:4.6,away:3.8},"GD Estoril Praia":{home:4.7,away:3.9},"Estrela da Amadora":{home:4.5,away:3.7},"Boavista FC":{home:4.8,away:4.0},"CD Santa Clara":{home:4.6,away:3.8},"CD Nacional":{home:4.5,away:3.7},"AVS Futebol SAD":{home:4.4,away:3.6},
     "Palmeiras":{home:6.2,away:5.3},"Flamengo":{home:6.4,away:5.5},"Botafogo":{home:5.8,away:4.9},"Atlético Mineiro":{home:5.9,away:5.0},"São Paulo":{home:5.7,away:4.8},"Internacional":{home:5.5,away:4.6},"Fluminense":{home:5.4,away:4.5},"Grêmio":{home:5.3,away:4.4},"Cruzeiro":{home:5.2,away:4.3},"Fortaleza":{home:5.4,away:4.5},"Red Bull Bragantino":{home:5.6,away:4.7},"Athletico Paranaense":{home:5.3,away:4.4},"Vasco da Gama":{home:5.1,away:4.2},"Corinthians":{home:5.0,away:4.2},"Bahia":{home:5.2,away:4.3},"Cuiabá":{home:4.7,away:3.9},"Vitória":{home:4.8,away:4.0},"Juventude":{home:4.6,away:3.8},"Criciúma":{home:4.5,away:3.7},"Atlético Goianiense":{home:4.6,away:3.8},
     "Leeds United":{home:5.8,away:4.9},"Burnley FC":{home:5.4,away:4.5},"Sheffield United":{home:5.2,away:4.3},"Luton Town":{home:4.9,away:4.1},"West Bromwich Albion":{home:5.0,away:4.2},"Norwich City":{home:5.1,away:4.3},"Hull City":{home:4.8,away:4.0},"Middlesbrough FC":{home:5.0,away:4.2},"Coventry City":{home:5.1,away:4.3},"Preston North End":{home:4.7,away:3.9},"Sunderland AFC":{home:5.0,away:4.2},"Swansea City":{home:4.9,away:4.1},"Watford FC":{home:5.1,away:4.3},"Bristol City":{home:4.8,away:4.0},"QPR":{home:4.7,away:3.9},"Stoke City":{home:4.8,away:4.0},"Sheffield Wednesday":{home:4.7,away:3.9},"Blackburn Rovers":{home:4.9,away:4.1},"Plymouth Argyle":{home:4.6,away:3.8},"Portsmouth FC":{home:4.8,away:4.0},"Derby County":{home:5.0,away:4.2},"Oxford United":{home:4.7,away:3.9},"Millwall FC":{home:4.8,away:4.0},"Cardiff City":{home:4.7,away:3.9},
-    // ── 2. BUNDESLIGA ──
-    "Hamburger SV":{home:5.6,away:4.7},"Hannover 96":{home:5.2,away:4.4},"Fortuna Düsseldorf":{home:5.0,away:4.2},"1. FC Nürnberg":{home:4.9,away:4.1},"Hertha BSC":{home:5.1,away:4.3},"FC Schalke 04":{home:5.0,away:4.2},"1. FC Kaiserslautern":{home:4.8,away:4.0},"SpVgg Greuther Fürth":{home:4.9,away:4.1},"SC Paderborn 07":{home:4.8,away:4.0},"Karlsruher SC":{home:4.7,away:3.9},"SV Elversberg":{home:4.7,away:3.9},"1. FC Magdeburg":{home:4.6,away:3.8},"FC Darmstadt 98":{home:4.8,away:4.0},"SSV Jahn Regensburg":{home:4.6,away:3.8},"SSV Ulm 1846":{home:4.5,away:3.7},"Eintracht Braunschweig":{home:4.6,away:3.8},"Preußen Münster":{home:4.5,away:3.7},"SV Wehen Wiesbaden":{home:4.4,away:3.6},
-    // ── LIGA MX ──
-    "América":{home:5.8,away:4.8},"Tigres UANL":{home:5.6,away:4.6},"Deportivo Guadalajara":{home:5.5,away:4.5},"Monterrey":{home:5.4,away:4.4},"Cruz Azul":{home:5.2,away:4.3},"CF Pachuca":{home:5.0,away:4.2},"UNAM Pumas":{home:5.0,away:4.1},"León":{home:4.9,away:4.0},"Atlas FC":{home:4.8,away:4.0},"Toluca FC":{home:4.9,away:4.1},"Club Necaxa":{home:4.6,away:3.8},"Santos Laguna":{home:4.8,away:4.0},"Club Tijuana":{home:4.6,away:3.8},"Atlético de San Luis":{home:4.7,away:3.9},"FC Juárez":{home:4.5,away:3.7},"Mazatlán FC":{home:4.5,away:3.7},"Querétaro FC":{home:4.4,away:3.6},"Puebla FC":{home:4.7,away:3.9},
-    // ── MLS ──
-    "Inter Miami CF":{home:5.8,away:4.9},"LA Galaxy":{home:5.4,away:4.5},"LAFC":{home:5.6,away:4.7},"Seattle Sounders FC":{home:5.2,away:4.4},"Portland Timbers":{home:5.0,away:4.2},"Columbus Crew":{home:5.0,away:4.2},"FC Cincinnati":{home:4.9,away:4.1},"Philadelphia Union":{home:5.1,away:4.3},"Atlanta United FC":{home:5.0,away:4.2},"New York City FC":{home:4.9,away:4.1},"New York Red Bulls":{home:4.8,away:4.0},"New England Revolution":{home:4.8,away:4.0},"Sporting Kansas City":{home:4.7,away:3.9},"Nashville SC":{home:4.9,away:4.1},"Minnesota United FC":{home:4.8,away:4.0},"Real Salt Lake":{home:4.9,away:4.1},"Colorado Rapids":{home:4.7,away:3.9},"Houston Dynamo FC":{home:4.8,away:4.0},"D.C. United":{home:4.6,away:3.8},"Toronto FC":{home:4.6,away:3.8},"Chicago Fire FC":{home:4.6,away:3.8},"Austin FC":{home:4.8,away:4.0},"Charlotte FC":{home:4.7,away:3.9},"CF Montréal":{home:4.7,away:3.9},"Vancouver Whitecaps FC":{home:4.8,away:4.0},"San Jose Earthquakes":{home:4.5,away:3.7},"Orlando City SC":{home:4.9,away:4.1},"FC Dallas":{home:4.7,away:3.9},"St. Louis City SC":{home:4.7,away:3.9},
-    // ── ELITESERIEN ──
-    "Bodø/Glimt":{home:5.8,away:4.9},"Molde FK":{home:5.4,away:4.5},"Rosenborg BK":{home:5.2,away:4.4},"Brann":{home:5.0,away:4.2},"Viking FK":{home:4.9,away:4.1},"Vålerenga FK":{home:4.9,away:4.1},"Lillestrøm SK":{home:4.8,away:4.0},"Odds BK":{home:4.7,away:3.9},"Fredrikstad FK":{home:4.7,away:3.9},"Stabæk":{home:4.6,away:3.8},"Tromsø IL":{home:4.6,away:3.8},"FK Haugesund":{home:4.5,away:3.7},"Sarpsborg 08":{home:4.6,away:3.8},"KFUM Oslo":{home:4.5,away:3.7},"HamKam":{home:4.4,away:3.6},"Sandefjord Fotball":{home:4.4,away:3.6},"FK Jerv":{home:4.3,away:3.5},"Kristiansund BK":{home:4.4,away:3.6},"Aalesunds FK":{home:4.5,away:3.7},
-    // ── A-LEAGUE ──
-    "Melbourne City":{home:5.5,away:4.6},"Melbourne Victory":{home:5.4,away:4.5},"Sydney FC":{home:5.3,away:4.4},"Perth Glory":{home:5.0,away:4.2},"Auckland FC":{home:5.0,away:4.2},"Western Sydney Wanderers":{home:4.9,away:4.1},"Central Coast Mariners":{home:4.9,away:4.1},"Brisbane Roar":{home:4.8,away:4.0},"Wellington Phoenix":{home:4.8,away:4.0},"Western United":{home:4.7,away:3.9},"Adelaide United":{home:4.8,away:4.0},"MacArthur FC":{home:4.7,away:3.9},"Newcastle Jets":{home:4.6,away:3.8},
-    // ── EERSTE DIVISIE ──
-    "Jong Ajax":{home:5.2,away:4.4},"Jong PSV":{home:5.0,away:4.2},"ADO Den Haag":{home:4.9,away:4.1},"De Graafschap":{home:4.8,away:4.0},"Jong AZ":{home:4.8,away:4.0},"FC Volendam":{home:4.7,away:3.9},"Jong Feyenoord":{home:4.8,away:4.0},"FC Dordrecht":{home:4.6,away:3.8},"Roda JC Kerkrade":{home:4.7,away:3.9},"FC Eindhoven":{home:4.6,away:3.8},"Jong FC Twente":{home:4.7,away:3.9},"Jong FC Utrecht":{home:4.6,away:3.8},"Excelsior Rotterdam":{home:4.6,away:3.8},"MVV Maastricht":{home:4.5,away:3.7},"VVV-Venlo":{home:4.6,away:3.8},"SC Telstar":{home:4.4,away:3.6},"TOP Oss":{home:4.4,away:3.6},"Jong NEC Nijmegen":{home:4.5,away:3.7},"Jong Almere City FC":{home:4.4,away:3.6},"SBV Vitesse":{home:4.8,away:4.0}
-};
+            // ── MLS ──
+    "Inter Miami CF":{home:5.8,away:4.9},"LA Galaxy":{home:5.4,away:4.5},"LAFC":{home:5.6,away:4.7},"Seattle Sounders FC":{home:5.2,away:4.4},"Portland Timbers":{home:5.0,away:4.2},"Columbus Crew":{home:5.0,away:4.2},"FC Cincinnati":{home:4.9,away:4.1},"Philadelphia Union":{home:5.1,away:4.3},"Atlanta United FC":{home:5.0,away:4.2},"New York City FC":{home:4.9,away:4.1},"New York Red Bulls":{home:4.8,away:4.0},"New England Revolution":{home:4.8,away:4.0},"Sporting Kansas City":{home:4.7,away:3.9},"Nashville SC":{home:4.9,away:4.1},"Minnesota United FC":{home:4.8,away:4.0},"Real Salt Lake":{home:4.9,away:4.1},"Colorado Rapids":{home:4.7,away:3.9},"Houston Dynamo FC":{home:4.8,away:4.0},"D.C. United":{home:4.6,away:3.8},"Toronto FC":{home:4.6,away:3.8},"Chicago Fire FC":{home:4.6,away:3.8},"Austin FC":{home:4.8,away:4.0},"Charlotte FC":{home:4.7,away:3.9},"CF Montréal":{home:4.7,away:3.9},"Vancouver Whitecaps FC":{home:4.8,away:4.0},"San Jose Earthquakes":{home:4.5,away:3.7},"Orlando City SC":{home:4.9,away:4.1},"FC Dallas":{home:4.7,away:3.9},"St. Louis City SC":{home:4.7,away:3.9}
+   };
 
 const GOAL_POWER_1T = {
     "Manchester City FC":{home:0.88,away:0.74},"Liverpool FC":{home:0.85,away:0.71},"Arsenal FC":{home:0.82,away:0.68},"Chelsea FC":{home:0.75,away:0.62},"Tottenham Hotspur FC":{home:0.74,away:0.61},"Aston Villa FC":{home:0.72,away:0.60},"Newcastle United FC":{home:0.70,away:0.58},"Manchester United FC":{home:0.67,away:0.55},"Brighton & Hove Albion FC":{home:0.71,away:0.60},"West Ham United FC":{home:0.64,away:0.53},"Crystal Palace FC":{home:0.58,away:0.47},"AFC Bournemouth":{home:0.60,away:0.49},"Fulham FC":{home:0.62,away:0.51},"Wolverhampton Wanderers FC":{home:0.60,away:0.49},"Everton FC":{home:0.57,away:0.46},"Brentford FC":{home:0.63,away:0.52},"Nottingham Forest FC":{home:0.58,away:0.47},"Leicester City FC":{home:0.60,away:0.49},"Ipswich Town FC":{home:0.54,away:0.43},"Southampton FC":{home:0.52,away:0.41},
@@ -358,19 +343,12 @@ const GOAL_POWER_1T = {
     "Sporting CP":{home:0.78,away:0.64},"SL Benfica":{home:0.76,away:0.62},"FC Porto":{home:0.74,away:0.61},"SC Braga":{home:0.67,away:0.55},"Vitória SC":{home:0.61,away:0.50},"Moreirense FC":{home:0.56,away:0.46},"FC Arouca":{home:0.55,away:0.45},"FC Famalicão":{home:0.56,away:0.46},"Casa Pia AC":{home:0.58,away:0.47},"SC Farense":{home:0.54,away:0.44},"Rio Ave FC":{home:0.57,away:0.47},"Gil Vicente FC":{home:0.55,away:0.45},"GD Estoril Praia":{home:0.56,away:0.46},"Estrela da Amadora":{home:0.54,away:0.44},"Boavista FC":{home:0.57,away:0.47},"CD Santa Clara":{home:0.55,away:0.45},"CD Nacional":{home:0.54,away:0.44},"AVS Futebol SAD":{home:0.53,away:0.43},
     "Palmeiras":{home:0.78,away:0.64},"Flamengo":{home:0.80,away:0.66},"Botafogo":{home:0.72,away:0.59},"Atlético Mineiro":{home:0.74,away:0.61},"São Paulo":{home:0.70,away:0.58},"Internacional":{home:0.67,away:0.55},"Fluminense":{home:0.65,away:0.54},"Grêmio":{home:0.64,away:0.53},"Cruzeiro":{home:0.63,away:0.52},"Fortaleza":{home:0.65,away:0.54},"Red Bull Bragantino":{home:0.68,away:0.56},"Athletico Paranaense":{home:0.64,away:0.53},"Vasco da Gama":{home:0.62,away:0.51},"Corinthians":{home:0.61,away:0.50},"Bahia":{home:0.63,away:0.52},"Cuiabá":{home:0.56,away:0.46},"Vitória":{home:0.57,away:0.47},"Juventude":{home:0.55,away:0.45},"Criciúma":{home:0.54,away:0.44},"Atlético Goianiense":{home:0.55,away:0.45},
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"Luton Town":{home:0.59,away:0.48},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Preston North End":{home:0.57,away:0.46},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46},
-    // ── 2. BUNDESLIGA ──
-    "Hamburger SV":{home:0.68,away:0.56},"Hannover 96":{home:0.63,away:0.52},"Fortuna Düsseldorf":{home:0.61,away:0.50},"1. FC Nürnberg":{home:0.59,away:0.48},"Hertha BSC":{home:0.62,away:0.51},"FC Schalke 04":{home:0.61,away:0.50},"1. FC Kaiserslautern":{home:0.58,away:0.47},"SpVgg Greuther Fürth":{home:0.59,away:0.48},"SC Paderborn 07":{home:0.58,away:0.47},"Karlsruher SC":{home:0.57,away:0.46},"SV Elversberg":{home:0.57,away:0.46},"1. FC Magdeburg":{home:0.56,away:0.45},"FC Darmstadt 98":{home:0.58,away:0.47},"SSV Jahn Regensburg":{home:0.56,away:0.45},"SSV Ulm 1846":{home:0.55,away:0.44},"Eintracht Braunschweig":{home:0.56,away:0.45},"Preußen Münster":{home:0.55,away:0.44},"SV Wehen Wiesbaden":{home:0.54,away:0.43},
-    // ── LIGA MX ──
-    "América":{home:0.72,away:0.59},"Tigres UANL":{home:0.70,away:0.57},"Deportivo Guadalajara":{home:0.68,away:0.55},"Monterrey":{home:0.67,away:0.54},"Cruz Azul":{home:0.65,away:0.53},"CF Pachuca":{home:0.63,away:0.51},"UNAM Pumas":{home:0.62,away:0.50},"León":{home:0.61,away:0.49},"Atlas FC":{home:0.59,away:0.48},"Toluca FC":{home:0.61,away:0.50},"Club Necaxa":{home:0.57,away:0.46},"Santos Laguna":{home:0.59,away:0.48},"Club Tijuana":{home:0.57,away:0.46},"Atlético de San Luis":{home:0.58,away:0.47},"FC Juárez":{home:0.56,away:0.45},"Mazatlán FC":{home:0.55,away:0.44},"Querétaro FC":{home:0.54,away:0.43},"Puebla FC":{home:0.58,away:0.47},
+    ,away:0.47},"SSV Jahn Regensburg":{home:0.56,away:0.45},"SSV Ulm 1846":{home:0.55,away:0.44},"Eintracht Braunschweig":{home:0.56,away:0.45},"Preußen Münster":{home:0.55,away:0.44},"SV Wehen Wiesbaden":{home:0.54,away:0.43},
     // ── MLS ──
-    "Inter Miami CF":{home:0.72,away:0.59},"LA Galaxy":{home:0.67,away:0.55},"LAFC":{home:0.70,away:0.57},"Seattle Sounders FC":{home:0.65,away:0.53},"Portland Timbers":{home:0.62,away:0.51},"Columbus Crew":{home:0.62,away:0.51},"FC Cincinnati":{home:0.61,away:0.50},"Philadelphia Union":{home:0.63,away:0.52},"Atlanta United FC":{home:0.62,away:0.51},"New York City FC":{home:0.61,away:0.50},"New York Red Bulls":{home:0.59,away:0.48},"New England Revolution":{home:0.59,away:0.48},"Sporting Kansas City":{home:0.58,away:0.47},"Nashville SC":{home:0.61,away:0.50},"Minnesota United FC":{home:0.59,away:0.48},"Real Salt Lake":{home:0.60,away:0.49},"Colorado Rapids":{home:0.58,away:0.47},"Houston Dynamo FC":{home:0.59,away:0.48},"D.C. United":{home:0.57,away:0.46},"Toronto FC":{home:0.57,away:0.46},"Chicago Fire FC":{home:0.57,away:0.46},"Austin FC":{home:0.60,away:0.49},"Charlotte FC":{home:0.58,away:0.47},"CF Montréal":{home:0.58,away:0.47},"Vancouver Whitecaps FC":{home:0.59,away:0.48},"San Jose Earthquakes":{home:0.56,away:0.45},"Orlando City SC":{home:0.61,away:0.50},"FC Dallas":{home:0.58,away:0.47},"St. Louis City SC":{home:0.58,away:0.47},
-    // ── ELITESERIEN ──
-    "Bodø/Glimt":{home:0.72,away:0.59},"Molde FK":{home:0.67,away:0.55},"Rosenborg BK":{home:0.65,away:0.53},"Brann":{home:0.62,away:0.51},"Viking FK":{home:0.61,away:0.50},"Vålerenga FK":{home:0.60,away:0.49},"Lillestrøm SK":{home:0.59,away:0.48},"Odds BK":{home:0.58,away:0.47},"Fredrikstad FK":{home:0.58,away:0.47},"Stabæk":{home:0.57,away:0.46},"Tromsø IL":{home:0.57,away:0.46},"FK Haugesund":{home:0.56,away:0.45},"Sarpsborg 08":{home:0.57,away:0.46},"KFUM Oslo":{home:0.56,away:0.45},"HamKam":{home:0.55,away:0.44},"Sandefjord Fotball":{home:0.55,away:0.44},"FK Jerv":{home:0.54,away:0.43},"Kristiansund BK":{home:0.55,away:0.44},"Aalesunds FK":{home:0.56,away:0.45},
-    // ── A-LEAGUE ──
-    "Melbourne City":{home:0.68,away:0.56},"Melbourne Victory":{home:0.67,away:0.55},"Sydney FC":{home:0.66,away:0.54},"Perth Glory":{home:0.62,away:0.51},"Auckland FC":{home:0.62,away:0.51},"Western Sydney Wanderers":{home:0.61,away:0.50},"Central Coast Mariners":{home:0.61,away:0.50},"Brisbane Roar":{home:0.59,away:0.48},"Wellington Phoenix":{home:0.59,away:0.48},"Western United":{home:0.58,away:0.47},"Adelaide United":{home:0.59,away:0.48},"MacArthur FC":{home:0.58,away:0.47},"Newcastle Jets":{home:0.57,away:0.46},
-    // ── EERSTE DIVISIE ──
-    "Jong Ajax":{home:0.64,away:0.53},"Jong PSV":{home:0.62,away:0.51},"ADO Den Haag":{home:0.61,away:0.50},"De Graafschap":{home:0.59,away:0.48},"Jong AZ":{home:0.59,away:0.48},"FC Volendam":{home:0.58,away:0.47},"Jong Feyenoord":{home:0.59,away:0.48},"FC Dordrecht":{home:0.57,away:0.46},"Roda JC Kerkrade":{home:0.58,away:0.47},"FC Eindhoven":{home:0.57,away:0.46},"Jong FC Twente":{home:0.58,away:0.47},"Jong FC Utrecht":{home:0.57,away:0.46},"Excelsior Rotterdam":{home:0.57,away:0.46},"MVV Maastricht":{home:0.56,away:0.45},"VVV-Venlo":{home:0.57,away:0.46},"SC Telstar":{home:0.55,away:0.44},"TOP Oss":{home:0.54,away:0.43},"Jong NEC Nijmegen":{home:0.56,away:0.45},"Jong Almere City FC":{home:0.55,away:0.44},"SBV Vitesse":{home:0.59,away:0.48}
-};
+    "Inter Miami CF":{home:0.72,away:0.59},"LA Galaxy":{home:0.67,away:0.55},"LAFC":{home:0.70,away:0.57},"Seattle Sounders FC":{home:0.65,away:0.53},"Portland Timbers":{home:0.62,away:0.51},"Columbus Crew":{home:0.62,away:0.51},"FC Cincinnati":{home:0.61,away:0.50},"Philadelphia Union":{home:0.63,away:0.52},"Atlanta United FC":{home:0.62,away:0.51},"New York City FC":{home:0.61,away:0.50},"New York Red Bulls":{home:0.59,away:0.48},"New England Revolution":{home:0.59,away:0.48},"Sporting Kansas City":{home:0.58,away:0.47},"Nashville SC":{home:0.61,away:0.50},"Minnesota United FC":{home:0.59,away:0.48},"Real Salt Lake":{home:0.60,away:0.49},"Colorado Rapids":{home:0.58,away:0.47},"Houston Dynamo FC":{home:0.59,away:0.48},"D.C. United":{home:0.57,away:0.46},"Toronto FC":{home:0.57,away:0.46},"Chicago Fire FC":{home:0.57,away:0.46},"Austin FC":{home:0.60,away:0.49},"Charlotte FC":{home:0.58,away:0.47},"CF Montréal":{home:0.58,away:0.47},"Vancouver Whitecaps FC":{home:0.59,away:0.48},"San Jose Earthquakes":{home:0.56,away:0.45},"Orlando City SC":{home:0.61,away:0.50},"FC Dallas":{home:0.58,away:0.47},"St. Louis City SC":{home:0.58,away:0.47}
+     // ── JUPILER PRO LEAGUE ──
+    "Club Brugge KV":{home:0.76,away:0.63},"Anderlecht":{home:0.72,away:0.59},"KAA Gent":{home:0.68,away:0.56},"KRC Genk":{home:0.67,away:0.55},"R. Union Saint-Gilloise":{home:0.66,away:0.54},"Cercle Brugge KSV":{home:0.63,away:0.52},"Standard de Liège":{home:0.61,away:0.50},"KV Mechelen":{home:0.59,away:0.48},"STVV":{home:0.58,away:0.47},"OH Leuven":{home:0.57,away:0.46},"Beerschot VA":{home:0.57,away:0.46},"KV Kortrijk":{home:0.56,away:0.45},"Charleroi":{home:0.59,away:0.48},"KVC Westerlo":{home:0.56,away:0.45},"RFC Seraing":{home:0.54,away:0.43},"Zulte Waregem":{home:0.55,away:0.44}
+    };
 
 const GOAL_POWER_FULL = {
     // ── PREMIER LEAGUE ──
@@ -440,18 +418,7 @@ const GOAL_POWER_FULL = {
     "GD Estoril Praia":{home:1.18,away:0.90},"Estrela da Amadora":{home:1.14,away:0.86},
     "Boavista FC":{home:1.20,away:0.92},"CD Santa Clara":{home:1.16,away:0.88},
     "CD Nacional":{home:1.14,away:0.86},"AVS Futebol SAD":{home:1.12,away:0.84},
-    // ── BRASILEIRÃO ──
-    "Flamengo":{home:1.70,away:1.35},"Palmeiras":{home:1.65,away:1.32},
-    "Botafogo":{home:1.52,away:1.15},"Atlético Mineiro":{home:1.56,away:1.19},
-    "São Paulo":{home:1.47,away:1.13},"Internacional":{home:1.40,away:1.07},
-    "Fluminense":{home:1.36,away:1.05},"Grêmio":{home:1.34,away:1.03},
-    "Cruzeiro":{home:1.32,away:1.01},"Fortaleza":{home:1.36,away:1.05},
-    "Red Bull Bragantino":{home:1.42,away:1.09},"Athletico Paranaense":{home:1.34,away:1.03},
-    "Vasco da Gama":{home:1.30,away:0.99},"Corinthians":{home:1.28,away:0.98},
-    "Bahia":{home:1.32,away:1.01},"Cuiabá":{home:1.18,away:0.90},
-    "Vitória":{home:1.20,away:0.92},"Juventude":{home:1.16,away:0.88},
-    "Criciúma":{home:1.14,away:0.86},"Atlético Goianiense":{home:1.16,away:0.90},
-    // ── CHAMPIONSHIP ──
+        // ── CHAMPIONSHIP ──
     "Leeds United":{home:1.47,away:1.13},"Burnley FC":{home:1.36,away:1.05},
     "Sheffield United":{home:1.32,away:1.01},"West Bromwich Albion":{home:1.28,away:0.98},
     "Norwich City":{home:1.30,away:0.99},"Middlesbrough FC":{home:1.28,away:0.98},
@@ -464,21 +431,7 @@ const GOAL_POWER_FULL = {
     "Preston North End":{home:1.20,away:0.90},"QPR":{home:1.20,away:0.90},
     "Sheffield Wednesday":{home:1.20,away:0.90},"Oxford United":{home:1.20,away:0.90},
     "Cardiff City":{home:1.20,away:0.90},"Plymouth Argyle":{home:1.16,away:0.88},
-    // ── 2. BUNDESLIGA ──
-    "Hamburger SV":{home:1.42,away:1.09},"Hannover 96":{home:1.32,away:1.01},"Fortuna Düsseldorf":{home:1.28,away:0.98},
-    "1. FC Nürnberg":{home:1.24,away:0.94},"Hertha BSC":{home:1.30,away:0.99},"FC Schalke 04":{home:1.28,away:0.98},
-    "1. FC Kaiserslautern":{home:1.22,away:0.92},"SpVgg Greuther Fürth":{home:1.24,away:0.94},"SC Paderborn 07":{home:1.22,away:0.92},
-    "Karlsruher SC":{home:1.20,away:0.90},"SV Elversberg":{home:1.20,away:0.90},"1. FC Magdeburg":{home:1.18,away:0.88},
-    "FC Darmstadt 98":{home:1.22,away:0.92},"SSV Jahn Regensburg":{home:1.18,away:0.88},"SSV Ulm 1846":{home:1.16,away:0.86},
-    "Eintracht Braunschweig":{home:1.18,away:0.88},"Preußen Münster":{home:1.16,away:0.86},"SV Wehen Wiesbaden":{home:1.14,away:0.84},
-    // ── LIGA MX ──
-    "América":{home:1.52,away:1.17},"Tigres UANL":{home:1.48,away:1.13},"Deportivo Guadalajara":{home:1.44,away:1.10},
-    "Monterrey":{home:1.42,away:1.08},"Cruz Azul":{home:1.36,away:1.05},"CF Pachuca":{home:1.32,away:1.01},
-    "UNAM Pumas":{home:1.30,away:0.99},"León":{home:1.28,away:0.98},"Atlas FC":{home:1.24,away:0.94},
-    "Toluca FC":{home:1.28,away:0.98},"Club Necaxa":{home:1.20,away:0.90},"Santos Laguna":{home:1.24,away:0.94},
-    "Club Tijuana":{home:1.20,away:0.90},"Atlético de San Luis":{home:1.22,away:0.92},"FC Juárez":{home:1.18,away:0.88},
-    "Mazatlán FC":{home:1.16,away:0.86},"Querétaro FC":{home:1.14,away:0.84},"Puebla FC":{home:1.22,away:0.92},
-    // ── MLS ──
+        // ── MLS ──
     "Inter Miami CF":{home:1.52,away:1.17},"LA Galaxy":{home:1.42,away:1.08},"LAFC":{home:1.48,away:1.13},
     "Seattle Sounders FC":{home:1.36,away:1.05},"Portland Timbers":{home:1.30,away:0.99},"Columbus Crew":{home:1.30,away:0.99},
     "FC Cincinnati":{home:1.28,away:0.98},"Philadelphia Union":{home:1.32,away:1.01},"Atlanta United FC":{home:1.30,away:0.99},
@@ -489,26 +442,9 @@ const GOAL_POWER_FULL = {
     "Austin FC":{home:1.26,away:0.96},"Charlotte FC":{home:1.22,away:0.92},"CF Montréal":{home:1.22,away:0.92},
     "Vancouver Whitecaps FC":{home:1.24,away:0.94},"San Jose Earthquakes":{home:1.18,away:0.88},"Orlando City SC":{home:1.28,away:0.98},
     "FC Dallas":{home:1.22,away:0.92},"St. Louis City SC":{home:1.22,away:0.92},
-    // ── ELITESERIEN ──
-    "Bodø/Glimt":{home:1.52,away:1.17},"Molde FK":{home:1.42,away:1.08},"Rosenborg BK":{home:1.36,away:1.05},
-    "Brann":{home:1.30,away:0.99},"Viking FK":{home:1.28,away:0.98},"Vålerenga FK":{home:1.26,away:0.96},
-    "Lillestrøm SK":{home:1.24,away:0.94},"Odds BK":{home:1.22,away:0.92},"Fredrikstad FK":{home:1.22,away:0.92},
-    "Stabæk":{home:1.20,away:0.90},"Tromsø IL":{home:1.20,away:0.90},"FK Haugesund":{home:1.18,away:0.88},
-    "Sarpsborg 08":{home:1.20,away:0.90},"KFUM Oslo":{home:1.18,away:0.88},"HamKam":{home:1.16,away:0.86},
-    "Sandefjord Fotball":{home:1.16,away:0.86},"FK Jerv":{home:1.14,away:0.84},"Kristiansund BK":{home:1.16,away:0.86},"Aalesunds FK":{home:1.18,away:0.88},
-    // ── A-LEAGUE ──
-    "Melbourne City":{home:1.42,away:1.08},"Melbourne Victory":{home:1.40,away:1.07},"Sydney FC":{home:1.38,away:1.05},
-    "Perth Glory":{home:1.30,away:0.99},"Auckland FC":{home:1.30,away:0.99},"Western Sydney Wanderers":{home:1.28,away:0.98},
-    "Central Coast Mariners":{home:1.28,away:0.98},"Brisbane Roar":{home:1.24,away:0.94},"Wellington Phoenix":{home:1.24,away:0.94},
-    "Western United":{home:1.22,away:0.92},"Adelaide United":{home:1.24,away:0.94},"MacArthur FC":{home:1.22,away:0.92},"Newcastle Jets":{home:1.20,away:0.90},
-    // ── EERSTE DIVISIE ──
-    "Jong Ajax":{home:1.34,away:1.03},"Jong PSV":{home:1.30,away:0.99},"ADO Den Haag":{home:1.28,away:0.98},
-    "De Graafschap":{home:1.24,away:0.94},"Jong AZ":{home:1.24,away:0.94},"FC Volendam":{home:1.22,away:0.92},
-    "Jong Feyenoord":{home:1.24,away:0.94},"FC Dordrecht":{home:1.20,away:0.90},"Roda JC Kerkrade":{home:1.22,away:0.92},
-    "FC Eindhoven":{home:1.20,away:0.90},"Jong FC Twente":{home:1.22,away:0.92},"Jong FC Utrecht":{home:1.20,away:0.90},
-    "Excelsior Rotterdam":{home:1.20,away:0.90},"MVV Maastricht":{home:1.18,away:0.88},"VVV-Venlo":{home:1.20,away:0.90},
-    "SC Telstar":{home:1.16,away:0.86},"TOP Oss":{home:1.14,away:0.84},"Jong NEC Nijmegen":{home:1.18,away:0.88},
-    "Jong Almere City FC":{home:1.16,away:0.86},"SBV Vitesse":{home:1.24,away:0.94},
+    // ── JUPILER PRO LEAGUE ──
+    "Club Brugge KV":{home:6.2,away:5.2},"Anderlecht":{home:5.9,away:5.0},"KAA Gent":{home:5.6,away:4.7},"KRC Genk":{home:5.5,away:4.6},"R. Union Saint-Gilloise":{home:5.4,away:4.5},"Cercle Brugge KSV":{home:5.2,away:4.3},"Standard de Liège":{home:5.0,away:4.2},"KV Mechelen":{home:4.9,away:4.1},"STVV":{home:4.8,away:4.0},"OH Leuven":{home:4.7,away:3.9},"Beerschot VA":{home:4.7,away:3.9},"KV Kortrijk":{home:4.6,away:3.8},"Charleroi":{home:4.8,away:4.0},"KVC Westerlo":{home:4.6,away:3.8},"RFC Seraing":{home:4.4,away:3.6},"Zulte Waregem":{home:4.5,away:3.7},
+      
 };
 
 // ── BSD FETCH ──
@@ -721,10 +657,8 @@ window.onload=async()=>{
             'La Liga':               'PD',
             'Serie A':               'SA',
             'Bundesliga':            'BL1',
-            '2. Bundesliga':         'BL2',
             'Ligue 1':               'FL1',
             'Eredivisie':            'DED',
-            'Eerste Divisie':        'ED2',
             'Primeira Liga':         'PPL',
             'Championship':          'ELC',
             'Brasileirão Série A':   'BSA',
@@ -732,7 +666,6 @@ window.onload=async()=>{
             'Brasileirão':           'BSA',
             'Liga MX':               'MXL',
             'MLS':                   'MLS',
-            'Eliteserien':           'ELI',
             'A-League Men':          'ALE',
             'A-League':              'ALE',
         };
