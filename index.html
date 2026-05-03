@@ -154,6 +154,9 @@
 
         /* CALIBRATION BADGE */
         .cal-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:var(--purple);text-transform:uppercase;margin-left:auto;}
+        /* OPTGROUPS */
+        select optgroup{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;color:var(--muted);background:var(--card2);}
+        select optgroup option{font-size:0.85rem;font-weight:500;letter-spacing:0;color:var(--text);background:var(--card);}
     </style>
 </head>
 <body>
@@ -733,18 +736,45 @@ window.onload=async()=>{
             'A-League Men':          'ALE',
             'A-League':              'ALE',
         };
+        // Ligas que el usuario sigue (imagen)
+        const RECOMENDADAS = new Set(['PL','BL1','BL2','BSA','DED','ED2','ELI','MXL','MLS','ALE']);
+
         lSel.innerHTML='<option value="">— Seleccionar Liga —</option>';
+
+        // Construir mapa de ligas desde API
+        const apiLeagues=[];
         (data.results||[]).filter(l=>{
             if(l.is_women) return false;
-            // Solo ligas con nombre EXACTO en el mapa
             return Object.keys(EXACT_MATCH).some(t=>l.name.trim()===t);
         }).forEach(l=>{
             const key=l.id.toString();
             const offKey=EXACT_MATCH[l.name.trim()]||null;
             leagueMap[key]={bsdId:l.id,currentSeasonId:l.current_season?.id||null,name:l.name,leagueAvg:leagueAvgFor(l.name),offKey};
-            lSel.add(new Option(`${flagFor(l.country)} ${l.name}`,key));
+            apiLeagues.push({key,name:`${flagFor(l.country)} ${l.name}`,offKey});
         });
-        addOfflineLeagues();
+
+        // Añadir offline si no están en API
+        const existingOffKeys=new Set(apiLeagues.map(l=>l.offKey));
+        for(let code in LIGAS_OFFLINE){
+            if(!existingOffKeys.has(code)){
+                const l=LIGAS_OFFLINE[code];
+                leagueMap[code]={bsdId:null,currentSeasonId:null,name:l.name,leagueAvg:l.leagueAvg,offline:true,offKey:code};
+                apiLeagues.push({key:code,name:l.name,offKey:code});
+            }
+        }
+
+        // Separar en grupos
+        const grpRec  = apiLeagues.filter(l=>RECOMENDADAS.has(l.offKey)).sort((a,b)=>a.name.localeCompare(b.name));
+        const grpEsp  = apiLeagues.filter(l=>!RECOMENDADAS.has(l.offKey)).sort((a,b)=>a.name.localeCompare(b.name));
+
+        // Añadir con optgroups
+        const ogRec=document.createElement('optgroup'); ogRec.label='⭐ Recomendadas';
+        grpRec.forEach(l=>ogRec.appendChild(new Option(l.name,l.key)));
+        const ogEsp=document.createElement('optgroup'); ogEsp.label='🌐 Esporádicas';
+        grpEsp.forEach(l=>ogEsp.appendChild(new Option(l.name,l.key)));
+        lSel.appendChild(ogRec);
+        lSel.appendChild(ogEsp);
+
         setApiStatus('live','🟢 BSD API activa — datos en tiempo real');
         apiAvailable=true;
         document.getElementById('engine-badge').textContent='🛰 BSD + Dixon-Coles + Platt + NegBin-v';
@@ -755,22 +785,25 @@ window.onload=async()=>{
 };
 
 function addOfflineLeagues(){
-    const existing=new Set([...lSel.options].map(o=>o.text.replace(/^\S+ /,'')));
-    for(let code in LIGAS_OFFLINE){
-        const l=LIGAS_OFFLINE[code],lname=l.name.replace(/^\S+ /,'');
-        if(!existing.has(lname)){
-            leagueMap[code]={bsdId:null,currentSeasonId:null,name:l.name,leagueAvg:l.leagueAvg,offline:true};
-            lSel.add(new Option(l.name,code));
-        }
-    }
+    // Ya manejado en el bloque principal con optgroups
 }
 function loadOfflineLeagues(){
+    const RECOMENDADAS = new Set(['PL','BL1','BL2','BSA','DED','ED2','ELI','MXL','MLS','ALE']);
     lSel.innerHTML='<option value="">— Seleccionar Liga —</option>';
+    const rec=[],esp=[];
     for(let code in LIGAS_OFFLINE){
         const l=LIGAS_OFFLINE[code];
-        leagueMap[code]={bsdId:null,currentSeasonId:null,name:l.name,leagueAvg:l.leagueAvg,offline:true};
-        lSel.add(new Option(l.name,code));
+        leagueMap[code]={bsdId:null,currentSeasonId:null,name:l.name,leagueAvg:l.leagueAvg,offline:true,offKey:code};
+        (RECOMENDADAS.has(code)?rec:esp).push({code,name:l.name});
     }
+    rec.sort((a,b)=>a.name.localeCompare(b.name));
+    esp.sort((a,b)=>a.name.localeCompare(b.name));
+    const ogRec=document.createElement('optgroup'); ogRec.label='⭐ Recomendadas';
+    rec.forEach(l=>ogRec.appendChild(new Option(l.name,l.code)));
+    const ogEsp=document.createElement('optgroup'); ogEsp.label='🌐 Esporádicas';
+    esp.forEach(l=>ogEsp.appendChild(new Option(l.name,l.code)));
+    lSel.appendChild(ogRec);
+    lSel.appendChild(ogEsp);
 }
 lSel.onchange=async()=>{
     const key=lSel.value;
