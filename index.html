@@ -1059,17 +1059,14 @@ function flagFor(c){const f={England:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',Spain:'🇪�
 function leagueAvgFor(n){
     if(n.includes('Premier')) return 10.1;
     if(n==='Bundesliga'||n.includes('Bundesliga')&&!n.includes('2.')) return 9.8;
-    if(n.includes('2. Bundesliga')) return 9.2;
     if(n.includes('La Liga')) return 9.5;
     if(n.includes('Serie A')) return 9.0;
     if(n.includes('Ligue 1')) return 9.3;
     if(n.includes('Eredivisie')&&!n.includes('Eerste')) return 9.6;
-    if(n.includes('Eerste Divisie')) return 9.3;
     if(n.includes('Liga Port')||n.includes('Primeira')) return 9.1;
     if(n.includes('Championship')) return 9.7;
     if(n.includes('Liga MX')||n.includes('MX')) return 8.5;
     if(n.includes('MLS')) return 9.0;
-    if(n.includes('Eliteserien')) return 8.8;
     if(n.includes('A-League')) return 9.0;
     return 9.3;
 }
