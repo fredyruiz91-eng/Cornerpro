@@ -3,854 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CornerIQ Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Selector de Equipos - API BSD</title>
     <style>
-        :root {
-            --bg:#08090d; --card:#10131a; --card2:#161b26; --border:#1e2535;
-            --text:#e8eaf0; --muted:#5a6480; --accent:#e63946;
-            --yellow:#f4b942; --green:#3dd68c; --blue:#2563eb; --purple:#8b5cf6;
-        }
-        *{box-sizing:border-box;margin:0;padding:0;}
-        body{
-            background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
-            min-height:100vh;display:flex;justify-content:center;padding:20px 15px 60px;
-            background-image:
-                radial-gradient(ellipse 60% 40% at 50% -10%,rgba(230,57,70,0.10) 0%,transparent 70%),
-                repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px),
-                repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px);
-        }
-        .container{width:100%;max-width:440px;}
-
-        .header{text-align:center;padding:24px 0 18px;}
-        .logo{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:3px;color:white;line-height:1;}
-        .logo span{color:var(--accent);}
-        .badge{display:inline-block;margin-top:6px;padding:3px 12px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.3);border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;}
-
-        .card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
-        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
-
-        .api-status{display:flex;align-items:center;gap:8px;font-size:0.66rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;padding:7px 12px;border-radius:8px;background:var(--card2);border:1px solid var(--border);}
-        .api-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
-        .api-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);}
-        .api-dot.error{background:var(--yellow);}
-
-        /* LEAGUE PILLS */
-        .league-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
-        .league-pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
-        .league-pill:hover{border-color:var(--accent);color:var(--text);}
-        .league-pill.active{background:rgba(230,57,70,0.15);border-color:var(--accent);color:var(--accent);}
-        .league-pill.disabled{opacity:0.3;cursor:not-allowed;}
-
-        label{display:block;margin:12px 0 5px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-        select{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6480' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;transition:border-color 0.2s;}
-        select:focus{outline:none;border-color:var(--accent);}
-        select:disabled{opacity:0.4;cursor:not-allowed;}
-        .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-        .team-col label{margin-top:0;}
-        .vs-divider{display:flex;align-items:center;justify-content:center;margin:4px 0;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;gap:10px;}
-        .vs-divider::before,.vs-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-
-        /* MARKETS TOGGLE */
-        .markets-label{display:block;margin:12px 0 8px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-        .market-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
-        .mkt-toggle{padding:5px 11px;border-radius:16px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
-        .mkt-toggle.on{background:rgba(61,214,140,0.12);border-color:rgba(61,214,140,0.4);color:var(--green);}
-        .mkt-toggle.unavailable{opacity:0.25;cursor:not-allowed;pointer-events:none;}
-
-        .calc-btn{width:100%;padding:13px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;margin-top:16px;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(230,57,70,0.3);position:relative;overflow:hidden;}
-        .calc-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 60%);}
-        .calc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(230,57,70,0.5);}
-        .calc-btn:active{transform:scale(0.98);}
-
-        .loading-state{text-align:center;padding:28px;color:var(--muted);font-size:0.8rem;letter-spacing:1px;}
-        .spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 10px;}
-        .loading-sub{font-size:0.63rem;color:var(--muted);margin-top:5px;opacity:0.7;}
-        @keyframes spin{to{transform:rotate(360deg);}}
-
-        .match-header{background:var(--card);border-radius:16px;padding:20px 16px 16px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
-        .match-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
-        .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;}
-        .team-side{display:flex;flex-direction:column;align-items:center;gap:6px;}
-        .team-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
-        .vs-center{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);letter-spacing:2px;}
-
-        /* FORM BADGES */
-        .form-row{display:flex;gap:3px;justify-content:center;margin-top:4px;}
-        .form-dot{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;}
-        .form-dot.w{background:rgba(61,214,140,0.2);color:var(--green);}
-        .form-dot.d{background:rgba(244,185,66,0.2);color:var(--yellow);}
-        .form-dot.l{background:rgba(230,57,70,0.2);color:var(--accent);}
-        .data-tag{font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:8px;text-transform:uppercase;}
-        .data-tag.api{background:rgba(61,214,140,0.1);color:var(--green);border:1px solid rgba(61,214,140,0.2);}
-        .data-tag.off{background:rgba(244,185,66,0.1);color:var(--yellow);border:1px solid rgba(244,185,66,0.2);}
-
-        .result-boxes{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;margin-top:14px;}
-        .result-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;}
-        .result-box.rb-center{border-color:rgba(244,185,66,0.2);background:rgba(244,185,66,0.04);min-width:80px;}
-        .rb-label{font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;}
-        .rb-pct{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1;}
-
-        .section-header{display:flex;align-items:center;gap:10px;margin:16px 0 10px;}
-        .section-icon{font-size:1rem;}
-        .section-title{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:var(--text);}
-        .section-lambda{margin-left:auto;font-family:'Bebas Neue',sans-serif;font-size:0.82rem;letter-spacing:1px;color:var(--muted);}
-        .section-lambda span{color:var(--yellow);}
-        .section-divider{height:1px;background:var(--border);margin:14px 0;}
-        .cal-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:var(--purple);text-transform:uppercase;}
-
-        .market-card{background:var(--card);border-radius:10px;padding:13px 15px;margin-bottom:7px;border:1px solid var(--border);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;transition:border-color 0.3s;}
-        .market-card.high{border-color:rgba(61,214,140,0.3);}
-        .market-card.mid{border-color:rgba(244,185,66,0.25);}
-        .market-card.low{border-color:rgba(230,57,70,0.2);}
-        .line-label{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;line-height:1;color:white;letter-spacing:1px;min-width:44px;}
-        .line-label small{display:block;font-family:'DM Sans',sans-serif;font-size:0.56rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
-        .bar-wrap{flex:1;}
-        .bar-bg{background:rgba(255,255,255,0.05);height:6px;border-radius:4px;overflow:hidden;margin-bottom:3px;}
-        .bar-fill{height:100%;border-radius:4px;width:0%;transition:width 0.9s cubic-bezier(0.4,0,0.2,1);}
-        .bar-sub{font-size:0.62rem;color:var(--muted);}
-        .uncertainty-band{font-size:0.58rem;color:var(--muted);margin-top:2px;letter-spacing:0.5px;}
-        .pct-label{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:1px;line-height:1;text-align:right;min-width:52px;}
-        .pct-label small{font-family:'DM Sans',sans-serif;font-size:0.56rem;color:var(--muted);font-weight:700;letter-spacing:1px;display:block;}
-
-        .recomendacion{background:linear-gradient(135deg,#0d1f12,#0a1a20);border:1px solid rgba(61,214,140,0.25);border-radius:16px;padding:18px 16px;margin-top:6px;text-align:center;position:relative;overflow:hidden;}
-        .recomendacion::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);}
-        .rec-title{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:3px;color:var(--green);opacity:0.8;margin-bottom:10px;}
-        .rec-main{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:white;line-height:1.1;}
-        .rec-sub{font-size:0.7rem;color:var(--muted);margin-top:6px;}
-        .rec-confidence{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 14px;border-radius:20px;background:rgba(61,214,140,0.08);border:1px solid rgba(61,214,140,0.15);}
-        .rc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green);}
-        .rc-label{font-size:0.62rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
-
-        /* MODO OFFLINE WARNING */
-        .offline-note{background:rgba(244,185,66,0.07);border:1px solid rgba(244,185,66,0.2);border-radius:8px;padding:8px 12px;font-size:0.66rem;color:var(--yellow);margin-bottom:10px;letter-spacing:0.5px;}
-
-        .disclaimer{text-align:center;color:var(--muted);font-size:0.63rem;margin-top:18px;line-height:1.6;opacity:0.6;}
-        .hidden{display:none;}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-        .animate-in{animation:fadeUp 0.4s ease-out forwards;}
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc; }
+        label { font-weight: bold; }
+        .status { font-size: 0.8em; color: #666; margin-top: 5px; }
     </style>
 </head>
 <body>
+
 <div class="container">
-    <div class="header">
-        <div class="logo">Corner<span>IQ</span> Pro</div>
-        <div class="badge" id="engine-badge">⚡ Motor Poisson + Dixon-Coles + Platt</div>
-    </div>
+    <h2>Configuración de Liga</h2>
+    
+    <label for="ligaSelector">Selecciona Liga:</label>
+    <select id="ligaSelector" onchange="loadTeams()">
+        <option value="">-- Elige una liga --</option>
+        <option value="PD">LaLiga (España)</option>
+        <option value="PL">Premier League (Inglaterra)</option>
+        <option value="SA">Serie A (Italia)</option>
+    </select>
 
-    <div class="card">
-        <div class="api-status">
-            <div class="api-dot" id="api-dot"></div>
-            <span id="api-status-text">Conectando con BSD API...</span>
-        </div>
-
-        <label>Liga / Competencia</label>
-        <div class="league-pills" id="league-pills"></div>
-
-        <div class="vs-divider" style="margin-top:14px;">VS</div>
-        <div class="team-grid">
-            <div class="team-col">
-                <label>🏠 Local</label>
-                <select id="home-team" disabled><option value="">— Selecciona liga —</option></select>
-            </div>
-            <div class="team-col">
-                <label>✈️ Visitante</label>
-                <select id="away-team" disabled><option value="">— Selecciona liga —</option></select>
-            </div>
-        </div>
-
-        <span class="markets-label">Mercados a calcular</span>
-        <div class="market-toggles" id="market-toggles"></div>
-
-        <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
-    </div>
-
-    <div id="results" class="hidden">
-        <div id="loading-indicator" class="card loading-state">
-            <div class="spinner"></div>
-            <div id="loading-text">Obteniendo estadísticas reales...</div>
-            <div class="loading-sub" id="loading-sub">Analizando últimos 15 partidos</div>
-        </div>
-        <div id="output" class="hidden">
-            <div id="match-header-container"></div>
-            <div id="all-markets-container"></div>
-            <div id="recomendacion-container"></div>
-            <p class="disclaimer">Modelo Poisson + Dixon-Coles + Platt Calibración + NegBin variable. Solo uso personal.</p>
-        </div>
-    </div>
+    <label for="teamSelector">Selecciona Equipo:</label>
+    <select id="teamSelector">
+        <option value="">Primero elige una liga</option>
+    </select>
+    
+    <div id="debugStatus" class="status"></div>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════
-const BSD_TOKEN      = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
-const BSD_BASE       = 'https://sports.bzzoiro.com/api';
-const MATCHES_TO_USE = 15;
+    // Configuración Inicial
+    const API_KEY = 'TU_API_KEY_AQUI'; // <--- Pon tu clave real aquí
+    let teamMap = {};
 
-// ══════════════════════════════════════════
-// LIGAS Y SUS MERCADOS PERMITIDOS
-// ══════════════════════════════════════════
-const LIGAS = {
-    "PL":  {
-        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", leagueAvg:10.1, negBinR:5.4,
-        markets:{ht:true,goles:true,btts:true,corn:true},
-        teams:["Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC","Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Ipswich Town FC","Leicester City FC","Liverpool FC","Manchester City FC","Manchester United FC","Newcastle United FC","Nottingham Forest FC","Southampton FC","Tottenham Hotspur FC","West Ham United FC","Wolverhampton Wanderers FC"]
-    },
-    "BL1": {
-        name:"🇩🇪 Bundesliga", leagueAvg:9.8, negBinR:5.9,
-        markets:{ht:true,goles:true,btts:true,corn:true},
-        teams:["1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen","Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg","FC Bayern München","FC St. Pauli","Holstein Kiel","RB Leipzig","SC Freiburg","SV Werder Bremen","TSG Hoffenheim","VfB Stuttgart","VfL Bochum 1848","VfL Wolfsburg"]
-    },
-    "DED": {
-        name:"🇳🇱 Eredivisie", leagueAvg:9.6, negBinR:5.7,
-        markets:{ht:true,goles:true,btts:true,corn:true},
-        teams:["AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente","FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo","NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk","Sparta Rotterdam","Willem II","sc Heerenveen"]
-    },
-    "JPL": {
-        name:"🇧🇪 Jupiler Pro League", leagueAvg:9.2, negBinR:6.0,
-        markets:{ht:true,goles:true,btts:true,corn:true},
-        teams:["Anderlecht","Royal Antwerp FC","Beerschot VA","Cercle Brugge KSV","Charleroi","Club Brugge KV","FCV Dender EH","KRC Genk","KAA Gent","KV Kortrijk","KV Mechelen","OH Leuven","STVV","Standard de Liège","R. Union Saint-Gilloise","KVC Westerlo"]
-    },
-    "FL1": {
-        name:"🇫🇷 Ligue 1", leagueAvg:9.3, negBinR:6.2,
-        markets:{ht:true,goles:false,btts:false,corn:false},
-        teams:["AJ Auxerre","AS Monaco FC","AS Saint-Étienne","Angers SCO","Le Havre AC","Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille","Paris Saint-Germain","RC Lens","RC Strasbourg Alsace","Stade Brestois 29","Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes"]
-    },
-    "BSA": {
-        name:"🇧🇷 Brasileirão", leagueAvg:9.4, negBinR:5.8,
-        markets:{ht:true,goles:false,btts:false,corn:true},
-        teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]
-    },
-    "ELC": {
-        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", leagueAvg:9.7, negBinR:5.5,
-        markets:{ht:false,goles:false,btts:true,corn:true},
-        teams:["Blackburn Rovers","Bristol City","Burnley FC","Cardiff City","Coventry City","Derby County","Hull City","Leeds United","Luton Town","Middlesbrough FC","Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC","Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City","Sunderland AFC","Swansea City","Watford FC","West Bromwich Albion"]
-    },
-    "PD":  {
-        name:"🇪🇸 La Liga", leagueAvg:9.5, negBinR:6.6,
-        markets:{ht:false,goles:false,btts:false,corn:true},
-        teams:["Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona","RCD Mallorca","Rayo Vallecano","Real Betis","Real Madrid CF","Real Sociedad","Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]
-    },
-    "SA":  {
-        name:"🇮🇹 Serie A", leagueAvg:9.0, negBinR:7.1,
-        markets:{ht:false,goles:false,btts:false,corn:false},
-        teams:["AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC","Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC","Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio","SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Venezia FC"]
-    },
-    "MXL": {
-        name:"🇲🇽 Liga MX", leagueAvg:8.5, negBinR:6.3,
-        markets:{ht:false,goles:true,btts:false,corn:true},
-        teams:["América","Atlas FC","Atlético de San Luis","CF Pachuca","Club Necaxa","Club Tijuana","Cruz Azul","Deportivo Guadalajara","FC Juárez","León","Mazatlán FC","Monterrey","Puebla FC","Querétaro FC","Santos Laguna","Tigres UANL","Toluca FC","UNAM Pumas"]
-    },
-    "LIB": {
-        name:"🏆 Copa Libertadores", leagueAvg:8.6, negBinR:6.0,
-        markets:{ht:true,goles:true,btts:true,corn:true},
-        teams:["Fluminense","Palmeiras","River Plate","Flamengo","Grêmio","Peñarol","São Paulo","Club Nacional","Colo-Colo","Talleres","Bolívar","The Strongest","Botafogo","San Lorenzo","Atlético Mineiro","Junior FC","LDU Quito","Independiente del Valle","Universitario","Alianza Lima","Estudiantes","Rosario Central","Libertad","Cerro Porteño","Huachipato","Cobresal","Barcelona SC","Millonarios","Caracas FC","Deportivo Táchira","Defensor Sporting","Palestino"]
-    }
-};
-
-// ══════════════════════════════════════════
-// DATOS OFFLINE: CORNER POWER
-// ══════════════════════════════════════════
-const CORNER_POWER = {
-    "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
-    "Real Madrid CF":{home:6.6,away:5.7},"FC Barcelona":{home:6.4,away:5.5},"Atlético de Madrid":{home:5.8,away:4.9},"Girona FC":{home:5.6,away:4.7},"Real Sociedad":{home:5.4,away:4.5},"Athletic Club":{home:5.5,away:4.6},"Real Betis":{home:5.3,away:4.4},"Valencia CF":{home:5.1,away:4.2},"Sevilla FC":{home:5.2,away:4.3},"Villarreal CF":{home:5.0,away:4.2},"CA Osasuna":{home:4.9,away:4.0},"Getafe CF":{home:4.5,away:3.7},"RC Celta de Vigo":{home:5.0,away:4.1},"RCD Mallorca":{home:4.7,away:3.9},"Rayo Vallecano":{home:4.6,away:3.8},"UD Las Palmas":{home:4.8,away:4.0},"Deportivo Alavés":{home:4.7,away:3.9},"CD Leganés":{home:4.5,away:3.7},"Real Valladolid CF":{home:4.4,away:3.6},"RCD Espanyol de Barcelona":{home:4.8,away:4.0},
-    "Inter Milano":{home:6.0,away:5.1},"AC Milan":{home:5.8,away:4.9},"Juventus FC":{home:5.6,away:4.7},"Atalanta BC":{home:5.9,away:5.0},"AS Roma":{home:5.5,away:4.6},"SS Lazio":{home:5.3,away:4.4},"SSC Napoli":{home:5.7,away:4.8},"ACF Fiorentina":{home:5.4,away:4.5},"Torino FC":{home:4.8,away:4.0},"Bologna FC 1909":{home:5.2,away:4.3},"Genoa CFC":{home:4.7,away:3.9},"AC Monza":{home:4.6,away:3.8},"Hellas Verona FC":{home:4.5,away:3.7},"US Lecce":{home:4.4,away:3.6},"Udinese Calcio":{home:4.6,away:3.8},"Cagliari Calcio":{home:4.5,away:3.7},"Empoli FC":{home:4.7,away:3.9},"Parma Calcio 1913":{home:4.8,away:4.0},"Como 1907":{home:5.0,away:4.2},"Venezia FC":{home:4.4,away:3.6},
-    "FC Bayern München":{home:7.2,away:6.2},"Borussia Dortmund":{home:6.4,away:5.4},"Bayer 04 Leverkusen":{home:6.7,away:5.7},"RB Leipzig":{home:6.3,away:5.3},"VfB Stuttgart":{home:5.9,away:5.0},"Eintracht Frankfurt":{home:5.7,away:4.8},"SC Freiburg":{home:5.4,away:4.5},"TSG Hoffenheim":{home:5.5,away:4.6},"SV Werder Bremen":{home:5.3,away:4.4},"1. FC Heidenheim 1846":{home:4.9,away:4.1},"FC Augsburg":{home:4.8,away:4.0},"VfL Wolfsburg":{home:5.2,away:4.3},"1. FSV Mainz 05":{home:5.0,away:4.2},"Borussia Mönchengladbach":{home:5.3,away:4.4},"1. FC Union Berlin":{home:4.7,away:3.9},"VfL Bochum 1848":{home:4.6,away:3.8},"FC St. Pauli":{home:4.8,away:4.0},"Holstein Kiel":{home:4.5,away:3.7},
-    "Paris Saint-Germain":{home:6.7,away:5.7},"AS Monaco FC":{home:6.0,away:5.1},"Stade Brestois 29":{home:5.2,away:4.3},"Lille OSC":{home:5.6,away:4.7},"OGC Nice":{home:5.4,away:4.5},"Olympique Lyonnais":{home:5.5,away:4.6},"RC Lens":{home:5.3,away:4.4},"Olympique de Marseille":{home:5.5,away:4.6},"Stade de Reims":{home:4.9,away:4.1},"Stade Rennais FC":{home:5.1,away:4.2},"Toulouse FC":{home:4.8,away:4.0},"Montpellier HSC":{home:4.7,away:3.9},"RC Strasbourg Alsace":{home:4.8,away:4.0},"Le Havre AC":{home:4.6,away:3.8},"FC Nantes":{home:4.7,away:3.9},"Angers SCO":{home:4.5,away:3.7},"AJ Auxerre":{home:4.6,away:3.8},"AS Saint-Étienne":{home:4.5,away:3.7},
-    "PSV Eindhoven":{home:6.5,away:5.6},"Feyenoord":{home:6.2,away:5.3},"FC Twente":{home:5.6,away:4.7},"AZ Alkmaar":{home:5.8,away:4.9},"Ajax":{home:6.0,away:5.1},"NEC Nijmegen":{home:4.9,away:4.1},"FC Utrecht":{home:5.2,away:4.3},"Sparta Rotterdam":{home:4.8,away:4.0},"Go Ahead Eagles":{home:4.7,away:3.9},"Fortuna Sittard":{home:4.5,away:3.7},"sc Heerenveen":{home:4.8,away:4.0},"PEC Zwolle":{home:4.6,away:3.8},"Almere City FC":{home:4.5,away:3.7},"Heracles Almelo":{home:4.7,away:3.9},"RKC Waalwijk":{home:4.4,away:3.6},"Willem II":{home:4.6,away:3.8},"NAC Breda":{home:4.8,away:4.0},"FC Groningen":{home:4.5,away:3.7},
-    "Palmeiras":{home:6.2,away:5.3},"Flamengo":{home:6.4,away:5.5},"Botafogo":{home:5.8,away:4.9},"Atlético Mineiro":{home:5.9,away:5.0},"São Paulo":{home:5.7,away:4.8},"Internacional":{home:5.5,away:4.6},"Fluminense":{home:5.4,away:4.5},"Grêmio":{home:5.3,away:4.4},"Cruzeiro":{home:5.2,away:4.3},"Fortaleza":{home:5.4,away:4.5},"Red Bull Bragantino":{home:5.6,away:4.7},"Athletico Paranaense":{home:5.3,away:4.4},"Vasco da Gama":{home:5.1,away:4.2},"Corinthians":{home:5.0,away:4.2},"Bahia":{home:5.2,away:4.3},"Cuiabá":{home:4.7,away:3.9},"Vitória":{home:4.8,away:4.0},"Juventude":{home:4.6,away:3.8},"Criciúma":{home:4.5,away:3.7},"Atlético Goianiense":{home:4.6,away:3.8},
-    "Leeds United":{home:5.8,away:4.9},"Burnley FC":{home:5.4,away:4.5},"Sheffield United":{home:5.2,away:4.3},"West Bromwich Albion":{home:5.0,away:4.2},"Norwich City":{home:5.1,away:4.3},"Hull City":{home:4.8,away:4.0},"Middlesbrough FC":{home:5.0,away:4.2},"Coventry City":{home:5.1,away:4.3},"Sunderland AFC":{home:5.0,away:4.2},"Swansea City":{home:4.9,away:4.1},"Watford FC":{home:5.1,away:4.3},"Bristol City":{home:4.8,away:4.0},"QPR":{home:4.7,away:3.9},"Stoke City":{home:4.8,away:4.0},"Sheffield Wednesday":{home:4.7,away:3.9},"Blackburn Rovers":{home:4.9,away:4.1},"Plymouth Argyle":{home:4.6,away:3.8},"Portsmouth FC":{home:4.8,away:4.0},"Derby County":{home:5.0,away:4.2},"Oxford United":{home:4.7,away:3.9},"Millwall FC":{home:4.8,away:4.0},"Cardiff City":{home:4.7,away:3.9},"Preston North End":{home:4.7,away:3.9},"Luton Town":{home:4.9,away:4.1},
-    "Club Brugge KV":{home:6.2,away:5.2},"Anderlecht":{home:5.9,away:5.0},"KAA Gent":{home:5.6,away:4.7},"KRC Genk":{home:5.5,away:4.6},"R. Union Saint-Gilloise":{home:5.4,away:4.5},"Cercle Brugge KSV":{home:5.2,away:4.3},"Standard de Liège":{home:5.0,away:4.2},"KV Mechelen":{home:4.9,away:4.1},"STVV":{home:4.8,away:4.0},"OH Leuven":{home:4.7,away:3.9},"Beerschot VA":{home:4.7,away:3.9},"KV Kortrijk":{home:4.6,away:3.8},"Charleroi":{home:4.8,away:4.0},"KVC Westerlo":{home:4.6,away:3.8},"Royal Antwerp FC":{home:5.8,away:4.9},"FCV Dender EH":{home:4.5,away:3.7},
-    "América":{home:5.8,away:4.8},"Tigres UANL":{home:5.6,away:4.6},"Deportivo Guadalajara":{home:5.5,away:4.5},"Monterrey":{home:5.4,away:4.4},"Cruz Azul":{home:5.2,away:4.3},"CF Pachuca":{home:5.0,away:4.2},"UNAM Pumas":{home:5.0,away:4.1},"León":{home:4.9,away:4.0},"Atlas FC":{home:4.8,away:4.0},"Toluca FC":{home:4.9,away:4.1},"Club Necaxa":{home:4.6,away:3.8},"Santos Laguna":{home:4.8,away:4.0},"Club Tijuana":{home:4.6,away:3.8},"Atlético de San Luis":{home:4.7,away:3.9},"FC Juárez":{home:4.5,away:3.7},"Mazatlán FC":{home:4.5,away:3.7},"Querétaro FC":{home:4.4,away:3.6},"Puebla FC":{home:4.7,away:3.9},
-    "River Plate":{home:6.2,away:5.2},"Colo-Colo":{home:5.0,away:4.2},"Club Nacional":{home:5.3,away:4.4},"Peñarol":{home:5.2,away:4.3},"LDU Quito":{home:5.5,away:4.2},"Independiente del Valle":{home:5.4,away:4.4},"San Lorenzo":{home:4.8,away:4.0},"Estudiantes":{home:5.1,away:4.2},"Libertad":{home:4.9,away:4.0},"Cerro Porteño":{home:4.8,away:4.1},"Talleres":{home:5.2,away:4.3},"Millonarios":{home:4.7,away:3.9},"Junior FC":{home:4.6,away:3.8}
-};
-
-const GOAL_POWER_1T = {
-    "Manchester City FC":{home:0.88,away:0.74},"Liverpool FC":{home:0.85,away:0.71},"Arsenal FC":{home:0.82,away:0.68},"Chelsea FC":{home:0.75,away:0.62},"Tottenham Hotspur FC":{home:0.74,away:0.61},"Aston Villa FC":{home:0.72,away:0.60},"Newcastle United FC":{home:0.70,away:0.58},"Manchester United FC":{home:0.67,away:0.55},"Brighton & Hove Albion FC":{home:0.71,away:0.60},"West Ham United FC":{home:0.64,away:0.53},"Crystal Palace FC":{home:0.58,away:0.47},"AFC Bournemouth":{home:0.60,away:0.49},"Fulham FC":{home:0.62,away:0.51},"Wolverhampton Wanderers FC":{home:0.60,away:0.49},"Everton FC":{home:0.57,away:0.46},"Brentford FC":{home:0.63,away:0.52},"Nottingham Forest FC":{home:0.58,away:0.47},"Leicester City FC":{home:0.60,away:0.49},"Ipswich Town FC":{home:0.54,away:0.43},"Southampton FC":{home:0.52,away:0.41},
-    "Real Madrid CF":{home:0.84,away:0.70},"FC Barcelona":{home:0.82,away:0.68},"Atlético de Madrid":{home:0.71,away:0.59},"Girona FC":{home:0.68,away:0.56},"Real Sociedad":{home:0.65,away:0.54},"Athletic Club":{home:0.66,away:0.55},"Real Betis":{home:0.64,away:0.53},"Valencia CF":{home:0.62,away:0.51},"Sevilla FC":{home:0.63,away:0.52},"Villarreal CF":{home:0.61,away:0.50},"CA Osasuna":{home:0.59,away:0.48},"Getafe CF":{home:0.53,away:0.43},"RC Celta de Vigo":{home:0.60,away:0.49},"RCD Mallorca":{home:0.56,away:0.46},"Rayo Vallecano":{home:0.57,away:0.47},"UD Las Palmas":{home:0.58,away:0.47},"Deportivo Alavés":{home:0.56,away:0.46},"CD Leganés":{home:0.54,away:0.44},"Real Valladolid CF":{home:0.53,away:0.43},"RCD Espanyol de Barcelona":{home:0.57,away:0.47},
-    "Inter Milano":{home:0.76,away:0.63},"AC Milan":{home:0.74,away:0.61},"Juventus FC":{home:0.70,away:0.58},"Atalanta BC":{home:0.75,away:0.62},"AS Roma":{home:0.67,away:0.55},"SS Lazio":{home:0.65,away:0.54},"SSC Napoli":{home:0.73,away:0.60},"ACF Fiorentina":{home:0.67,away:0.55},"Torino FC":{home:0.58,away:0.47},"Bologna FC 1909":{home:0.63,away:0.52},"Genoa CFC":{home:0.56,away:0.46},"AC Monza":{home:0.55,away:0.45},"Hellas Verona FC":{home:0.54,away:0.44},"US Lecce":{home:0.53,away:0.43},"Udinese Calcio":{home:0.55,away:0.45},"Cagliari Calcio":{home:0.54,away:0.44},"Empoli FC":{home:0.56,away:0.46},"Parma Calcio 1913":{home:0.57,away:0.47},"Como 1907":{home:0.60,away:0.49},"Venezia FC":{home:0.53,away:0.43},
-    "FC Bayern München":{home:0.90,away:0.76},"Borussia Dortmund":{home:0.78,away:0.65},"Bayer 04 Leverkusen":{home:0.80,away:0.67},"RB Leipzig":{home:0.77,away:0.64},"VfB Stuttgart":{home:0.72,away:0.60},"Eintracht Frankfurt":{home:0.70,away:0.58},"SC Freiburg":{home:0.65,away:0.54},"TSG Hoffenheim":{home:0.66,away:0.55},"SV Werder Bremen":{home:0.64,away:0.53},"1. FC Heidenheim 1846":{home:0.58,away:0.48},"FC Augsburg":{home:0.57,away:0.47},"VfL Wolfsburg":{home:0.63,away:0.52},"1. FSV Mainz 05":{home:0.61,away:0.50},"Borussia Mönchengladbach":{home:0.64,away:0.53},"1. FC Union Berlin":{home:0.56,away:0.46},"VfL Bochum 1848":{home:0.55,away:0.45},"FC St. Pauli":{home:0.57,away:0.47},"Holstein Kiel":{home:0.54,away:0.44},
-    "Paris Saint-Germain":{home:0.86,away:0.72},"AS Monaco FC":{home:0.75,away:0.62},"Stade Brestois 29":{home:0.63,away:0.52},"Lille OSC":{home:0.70,away:0.58},"OGC Nice":{home:0.67,away:0.55},"Olympique Lyonnais":{home:0.68,away:0.56},"RC Lens":{home:0.65,away:0.54},"Olympique de Marseille":{home:0.68,away:0.56},"Stade de Reims":{home:0.59,away:0.48},"Stade Rennais FC":{home:0.62,away:0.51},"Toulouse FC":{home:0.58,away:0.47},"Montpellier HSC":{home:0.56,away:0.46},"RC Strasbourg Alsace":{home:0.58,away:0.47},"Le Havre AC":{home:0.55,away:0.45},"FC Nantes":{home:0.57,away:0.46},"Angers SCO":{home:0.54,away:0.44},"AJ Auxerre":{home:0.55,away:0.45},"AS Saint-Étienne":{home:0.54,away:0.44},
-    "PSV Eindhoven":{home:0.82,away:0.68},"Feyenoord":{home:0.79,away:0.65},"FC Twente":{home:0.68,away:0.56},"AZ Alkmaar":{home:0.73,away:0.60},"Ajax":{home:0.77,away:0.63},"NEC Nijmegen":{home:0.59,away:0.48},"FC Utrecht":{home:0.63,away:0.52},"Sparta Rotterdam":{home:0.58,away:0.47},"Go Ahead Eagles":{home:0.56,away:0.46},"Fortuna Sittard":{home:0.54,away:0.44},"sc Heerenveen":{home:0.58,away:0.47},"PEC Zwolle":{home:0.55,away:0.45},"Almere City FC":{home:0.54,away:0.44},"Heracles Almelo":{home:0.56,away:0.46},"RKC Waalwijk":{home:0.53,away:0.43},"Willem II":{home:0.55,away:0.45},"NAC Breda":{home:0.57,away:0.47},"FC Groningen":{home:0.54,away:0.44},
-    "Palmeiras":{home:0.78,away:0.64},"Flamengo":{home:0.80,away:0.66},"Botafogo":{home:0.72,away:0.59},"Atlético Mineiro":{home:0.74,away:0.61},"São Paulo":{home:0.70,away:0.58},"Internacional":{home:0.67,away:0.55},"Fluminense":{home:0.65,away:0.54},"Grêmio":{home:0.64,away:0.53},"Cruzeiro":{home:0.63,away:0.52},"Fortaleza":{home:0.65,away:0.54},"Red Bull Bragantino":{home:0.68,away:0.56},"Athletico Paranaense":{home:0.64,away:0.53},"Vasco da Gama":{home:0.62,away:0.51},"Corinthians":{home:0.61,away:0.50},"Bahia":{home:0.63,away:0.52},"Cuiabá":{home:0.56,away:0.46},"Vitória":{home:0.57,away:0.47},"Juventude":{home:0.55,away:0.45},"Criciúma":{home:0.54,away:0.44},"Atlético Goianiense":{home:0.55,away:0.45},
-    "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46},"Preston North End":{home:0.57,away:0.46},"Luton Town":{home:0.59,away:0.48},
-    "Club Brugge KV":{home:0.76,away:0.63},"Anderlecht":{home:0.72,away:0.59},"KAA Gent":{home:0.68,away:0.56},"KRC Genk":{home:0.67,away:0.55},"R. Union Saint-Gilloise":{home:0.66,away:0.54},"Cercle Brugge KSV":{home:0.63,away:0.52},"Standard de Liège":{home:0.61,away:0.50},"KV Mechelen":{home:0.59,away:0.48},"STVV":{home:0.58,away:0.47},"OH Leuven":{home:0.57,away:0.46},"Beerschot VA":{home:0.57,away:0.46},"KV Kortrijk":{home:0.56,away:0.45},"Charleroi":{home:0.59,away:0.48},"KVC Westerlo":{home:0.56,away:0.45},"Royal Antwerp FC":{home:0.71,away:0.59},"FCV Dender EH":{home:0.52,away:0.42},
-    "América":{home:0.72,away:0.59},"Tigres UANL":{home:0.70,away:0.57},"Deportivo Guadalajara":{home:0.68,away:0.55},"Monterrey":{home:0.67,away:0.54},"Cruz Azul":{home:0.65,away:0.53},"CF Pachuca":{home:0.63,away:0.51},"UNAM Pumas":{home:0.62,away:0.50},"León":{home:0.61,away:0.49},"Atlas FC":{home:0.59,away:0.48},"Toluca FC":{home:0.61,away:0.50},"Club Necaxa":{home:0.57,away:0.46},"Santos Laguna":{home:0.59,away:0.48},"Club Tijuana":{home:0.57,away:0.46},"Atlético de San Luis":{home:0.58,away:0.47},"FC Juárez":{home:0.56,away:0.45},"Mazatlán FC":{home:0.55,away:0.44},"Querétaro FC":{home:0.54,away:0.43},"Puebla FC":{home:0.58,away:0.47},
-    "River Plate":{home:0.75,away:0.62},"Colo-Colo":{home:0.60,away:0.49},"Club Nacional":{home:0.63,away:0.51},"Peñarol":{home:0.61,away:0.50},"LDU Quito":{home:0.68,away:0.52},"Independiente del Valle":{home:0.65,away:0.54},"San Lorenzo":{home:0.56,away:0.45},"Estudiantes":{home:0.60,away:0.49},"Libertad":{home:0.59,away:0.48},"Cerro Porteño":{home:0.57,away:0.46},"Talleres":{home:0.61,away:0.50},"Millonarios":{home:0.55,away:0.45},"Junior FC":{home:0.56,away:0.44}
-};
-
-const GOAL_POWER_FULL = {
-    "Manchester City FC":{home:1.90,away:1.50},"Liverpool FC":{home:1.85,away:1.45},"Arsenal FC":{home:1.75,away:1.40},"Chelsea FC":{home:1.60,away:1.25},"Tottenham Hotspur FC":{home:1.55,away:1.20},"Aston Villa FC":{home:1.50,away:1.18},"Newcastle United FC":{home:1.45,away:1.15},"Manchester United FC":{home:1.35,away:1.05},"Brighton & Hove Albion FC":{home:1.50,away:1.20},"West Ham United FC":{home:1.28,away:1.00},"Crystal Palace FC":{home:1.22,away:0.92},"AFC Bournemouth":{home:1.26,away:0.96},"Fulham FC":{home:1.30,away:1.00},"Wolverhampton Wanderers FC":{home:1.26,away:0.96},"Everton FC":{home:1.20,away:0.90},"Brentford FC":{home:1.32,away:1.02},"Nottingham Forest FC":{home:1.22,away:0.92},"Leicester City FC":{home:1.26,away:0.96},"Ipswich Town FC":{home:1.14,away:0.84},"Southampton FC":{home:1.10,away:0.80},
-    "Real Madrid CF":{home:1.80,away:1.45},"FC Barcelona":{home:1.75,away:1.40},"Atlético de Madrid":{home:1.45,away:1.15},"Athletic Club":{home:1.35,away:1.05},"Real Betis":{home:1.30,away:1.00},"Girona FC":{home:1.42,away:1.09},"Real Sociedad":{home:1.36,away:1.05},"Valencia CF":{home:1.30,away:0.99},"Sevilla FC":{home:1.32,away:1.01},"Villarreal CF":{home:1.28,away:0.98},"CA Osasuna":{home:1.24,away:0.94},"Getafe CF":{home:1.12,away:0.84},"RC Celta de Vigo":{home:1.26,away:0.96},"RCD Mallorca":{home:1.18,away:0.90},"Rayo Vallecano":{home:1.20,away:0.92},"UD Las Palmas":{home:1.22,away:0.92},"Deportivo Alavés":{home:1.18,away:0.90},"CD Leganés":{home:1.14,away:0.86},"Real Valladolid CF":{home:1.12,away:0.84},"RCD Espanyol de Barcelona":{home:1.20,away:0.92},
-    "Inter Milano":{home:1.60,away:1.25},"AC Milan":{home:1.55,away:1.20},"Juventus FC":{home:1.45,away:1.15},"Atalanta BC":{home:1.65,away:1.30},"SSC Napoli":{home:1.55,away:1.22},"AS Roma":{home:1.40,away:1.08},"SS Lazio":{home:1.38,away:1.05},"ACF Fiorentina":{home:1.40,away:1.08},"Torino FC":{home:1.22,away:0.92},"Bologna FC 1909":{home:1.32,away:1.01},"Genoa CFC":{home:1.18,away:0.90},"AC Monza":{home:1.16,away:0.88},"Hellas Verona FC":{home:1.14,away:0.86},"US Lecce":{home:1.12,away:0.84},"Udinese Calcio":{home:1.16,away:0.88},"Cagliari Calcio":{home:1.14,away:0.86},"Empoli FC":{home:1.18,away:0.90},"Parma Calcio 1913":{home:1.20,away:0.92},"Como 1907":{home:1.26,away:0.96},"Venezia FC":{home:1.12,away:0.84},
-    "FC Bayern München":{home:2.00,away:1.60},"Borussia Dortmund":{home:1.65,away:1.30},"Bayer 04 Leverkusen":{home:1.70,away:1.35},"RB Leipzig":{home:1.60,away:1.28},"VfB Stuttgart":{home:1.52,away:1.17},"Eintracht Frankfurt":{home:1.47,away:1.13},"SC Freiburg":{home:1.37,away:1.05},"TSG Hoffenheim":{home:1.38,away:1.07},"SV Werder Bremen":{home:1.34,away:1.03},"1. FC Heidenheim 1846":{home:1.22,away:0.94},"FC Augsburg":{home:1.20,away:0.92},"VfL Wolfsburg":{home:1.32,away:1.01},"1. FSV Mainz 05":{home:1.28,away:0.98},"Borussia Mönchengladbach":{home:1.34,away:1.03},"1. FC Union Berlin":{home:1.18,away:0.90},"VfL Bochum 1848":{home:1.16,away:0.88},"FC St. Pauli":{home:1.20,away:0.92},"Holstein Kiel":{home:1.14,away:0.86},
-    "Paris Saint-Germain":{home:1.90,away:1.55},"AS Monaco FC":{home:1.60,away:1.28},"Stade Brestois 29":{home:1.32,away:1.01},"Lille OSC":{home:1.47,away:1.13},"OGC Nice":{home:1.40,away:1.07},"Olympique Lyonnais":{home:1.42,away:1.09},"RC Lens":{home:1.36,away:1.05},"Olympique de Marseille":{home:1.42,away:1.09},"Stade de Reims":{home:1.24,away:0.94},"Stade Rennais FC":{home:1.30,away:0.99},"Toulouse FC":{home:1.22,away:0.92},"Montpellier HSC":{home:1.18,away:0.90},"RC Strasbourg Alsace":{home:1.22,away:0.92},"Le Havre AC":{home:1.16,away:0.88},"FC Nantes":{home:1.20,away:0.90},"Angers SCO":{home:1.14,away:0.86},"AJ Auxerre":{home:1.16,away:0.88},"AS Saint-Étienne":{home:1.14,away:0.86},
-    "PSV Eindhoven":{home:1.80,away:1.45},"Feyenoord":{home:1.70,away:1.38},"Ajax":{home:1.65,away:1.32},"FC Twente":{home:1.42,away:1.09},"AZ Alkmaar":{home:1.52,away:1.17},"NEC Nijmegen":{home:1.24,away:0.94},"FC Utrecht":{home:1.32,away:1.01},"Sparta Rotterdam":{home:1.22,away:0.92},"Go Ahead Eagles":{home:1.18,away:0.90},"Fortuna Sittard":{home:1.14,away:0.86},"sc Heerenveen":{home:1.22,away:0.92},"PEC Zwolle":{home:1.16,away:0.88},"Almere City FC":{home:1.14,away:0.86},"Heracles Almelo":{home:1.18,away:0.90},"RKC Waalwijk":{home:1.12,away:0.84},"Willem II":{home:1.16,away:0.88},"NAC Breda":{home:1.20,away:0.92},"FC Groningen":{home:1.14,away:0.86},
-    "Flamengo":{home:1.70,away:1.35},"Palmeiras":{home:1.65,away:1.32},"Botafogo":{home:1.52,away:1.15},"Atlético Mineiro":{home:1.56,away:1.19},"São Paulo":{home:1.47,away:1.13},"Internacional":{home:1.40,away:1.07},"Fluminense":{home:1.36,away:1.05},"Grêmio":{home:1.34,away:1.03},"Cruzeiro":{home:1.32,away:1.01},"Fortaleza":{home:1.36,away:1.05},"Red Bull Bragantino":{home:1.42,away:1.09},"Athletico Paranaense":{home:1.34,away:1.03},"Vasco da Gama":{home:1.30,away:0.99},"Corinthians":{home:1.28,away:0.98},"Bahia":{home:1.32,away:1.01},"Cuiabá":{home:1.18,away:0.90},"Vitória":{home:1.20,away:0.92},"Juventude":{home:1.16,away:0.88},"Criciúma":{home:1.14,away:0.86},"Atlético Goianiense":{home:1.16,away:0.90},
-    "Leeds United":{home:1.47,away:1.13},"Burnley FC":{home:1.36,away:1.05},"Sheffield United":{home:1.32,away:1.01},"West Bromwich Albion":{home:1.28,away:0.98},"Norwich City":{home:1.30,away:0.99},"Middlesbrough FC":{home:1.28,away:0.98},"Coventry City":{home:1.30,away:0.99},"Sunderland AFC":{home:1.28,away:0.98},"Watford FC":{home:1.30,away:0.99},"Luton Town":{home:1.24,away:0.94},"Swansea City":{home:1.24,away:0.94},"Blackburn Rovers":{home:1.24,away:0.94},"Bristol City":{home:1.22,away:0.92},"Hull City":{home:1.22,away:0.92},"Portsmouth FC":{home:1.22,away:0.92},"Derby County":{home:1.28,away:0.98},"Stoke City":{home:1.22,away:0.92},"Millwall FC":{home:1.22,away:0.92},"Preston North End":{home:1.20,away:0.90},"QPR":{home:1.20,away:0.90},"Sheffield Wednesday":{home:1.20,away:0.90},"Oxford United":{home:1.20,away:0.90},"Cardiff City":{home:1.20,away:0.90},"Plymouth Argyle":{home:1.16,away:0.88},
-    "Club Brugge KV":{home:1.65,away:1.30},"Anderlecht":{home:1.58,away:1.24},"KAA Gent":{home:1.48,away:1.14},"KRC Genk":{home:1.45,away:1.12},"R. Union Saint-Gilloise":{home:1.42,away:1.09},"Cercle Brugge KSV":{home:1.34,away:1.02},"Standard de Liège":{home:1.28,away:0.98},"KV Mechelen":{home:1.24,away:0.94},"STVV":{home:1.22,away:0.92},"OH Leuven":{home:1.20,away:0.90},"Beerschot VA":{home:1.20,away:0.90},"KV Kortrijk":{home:1.18,away:0.88},"Charleroi":{home:1.24,away:0.94},"KVC Westerlo":{home:1.18,away:0.88},"Royal Antwerp FC":{home:1.55,away:1.20},"FCV Dender EH":{home:1.15,away:0.85},
-    "América":{home:1.52,away:1.17},"Tigres UANL":{home:1.48,away:1.13},"Deportivo Guadalajara":{home:1.44,away:1.10},"Monterrey":{home:1.42,away:1.08},"Cruz Azul":{home:1.36,away:1.05},"CF Pachuca":{home:1.32,away:1.01},"UNAM Pumas":{home:1.30,away:0.99},"León":{home:1.28,away:0.98},"Atlas FC":{home:1.24,away:0.94},"Toluca FC":{home:1.28,away:0.98},"Club Necaxa":{home:1.20,away:0.90},"Santos Laguna":{home:1.24,away:0.94},"Club Tijuana":{home:1.20,away:0.90},"Atlético de San Luis":{home:1.22,away:0.92},"FC Juárez":{home:1.18,away:0.88},"Mazatlán FC":{home:1.16,away:0.86},"Querétaro FC":{home:1.14,away:0.84},"Puebla FC":{home:1.22,away:0.92},
-    "River Plate":{home:1.60,away:1.25},"Colo-Colo":{home:1.32,away:1.01},"Club Nacional":{home:1.36,away:1.05},"Peñarol":{home:1.34,away:1.03},"LDU Quito":{home:1.55,away:1.05},"Independiente del Valle":{home:1.45,away:1.12},"San Lorenzo":{home:1.22,away:0.92},"Estudiantes":{home:1.30,away:1.00},"Libertad":{home:1.28,away:0.98},"Cerro Porteño":{home:1.26,away:0.96},"Talleres":{home:1.34,away:1.03},"Millonarios":{home:1.20,away:0.90},"Junior FC":{home:1.22,away:0.92}
-};
-
-// ══════════════════════════════════════════
-// ESTADO GLOBAL
-// ══════════════════════════════════════════
-let currentLeagueKey = null;
-let teamMap = {};
-let apiAvailable = false;
-const statsCache = {};
-let activeMarkets = {ht:true, goles:true, btts:true, corn:true};
-let bsdLeagueMap = {}; // key → {bsdId, seasonId} desde la API
-
-// ══════════════════════════════════════════
-// PLATT CALIBRATION
-// ══════════════════════════════════════════
-const PLATT_PARAMS = {
-    goals_over15:{A:0.935,B:-0.042}, goals_over25:{A:0.918,B:-0.061},
-    btts:{A:0.944,B:-0.038}, corners:{A:0.962,B:-0.025},
-    goals_ht05:{A:0.951,B:-0.035}, goals_ht15:{A:0.924,B:-0.055},
-    resultado:{A:0.908,B:-0.075}
-};
-function plattCalibrate(rawProb, marketType) {
-    const p = Math.max(0.001, Math.min(0.999, rawProb/100));
-    const logit = Math.log(p/(1-p));
-    const params = PLATT_PARAMS[marketType]||{A:0.93,B:-0.04};
-    const calibP = 1/(1+Math.exp(-(params.A*logit+params.B)));
-    return Math.min(98, Math.max(2, calibP*100));
-}
-
-// ══════════════════════════════════════════
-// FORMA RECIENTE
-// ══════════════════════════════════════════
-function formMultiplier(form) {
-    if(!form||form.length===0) return 1.0;
-    const score = form.reduce((acc,r)=>acc+(r==='w'?3:r==='d'?1:0),0);
-    const adj = (score/(form.length*3) - 0.38)*0.23;
-    return Math.max(0.88,Math.min(1.12,1.0+adj));
-}
-
-// ══════════════════════════════════════════
-// BANDA DE INCERTIDUMBRE IC80%
-// ══════════════════════════════════════════
-function uncertaintyBand(prob, nMatches) {
-    const p=prob/100, se=Math.sqrt(p*(1-p)/Math.max(5,nMatches));
-    const low=Math.max(0,(p-1.282*se)*100), high=Math.min(100,(p+1.282*se)*100);
-    return {low:low.toFixed(0), high:high.toFixed(0)};
-}
-
-// ══════════════════════════════════════════
-// BSD API
-// ══════════════════════════════════════════
-async function bsdFetch(path) {
-    const res=await fetch(`${BSD_BASE}${path}`,{headers:{'Authorization':`Token ${BSD_TOKEN}`}});
-    if(!res.ok) throw new Error(`BSD ${res.status}`);
-    return res.json();
-}
-async function bsdFetchAll(path) {
-    let results=[],url=`${BSD_BASE}${path}`;
-    while(url){
-        const res=await fetch(url,{headers:{'Authorization':`Token ${BSD_TOKEN}`}});
-        if(!res.ok) break;
-        const data=await res.json();
-        results=results.concat(data.results||[]);
-        url=data.next||null;
-        if(results.length>=200) break;
-    }
-    return results;
-}
-
-function extractMatchStats(match, role) {
-    const s=match.stats||match.statistics||{}, ls=match.live_stats||{};
-    let corners=null, goals1t=null, goalsFull=null;
-    if(s[role]?.corner_kicks!=null) corners=s[role].corner_kicks;
-    else if(ls[role]?.corner_kicks!=null) corners=ls[role].corner_kicks;
-    else if(role==='home'&&match.home_corners!=null) corners=match.home_corners;
-    else if(role==='away'&&match.away_corners!=null) corners=match.away_corners;
-    if(role==='home'&&match.home_score_ht!=null) goals1t=match.home_score_ht;
-    if(role==='away'&&match.away_score_ht!=null) goals1t=match.away_score_ht;
-    if(role==='home'&&match.home_score!=null) goalsFull=match.home_score;
-    if(role==='away'&&match.away_score!=null) goalsFull=match.away_score;
-    return {corners,goals1t,goalsFull};
-}
-
-async function getTeamStats(teamId, teamName, role, seasonId) {
-    const key=`${teamId}_${seasonId}_${role}`;
-    if(statsCache[key]) return statsCache[key];
-    try {
-        const events=await bsdFetchAll(`/events/?team=${teamId}&season=${seasonId}&limit=200`);
-        const finished=events.filter(m=>{
-            const st=(m.status||'').toUpperCase();
-            const ok=['FT','FINISHED','AET','PEN','FULL_TIME'].includes(st)||st.includes('FT');
-            if(!ok) return false;
-            return role==='home'
-                ?(m.home_team_obj?.id===teamId||m.home_team===teamName)
-                :(m.away_team_obj?.id===teamId||m.away_team===teamName);
-        }).slice(-MATCHES_TO_USE);
-
-        if(finished.length<3) return null;
-        const weights=finished.map((_,i)=>Math.exp(0.15*i));
-        let tC=0,wC=0,tG=0,wG=0,tGF=0,wGF=0;
-        const form=[];
-        finished.slice(-5).forEach(m=>{
-            const hs=Number(m.home_score||0),as=Number(m.away_score||0);
-            if(role==='home'){if(hs>as)form.push('w');else if(hs===as)form.push('d');else form.push('l');}
-            else{if(as>hs)form.push('w');else if(as===hs)form.push('d');else form.push('l');}
-        });
-        finished.forEach((m,i)=>{
-            const w=weights[i], {corners,goals1t,goalsFull}=extractMatchStats(m,role);
-            if(corners!=null){tC+=Number(corners)*w;wC+=w;}
-            if(goals1t!=null){tG+=Number(goals1t)*w;wG+=w;}
-            if(goalsFull!=null){tGF+=Number(goalsFull)*w;wGF+=w;}
-        });
-        const result={
-            corners:wC>0?tC/wC:null, goals1t:wG>0?tG/wG:null, goalsFull:wGF>0?tGF/wGF:null,
-            matches:finished.length, form, fromApi:true
-        };
-        statsCache[key]=result;
-        return result;
-    } catch{return null;}
-}
-
-// ══════════════════════════════════════════
-// FALLBACKS OFFLINE
-// ══════════════════════════════════════════
-function fallbackCorners(name, role, avg) {
-    if(CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
-    return Math.min(8.0,Math.max(3.2,role==='home'?avg/2*1.10:avg/2*0.90));
-}
-function fallbackGoals1T(name, role, avg) {
-    if(GOAL_POWER_1T[name]?.[role]) return GOAL_POWER_1T[name][role];
-    return Math.min(0.90,Math.max(0.30,role==='home'?(avg/10)*1.15*1.08:(avg/10)*1.15*0.92));
-}
-function fallbackGoalsFull(name, role, avg) {
-    if(GOAL_POWER_FULL[name]?.[role]) return GOAL_POWER_FULL[name][role];
-    const g1t=fallbackGoals1T(name,role,avg);
-    return Math.min(2.10,Math.max(0.60,role==='home'?g1t*2.20:g1t*2.10));
-}
-function regressionBlend(teamVal,leagueMean,nMatches) {
-    const trust=Math.min(0.85,0.40+(nMatches/MATCHES_TO_USE)*0.45);
-    return teamVal*trust+leagueMean*(1-trust);
-}
-
-// ══════════════════════════════════════════
-// POISSON / NEGBIN / DIXON-COLES
-// ══════════════════════════════════════════
-function poissonProb(lambda,k){let p=Math.exp(-lambda),term=p;for(let i=1;i<=k;i++){term*=lambda/i;p+=term;}return p;}
-function poissonExact(lambda,k){let term=Math.exp(-lambda);for(let i=0;i<k;i++)term*=lambda/(i+1);return term;}
-function poissonOver(lambda,threshold){return Math.min(98,Math.max(2,(1-poissonProb(lambda,Math.floor(threshold)))*100));}
-function negBinExact(mu,r,k){const p=r/(r+mu);let logP=0;for(let i=0;i<k;i++)logP+=Math.log(r+i)-Math.log(i+1);logP+=r*Math.log(p)+k*Math.log(1-p);return Math.exp(logP);}
-function negBinOver(mu,threshold,r=6.0){const k=Math.floor(threshold);let cdf=0;for(let i=0;i<=k;i++)cdf+=negBinExact(mu,r,i);return Math.min(98,Math.max(2,(1-cdf)*100));}
-function dixonColesTau(x,y,lH,lA,rho){if(x===0&&y===0)return 1-lH*lA*rho;if(x===0&&y===1)return 1+lH*rho;if(x===1&&y===0)return 1+lA*rho;if(x===1&&y===1)return 1-rho;return 1;}
-function calcResultProbs(lambdaH,lambdaA){
-    const rho=-0.13;let pH=0,pD=0,pA=0;
-    for(let h=0;h<=10;h++)for(let a=0;a<=10;a++){
-        let p=poissonExact(lambdaH,h)*poissonExact(lambdaA,a);
-        if(h<=1&&a<=1)p*=dixonColesTau(h,a,lambdaH,lambdaA,rho);
-        if(h>a)pH+=p;else if(h===a)pD+=p;else pA+=p;
-    }
-    const t=pH+pD+pA;
-    return{home:+(pH/t*100).toFixed(1),draw:+(pD/t*100).toFixed(1),away:+(pA/t*100).toFixed(1)};
-}
-function calcBTTS(lambdaH,lambdaA){
-    const rho=-0.13;
-    const p00=poissonExact(lambdaH,0)*poissonExact(lambdaA,0)*dixonColesTau(0,0,lambdaH,lambdaA,rho);
-    return Math.min(98,Math.max(2,(1-Math.exp(-lambdaH)-Math.exp(-lambdaA)+p00)*100));
-}
-
-// ══════════════════════════════════════════
-// RECOMENDACIÓN
-// ══════════════════════════════════════════
-function buildRecommendation(markets) {
-    const thresholds={resultado:55,btts:58,goles:62,corners:67,ht:62};
-    const minMargin={resultado:10,btts:10,goles:10,corners:8,ht:15};
-    const reliability={corners:0.92,btts:0.88,goles:0.85,ht:0.82,resultado:0.78};
-    const candidates=markets
-        .filter(m=>m.prob>=(thresholds[m.type]||55)+(minMargin[m.type]||10))
-        .map(m=>{
-            const sameGroup=markets.filter(x=>x.type===m.type&&x!==m&&x.prob>=55);
-            return{...m,score:m.prob*(reliability[m.type]||0.80)+sameGroup.length*1.5};
-        }).sort((a,b)=>b.score-a.score);
-    if(!candidates.length) return{top:null,second:null};
-    return{top:{...candidates[0],diamond:candidates[0].prob>=80?'💎':candidates[0].prob>=72?'⭐':''},second:candidates[1]||null};
-}
-
-// ══════════════════════════════════════════
-// UI HELPERS
-// ══════════════════════════════════════════
-function colorFor(p){return p>=65?'var(--green)':p>=42?'var(--yellow)':'var(--accent)';}
-function cardClassFor(p){return p>=65?'high':p>=42?'mid':'low';}
-function setApiStatus(state,text){document.getElementById('api-dot').className=`api-dot ${state}`;document.getElementById('api-status-text').textContent=text;}
-
-// ══════════════════════════════════════════
-// INIT: LEAGUE PILLS + BSD API
-// ══════════════════════════════════════════
-const LIGA_BSD_NAMES = {
-    'PL':'Premier League','BL1':'Bundesliga','DED':'Eredivisie',
-    'JPL':'Jupiler Pro League','FL1':'Ligue 1','BSA':'Brasileirão Série A',
-    'ELC':'Championship','PD':'La Liga','SA':'Serie A','MXL':'Liga MX',
-    'LIB':'Copa Libertadores'
-};
-
-window.onload = async () => {
-    renderLeaguePills();
-    renderMarketToggles();
-    try {
-        const data = await bsdFetch('/leagues/');
-        (data.results||[]).forEach(l=>{
-            if(l.is_women) return;
-            for(const [code,bsdName] of Object.entries(LIGA_BSD_NAMES)){
-                if(l.name.trim()===bsdName && l.current_season?.id){
-                    bsdLeagueMap[code]={bsdId:l.id,seasonId:l.current_season.id};
-                }
-            }
-        });
-        setApiStatus('live','🟢 BSD API activa — datos en tiempo real');
-        apiAvailable=true;
-        document.getElementById('engine-badge').textContent='🛰 BSD + Dixon-Coles + Platt + NegBin-v';
-    } catch {
-        setApiStatus('error','🟡 Modo offline — datos históricos calibrados');
-    }
-};
-
-function renderLeaguePills() {
-    const container=document.getElementById('league-pills');
-    container.innerHTML='';
-    for(const [key,liga] of Object.entries(LIGAS)){
-        const pill=document.createElement('button');
-        pill.className='league-pill';
-        pill.textContent=liga.name;
-        pill.dataset.key=key;
-        pill.onclick=()=>selectLeague(key);
-        container.appendChild(pill);
-    }
-}
-
-function renderMarketToggles() {
-    const container=document.getElementById('market-toggles');
-    const defs=[
-        {key:'ht',label:'⏱ Goles HT'},
-        {key:'goles',label:'⚽ Goles +1.5/2.5'},
-        {key:'btts',label:'🤝 BTTS'},
-        {key:'corn',label:'⬡ Córners'}
-    ];
-    container.innerHTML='';
-    const liga=currentLeagueKey?LIGAS[currentLeagueKey]:null;
-    defs.forEach(d=>{
-        const btn=document.createElement('button');
-        btn.className='mkt-toggle';
-        btn.textContent=d.label;
-        btn.dataset.key=d.key;
-        const available=!liga||(liga.markets[d.key]===true);
-        if(!available){
-            btn.classList.add('unavailable');
-            activeMarkets[d.key]=false;
-        } else {
-            if(activeMarkets[d.key]) btn.classList.add('on');
-            btn.onclick=()=>{
-                activeMarkets[d.key]=!activeMarkets[d.key];
-                btn.classList.toggle('on');
-            };
-        }
-        container.appendChild(btn);
-    });
-}
-
-function selectLeague(key) {
-    if(currentLeagueKey===key) return;
-    currentLeagueKey=key;
-    document.querySelectorAll('.league-pill').forEach(p=>{
-        p.classList.toggle('active',p.dataset.key===key);
-    });
-    const liga=LIGAS[key];
-    // Reset mercados activos según la liga
-    activeMarkets={ht:liga.markets.ht,goles:liga.markets.goles,btts:liga.markets.btts,corn:liga.markets.corn};
-    renderMarketToggles();
-    // Cargar equipos
-    loadTeams(key);
-    document.getElementById('results').classList.add('hidden');
-}
-
-async function loadTeams(key) {
-    const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
-    hSel.innerHTML=aSel.innerHTML='<option value="">— Cargando... —</option>';
-    hSel.disabled=aSel.disabled=true;
-    teamMap={};
-    Object.keys(statsCache).forEach(k=>delete statsCache[k]);
-
-    const liga=LIGAS[key];
-    let teams=liga.teams;
-
-    // Intentar cargar equipos desde BSD API
-    if(apiAvailable && bsdLeagueMap[key]){
-        try{
-            setApiStatus('live','🟢 Cargando equipos...');
-            const data=await bsdFetch(`/teams/?league=${bsdLeagueMap[key].bsdId}&page_size=100`);
-            const apiTeams=(data.results||[]).map(t=>{
-                teamMap[t.name]={bsdId:t.id};
-                return t.name;
-            });
-            // Filtrar contra lista offline para asegurarnos que son equipos válidos
-            const knownSet=new Set(liga.teams);
-            const filtered=apiTeams.filter(t=>knownSet.has(t));
-            if(filtered.length>=8) teams=filtered;
-            setApiStatus('live',`🟢 BSD — ${liga.name}`);
-        } catch {
-            setApiStatus('error','🟡 Equipos desde base de datos offline');
-        }
-    }
-
-    fillSelects(teams);
-}
-
-function fillSelects(teams) {
-    const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
-    hSel.innerHTML=aSel.innerHTML='<option value="">— Seleccionar —</option>';
-    [...new Set(teams)].sort().forEach(n=>{hSel.add(new Option(n,n));aSel.add(new Option(n,n));});
-    hSel.disabled=aSel.disabled=false;
-}
-
-// ══════════════════════════════════════════
-// CÁLCULO PRINCIPAL
-// ══════════════════════════════════════════
-document.getElementById('calc-btn').onclick = async () => {
-    const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
-    const home=hSel.value, away=aSel.value;
-    if(!currentLeagueKey){alert('Selecciona una liga primero.');return;}
-    if(!home||!away){alert('Selecciona ambos equipos.');return;}
-    if(home===away){alert('Los equipos deben ser diferentes.');return;}
-
-    const liga=LIGAS[currentLeagueKey];
-    const leagueAvg=liga.leagueAvg, negBinR=liga.negBinR;
-    const bsdInfo=bsdLeagueMap[currentLeagueKey];
-    const homeId=teamMap[home]?.bsdId, awayId=teamMap[away]?.bsdId;
-    const seasonId=bsdInfo?.seasonId;
-
-    const resultsEl=document.getElementById('results'), loadingEl=document.getElementById('loading-indicator'), outputEl=document.getElementById('output');
-    resultsEl.classList.remove('hidden');loadingEl.classList.remove('hidden');outputEl.classList.add('hidden');
-
-    let homeStats=null, awayStats=null;
-    if(homeId&&awayId&&seasonId&&apiAvailable){
-        document.getElementById('loading-text').textContent=`Analizando ${home.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent=`Ponderando últimos ${MATCHES_TO_USE} partidos`;
-        homeStats=await getTeamStats(homeId,home,'home',seasonId);
-        document.getElementById('loading-text').textContent=`Analizando ${away.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent='Calibración Platt + NegBin variable...';
-        awayStats=await getTeamStats(awayId,away,'away',seasonId);
-    }
-
-    const homeMatchesC=homeStats?.matches||0, awayMatchesC=awayStats?.matches||0;
-    const leagueCornerMean=leagueAvg/2, leagueGoalMean=(leagueAvg/10)*1.35, leagueGoalFMean=leagueAvg/10*1.05;
-    const totalMatchesUsed=homeMatchesC+awayMatchesC;
-
-    let homeCorn=homeStats?.fromApi?regressionBlend(homeStats.corners??fallbackCorners(home,'home',leagueAvg),leagueCornerMean*1.10,homeMatchesC):fallbackCorners(home,'home',leagueAvg);
-    let awayCorn=awayStats?.fromApi?regressionBlend(awayStats.corners??fallbackCorners(away,'away',leagueAvg),leagueCornerMean*0.90,awayMatchesC):fallbackCorners(away,'away',leagueAvg);
-    let homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',leagueAvg),leagueGoalMean*1.10,homeMatchesC):fallbackGoals1T(home,'home',leagueAvg);
-    let awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',leagueAvg),leagueGoalMean*0.90,awayMatchesC):fallbackGoals1T(away,'away',leagueAvg);
-    let homeGoalF=homeStats?.fromApi?regressionBlend(homeStats.goalsFull??fallbackGoalsFull(home,'home',leagueAvg),leagueGoalFMean*1.10,homeMatchesC):fallbackGoalsFull(home,'home',leagueAvg);
-    let awayGoalF=awayStats?.fromApi?regressionBlend(awayStats.goalsFull??fallbackGoalsFull(away,'away',leagueAvg),leagueGoalFMean*0.90,awayMatchesC):fallbackGoalsFull(away,'away',leagueAvg);
-
-    // Ajuste por forma
-    const hFm=formMultiplier(homeStats?.form), aFm=formMultiplier(awayStats?.form);
-    homeGoalF*=hFm; awayGoalF*=aFm;
-    homeGoal1T*=hFm; awayGoal1T*=aFm;
-    homeCorn*=(hFm*0.5+0.5); awayCorn*=(aFm*0.5+0.5);
-
-    const lambdaCorn=+(homeCorn+awayCorn).toFixed(2);
-    const lambdaGoal=+(homeGoal1T+awayGoal1T).toFixed(2);
-    const lambdaH=+homeGoalF.toFixed(2), lambdaA=+awayGoalF.toFixed(2);
-    const usedApi=homeStats?.fromApi||awayStats?.fromApi;
-
-    loadingEl.classList.add('hidden');
-    renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,usedApi,leagueAvg,negBinR,totalMatchesUsed,liga});
-    outputEl.classList.remove('hidden');
-    requestAnimationFrame(()=>requestAnimationFrame(animateBars));
-    window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-};
-
-// ══════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════
-function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,usedApi,negBinR,totalMatchesUsed,liga}) {
-
-    // MATCH HEADER CON FORMA
-    const homeForm=homeStats?.form||[], awayForm=awayStats?.form||[];
-    function formDots(f){return f.map(r=>`<span class="form-dot ${r}">${r.toUpperCase()}</span>`).join('');}
-    const homeTag=homeStats?.fromApi?'<span class="data-tag api">LIVE</span>':'<span class="data-tag off">EST</span>';
-    const awayTag=awayStats?.fromApi?'<span class="data-tag api">LIVE</span>':'<span class="data-tag off">EST</span>';
-
-    document.getElementById('match-header-container').innerHTML=`
-    <div class="match-header animate-in">
-        <div style="text-align:center;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:12px;font-weight:700;text-transform:uppercase;">${liga.name}</div>
-        <div class="teams-row">
-            <div class="team-side">
-                ${homeTag}
-                <div class="team-name">${home.replace(/\s?(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s?/gi,'').trim()}</div>
-                ${homeForm.length?`<div class="form-row">${formDots(homeForm)}</div>`:''}
-            </div>
-            <div class="vs-center">VS</div>
-            <div class="team-side">
-                ${awayTag}
-                <div class="team-name">${away.replace(/\s?(FC|CF|SC|CD|AC|AS|SS|RC|RB)\s?/gi,'').trim()}</div>
-                ${awayForm.length?`<div class="form-row">${formDots(awayForm)}</div>`:''}
-            </div>
-        </div>
-        ${renderResultBoxes(lambdaH,lambdaA)}
-    </div>`;
-
-    // MERCADOS SEGÚN CONFIGURACIÓN
-    let html='';
-    const mkt=activeMarkets;
-
-    function mktCard(labelLine,rawProb,marketType,barIdx,labelSub) {
-        const prob=+plattCalibrate(rawProb,marketType).toFixed(1);
-        const color=colorFor(prob), cls=cardClassFor(prob);
-        const band=uncertaintyBand(prob,Math.max(8,totalMatchesUsed));
-        return `
-        <div class="market-card ${cls} animate-in" style="animation-delay:${barIdx*0.06}s;opacity:0;">
-            <div class="line-label">${labelLine}<small>LÍNEA</small></div>
-            <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${prob}" style="background:${color};width:0%"></div></div>
-                <div class="bar-sub">${labelSub}: ${(100-prob).toFixed(1)}%</div>
-                <div class="uncertainty-band">IC80%: ${band.low}–${band.high}%</div>
-            </div>
-            <div class="pct-label" style="color:${color}">${prob.toFixed(0)}%<small>OVER</small></div>
-        </div>`;
-    }
-
-    // Goles partido completo
-    if(mkt.goles){
-        const lFull2=lambdaH+lambdaA;
-        html+=`<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${lFull2.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
-        html+=mktCard('+1.5',poissonOver(lFull2,1.5),'goals_over15',0,'Under');
-        html+=mktCard('+2.5',poissonOver(lFull2,2.5),'goals_over25',1,'Under');
-        html+='<div class="section-divider"></div>';
-    }
-
-    // Goles 1er tiempo
-    if(mkt.ht){
-        html+=`<div class="section-header animate-in"><span class="section-icon">⏱</span><span class="section-title">GOLES 1er TIEMPO</span><span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
-        html+=mktCard('+0.5',poissonOver(lambdaGoal,0.5),'goals_ht05',2,'Under');
-        html+=mktCard('+1.5',poissonOver(lambdaGoal,1.5),'goals_ht15',3,'Under');
-        html+='<div class="section-divider"></div>';
-    }
-
-    // BTTS
-    if(mkt.btts){
-        const bttsRaw=calcBTTS(lambdaH,lambdaA);
-        const bttsProb=+plattCalibrate(bttsRaw,'btts').toFixed(0);
-        const band=uncertaintyBand(bttsProb,Math.max(8,totalMatchesUsed));
-        html+=`<div class="section-header animate-in"><span class="section-icon">🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ Calibrado</span></div>`;
-        html+=`<div class="market-card ${cardClassFor(bttsProb)} animate-in" style="opacity:0;">
-            <div class="line-label">BTTS<small>AMBOS</small></div>
-            <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${bttsProb}" style="background:${colorFor(bttsProb)};width:0%"></div></div>
-                <div class="bar-sub">No: ${(100-bttsProb).toFixed(1)}%</div>
-                <div class="uncertainty-band">IC80%: ${band.low}–${band.high}%</div>
-            </div>
-            <div class="pct-label" style="color:${colorFor(bttsProb)}">${bttsProb}%<small>SÍ</small></div>
-        </div>`;
-        html+='<div class="section-divider"></div>';
-    }
-
-    // Córners
-    if(mkt.corn){
-        html+=`<div class="section-header animate-in"><span class="section-icon">⬡</span><span class="section-title">CÓRNERS</span><span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
-        [7.5,8.5,9.5,10.5].forEach((line,i)=>{
-            html+=mktCard(`+${line}`,negBinOver(lambdaCorn,line,negBinR),'corners',i+4,'Under');
-        });
-    }
-
-    document.getElementById('all-markets-container').innerHTML=html;
-
-    // RECOMENDACIÓN
-    const lFull2=lambdaH+lambdaA;
-    const allMkts=[];
-    if(mkt.goles){
-        allMkts.push({label:'GOLES OVER 1.5',prob:+plattCalibrate(poissonOver(lFull2,1.5),'goals_over15').toFixed(0),desc:'Alta prob. de partido con goles',type:'goles'});
-        allMkts.push({label:'GOLES OVER 2.5',prob:+plattCalibrate(poissonOver(lFull2,2.5),'goals_over25').toFixed(0),desc:'3+ goles en el partido',type:'goles'});
-    }
-    if(mkt.ht){
-        allMkts.push({label:'GOL HT OVER 0.5',prob:+plattCalibrate(poissonOver(lambdaGoal,0.5),'goals_ht05').toFixed(0),desc:'Al menos un gol antes del descanso',type:'ht'});
-        allMkts.push({label:'GOL HT OVER 1.5',prob:+plattCalibrate(poissonOver(lambdaGoal,1.5),'goals_ht15').toFixed(0),desc:'2+ goles en el primer tiempo',type:'ht'});
-    }
-    if(mkt.btts){
-        const bp=+plattCalibrate(calcBTTS(lambdaH,lambdaA),'btts').toFixed(0);
-        allMkts.push({label:'AMBOS MARCAN',prob:bp,desc:`${bp}% de prob. que ambos anoten`,type:'btts'});
-    }
-    if(mkt.corn){
-        [7.5,8.5,9.5].forEach(line=>{
-            allMkts.push({label:`CÓRNERS OVER ${line}`,prob:+plattCalibrate(negBinOver(lambdaCorn,line,negBinR),'corners').toFixed(0),desc:`Sobre ${line} córners`,type:'corners'});
-        });
-    }
-
-    const rpRaw=calcResultProbs(lambdaH,lambdaA);
-    const rp={home:+plattCalibrate(rpRaw.home,'resultado').toFixed(1),draw:+plattCalibrate(rpRaw.draw,'resultado').toFixed(1),away:+plattCalibrate(rpRaw.away,'resultado').toFixed(1)};
-    allMkts.push({label:`VICTORIA LOCAL`,prob:rp.home,desc:`${home.split(' ').slice(-1)[0]} favorito`,type:'resultado'});
-    allMkts.push({label:`VICTORIA VISITANTE`,prob:rp.away,desc:`${away.split(' ').slice(-1)[0]} favorito`,type:'resultado'});
-
-    const rec=buildRecommendation(allMkts);
-    if(!rec.top){
-        document.getElementById('recomendacion-container').innerHTML=`
-        <div class="recomendacion animate-in" style="border-color:rgba(230,57,70,0.2);">
-            <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
-            <div class="rec-main" style="color:var(--accent);font-size:1.2rem;">SIN APUESTA CLARA</div>
-            <div class="rec-sub">Ningún mercado supera el umbral de confianza mínimo</div>
-        </div>`;
-    } else {
-        const t=rec.top;
-        const clsColor=t.prob>=70?'var(--green)':t.prob>=60?'var(--yellow)':'var(--accent)';
-        const secondHtml=rec.second?`
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);">
-            <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">SEGUNDA OPCIÓN</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--muted);">
-                ${rec.second.label} <span style="color:${colorFor(rec.second.prob)};margin-left:6px;">${rec.second.prob}%</span>
-            </div>
-        </div>`:'';
-        document.getElementById('recomendacion-container').innerHTML=`
-        <div class="recomendacion animate-in">
-            <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
-            <div class="rec-main" style="color:${clsColor}">${t.label} ${t.diamond||''}</div>
-            <div class="rec-sub">${t.desc}</div>
-            <div class="rec-confidence">
-                <span class="rc-pct" style="color:${clsColor}">${t.prob.toFixed(0)}%</span>
-                <span class="rc-label">MODELO CALIBRADO</span>
-            </div>
-            ${secondHtml}
-        </div>`;
-    }
-}
-
-function renderResultBoxes(lambdaH,lambdaA) {
-    const rpRaw=calcResultProbs(lambdaH,lambdaA);
-    const rp={
-        home:+plattCalibrate(rpRaw.home,'resultado').toFixed(1),
-        draw:+plattCalibrate(rpRaw.draw,'resultado').toFixed(1),
-        away:+plattCalibrate(rpRaw.away,'resultado').toFixed(1)
+    const LIGAS = {
+        'PD': { id: '2014', teams: ["Real Madrid", "Barcelona", "Atletico", "Sevilla", "Valencia", "Villarreal", "Betis", "Real Sociedad"] },
+        'PL': { id: '2021', teams: ["Arsenal", "Manchester City", "Liverpool", "Chelsea", "Manchester United", "Tottenham"] },
+        'SA': { id: '2019', teams: ["Juventus", "Inter", "Milan", "Napoli", "Roma", "Lazio"]}
     };
-    const maxRP=Math.max(rp.home,rp.draw,rp.away);
-    const rpColor=v=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
-    return `
-    <div class="result-boxes">
-        <div class="result-box">
-            <div class="rb-label">🏠 Local</div>
-            <div class="rb-pct" style="color:${rpColor(rp.home)}">${rp.home}%</div>
-        </div>
-        <div class="result-box rb-center">
-            <div class="rb-label">🟡 Empate</div>
-            <div class="rb-pct" style="color:${rpColor(rp.draw)}">${rp.draw}%</div>
-        </div>
-        <div class="result-box">
-            <div class="rb-label">✈️ Visitante</div>
-            <div class="rb-pct" style="color:${rpColor(rp.away)}">${rp.away}%</div>
-        </div>
-    </div>`;
-}
 
-function animateBars(){
-    document.querySelectorAll('.bar-fill[data-target]').forEach(b=>{b.style.width=b.dataset.target+'%';});
-}
+    /**
+     * Función principal para cargar equipos sin perder ninguno
+     */
+    async function loadTeams() {
+        const selector = document.getElementById('ligaSelector');
+        const teamSelector = document.getElementById('teamSelector');
+        const statusDiv = document.getElementById('debugStatus');
+        const ligaKey = selector.value;
+        const liga = LIGAS[ligaKey];
+
+        if (!liga) {
+            teamSelector.innerHTML = '<option value="">Primero elige una liga</option>';
+            return;
+        }
+
+        teamSelector.innerHTML = '<option value="">Cargando equipos...</option>';
+        teamMap = {}; 
+
+        try {
+            const response = await fetch(`https://api.bsd.com/v1/teams?league_id=${liga.id}&page_size=100`, {
+                headers: { 'Authorization': `Bearer ${API_KEY}` }
+            });
+            
+            if (!response.ok) throw new Error('Error en la respuesta de la API');
+            
+            const data = await response.json();
+            const apiResults = data.results || [];
+
+            // 1. Guardar IDs originales de la API
+            apiResults.forEach(t => {
+                teamMap[t.name] = { bsdId: t.id };
+            });
+
+            const apiNames = apiResults.map(t => t.name);
+
+            // 2. Lógica de Filtrado Inteligente (Normalización + Coincidencia Parcial)
+            const cleanText = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+            let filtered = apiNames.filter(apiName => {
+                return liga.teams.some(localName => {
+                    const a = cleanText(apiName);
+                    const b = cleanText(localName);
+                    return a.includes(b) || b.includes(a);
+                });
+            });
+
+            // 3. Sistema de Respaldo: Si el filtro es muy agresivo, mostramos todo lo de la API
+            const finalTeams = filtered.length > 0 ? filtered : apiNames;
+
+            // 4. Renderizado
+            teamSelector.innerHTML = '<option value="">Selecciona equipo</option>';
+            finalTeams.sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                teamSelector.appendChild(option);
+            });
+
+            statusDiv.innerText = `Éxito: ${finalTeams.length} equipos cargados.`;
+
+        } catch (error) {
+            console.error("Error:", error);
+            teamSelector.innerHTML = '<option value="">Error al conectar con la API</option>';
+            statusDiv.innerText = "Error: Verifica la API_KEY y la conexión.";
+        }
+    }
 </script>
+
 </body>
 </html>
