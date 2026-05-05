@@ -243,7 +243,7 @@ const LIGAS = {
         markets:{ht:true,goles:false,btts:false,corn:true},
         // BSD puede tener como "Campeonato Brasileiro Série A" o "Brasileirão"
         bsdName:"Campeonato Brasileiro Série A",
-        bsdNameAlt:["Brasileirão","Brasileirao","Serie A (Brazil)"],
+        bsdNameAlt:["Brasileirão Série A","Brasileirao Serie A","Serie A (Brazil)","Brazilian Serie A"],
         teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]
     },
     "ELC": {
@@ -594,19 +594,18 @@ function setApiStatus(state,text){document.getElementById('api-dot').className=`
 function matchLeagueName(bsdLeagueName, ligaKey) {
     const liga = LIGAS[ligaKey];
     if (!liga) return false;
-    const bsdNorm = bsdLeagueName.trim().toLowerCase();
-    // Comparar con nombre principal
-    if (bsdNorm === liga.bsdName.toLowerCase()) return true;
-    // Comparar con nombres alternativos
+    // Normalizar: quitar tildes, lowercase, trim
+    const norm = s => s.trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/\s+/g,' ');
+    const bsdNorm = norm(bsdLeagueName);
+    // Solo comparación EXACTA — evita falsos positivos entre ligas con nombres similares
+    if (bsdNorm === norm(liga.bsdName)) return true;
     if (liga.bsdNameAlt) {
         for (const alt of liga.bsdNameAlt) {
-            if (bsdNorm === alt.toLowerCase()) return true;
-            // Comparación parcial para casos como "Brasileirão" vs "Brasileirao"
-            if (bsdNorm.includes(alt.toLowerCase()) || alt.toLowerCase().includes(bsdNorm)) return true;
+            if (bsdNorm === norm(alt)) return true;
         }
     }
-    // Comparación con nombre principal parcial
-    if (bsdNorm.includes(liga.bsdName.toLowerCase()) || liga.bsdName.toLowerCase().includes(bsdNorm)) return true;
     return false;
 }
 
@@ -734,40 +733,31 @@ async function loadTeams(key) {
     if(apiAvailable && bsdLeagueMap[key]){
         try{
             setApiStatus('live','🟢 Cargando equipos...');
-            // Intentar con league ID y también con season ID para mayor compatibilidad
             let data = await bsdFetch(`/teams/?league=${bsdLeagueMap[key].bsdId}&page_size=100`);
-            let apiTeams=(data.results||[]);
+            let apiTeams = data.results || [];
 
             // Si no trae equipos con league, intentar con season
             if(apiTeams.length < 4) {
                 data = await bsdFetch(`/teams/?season=${bsdLeagueMap[key].seasonId}&page_size=100`);
-                apiTeams = (data.results||[]);
+                apiTeams = data.results || [];
             }
 
-            apiTeams.forEach(t => {
-                teamMap[t.name] = {bsdId: t.id};
-            });
-
-            // Mapear nombres de equipos de la API con los nombres offline
-            // para mantener consistencia de datos
-            const knownSet = new Set(liga.teams);
-            const apiNames = new Set(apiTeams.map(t => t.name));
-
-            // Combinar: equipos offline + cualquier equipo de la API que no esté
-            const combined = [...new Set([...liga.teams, ...apiTeams.map(t=>t.name)])];
+            // Registrar IDs para stats
+            apiTeams.forEach(t => { teamMap[t.name] = {bsdId: t.id}; });
 
             if(apiTeams.length >= 4) {
-                // Usar equipos de la API pero también incluir los offline
-                teams = combined;
+                // Usar SOLO equipos de la API — sin mezclar con offline para evitar duplicados
+                // Los equipos offline sirven de fallback solo si la API no devuelve nada
+                teams = apiTeams.map(t => t.name);
             }
+            // Si la API devuelve menos de 4, ya quedó la lista offline en `teams`
 
-            setApiStatus('live',`🟢 BSD — ${liga.name} (${Object.keys(teamMap).length} equipos)`);
+            setApiStatus('live',`🟢 BSD — ${liga.name} (${teams.length} equipos)`);
         } catch(e) {
             console.error('Error cargando equipos:', e);
             setApiStatus('error','🟡 Equipos desde base de datos offline');
         }
     } else if(apiAvailable && !bsdLeagueMap[key]) {
-        // La liga no se mapeó — usar offline con aviso
         setApiStatus('error', `🟡 ${liga.name} — datos offline (no encontrada en API)`);
     }
 
