@@ -728,37 +728,48 @@ async function loadTeams(key) {
     Object.keys(statsCache).forEach(k=>delete statsCache[k]);
 
     const liga=LIGAS[key];
-    let teams=[...liga.teams];
+    // Lista offline = fuente de verdad de nombres. Sin mezcla. Sin duplicados.
+    const teams = liga.teams;
 
     if(apiAvailable && bsdLeagueMap[key]){
         try{
             setApiStatus('live','🟢 Cargando equipos...');
-            let data = await bsdFetch(`/teams/?league=${bsdLeagueMap[key].bsdId}&page_size=100`);
-            let apiTeams = data.results || [];
-
-            // Si no trae equipos con league, intentar con season
-            if(apiTeams.length < 4) {
-                data = await bsdFetch(`/teams/?season=${bsdLeagueMap[key].seasonId}&page_size=100`);
+            let apiTeams = [];
+            let data = await bsdFetch('/teams/?league='+bsdLeagueMap[key].bsdId+'&page_size=100');
+            apiTeams = data.results || [];
+            if(apiTeams.length < 4){
+                data = await bsdFetch('/teams/?season='+bsdLeagueMap[key].seasonId+'&page_size=100');
                 apiTeams = data.results || [];
             }
 
-            // Registrar IDs para stats
-            apiTeams.forEach(t => { teamMap[t.name] = {bsdId: t.id}; });
+            // Deduplicar por ID
+            const seenIds = new Set();
+            const uniq = apiTeams.filter(t => {
+                if(seenIds.has(t.id)) return false;
+                seenIds.add(t.id); return true;
+            });
 
-            if(apiTeams.length >= 4) {
-                // Usar SOLO equipos de la API — sin mezclar con offline para evitar duplicados
-                // Los equipos offline sirven de fallback solo si la API no devuelve nada
-                teams = apiTeams.map(t => t.name);
-            }
-            // Si la API devuelve menos de 4, ya quedó la lista offline en `teams`
+            // Mapear: offline name -> API id (comparacion normalizada)
+            const normName = s => s.trim().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
+            teams.forEach(offlineName => {
+                const norm = normName(offlineName);
+                let found = uniq.find(t => normName(t.name) === norm);
+                if(!found) found = uniq.find(t => {
+                    const an = normName(t.name);
+                    return an.includes(norm) || norm.includes(an);
+                });
+                if(found) teamMap[offlineName] = {bsdId: found.id};
+            });
 
-            setApiStatus('live',`🟢 BSD — ${liga.name} (${teams.length} equipos)`);
+            const mapped = Object.keys(teamMap).length;
+            setApiStatus('live','🟢 BSD — '+liga.name+' ('+mapped+'/'+teams.length+' live)');
         } catch(e) {
             console.error('Error cargando equipos:', e);
-            setApiStatus('error','🟡 Equipos desde base de datos offline');
+            setApiStatus('error','🟡 Equipos offline — API no disponible');
         }
-    } else if(apiAvailable && !bsdLeagueMap[key]) {
-        setApiStatus('error', `🟡 ${liga.name} — datos offline (no encontrada en API)`);
+    } else if(apiAvailable && !bsdLeagueMap[key]){
+        setApiStatus('error', '🟡 '+liga.name+' — datos offline (liga no en API)');
     }
 
     fillSelects(teams);
@@ -767,7 +778,8 @@ async function loadTeams(key) {
 function fillSelects(teams) {
     const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
     hSel.innerHTML=aSel.innerHTML='<option value="">— Seleccionar —</option>';
-    [...new Set(teams)].sort().forEach(n=>{hSel.add(new Option(n,n));aSel.add(new Option(n,n));});
+    // Lista ya es unica y sin duplicados — solo ordenar
+    [...teams].sort().forEach(n=>{hSel.add(new Option(n,n));aSel.add(new Option(n,n));});
     hSel.disabled=aSel.disabled=false;
 }
 
