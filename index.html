@@ -202,7 +202,8 @@ const MATCHES_TO_USE = 15;
 //   La Liga         → CORN
 //   Serie A Italia  → HT, GOLES, CORN  ← ACTUALIZADO
 //   Liga MX         → GOLES, CORN
-//   Libertadores    → HT, GOLES, CORN  ← NUEVA
+//   Libertadores    → HT, GOLES, CORN  (32 equipos 2026)
+//   MLS             → GOLES, BTTS
 // ══════════════════════════════════════════
 const LIGAS = {
     "PL":  {
@@ -276,37 +277,62 @@ const LIGAS = {
         teams:["América","Atlas FC","Atlético de San Luis","CF Pachuca","Club Necaxa","Club Tijuana","Cruz Azul","Deportivo Guadalajara","FC Juárez","León","Mazatlán FC","Monterrey","Puebla FC","Querétaro FC","Santos Laguna","Tigres UANL","Toluca FC","UNAM Pumas"]
     },
     // ══════════════════════════════════════
-    // LIBERTADORES — NUEVA LIGA
+    // LIBERTADORES 2026 — 32 equipos fase de grupos
     // Mercados: HT + GOLES (+1.5/2.5) + CORN
+    // Grupos confirmados:
+    // A: Flamengo, Estudiantes, Cusco FC, Independiente Medellín
+    // B: Nacional, Universitario, Coquimbo Unido, Deportes Tolima
+    // C: Fluminense, Bolívar, Deportivo La Guaira, Independiente Rivadavia
+    // D: Boca Juniors, Cruzeiro, Universidad Católica, Barcelona SC
+    // E: Peñarol, Corinthians, Santa Fe, Platense
+    // F: Palmeiras, Cerro Porteño, Junior, Sporting Cristal
+    // G: Liga de Quito, Lanús, Always Ready, Mirassol
+    // H: Independiente del Valle, Libertad, Rosario Central, Universidad Central
     // ══════════════════════════════════════
     "LIB": {
         name:"🏆 Libertadores", leagueAvg:9.2, negBinR:6.1,
         markets:{ht:true,goles:true,btts:false,corn:true},
         bsdName:"Copa Libertadores",
-        bsdNameAlt:["CONMEBOL Libertadores","Copa CONMEBOL Libertadores"],
+        bsdNameAlt:["CONMEBOL Libertadores","Copa CONMEBOL Libertadores","Copa CONMEBOL Libertadores 2026"],
         teams:[
-            // Argentina
-            "River Plate","Boca Juniors","Estudiantes de La Plata","Vélez Sársfield","Independiente","Racing Club","San Lorenzo","Talleres de Córdoba","Huracán","Lanús",
-            // Brasil
-            "Flamengo","Palmeiras","Atlético Mineiro","Botafogo","Fluminense","São Paulo","Internacional","Grêmio","Santos FC","Athletico Paranaense","Red Bull Bragantino","Cruzeiro","Fortaleza",
-            // Uruguay
-            "Peñarol","Nacional",
-            // Chile
-            "Colo-Colo","Universidad de Chile","Universidad Católica",
-            // Colombia
-            "Atlético Nacional","Millonarios FC","América de Cali","Junior FC","Deportivo Cali","Once Caldas",
-            // Ecuador
-            "LDU Quito","Barcelona SC","Independiente del Valle","El Nacional",
-            // Paraguay
-            "Olimpia","Cerro Porteño","Club Libertad",
-            // Peru
-            "Alianza Lima","Club Universitario de Deportes","Sporting Cristal",
-            // Bolivia
-            "Club Bolívar","The Strongest","Club Always Ready",
-            // Venezuela
-            "Caracas FC","Monagas SC","Deportivo Táchira",
-            // México
-            "América","Monterrey","Club León"
+            // Grupo A
+            "Flamengo","Estudiantes de La Plata","Cusco FC","Independiente Medellín",
+            // Grupo B
+            "Nacional","Universitario","Coquimbo Unido","Deportes Tolima",
+            // Grupo C
+            "Fluminense","Club Bolívar","Deportivo La Guaira","Independiente Rivadavia",
+            // Grupo D
+            "Boca Juniors","Cruzeiro","Universidad Católica","Barcelona SC",
+            // Grupo E
+            "Peñarol","Corinthians","Santa Fe","Platense",
+            // Grupo F
+            "Palmeiras","Cerro Porteño","Junior","Sporting Cristal",
+            // Grupo G
+            "LDU Quito","Lanús","Always Ready","Mirassol",
+            // Grupo H
+            "Independiente del Valle","Libertad","Rosario Central","Universidad Central"
+        ]
+    },
+    // ══════════════════════════════════════
+    // MLS — Major League Soccer
+    // Mercados: GOLES (+1.5/2.5) + BTTS
+    // ══════════════════════════════════════
+    "MLS": {
+        name:"🇺🇸 MLS", leagueAvg:9.1, negBinR:6.2,
+        markets:{ht:false,goles:true,btts:true,corn:false},
+        bsdName:"Major League Soccer",
+        bsdNameAlt:["MLS","MLS Regular Season"],
+        teams:[
+            // Eastern Conference
+            "Inter Miami CF","CF Montréal","Charlotte FC","Chicago Fire FC","FC Cincinnati",
+            "Columbus Crew","D.C. United","CF New England Revolution","Nashville SC",
+            "New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union",
+            "Atlanta United FC","Toronto FC",
+            // Western Conference
+            "Austin FC","Colorado Rapids","FC Dallas","Houston Dynamo FC","LA Galaxy",
+            "Los Angeles FC","Minnesota United FC","Portland Timbers","Real Salt Lake",
+            "San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City",
+            "St. Louis City SC","Vancouver Whitecaps FC","San Diego FC"
         ]
     }
 };
@@ -335,17 +361,26 @@ const CORNER_POWER = {
     "Club Brugge KV":{home:6.2,away:5.2},"Anderlecht":{home:5.9,away:5.0},"KAA Gent":{home:5.6,away:4.7},"KRC Genk":{home:5.5,away:4.6},"R. Union Saint-Gilloise":{home:5.4,away:4.5},"Cercle Brugge KSV":{home:5.2,away:4.3},"Standard de Liège":{home:5.0,away:4.2},"KV Mechelen":{home:4.9,away:4.1},"STVV":{home:4.8,away:4.0},"OH Leuven":{home:4.7,away:3.9},"Beerschot VA":{home:4.7,away:3.9},"KV Kortrijk":{home:4.6,away:3.8},"Charleroi":{home:4.8,away:4.0},"KVC Westerlo":{home:4.6,away:3.8},"RFC Seraing":{home:4.4,away:3.6},"Zulte Waregem":{home:4.5,away:3.7},
     // Liga MX
     "América":{home:5.8,away:4.8},"Tigres UANL":{home:5.6,away:4.6},"Deportivo Guadalajara":{home:5.5,away:4.5},"Monterrey":{home:5.4,away:4.4},"Cruz Azul":{home:5.2,away:4.3},"CF Pachuca":{home:5.0,away:4.2},"UNAM Pumas":{home:5.0,away:4.1},"León":{home:4.9,away:4.0},"Atlas FC":{home:4.8,away:4.0},"Toluca FC":{home:4.9,away:4.1},"Club Necaxa":{home:4.6,away:3.8},"Santos Laguna":{home:4.8,away:4.0},"Club Tijuana":{home:4.6,away:3.8},"Atlético de San Luis":{home:4.7,away:3.9},"FC Juárez":{home:4.5,away:3.7},"Mazatlán FC":{home:4.5,away:3.7},"Querétaro FC":{home:4.4,away:3.6},"Puebla FC":{home:4.7,away:3.9},
-    // Libertadores — equipos con datos estimados
-    "River Plate":{home:6.3,away:5.3},"Boca Juniors":{home:6.0,away:5.0},"Estudiantes de La Plata":{home:5.4,away:4.5},"Vélez Sársfield":{home:5.2,away:4.3},"Independiente":{home:5.0,away:4.1},"Racing Club":{home:5.3,away:4.4},"San Lorenzo":{home:5.1,away:4.2},"Talleres de Córdoba":{home:5.0,away:4.1},"Huracán":{home:4.8,away:4.0},"Lanús":{home:4.9,away:4.0},
-    "Santos FC":{home:5.5,away:4.6},"Peñarol":{home:5.6,away:4.7},"Nacional":{home:5.4,away:4.5},
-    "Colo-Colo":{home:5.5,away:4.6},"Universidad de Chile":{home:5.3,away:4.4},"Universidad Católica":{home:5.2,away:4.3},
-    "Atlético Nacional":{home:5.6,away:4.7},"Millonarios FC":{home:5.3,away:4.4},"América de Cali":{home:5.2,away:4.3},"Junior FC":{home:5.1,away:4.2},"Deportivo Cali":{home:5.0,away:4.1},"Once Caldas":{home:4.8,away:4.0},
-    "LDU Quito":{home:5.7,away:4.8},"Barcelona SC":{home:5.5,away:4.6},"Independiente del Valle":{home:5.8,away:4.9},"El Nacional":{home:4.8,away:4.0},
-    "Olimpia":{home:5.4,away:4.5},"Cerro Porteño":{home:5.3,away:4.4},"Club Libertad":{home:5.1,away:4.2},
-    "Alianza Lima":{home:5.2,away:4.3},"Club Universitario de Deportes":{home:5.0,away:4.2},"Sporting Cristal":{home:5.1,away:4.3},
-    "Club Bolívar":{home:5.5,away:4.6},"The Strongest":{home:5.3,away:4.4},"Club Always Ready":{home:5.0,away:4.2},
-    "Caracas FC":{home:4.9,away:4.0},"Monagas SC":{home:4.8,away:3.9},"Deportivo Táchira":{home:4.9,away:4.0},
-    "Club León":{home:5.0,away:4.1}
+    // MLS — corners (fallback, mercado no activo)
+    "Inter Miami CF":{home:5.2,away:4.3},"LA Galaxy":{home:5.0,away:4.2},"Los Angeles FC":{home:5.1,away:4.3},
+    "Seattle Sounders FC":{home:5.0,away:4.1},"Portland Timbers":{home:4.9,away:4.0},"Philadelphia Union":{home:4.8,away:4.0},
+    "FC Cincinnati":{home:4.9,away:4.0},"Nashville SC":{home:4.8,away:3.9},"Columbus Crew":{home:4.9,away:4.0},
+    "Atlanta United FC":{home:4.8,away:3.9},"New York City FC":{home:4.8,away:4.0},"New York Red Bulls":{home:4.7,away:3.9},
+    "CF New England Revolution":{home:4.6,away:3.8},"Houston Dynamo FC":{home:4.7,away:3.9},"Real Salt Lake":{home:4.8,away:4.0},
+    "Minnesota United FC":{home:4.7,away:3.9},"Sporting Kansas City":{home:4.7,away:3.8},"D.C. United":{home:4.6,away:3.8},
+    "Chicago Fire FC":{home:4.6,away:3.8},"Colorado Rapids":{home:4.6,away:3.8},"FC Dallas":{home:4.7,away:3.9},
+    "Austin FC":{home:4.8,away:4.0},"Charlotte FC":{home:4.6,away:3.8},"Orlando City SC":{home:4.7,away:3.9},
+    "Toronto FC":{home:4.5,away:3.7},"Vancouver Whitecaps FC":{home:4.7,away:3.9},"San Jose Earthquakes":{home:4.5,away:3.7},
+    "St. Louis City SC":{home:4.7,away:3.9},"CF Montréal":{home:4.6,away:3.8},"San Diego FC":{home:4.6,away:3.8},
+    // Libertadores 2026 — 32 equipos fase de grupos
+    "Flamengo":{home:6.4,away:5.5},"Estudiantes de La Plata":{home:5.4,away:4.5},"Cusco FC":{home:4.6,away:3.8},"Independiente Medellín":{home:5.0,away:4.2},
+    "Nacional":{home:5.4,away:4.5},"Universitario":{home:5.0,away:4.2},"Coquimbo Unido":{home:4.7,away:3.9},"Deportes Tolima":{home:4.8,away:4.0},
+    "Fluminense":{home:5.4,away:4.5},"Club Bolívar":{home:5.5,away:4.6},"Deportivo La Guaira":{home:4.6,away:3.8},"Independiente Rivadavia":{home:4.5,away:3.7},
+    "Boca Juniors":{home:6.0,away:5.0},"Cruzeiro":{home:5.2,away:4.3},"Universidad Católica":{home:5.2,away:4.3},"Barcelona SC":{home:5.5,away:4.6},
+    "Peñarol":{home:5.6,away:4.7},"Corinthians":{home:5.0,away:4.2},"Santa Fe":{home:4.9,away:4.1},"Platense":{home:4.6,away:3.8},
+    "Palmeiras":{home:6.2,away:5.3},"Cerro Porteño":{home:5.3,away:4.4},"Junior":{home:5.1,away:4.2},"Sporting Cristal":{home:5.1,away:4.3},
+    "LDU Quito":{home:5.7,away:4.8},"Lanús":{home:4.9,away:4.0},"Always Ready":{home:5.0,away:4.2},"Mirassol":{home:4.6,away:3.8},
+    "Independiente del Valle":{home:5.8,away:4.9},"Libertad":{home:5.1,away:4.2},"Rosario Central":{home:5.0,away:4.1},"Universidad Central":{home:4.5,away:3.7}
 };
 
 const GOAL_POWER_1T = {
@@ -359,17 +394,26 @@ const GOAL_POWER_1T = {
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46},"Preston North End":{home:0.57,away:0.46},"Luton Town":{home:0.59,away:0.48},
     "Club Brugge KV":{home:0.76,away:0.63},"Anderlecht":{home:0.72,away:0.59},"KAA Gent":{home:0.68,away:0.56},"KRC Genk":{home:0.67,away:0.55},"R. Union Saint-Gilloise":{home:0.66,away:0.54},"Cercle Brugge KSV":{home:0.63,away:0.52},"Standard de Liège":{home:0.61,away:0.50},"KV Mechelen":{home:0.59,away:0.48},"STVV":{home:0.58,away:0.47},"OH Leuven":{home:0.57,away:0.46},"Beerschot VA":{home:0.57,away:0.46},"KV Kortrijk":{home:0.56,away:0.45},"Charleroi":{home:0.59,away:0.48},"KVC Westerlo":{home:0.56,away:0.45},"RFC Seraing":{home:0.54,away:0.43},"Zulte Waregem":{home:0.55,away:0.44},
     "América":{home:0.72,away:0.59},"Tigres UANL":{home:0.70,away:0.57},"Deportivo Guadalajara":{home:0.68,away:0.55},"Monterrey":{home:0.67,away:0.54},"Cruz Azul":{home:0.65,away:0.53},"CF Pachuca":{home:0.63,away:0.51},"UNAM Pumas":{home:0.62,away:0.50},"León":{home:0.61,away:0.49},"Atlas FC":{home:0.59,away:0.48},"Toluca FC":{home:0.61,away:0.50},"Club Necaxa":{home:0.57,away:0.46},"Santos Laguna":{home:0.59,away:0.48},"Club Tijuana":{home:0.57,away:0.46},"Atlético de San Luis":{home:0.58,away:0.47},"FC Juárez":{home:0.56,away:0.45},"Mazatlán FC":{home:0.55,away:0.44},"Querétaro FC":{home:0.54,away:0.43},"Puebla FC":{home:0.58,away:0.47},
-    // Libertadores
-    "River Plate":{home:0.78,away:0.64},"Boca Juniors":{home:0.74,away:0.61},"Estudiantes de La Plata":{home:0.67,away:0.55},"Vélez Sársfield":{home:0.64,away:0.53},"Independiente":{home:0.62,away:0.51},"Racing Club":{home:0.66,away:0.54},"San Lorenzo":{home:0.63,away:0.52},"Talleres de Córdoba":{home:0.62,away:0.51},"Huracán":{home:0.59,away:0.48},"Lanús":{home:0.60,away:0.49},
-    "Santos FC":{home:0.68,away:0.56},"Peñarol":{home:0.70,away:0.57},"Nacional":{home:0.67,away:0.55},
-    "Colo-Colo":{home:0.68,away:0.56},"Universidad de Chile":{home:0.65,away:0.54},"Universidad Católica":{home:0.64,away:0.53},
-    "Atlético Nacional":{home:0.70,away:0.57},"Millonarios FC":{home:0.66,away:0.54},"América de Cali":{home:0.64,away:0.53},"Junior FC":{home:0.63,away:0.52},"Deportivo Cali":{home:0.62,away:0.51},"Once Caldas":{home:0.59,away:0.48},
-    "LDU Quito":{home:0.72,away:0.58},"Barcelona SC":{home:0.68,away:0.55},"Independiente del Valle":{home:0.73,away:0.59},"El Nacional":{home:0.58,away:0.47},
-    "Olimpia":{home:0.67,away:0.55},"Cerro Porteño":{home:0.66,away:0.54},"Club Libertad":{home:0.63,away:0.52},
-    "Alianza Lima":{home:0.64,away:0.53},"Club Universitario de Deportes":{home:0.62,away:0.51},"Sporting Cristal":{home:0.63,away:0.52},
-    "Club Bolívar":{home:0.68,away:0.56},"The Strongest":{home:0.66,away:0.54},"Club Always Ready":{home:0.62,away:0.51},
-    "Caracas FC":{home:0.60,away:0.49},"Monagas SC":{home:0.59,away:0.48},"Deportivo Táchira":{home:0.60,away:0.49},
-    "Club León":{home:0.62,away:0.51}
+    // Libertadores 2026 — 32 equipos fase de grupos
+    "Flamengo":{home:0.80,away:0.66},"Estudiantes de La Plata":{home:0.67,away:0.55},"Cusco FC":{home:0.52,away:0.42},"Independiente Medellín":{home:0.60,away:0.49},
+    "Nacional":{home:0.67,away:0.55},"Universitario":{home:0.62,away:0.51},"Coquimbo Unido":{home:0.55,away:0.45},"Deportes Tolima":{home:0.58,away:0.47},
+    "Fluminense":{home:0.65,away:0.54},"Club Bolívar":{home:0.68,away:0.56},"Deportivo La Guaira":{home:0.54,away:0.44},"Independiente Rivadavia":{home:0.54,away:0.44},
+    "Boca Juniors":{home:0.74,away:0.61},"Cruzeiro":{home:0.63,away:0.52},"Universidad Católica":{home:0.64,away:0.53},"Barcelona SC":{home:0.68,away:0.55},
+    "Peñarol":{home:0.70,away:0.57},"Corinthians":{home:0.61,away:0.50},"Santa Fe":{home:0.59,away:0.48},"Platense":{home:0.56,away:0.46},
+    "Palmeiras":{home:0.78,away:0.64},"Cerro Porteño":{home:0.66,away:0.54},"Junior":{home:0.63,away:0.52},"Sporting Cristal":{home:0.63,away:0.52},
+    "LDU Quito":{home:0.72,away:0.58},"Lanús":{home:0.60,away:0.49},"Always Ready":{home:0.62,away:0.51},"Mirassol":{home:0.54,away:0.44},
+    "Independiente del Valle":{home:0.73,away:0.59},"Libertad":{home:0.63,away:0.52},"Rosario Central":{home:0.62,away:0.51},"Universidad Central":{home:0.53,away:0.43},
+    // MLS
+    "Inter Miami CF":{home:0.70,away:0.57},"LA Galaxy":{home:0.66,away:0.54},"Los Angeles FC":{home:0.67,away:0.55},
+    "Seattle Sounders FC":{home:0.65,away:0.53},"Portland Timbers":{home:0.63,away:0.52},"Philadelphia Union":{home:0.63,away:0.52},
+    "FC Cincinnati":{home:0.64,away:0.53},"Nashville SC":{home:0.62,away:0.51},"Columbus Crew":{home:0.64,away:0.53},
+    "Atlanta United FC":{home:0.62,away:0.51},"New York City FC":{home:0.63,away:0.52},"New York Red Bulls":{home:0.61,away:0.50},
+    "CF New England Revolution":{home:0.59,away:0.48},"Houston Dynamo FC":{home:0.61,away:0.50},"Real Salt Lake":{home:0.62,away:0.51},
+    "Minnesota United FC":{home:0.61,away:0.50},"Sporting Kansas City":{home:0.60,away:0.49},"D.C. United":{home:0.59,away:0.48},
+    "Chicago Fire FC":{home:0.59,away:0.48},"Colorado Rapids":{home:0.59,away:0.48},"FC Dallas":{home:0.61,away:0.50},
+    "Austin FC":{home:0.62,away:0.51},"Charlotte FC":{home:0.59,away:0.48},"Orlando City SC":{home:0.61,away:0.50},
+    "Toronto FC":{home:0.57,away:0.47},"Vancouver Whitecaps FC":{home:0.61,away:0.50},"San Jose Earthquakes":{home:0.57,away:0.47},
+    "St. Louis City SC":{home:0.61,away:0.50},"CF Montréal":{home:0.59,away:0.48},"San Diego FC":{home:0.59,away:0.48}
 };
 
 const GOAL_POWER_FULL = {
@@ -383,17 +427,26 @@ const GOAL_POWER_FULL = {
     "Leeds United":{home:1.47,away:1.13},"Burnley FC":{home:1.36,away:1.05},"Sheffield United":{home:1.32,away:1.01},"West Bromwich Albion":{home:1.28,away:0.98},"Norwich City":{home:1.30,away:0.99},"Middlesbrough FC":{home:1.28,away:0.98},"Coventry City":{home:1.30,away:0.99},"Sunderland AFC":{home:1.28,away:0.98},"Watford FC":{home:1.30,away:0.99},"Luton Town":{home:1.24,away:0.94},"Swansea City":{home:1.24,away:0.94},"Blackburn Rovers":{home:1.24,away:0.94},"Bristol City":{home:1.22,away:0.92},"Hull City":{home:1.22,away:0.92},"Portsmouth FC":{home:1.22,away:0.92},"Derby County":{home:1.28,away:0.98},"Stoke City":{home:1.22,away:0.92},"Millwall FC":{home:1.22,away:0.92},"Preston North End":{home:1.20,away:0.90},"QPR":{home:1.20,away:0.90},"Sheffield Wednesday":{home:1.20,away:0.90},"Oxford United":{home:1.20,away:0.90},"Cardiff City":{home:1.20,away:0.90},"Plymouth Argyle":{home:1.16,away:0.88},
     "Club Brugge KV":{home:1.65,away:1.30},"Anderlecht":{home:1.58,away:1.24},"KAA Gent":{home:1.48,away:1.14},"KRC Genk":{home:1.45,away:1.12},"R. Union Saint-Gilloise":{home:1.42,away:1.09},"Cercle Brugge KSV":{home:1.34,away:1.02},"Standard de Liège":{home:1.28,away:0.98},"KV Mechelen":{home:1.24,away:0.94},"STVV":{home:1.22,away:0.92},"OH Leuven":{home:1.20,away:0.90},"Beerschot VA":{home:1.20,away:0.90},"KV Kortrijk":{home:1.18,away:0.88},"Charleroi":{home:1.24,away:0.94},"KVC Westerlo":{home:1.18,away:0.88},"RFC Seraing":{home:1.14,away:0.84},"Zulte Waregem":{home:1.16,away:0.86},
     "América":{home:1.52,away:1.17},"Tigres UANL":{home:1.48,away:1.13},"Deportivo Guadalajara":{home:1.44,away:1.10},"Monterrey":{home:1.42,away:1.08},"Cruz Azul":{home:1.36,away:1.05},"CF Pachuca":{home:1.32,away:1.01},"UNAM Pumas":{home:1.30,away:0.99},"León":{home:1.28,away:0.98},"Atlas FC":{home:1.24,away:0.94},"Toluca FC":{home:1.28,away:0.98},"Club Necaxa":{home:1.20,away:0.90},"Santos Laguna":{home:1.24,away:0.94},"Club Tijuana":{home:1.20,away:0.90},"Atlético de San Luis":{home:1.22,away:0.92},"FC Juárez":{home:1.18,away:0.88},"Mazatlán FC":{home:1.16,away:0.86},"Querétaro FC":{home:1.14,away:0.84},"Puebla FC":{home:1.22,away:0.92},
-    // Libertadores
-    "River Plate":{home:1.65,away:1.30},"Boca Juniors":{home:1.58,away:1.24},"Estudiantes de La Plata":{home:1.40,away:1.08},"Vélez Sársfield":{home:1.34,away:1.03},"Independiente":{home:1.30,away:0.99},"Racing Club":{home:1.38,away:1.06},"San Lorenzo":{home:1.32,away:1.01},"Talleres de Córdoba":{home:1.30,away:0.99},"Huracán":{home:1.24,away:0.94},"Lanús":{home:1.26,away:0.96},
-    "Santos FC":{home:1.42,away:1.09},"Peñarol":{home:1.45,away:1.12},"Nacional":{home:1.40,away:1.07},
-    "Colo-Colo":{home:1.42,away:1.09},"Universidad de Chile":{home:1.36,away:1.05},"Universidad Católica":{home:1.34,away:1.03},
-    "Atlético Nacional":{home:1.46,away:1.12},"Millonarios FC":{home:1.38,away:1.06},"América de Cali":{home:1.34,away:1.03},"Junior FC":{home:1.32,away:1.01},"Deportivo Cali":{home:1.28,away:0.98},"Once Caldas":{home:1.24,away:0.94},
-    "LDU Quito":{home:1.50,away:1.15},"Barcelona SC":{home:1.44,away:1.10},"Independiente del Valle":{home:1.52,away:1.17},"El Nacional":{home:1.22,away:0.93},
-    "Olimpia":{home:1.40,away:1.07},"Cerro Porteño":{home:1.38,away:1.05},"Club Libertad":{home:1.32,away:1.01},
-    "Alianza Lima":{home:1.34,away:1.03},"Club Universitario de Deportes":{home:1.30,away:0.99},"Sporting Cristal":{home:1.32,away:1.01},
-    "Club Bolívar":{home:1.44,away:1.10},"The Strongest":{home:1.38,away:1.05},"Club Always Ready":{home:1.30,away:0.99},
-    "Caracas FC":{home:1.26,away:0.96},"Monagas SC":{home:1.24,away:0.94},"Deportivo Táchira":{home:1.26,away:0.96},
-    "Club León":{home:1.30,away:0.99}
+    // Libertadores 2026 — 32 equipos fase de grupos
+    "Flamengo":{home:1.70,away:1.35},"Estudiantes de La Plata":{home:1.40,away:1.08},"Cusco FC":{home:1.08,away:0.82},"Independiente Medellín":{home:1.26,away:0.96},
+    "Nacional":{home:1.40,away:1.07},"Universitario":{home:1.30,away:0.99},"Coquimbo Unido":{home:1.14,away:0.87},"Deportes Tolima":{home:1.20,away:0.92},
+    "Fluminense":{home:1.36,away:1.05},"Club Bolívar":{home:1.44,away:1.10},"Deportivo La Guaira":{home:1.12,away:0.86},"Independiente Rivadavia":{home:1.12,away:0.86},
+    "Boca Juniors":{home:1.58,away:1.24},"Cruzeiro":{home:1.32,away:1.01},"Universidad Católica":{home:1.34,away:1.03},"Barcelona SC":{home:1.44,away:1.10},
+    "Peñarol":{home:1.45,away:1.12},"Corinthians":{home:1.28,away:0.98},"Santa Fe":{home:1.24,away:0.94},"Platense":{home:1.16,away:0.88},
+    "Palmeiras":{home:1.65,away:1.32},"Cerro Porteño":{home:1.38,away:1.05},"Junior":{home:1.32,away:1.01},"Sporting Cristal":{home:1.32,away:1.01},
+    "LDU Quito":{home:1.50,away:1.15},"Lanús":{home:1.26,away:0.96},"Always Ready":{home:1.30,away:0.99},"Mirassol":{home:1.12,away:0.86},
+    "Independiente del Valle":{home:1.52,away:1.17},"Libertad":{home:1.32,away:1.01},"Rosario Central":{home:1.30,away:0.99},"Universidad Central":{home:1.10,away:0.84},
+    // MLS
+    "Inter Miami CF":{home:1.48,away:1.13},"LA Galaxy":{home:1.38,away:1.06},"Los Angeles FC":{home:1.40,away:1.08},
+    "Seattle Sounders FC":{home:1.36,away:1.05},"Portland Timbers":{home:1.32,away:1.01},"Philadelphia Union":{home:1.32,away:1.01},
+    "FC Cincinnati":{home:1.34,away:1.03},"Nashville SC":{home:1.30,away:0.99},"Columbus Crew":{home:1.34,away:1.03},
+    "Atlanta United FC":{home:1.30,away:0.99},"New York City FC":{home:1.32,away:1.01},"New York Red Bulls":{home:1.28,away:0.98},
+    "CF New England Revolution":{home:1.24,away:0.94},"Houston Dynamo FC":{home:1.28,away:0.98},"Real Salt Lake":{home:1.30,away:0.99},
+    "Minnesota United FC":{home:1.28,away:0.98},"Sporting Kansas City":{home:1.26,away:0.96},"D.C. United":{home:1.24,away:0.94},
+    "Chicago Fire FC":{home:1.24,away:0.94},"Colorado Rapids":{home:1.24,away:0.94},"FC Dallas":{home:1.28,away:0.98},
+    "Austin FC":{home:1.30,away:0.99},"Charlotte FC":{home:1.24,away:0.94},"Orlando City SC":{home:1.28,away:0.98},
+    "Toronto FC":{home:1.20,away:0.90},"Vancouver Whitecaps FC":{home:1.28,away:0.98},"San Jose Earthquakes":{home:1.20,away:0.90},
+    "St. Louis City SC":{home:1.28,away:0.98},"CF Montréal":{home:1.24,away:0.94},"San Diego FC":{home:1.24,away:0.94}
 };
 
 // ══════════════════════════════════════════
@@ -615,51 +668,53 @@ function matchLeagueName(bsdLeagueName, ligaKey) {
 window.onload = async () => {
     renderLeaguePills();
     renderMarketToggles();
+    // Mostrar offline inmediatamente — se actualizará si la API responde
+    setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
+
+    // Intentar conectar con la API con timeout de 8 segundos
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     try {
-        // Cargar todas las páginas de ligas para no perder ninguna
         let allLeagues = [];
-        let url = `${BSD_BASE}/leagues/?page_size=100`;
+        let url = BSD_BASE + '/leagues/?page_size=100';
         let pageCount = 0;
         while (url && pageCount < 5) {
-            const res = await fetch(url, {headers:{'Authorization':`Token ${BSD_TOKEN}`}});
-            if (!res.ok) throw new Error(`BSD ${res.status}`);
+            const res = await fetch(url, {
+                headers: {'Authorization': 'Token ' + BSD_TOKEN},
+                signal: controller.signal
+            });
+            if (!res.ok) throw new Error('BSD ' + res.status);
             const data = await res.json();
             allLeagues = allLeagues.concat(data.results || []);
             url = data.next || null;
             pageCount++;
         }
-
-        // Debug: log de todas las ligas disponibles (ayuda a diagnosticar)
-        const leagueNames = allLeagues.map(l => l.name);
-        console.log('BSD Ligas disponibles:', leagueNames);
+        clearTimeout(timeoutId);
 
         allLeagues.forEach(l => {
             if (l.is_women) return;
             if (!l.current_season?.id) return;
             for (const code of Object.keys(LIGAS)) {
                 if (matchLeagueName(l.name, code)) {
-                    // Solo asignar si no está ya asignado (primer match gana)
                     if (!bsdLeagueMap[code]) {
                         bsdLeagueMap[code] = {bsdId: l.id, seasonId: l.current_season.id};
-                        console.log(`✅ Liga mapeada: ${code} → "${l.name}" (id=${l.id})`);
                     }
                 }
             }
         });
 
-        // Reportar qué ligas no se pudieron mapear
-        for (const code of Object.keys(LIGAS)) {
-            if (!bsdLeagueMap[code]) {
-                console.warn(`⚠️ Liga NO mapeada: ${code} (${LIGAS[code].bsdName})`);
-            }
-        }
-
         const mapped = Object.keys(bsdLeagueMap).length;
-        setApiStatus('live', `🟢 BSD API — ${mapped}/${Object.keys(LIGAS).length} ligas activas`);
-        apiAvailable = true;
-        document.getElementById('engine-badge').textContent = '🛰 BSD + Dixon-Coles + Platt + NegBin-v';
+        if (mapped > 0) {
+            setApiStatus('live', '🟢 BSD API — ' + mapped + '/' + Object.keys(LIGAS).length + ' ligas activas');
+            apiAvailable = true;
+            document.getElementById('engine-badge').textContent = '🛰 BSD + Dixon-Coles + Platt + NegBin-v';
+        } else {
+            setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
+        }
     } catch(e) {
-        console.error('BSD API error:', e);
+        clearTimeout(timeoutId);
+        // No mostrar error en consola — modo offline es comportamiento esperado
         setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
     }
 };
