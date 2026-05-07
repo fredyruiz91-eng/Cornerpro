@@ -7,135 +7,317 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:#08090d; --card:#10131a; --card2:#161b26; --border:#1e2535;
-            --text:#e8eaf0; --muted:#5a6480; --accent:#e63946;
-            --yellow:#f4b942; --green:#3dd68c; --blue:#2563eb; --purple:#8b5cf6;
+            --bg:#0a0e17; --card:rgba(16,20,32,0.7); --card2:rgba(22,27,42,0.8); --border:rgba(255,255,255,0.08);
+            --text:#f0f2f8; --muted:#7b8aa6; --accent:#ff4d5a; --accent-glow:rgba(255,77,90,0.5);
+            --yellow:#ffb627; --yellow-glow:rgba(255,182,39,0.5);
+            --green:#2ecc71; --green-glow:rgba(46,204,113,0.5);
+            --blue:#4dabf7; --purple:#9775fa;
+            --glass-bg:rgba(255,255,255,0.03);
         }
         *{box-sizing:border-box;margin:0;padding:0;}
         body{
             background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;
             min-height:100vh;display:flex;justify-content:center;padding:20px 15px 60px;
             background-image:
-                radial-gradient(ellipse 60% 40% at 50% -10%,rgba(230,57,70,0.10) 0%,transparent 70%),
-                repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px),
-                repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.02) 39px,rgba(255,255,255,0.02) 40px);
+                radial-gradient(ellipse 80% 50% at 50% -10%,rgba(255,77,90,0.15) 0%,transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 80%,rgba(46,204,113,0.08) 0%,transparent 60%),
+                radial-gradient(ellipse 50% 35% at 20% 60%,rgba(77,171,247,0.06) 0%,transparent 50%),
+                repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,0.015) 39px,rgba(255,255,255,0.015) 40px),
+                repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,0.015) 39px,rgba(255,255,255,0.015) 40px);
         }
         .container{width:100%;max-width:440px;}
 
-        .header{text-align:center;padding:24px 0 18px;}
-        .logo{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:3px;color:white;line-height:1;}
-        .logo span{color:var(--accent);}
-        .badge{display:inline-block;margin-top:6px;padding:3px 12px;background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.3);border-radius:20px;font-size:0.68rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;}
+        .header{
+            text-align:center;padding:28px 20px 20px;margin-bottom:8px;
+            background:var(--glass-bg);backdrop-filter:blur(20px);
+            border-radius:20px;border:1px solid rgba(255,255,255,0.06);
+            position:relative;overflow:hidden;
+        }
+        .header::before{
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+            background:conic-gradient(from 0deg,transparent,var(--accent-glow),transparent,var(--green-glow),transparent);
+            animation:rotateGlow 8s linear infinite;opacity:0.3;
+        }
+        @keyframes rotateGlow{to{transform:rotate(360deg);}}
+        .header>*{position:relative;z-index:1;}
+        .logo{
+            font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:4px;color:white;line-height:1;
+            text-shadow:0 0 30px var(--accent-glow),0 2px 4px rgba(0,0,0,0.5);
+            background:linear-gradient(135deg,#ffffff 0%,#ff8a95 50%,#ffffff 100%);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            background-clip:text;
+        }
+        .logo span{
+            -webkit-text-fill-color:transparent;
+            background:linear-gradient(135deg,var(--accent),#ff8a95);
+            -webkit-background-clip:text;background-clip:text;
+        }
+        .badge{
+            display:inline-block;margin-top:8px;padding:4px 14px;
+            background:linear-gradient(135deg,rgba(255,77,90,0.15),rgba(77,171,247,0.1));
+            border:1px solid rgba(255,77,90,0.25);border-radius:20px;
+            font-size:0.68rem;font-weight:700;letter-spacing:2px;color:var(--accent);
+            text-transform:uppercase;backdrop-filter:blur(10px);
+            box-shadow:0 0 20px rgba(255,77,90,0.1);
+        }
 
-        .card{background:var(--card);border-radius:16px;padding:20px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
-        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
+        .card{
+            background:var(--card);backdrop-filter:blur(24px);
+            border-radius:20px;padding:22px;border:1px solid var(--border);
+            margin-bottom:14px;position:relative;overflow:hidden;
+            box-shadow:0 8px 32px rgba(0,0,0,0.3);
+            transition:all 0.3s ease;
+        }
+        .card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.12);}
+        .card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,transparent,var(--accent),var(--yellow),var(--green),transparent);
+            opacity:0.7;
+        }
+        .card::after{
+            content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+            background:radial-gradient(ellipse at top left,rgba(255,255,255,0.02) 0%,transparent 50%);
+            pointer-events:none;
+        }
 
-        .api-status{display:flex;align-items:center;gap:8px;font-size:0.66rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;padding:7px 12px;border-radius:8px;background:var(--card2);border:1px solid var(--border);}
-        .api-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
-        .api-dot.live{background:var(--green);box-shadow:0 0 6px var(--green);}
-        .api-dot.error{background:var(--yellow);}
+        .api-status{
+            display:flex;align-items:center;gap:10px;font-size:0.66rem;font-weight:700;
+            letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;
+            padding:8px 14px;border-radius:12px;
+            background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
+            backdrop-filter:blur(10px);
+        }
+        .api-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:all 0.3s;}
+        .api-dot.live{background:var(--green);box-shadow:0 0 10px var(--green-glow),0 0 20px var(--green-glow);}
+        .api-dot.error{background:var(--yellow);box-shadow:0 0 10px var(--yellow-glow);}
 
-        /* LEAGUE PILLS */
         .league-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
-        .league-pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
-        .league-pill:hover{border-color:var(--accent);color:var(--text);}
-        .league-pill.active{background:rgba(230,57,70,0.15);border-color:var(--accent);color:var(--accent);}
+        .league-pill{
+            padding:6px 13px;border-radius:20px;border:1px solid var(--border);
+            background:var(--glass-bg);color:var(--muted);font-size:0.72rem;
+            font-weight:700;cursor:pointer;transition:all 0.25s ease;
+            letter-spacing:0.5px;backdrop-filter:blur(10px);
+        }
+        .league-pill:hover{
+            border-color:var(--accent);color:var(--text);
+            background:rgba(255,77,90,0.1);transform:translateY(-1px);
+            box-shadow:0 4px 15px rgba(255,77,90,0.2);
+        }
+        .league-pill.active{
+            background:linear-gradient(135deg,rgba(255,77,90,0.2),rgba(77,171,247,0.15));
+            border-color:var(--accent);color:white;
+            box-shadow:0 0 20px rgba(255,77,90,0.2);
+        }
         .league-pill.disabled{opacity:0.3;cursor:not-allowed;}
 
-        label{display:block;margin:12px 0 5px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-        select{width:100%;padding:11px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6480' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;cursor:pointer;transition:border-color 0.2s;}
-        select:focus{outline:none;border-color:var(--accent);}
+        label{display:block;margin:14px 0 5px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+        select{
+            width:100%;padding:12px 15px;border-radius:12px;border:1px solid var(--border);
+            background:var(--glass-bg);color:var(--text);font-family:'DM Sans',sans-serif;
+            font-size:0.88rem;appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237b8aa6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right 14px center;
+            cursor:pointer;transition:all 0.25s ease;backdrop-filter:blur(10px);
+        }
+        select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 15px rgba(255,77,90,0.1);}
         select:disabled{opacity:0.4;cursor:not-allowed;}
-        .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
         .team-col label{margin-top:0;}
-        .vs-divider{display:flex;align-items:center;justify-content:center;margin:4px 0;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;gap:10px;}
-        .vs-divider::before,.vs-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+        .vs-divider{
+            display:flex;align-items:center;justify-content:center;margin:6px 0;
+            color:var(--muted);font-family:'Bebas Neue',sans-serif;
+            font-size:1.1rem;letter-spacing:3px;gap:12px;
+        }
+        .vs-divider::before,.vs-divider::after{
+            content:'';flex:1;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+        }
 
-        /* MARKETS TOGGLE */
-        .markets-label{display:block;margin:12px 0 8px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+        .markets-label{display:block;margin:14px 0 8px;color:var(--muted);font-size:0.66rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
         .market-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
-        .mkt-toggle{padding:5px 11px;border-radius:16px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
-        .mkt-toggle.on{background:rgba(61,214,140,0.12);border-color:rgba(61,214,140,0.4);color:var(--green);}
+        .mkt-toggle{
+            padding:6px 12px;border-radius:16px;border:1px solid var(--border);
+            background:var(--glass-bg);color:var(--muted);font-size:0.7rem;
+            font-weight:700;cursor:pointer;transition:all 0.25s ease;
+            letter-spacing:0.5px;backdrop-filter:blur(10px);
+        }
+        .mkt-toggle:hover{transform:translateY(-1px);}
+        .mkt-toggle.on{
+            background:linear-gradient(135deg,rgba(46,204,113,0.15),rgba(77,171,247,0.1));
+            border-color:rgba(46,204,113,0.4);color:var(--green);
+            box-shadow:0 0 15px rgba(46,204,113,0.15);
+        }
         .mkt-toggle.unavailable{opacity:0.25;cursor:not-allowed;pointer-events:none;}
 
-        .calc-btn{width:100%;padding:13px;border-radius:10px;border:none;background:var(--accent);color:white;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;margin-top:16px;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(230,57,70,0.3);position:relative;overflow:hidden;}
-        .calc-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 60%);}
-        .calc-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(230,57,70,0.5);}
-        .calc-btn:active{transform:scale(0.98);}
+        .calc-btn{
+            width:100%;padding:14px;border-radius:14px;border:none;
+            background:linear-gradient(135deg,var(--accent),#ff6b7a,var(--accent));
+            background-size:200% 100%;color:white;
+            font-family:'Bebas Neue',sans-serif;font-size:1.15rem;
+            letter-spacing:2px;margin-top:18px;cursor:pointer;
+            transition:all 0.3s ease;position:relative;overflow:hidden;
+            box-shadow:0 6px 25px rgba(255,77,90,0.3);
+            animation:shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+        .calc-btn::after{
+            content:'';position:absolute;inset:0;
+            background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
+        }
+        .calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 35px rgba(255,77,90,0.5);}
+        .calc-btn:active{transform:scale(0.97);}
 
-        .loading-state{text-align:center;padding:28px;color:var(--muted);font-size:0.8rem;letter-spacing:1px;}
-        .spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 10px;}
-        .loading-sub{font-size:0.63rem;color:var(--muted);margin-top:5px;opacity:0.7;}
+        .loading-state{text-align:center;padding:32px;color:var(--muted);font-size:0.8rem;letter-spacing:1px;}
+        .spinner{
+            width:30px;height:30px;border:2px solid var(--border);
+            border-top-color:var(--accent);border-radius:50%;
+            animation:spin 0.7s linear infinite;margin:0 auto 12px;
+        }
+        .loading-sub{font-size:0.63rem;color:var(--muted);margin-top:6px;opacity:0.7;}
         @keyframes spin{to{transform:rotate(360deg);}}
 
-        .match-header{background:var(--card);border-radius:16px;padding:20px 16px 16px;border:1px solid var(--border);margin-bottom:12px;position:relative;overflow:hidden;}
-        .match-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0.5;}
-        .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;}
-        .team-side{display:flex;flex-direction:column;align-items:center;gap:6px;}
-        .team-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
-        .vs-center{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);letter-spacing:2px;}
+        .match-header{
+            background:var(--card);backdrop-filter:blur(24px);
+            border-radius:20px;padding:22px 18px;border:1px solid var(--border);
+            margin-bottom:14px;position:relative;overflow:hidden;
+            box-shadow:0 8px 32px rgba(0,0,0,0.3);
+        }
+        .match-header::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,transparent,var(--accent),var(--yellow),var(--green),transparent);
+            opacity:0.8;
+        }
+        .teams-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;}
+        .team-side{display:flex;flex-direction:column;align-items:center;gap:8px;}
+        .team-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;color:white;text-align:center;line-height:1.2;}
+        .vs-center{
+            font-family:'Bebas Neue',sans-serif;font-size:1.5rem;
+            background:linear-gradient(135deg,var(--accent),var(--yellow));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            background-clip:text;letter-spacing:3px;
+        }
 
-        /* FORM BADGES */
         .form-row{display:flex;gap:3px;justify-content:center;margin-top:4px;}
-        .form-dot{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.55rem;font-weight:700;}
-        .form-dot.w{background:rgba(61,214,140,0.2);color:var(--green);}
-        .form-dot.d{background:rgba(244,185,66,0.2);color:var(--yellow);}
-        .form-dot.l{background:rgba(230,57,70,0.2);color:var(--accent);}
-        .data-tag{font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:2px 7px;border-radius:8px;text-transform:uppercase;}
-        .data-tag.api{background:rgba(61,214,140,0.1);color:var(--green);border:1px solid rgba(61,214,140,0.2);}
-        .data-tag.off{background:rgba(244,185,66,0.1);color:var(--yellow);border:1px solid rgba(244,185,66,0.2);}
+        .form-dot{
+            width:20px;height:20px;border-radius:5px;display:flex;
+            align-items:center;justify-content:center;
+            font-size:0.55rem;font-weight:700;backdrop-filter:blur(5px);
+        }
+        .form-dot.w{background:rgba(46,204,113,0.25);color:var(--green);box-shadow:0 0 6px rgba(46,204,113,0.2);}
+        .form-dot.d{background:rgba(255,182,39,0.25);color:var(--yellow);box-shadow:0 0 6px rgba(255,182,39,0.2);}
+        .form-dot.l{background:rgba(255,77,90,0.25);color:var(--accent);box-shadow:0 0 6px rgba(255,77,90,0.2);}
+        .data-tag{font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:2px 8px;border-radius:8px;text-transform:uppercase;}
+        .data-tag.api{background:rgba(46,204,113,0.12);color:var(--green);border:1px solid rgba(46,204,113,0.25);}
+        .data-tag.off{background:rgba(255,182,39,0.12);color:var(--yellow);border:1px solid rgba(255,182,39,0.25);}
 
-        .result-boxes{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;margin-top:14px;}
-        .result-box{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;}
-        .result-box.rb-center{border-color:rgba(244,185,66,0.2);background:rgba(244,185,66,0.04);min-width:80px;}
-        .rb-label{font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:5px;}
-        .rb-pct{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1;}
+        .result-boxes{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;margin-top:16px;}
+        .result-box{
+            background:var(--glass-bg);border:1px solid var(--border);
+            border-radius:12px;padding:12px 8px;text-align:center;
+            backdrop-filter:blur(15px);transition:all 0.3s ease;
+        }
+        .result-box:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.3);}
+        .result-box.rb-center{
+            border-color:rgba(255,182,39,0.3);
+            background:rgba(255,182,39,0.05);min-width:80px;
+        }
+        .rb-label{font-size:0.62rem;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+        .rb-pct{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1px;line-height:1;}
 
-        .section-header{display:flex;align-items:center;gap:10px;margin:16px 0 10px;}
-        .section-icon{font-size:1rem;}
+        .section-header{display:flex;align-items:center;gap:10px;margin:18px 0 10px;}
+        .section-icon{font-size:1.1rem;}
         .section-title{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:var(--text);}
-        .section-lambda{margin-left:auto;font-family:'Bebas Neue',sans-serif;font-size:0.82rem;letter-spacing:1px;color:var(--muted);}
+        .section-lambda{margin-left:auto;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;letter-spacing:1px;color:var(--muted);}
         .section-lambda span{color:var(--yellow);}
-        .section-divider{height:1px;background:var(--border);margin:14px 0;}
-        .cal-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:12px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);color:var(--purple);text-transform:uppercase;}
+        .section-divider{
+            height:1px;margin:16px 0;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+        }
+        .cal-badge{
+            display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;
+            font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:12px;
+            background:rgba(151,117,250,0.12);border:1px solid rgba(151,117,250,0.25);
+            color:var(--purple);text-transform:uppercase;
+        }
 
-        .market-card{background:var(--card);border-radius:10px;padding:13px 15px;margin-bottom:7px;border:1px solid var(--border);display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:11px;transition:border-color 0.3s;}
-        .market-card.high{border-color:rgba(61,214,140,0.3);}
-        .market-card.mid{border-color:rgba(244,185,66,0.25);}
-        .market-card.low{border-color:rgba(230,57,70,0.2);}
-        .line-label{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;line-height:1;color:white;letter-spacing:1px;min-width:44px;}
+        .market-card{
+            background:var(--glass-bg);backdrop-filter:blur(15px);
+            border-radius:14px;padding:14px 16px;margin-bottom:8px;
+            border:1px solid var(--border);display:grid;
+            grid-template-columns:auto 1fr auto;align-items:center;gap:12px;
+            transition:all 0.3s ease;
+        }
+        .market-card:hover{transform:translateX(2px);box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+        .market-card.high{border-color:rgba(46,204,113,0.35);background:rgba(46,204,113,0.03);}
+        .market-card.mid{border-color:rgba(255,182,39,0.3);background:rgba(255,182,39,0.03);}
+        .market-card.low{border-color:rgba(255,77,90,0.25);background:rgba(255,77,90,0.03);}
+        .line-label{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;line-height:1;color:white;letter-spacing:1px;min-width:48px;}
         .line-label small{display:block;font-family:'DM Sans',sans-serif;font-size:0.56rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
         .bar-wrap{flex:1;}
-        .bar-bg{background:rgba(255,255,255,0.05);height:6px;border-radius:4px;overflow:hidden;margin-bottom:3px;}
-        .bar-fill{height:100%;border-radius:4px;width:0%;transition:width 0.9s cubic-bezier(0.4,0,0.2,1);}
+        .bar-bg{background:rgba(255,255,255,0.05);height:7px;border-radius:4px;overflow:hidden;margin-bottom:3px;}
+        .bar-fill{height:100%;border-radius:4px;width:0%;transition:width 1.2s cubic-bezier(0.25,0.46,0.45,0.94);box-shadow:0 0 8px currentColor;}
         .bar-sub{font-size:0.62rem;color:var(--muted);}
         .uncertainty-band{font-size:0.58rem;color:var(--muted);margin-top:2px;letter-spacing:0.5px;}
-        .pct-label{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;letter-spacing:1px;line-height:1;text-align:right;min-width:52px;}
+        .pct-label{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:1px;line-height:1;text-align:right;min-width:52px;}
         .pct-label small{font-family:'DM Sans',sans-serif;font-size:0.56rem;color:var(--muted);font-weight:700;letter-spacing:1px;display:block;}
 
-        .recomendacion{background:linear-gradient(135deg,#0d1f12,#0a1a20);border:1px solid rgba(61,214,140,0.25);border-radius:16px;padding:18px 16px;margin-top:6px;text-align:center;position:relative;overflow:hidden;}
-        .recomendacion::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);}
-        .rec-title{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:3px;color:var(--green);opacity:0.8;margin-bottom:10px;}
-        .rec-main{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:2px;color:white;line-height:1.1;}
+        .context-tags{
+            grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px;
+            margin-top:2px;font-size:0.58rem;
+        }
+        .context-tag{
+            padding:2px 7px;border-radius:8px;font-weight:700;letter-spacing:0.5px;
+            background:rgba(151,117,250,0.1);border:1px solid rgba(151,117,250,0.2);color:var(--purple);
+        }
+        .context-tag.altitude{
+            background:rgba(255,182,39,0.1);border:1px solid rgba(255,182,39,0.2);color:var(--yellow);
+        }
+
+        .recomendacion{
+            background:linear-gradient(135deg,rgba(46,204,113,0.05),rgba(77,171,247,0.05));
+            border:1px solid rgba(46,204,113,0.3);border-radius:20px;
+            padding:20px 18px;margin-top:8px;text-align:center;
+            position:relative;overflow:hidden;backdrop-filter:blur(20px);
+            box-shadow:0 8px 32px rgba(0,0,0,0.3);
+        }
+        .recomendacion::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,transparent,var(--green),var(--blue),transparent);
+        }
+        .rec-title{font-family:'Bebas Neue',sans-serif;font-size:0.7rem;letter-spacing:3px;color:var(--green);opacity:0.9;margin-bottom:12px;}
+        .rec-main{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:2px;color:white;line-height:1.1;}
         .rec-sub{font-size:0.7rem;color:var(--muted);margin-top:6px;}
-        .rec-confidence{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:5px 14px;border-radius:20px;background:rgba(61,214,140,0.08);border:1px solid rgba(61,214,140,0.15);}
-        .rc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green);}
+        .rec-confidence{
+            display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+            padding:6px 16px;border-radius:20px;
+            background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.2);
+            backdrop-filter:blur(10px);
+        }
+        .rc-pct{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--green);}
         .rc-label{font-size:0.62rem;color:var(--muted);font-weight:700;letter-spacing:1px;}
 
-        /* MODO OFFLINE WARNING */
-        .offline-note{background:rgba(244,185,66,0.07);border:1px solid rgba(244,185,66,0.2);border-radius:8px;padding:8px 12px;font-size:0.66rem;color:var(--yellow);margin-bottom:10px;letter-spacing:0.5px;}
+        .offline-note{
+            background:rgba(255,182,39,0.08);border:1px solid rgba(255,182,39,0.25);
+            border-radius:10px;padding:9px 14px;font-size:0.66rem;
+            color:var(--yellow);margin-bottom:12px;letter-spacing:0.5px;
+            backdrop-filter:blur(10px);
+        }
 
-        .disclaimer{text-align:center;color:var(--muted);font-size:0.63rem;margin-top:18px;line-height:1.6;opacity:0.6;}
+        .disclaimer{text-align:center;color:var(--muted);font-size:0.63rem;margin-top:20px;line-height:1.6;opacity:0.6;}
         .hidden{display:none;}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-        .animate-in{animation:fadeUp 0.4s ease-out forwards;}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+        .animate-in{animation:fadeUp 0.5s ease-out forwards;}
+
+        @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.7;}}
+        .pulse{animation:pulse 2s ease-in-out infinite;}
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <div class="logo">FOOTBALL<span>PREDICTOR</div>
-        <div class="badge" id="engine-badge">⚡ Motor Poisson + Dixon-Coles + Platt</div>
+        <div class="logo">Corner<span>IQ</span> Pro</div>
+        <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.0</div>
     </div>
 
     <div class="card">
@@ -168,14 +350,14 @@
     <div id="results" class="hidden">
         <div id="loading-indicator" class="card loading-state">
             <div class="spinner"></div>
-            <div id="loading-text">Obteniendo estadísticas reales...</div>
+            <div id="loading-text" class="pulse">Obteniendo estadísticas reales...</div>
             <div class="loading-sub" id="loading-sub">Analizando últimos 15 partidos</div>
         </div>
         <div id="output" class="hidden">
             <div id="match-header-container"></div>
             <div id="all-markets-container"></div>
             <div id="recomendacion-container"></div>
-            <p class="disclaimer">Modelo Poisson + Dixon-Coles + Platt Calibración + NegBin variable. Solo uso personal.</p>
+            <p class="disclaimer">Modelo Avanzado v2.0 · Dixon-Coles (ρ por liga) · Ataque×Defensa · Elo · xG · NegBin · Platt Calibración · Altitud/Contexto. Solo uso personal.</p>
         </div>
     </div>
 </div>
@@ -190,26 +372,11 @@ const MATCHES_TO_USE = 15;
 
 // ══════════════════════════════════════════
 // LIGAS Y SUS MERCADOS PERMITIDOS
-// Según la tabla de la imagen actualizada:
-//
-// Principales (todas las columnas):
-//   Bundesliga, Premier League, Eredivisie, Jupiler Pro
-//
-// Esporádicas:
-//   Ligue 1         → HT
-//   Brasileirão     → HT, CORN
-//   Championship    → BTTS, CORN
-//   La Liga         → CORN
-//   Serie A Italia  → HT, GOLES, CORN  ← ACTUALIZADO
-//   Liga MX         → GOLES, CORN
-//   Libertadores    → HT, GOLES, CORN  (32 equipos 2026)
-//   MLS             → GOLES, BTTS
 // ══════════════════════════════════════════
 const LIGAS = {
     "PL":  {
         name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", leagueAvg:10.1, negBinR:5.4,
         markets:{ht:true,goles:true,btts:true,corn:true},
-        // Nombres exactos como aparecen en BSD API
         bsdName:"Premier League",
         teams:["Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC","Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Ipswich Town FC","Leicester City FC","Liverpool FC","Manchester City FC","Manchester United FC","Newcastle United FC","Nottingham Forest FC","Southampton FC","Tottenham Hotspur FC","West Ham United FC","Wolverhampton Wanderers FC"]
     },
@@ -228,7 +395,6 @@ const LIGAS = {
     "JPL": {
         name:"🇧🇪 Jupiler Pro League", leagueAvg:9.2, negBinR:6.0,
         markets:{ht:true,goles:true,btts:true,corn:true},
-        // NOTA: En BSD API puede aparecer como "Belgian Pro League" o "First Division A"
         bsdName:"Belgian Pro League",
         bsdNameAlt:["First Division A","Jupiler Pro League","Pro League"],
         teams:["Anderlecht","Club Brugge KV","KAA Gent","KRC Genk","Cercle Brugge KSV","Standard de Liège","R. Union Saint-Gilloise","KV Mechelen","STVV","Beerschot VA","OH Leuven","KV Kortrijk","Charleroi","KVC Westerlo","RFC Seraing","Zulte Waregem"]
@@ -242,7 +408,6 @@ const LIGAS = {
     "BSA": {
         name:"🇧🇷 Brasileirão", leagueAvg:9.4, negBinR:5.8,
         markets:{ht:true,goles:false,btts:false,corn:true},
-        // BSD puede tener como "Campeonato Brasileiro Série A" o "Brasileirão"
         bsdName:"Campeonato Brasileiro Série A",
         bsdNameAlt:["Brasileirão Série A","Brasileirao Serie A","Serie A (Brazil)","Brazilian Serie A"],
         teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]
@@ -262,7 +427,6 @@ const LIGAS = {
         teams:["Athletic Club","Atlético de Madrid","CA Osasuna","CD Leganés","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Espanyol de Barcelona","RCD Mallorca","Rayo Vallecano","Real Betis Balompié","Real Madrid CF","Real Sociedad","Real Valladolid CF","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF"]
     },
     "SA":  {
-        // *** ACTUALIZADO: Serie A ahora tiene HT + GOLES + CORN ***
         name:"🇮🇹 Serie A", leagueAvg:9.0, negBinR:7.1,
         markets:{ht:true,goles:true,btts:false,corn:true},
         bsdName:"Serie A",
@@ -276,111 +440,108 @@ const LIGAS = {
         bsdNameAlt:["Liga BBVA MX","Mexican Liga MX"],
         teams:["América","Atlas FC","Atlético de San Luis","CF Pachuca","Club Necaxa","Club Tijuana","Cruz Azul","Deportivo Guadalajara","FC Juárez","León","Mazatlán FC","Monterrey","Puebla FC","Querétaro FC","Santos Laguna","Tigres UANL","Toluca FC","UNAM Pumas"]
     },
-    // ══════════════════════════════════════
-    // LIBERTADORES 2026 — 32 equipos fase de grupos
-    // Mercados: HT + GOLES (+1.5/2.5) + CORN
-    // Grupos confirmados:
-    // A: Flamengo, Estudiantes, Cusco FC, Independiente Medellín
-    // B: Nacional, Universitario, Coquimbo Unido, Deportes Tolima
-    // C: Fluminense, Bolívar, Deportivo La Guaira, Independiente Rivadavia
-    // D: Boca Juniors, Cruzeiro, Universidad Católica, Barcelona SC
-    // E: Peñarol, Corinthians, Santa Fe, Platense
-    // F: Palmeiras, Cerro Porteño, Junior, Sporting Cristal
-    // G: Liga de Quito, Lanús, Always Ready, Mirassol
-    // H: Independiente del Valle, Libertad, Rosario Central, Universidad Central
-    // ══════════════════════════════════════
     "LIB": {
         name:"🏆 Libertadores", leagueAvg:9.2, negBinR:6.1,
         markets:{ht:true,goles:true,btts:false,corn:true},
         bsdName:"Copa Libertadores",
         bsdNameAlt:["CONMEBOL Libertadores","Copa CONMEBOL Libertadores","Copa CONMEBOL Libertadores 2026"],
-        teams:[
-            // Grupo A
-            "Flamengo","Estudiantes de La Plata","Cusco FC","Independiente Medellín",
-            // Grupo B
-            "Nacional","Universitario","Coquimbo Unido","Deportes Tolima",
-            // Grupo C
-            "Fluminense","Club Bolívar","Deportivo La Guaira","Independiente Rivadavia",
-            // Grupo D
-            "Boca Juniors","Cruzeiro","Universidad Católica","Barcelona SC",
-            // Grupo E
-            "Peñarol","Corinthians","Santa Fe","Platense",
-            // Grupo F
-            "Palmeiras","Cerro Porteño","Junior","Sporting Cristal",
-            // Grupo G
-            "LDU Quito","Lanús","Always Ready","Mirassol",
-            // Grupo H
-            "Independiente del Valle","Libertad","Rosario Central","Universidad Central"
-        ]
+        teams:["Flamengo","Estudiantes de La Plata","Cusco FC","Independiente Medellín","Nacional","Universitario","Coquimbo Unido","Deportes Tolima","Fluminense","Club Bolívar","Deportivo La Guaira","Independiente Rivadavia","Boca Juniors","Cruzeiro","Universidad Católica","Barcelona SC","Peñarol","Corinthians","Santa Fe","Platense","Palmeiras","Cerro Porteño","Junior","Sporting Cristal","LDU Quito","Lanús","Always Ready","Mirassol","Independiente del Valle","Libertad","Rosario Central","Universidad Central"]
     },
-    // ══════════════════════════════════════
-    // MLS — Major League Soccer
-    // Mercados: GOLES (+1.5/2.5) + BTTS
-    // ══════════════════════════════════════
     "MLS": {
         name:"🇺🇸 MLS", leagueAvg:9.1, negBinR:6.2,
         markets:{ht:false,goles:true,btts:true,corn:false},
         bsdName:"Major League Soccer",
         bsdNameAlt:["MLS","MLS Regular Season"],
-        teams:[
-            // Eastern Conference
-            "Inter Miami CF","CF Montréal","Charlotte FC","Chicago Fire FC","FC Cincinnati",
-            "Columbus Crew","D.C. United","CF New England Revolution","Nashville SC",
-            "New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union",
-            "Atlanta United FC","Toronto FC",
-            // Western Conference
-            "Austin FC","Colorado Rapids","FC Dallas","Houston Dynamo FC","LA Galaxy",
-            "Los Angeles FC","Minnesota United FC","Portland Timbers","Real Salt Lake",
-            "San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City",
-            "St. Louis City SC","Vancouver Whitecaps FC","San Diego FC"
-        ]
+        teams:["Inter Miami CF","CF Montréal","Charlotte FC","Chicago Fire FC","FC Cincinnati","Columbus Crew","D.C. United","CF New England Revolution","Nashville SC","New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union","Atlanta United FC","Toronto FC","Austin FC","Colorado Rapids","FC Dallas","Houston Dynamo FC","LA Galaxy","Los Angeles FC","Minnesota United FC","Portland Timbers","Real Salt Lake","San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City","St. Louis City SC","Vancouver Whitecaps FC","San Diego FC"]
+    },
+    "BSB": {
+        name:"🇧🇷 Brasileirão B", leagueAvg:8.8, negBinR:6.4,
+        markets:{ht:false,goles:true,btts:true,corn:false},
+        bsdName:"Campeonato Brasileiro Série B",
+        bsdNameAlt:["Brasileirão Série B","Serie B (Brazil)","Brazilian Serie B"],
+        teams:["América Mineiro","Athletic Club","Atlético Goianiense","Avaí FC","Botafogo-SP","Ceará SC","CRB","Criciúma","Cuiabá","Fortaleza","Goiás","Juventude","Londrina","Náutico","Novorizontino","Operário-PR","Ponte Preta","São Bernardo FC","Sport Recife","Vila Nova"]
+    },
+    "PPT": {
+        name:"🇵🇹 Liga Portugal", leagueAvg:9.4, negBinR:6.1,
+        markets:{ht:false,goles:true,btts:true,corn:true},
+        bsdName:"Liga Portugal",
+        bsdNameAlt:["Primeira Liga","Liga Portugal Betclic","Liga NOS"],
+        teams:["Sporting CP","FC Porto","SL Benfica","SC Braga","FC Famalicão","Rio Ave FC","CD Santa Clara","FC Alverca","GD Estoril Praia","Gil Vicente FC","Vitória SC","Casa Pia AC","FC Arouca","CD Tondela","Moreirense FC","CD Nacional","Estrela da Amadora","SC Farense"]
+    },
+    "EKS": {
+        name:"🇵🇱 Ekstraklasa", leagueAvg:9.3, negBinR:6.2,
+        markets:{ht:false,goles:true,btts:true,corn:true},
+        bsdName:"Ekstraklasa",
+        bsdNameAlt:["PKO Bank Polski Ekstraklasa","PKO BP Ekstraklasa","Poland Ekstraklasa"],
+        teams:["Lech Poznań","Raków Częstochowa","Jagiellonia Białystok","Legia Warszawa","Pogoń Szczecin","Górnik Zabrze","Zagłębie Lubin","Piast Gliwice","Wisła Płock","Motor Lublin","GKS Katowice","Cracovia","Widzew Łódź","Korona Kielce","Radomiak Radom","Lechia Gdańsk","Arka Gdynia","Bruk-Bet Termalica Nieciecza"]
+    },
+    "SLG": {
+        name:"🇬🇷 Super Liga Grecia", leagueAvg:9.0, negBinR:6.3,
+        markets:{ht:false,goles:true,btts:true,corn:true},
+        bsdName:"Super League Greece",
+        bsdNameAlt:["Stoiximan Super League","Super League 1","Greek Super League"],
+        teams:["AEK Athens","PAOK","Olympiacos","Panathinaikos","Levadiakos","Aris","OFI Crete","Volos NFC","Atromitos","A.E. Kifisia","Panetolikos","Panserraikos","Asteras Tripolis","AEL"]
     }
 };
 
 // ══════════════════════════════════════════
-// DATOS OFFLINE: CORNER POWER
+// FASE 1: RHO DE DIXON-COLES POR LIGA
+// Valores típicos extraídos de literatura académica
+// ══════════════════════════════════════════
+const DIXON_COLES_RHO = {
+    "PL": -0.065,   // Premier League (más goles, ρ cerca de 0)
+    "BL1": -0.085,  // Bundesliga
+    "SA": -0.130,   // Serie A (menos goles, ρ más negativo)
+    "PD": -0.098,   // La Liga
+    "FL1": -0.105,  // Ligue 1
+    "DED": -0.072,  // Eredivisie
+    "BSA": -0.090,  // Brasileirão
+    "ELC": -0.078,  // Championship
+    "JPL": -0.082,  // Jupiler Pro
+    "MXL": -0.095,  // Liga MX
+    "LIB": -0.088,  // Libertadores
+    "MLS": -0.070,  // MLS
+    "BSB": -0.092,  // Brasileirão B
+    "PPT": -0.080,  // Liga Portugal
+    "EKS": -0.085,  // Ekstraklasa
+    "SLG": -0.100,  // Super Liga Grecia
+    "default": -0.13
+};
+
+// ══════════════════════════════════════════
+// FASE 5: VENTAJA POR ALTITUD
+// ══════════════════════════════════════════
+const ALTITUDE_TEAMS = {
+    "Club Bolívar": {advantage:1.12, altitude:"3600m"},
+    "Always Ready": {advantage:1.18, altitude:"4100m"},
+    "LDU Quito": {advantage:1.08, altitude:"2800m"},
+    "Cusco FC": {advantage:1.06, altitude:"3400m"},
+    "Universitario": {advantage:1.04, altitude:"2800m"},
+    "Independiente del Valle": {advantage:1.03, altitude:"2500m"},
+    "Deportivo La Guaira": {advantage:1.00, altitude:"~1000m"},
+    "Nacional": {advantage:1.01, altitude:"1500m"},
+};
+
+// ══════════════════════════════════════════
+// DATOS OFFLINE
 // ══════════════════════════════════════════
 const CORNER_POWER = {
-    // Premier League
     "Manchester City FC":{home:7.8,away:6.8},"Liverpool FC":{home:7.4,away:6.1},"Arsenal FC":{home:7.0,away:5.9},"Chelsea FC":{home:6.5,away:5.5},"Tottenham Hotspur FC":{home:6.4,away:5.3},"Aston Villa FC":{home:6.3,away:5.2},"Newcastle United FC":{home:6.0,away:5.0},"Manchester United FC":{home:5.8,away:4.9},"Brighton & Hove Albion FC":{home:6.2,away:5.4},"West Ham United FC":{home:5.5,away:4.6},"Crystal Palace FC":{home:4.9,away:4.1},"AFC Bournemouth":{home:5.0,away:4.2},"Fulham FC":{home:5.2,away:4.3},"Wolverhampton Wanderers FC":{home:5.1,away:4.3},"Everton FC":{home:4.8,away:4.0},"Brentford FC":{home:5.3,away:4.5},"Nottingham Forest FC":{home:4.9,away:4.0},"Leicester City FC":{home:5.0,away:4.2},"Ipswich Town FC":{home:4.6,away:3.8},"Southampton FC":{home:4.4,away:3.6},
-    // La Liga
     "Real Madrid CF":{home:6.6,away:5.7},"FC Barcelona":{home:6.4,away:5.5},"Atlético de Madrid":{home:5.8,away:4.9},"Girona FC":{home:5.6,away:4.7},"Real Sociedad":{home:5.4,away:4.5},"Athletic Club":{home:5.5,away:4.6},"Real Betis Balompié":{home:5.3,away:4.4},"Valencia CF":{home:5.1,away:4.2},"Sevilla FC":{home:5.2,away:4.3},"Villarreal CF":{home:5.0,away:4.2},"CA Osasuna":{home:4.9,away:4.0},"Getafe CF":{home:4.5,away:3.7},"RC Celta de Vigo":{home:5.0,away:4.1},"RCD Mallorca":{home:4.7,away:3.9},"Rayo Vallecano":{home:4.6,away:3.8},"UD Las Palmas":{home:4.8,away:4.0},"Deportivo Alavés":{home:4.7,away:3.9},"CD Leganés":{home:4.5,away:3.7},"Real Valladolid CF":{home:4.4,away:3.6},"RCD Espanyol de Barcelona":{home:4.8,away:4.0},
-    // Serie A
     "Inter Milano":{home:6.0,away:5.1},"AC Milan":{home:5.8,away:4.9},"Juventus FC":{home:5.6,away:4.7},"Atalanta BC":{home:5.9,away:5.0},"AS Roma":{home:5.5,away:4.6},"SS Lazio":{home:5.3,away:4.4},"SSC Napoli":{home:5.7,away:4.8},"ACF Fiorentina":{home:5.4,away:4.5},"Torino FC":{home:4.8,away:4.0},"Bologna FC 1909":{home:5.2,away:4.3},"Genoa CFC":{home:4.7,away:3.9},"AC Monza":{home:4.6,away:3.8},"Hellas Verona FC":{home:4.5,away:3.7},"US Lecce":{home:4.4,away:3.6},"Udinese Calcio":{home:4.6,away:3.8},"Cagliari Calcio":{home:4.5,away:3.7},"Empoli FC":{home:4.7,away:3.9},"Parma Calcio 1913":{home:4.8,away:4.0},"Como 1907":{home:5.0,away:4.2},"Venezia FC":{home:4.4,away:3.6},
-    // Bundesliga
     "FC Bayern München":{home:7.2,away:6.2},"Borussia Dortmund":{home:6.4,away:5.4},"Bayer 04 Leverkusen":{home:6.7,away:5.7},"RB Leipzig":{home:6.3,away:5.3},"VfB Stuttgart":{home:5.9,away:5.0},"Eintracht Frankfurt":{home:5.7,away:4.8},"SC Freiburg":{home:5.4,away:4.5},"TSG 1899 Hoffenheim":{home:5.5,away:4.6},"SV Werder Bremen":{home:5.3,away:4.4},"1. FC Heidenheim 1846":{home:4.9,away:4.1},"FC Augsburg":{home:4.8,away:4.0},"VfL Wolfsburg":{home:5.2,away:4.3},"1. FSV Mainz 05":{home:5.0,away:4.2},"Borussia Mönchengladbach":{home:5.3,away:4.4},"1. FC Union Berlin":{home:4.7,away:3.9},"VfL Bochum 1848":{home:4.6,away:3.8},"FC St. Pauli":{home:4.8,away:4.0},"Holstein Kiel":{home:4.5,away:3.7},
-    // Ligue 1
     "Paris Saint-Germain FC":{home:6.7,away:5.7},"AS Monaco FC":{home:6.0,away:5.1},"Stade Brestois 29":{home:5.2,away:4.3},"Lille OSC":{home:5.6,away:4.7},"OGC Nice":{home:5.4,away:4.5},"Olympique Lyonnais":{home:5.5,away:4.6},"RC Lens":{home:5.3,away:4.4},"Olympique de Marseille":{home:5.5,away:4.6},"Stade de Reims":{home:4.9,away:4.1},"Stade Rennais FC":{home:5.1,away:4.2},"Toulouse FC":{home:4.8,away:4.0},"Montpellier HSC":{home:4.7,away:3.9},"RC Strasbourg Alsace":{home:4.8,away:4.0},"Le Havre AC":{home:4.6,away:3.8},"FC Nantes":{home:4.7,away:3.9},"Angers SCO":{home:4.5,away:3.7},"AJ Auxerre":{home:4.6,away:3.8},"AS Saint-Étienne":{home:4.5,away:3.7},
-    // Eredivisie
     "PSV Eindhoven":{home:6.5,away:5.6},"Feyenoord":{home:6.2,away:5.3},"FC Twente":{home:5.6,away:4.7},"AZ Alkmaar":{home:5.8,away:4.9},"Ajax":{home:6.0,away:5.1},"NEC Nijmegen":{home:4.9,away:4.1},"FC Utrecht":{home:5.2,away:4.3},"Sparta Rotterdam":{home:4.8,away:4.0},"Go Ahead Eagles":{home:4.7,away:3.9},"Fortuna Sittard":{home:4.5,away:3.7},"sc Heerenveen":{home:4.8,away:4.0},"PEC Zwolle":{home:4.6,away:3.8},"Almere City FC":{home:4.5,away:3.7},"Heracles Almelo":{home:4.7,away:3.9},"RKC Waalwijk":{home:4.4,away:3.6},"Willem II":{home:4.6,away:3.8},"NAC Breda":{home:4.8,away:4.0},"FC Groningen":{home:4.5,away:3.7},
-    // Brasileirão
     "Palmeiras":{home:6.2,away:5.3},"Flamengo":{home:6.4,away:5.5},"Botafogo":{home:5.8,away:4.9},"Atlético Mineiro":{home:5.9,away:5.0},"São Paulo":{home:5.7,away:4.8},"Internacional":{home:5.5,away:4.6},"Fluminense":{home:5.4,away:4.5},"Grêmio":{home:5.3,away:4.4},"Cruzeiro":{home:5.2,away:4.3},"Fortaleza":{home:5.4,away:4.5},"Red Bull Bragantino":{home:5.6,away:4.7},"Athletico Paranaense":{home:5.3,away:4.4},"Vasco da Gama":{home:5.1,away:4.2},"Corinthians":{home:5.0,away:4.2},"Bahia":{home:5.2,away:4.3},"Cuiabá":{home:4.7,away:3.9},"Vitória":{home:4.8,away:4.0},"Juventude":{home:4.6,away:3.8},"Criciúma":{home:4.5,away:3.7},"Atlético Goianiense":{home:4.6,away:3.8},
-    // Championship
     "Leeds United":{home:5.8,away:4.9},"Burnley FC":{home:5.4,away:4.5},"Sheffield United":{home:5.2,away:4.3},"West Bromwich Albion":{home:5.0,away:4.2},"Norwich City":{home:5.1,away:4.3},"Hull City":{home:4.8,away:4.0},"Middlesbrough FC":{home:5.0,away:4.2},"Coventry City":{home:5.1,away:4.3},"Sunderland AFC":{home:5.0,away:4.2},"Swansea City":{home:4.9,away:4.1},"Watford FC":{home:5.1,away:4.3},"Bristol City":{home:4.8,away:4.0},"QPR":{home:4.7,away:3.9},"Stoke City":{home:4.8,away:4.0},"Sheffield Wednesday":{home:4.7,away:3.9},"Blackburn Rovers":{home:4.9,away:4.1},"Plymouth Argyle":{home:4.6,away:3.8},"Portsmouth FC":{home:4.8,away:4.0},"Derby County":{home:5.0,away:4.2},"Oxford United":{home:4.7,away:3.9},"Millwall FC":{home:4.8,away:4.0},"Cardiff City":{home:4.7,away:3.9},"Preston North End":{home:4.7,away:3.9},"Luton Town":{home:4.9,away:4.1},
-    // Jupiler Pro League
     "Club Brugge KV":{home:6.2,away:5.2},"Anderlecht":{home:5.9,away:5.0},"KAA Gent":{home:5.6,away:4.7},"KRC Genk":{home:5.5,away:4.6},"R. Union Saint-Gilloise":{home:5.4,away:4.5},"Cercle Brugge KSV":{home:5.2,away:4.3},"Standard de Liège":{home:5.0,away:4.2},"KV Mechelen":{home:4.9,away:4.1},"STVV":{home:4.8,away:4.0},"OH Leuven":{home:4.7,away:3.9},"Beerschot VA":{home:4.7,away:3.9},"KV Kortrijk":{home:4.6,away:3.8},"Charleroi":{home:4.8,away:4.0},"KVC Westerlo":{home:4.6,away:3.8},"RFC Seraing":{home:4.4,away:3.6},"Zulte Waregem":{home:4.5,away:3.7},
-    // Liga MX
     "América":{home:5.8,away:4.8},"Tigres UANL":{home:5.6,away:4.6},"Deportivo Guadalajara":{home:5.5,away:4.5},"Monterrey":{home:5.4,away:4.4},"Cruz Azul":{home:5.2,away:4.3},"CF Pachuca":{home:5.0,away:4.2},"UNAM Pumas":{home:5.0,away:4.1},"León":{home:4.9,away:4.0},"Atlas FC":{home:4.8,away:4.0},"Toluca FC":{home:4.9,away:4.1},"Club Necaxa":{home:4.6,away:3.8},"Santos Laguna":{home:4.8,away:4.0},"Club Tijuana":{home:4.6,away:3.8},"Atlético de San Luis":{home:4.7,away:3.9},"FC Juárez":{home:4.5,away:3.7},"Mazatlán FC":{home:4.5,away:3.7},"Querétaro FC":{home:4.4,away:3.6},"Puebla FC":{home:4.7,away:3.9},
-    // MLS — corners (fallback, mercado no activo)
-    "Inter Miami CF":{home:5.2,away:4.3},"LA Galaxy":{home:5.0,away:4.2},"Los Angeles FC":{home:5.1,away:4.3},
-    "Seattle Sounders FC":{home:5.0,away:4.1},"Portland Timbers":{home:4.9,away:4.0},"Philadelphia Union":{home:4.8,away:4.0},
-    "FC Cincinnati":{home:4.9,away:4.0},"Nashville SC":{home:4.8,away:3.9},"Columbus Crew":{home:4.9,away:4.0},
-    "Atlanta United FC":{home:4.8,away:3.9},"New York City FC":{home:4.8,away:4.0},"New York Red Bulls":{home:4.7,away:3.9},
-    "CF New England Revolution":{home:4.6,away:3.8},"Houston Dynamo FC":{home:4.7,away:3.9},"Real Salt Lake":{home:4.8,away:4.0},
-    "Minnesota United FC":{home:4.7,away:3.9},"Sporting Kansas City":{home:4.7,away:3.8},"D.C. United":{home:4.6,away:3.8},
-    "Chicago Fire FC":{home:4.6,away:3.8},"Colorado Rapids":{home:4.6,away:3.8},"FC Dallas":{home:4.7,away:3.9},
-    "Austin FC":{home:4.8,away:4.0},"Charlotte FC":{home:4.6,away:3.8},"Orlando City SC":{home:4.7,away:3.9},
-    "Toronto FC":{home:4.5,away:3.7},"Vancouver Whitecaps FC":{home:4.7,away:3.9},"San Jose Earthquakes":{home:4.5,away:3.7},
-    "St. Louis City SC":{home:4.7,away:3.9},"CF Montréal":{home:4.6,away:3.8},"San Diego FC":{home:4.6,away:3.8},
-    // Libertadores 2026 — 32 equipos fase de grupos
-    "Flamengo":{home:6.4,away:5.5},"Estudiantes de La Plata":{home:5.4,away:4.5},"Cusco FC":{home:4.6,away:3.8},"Independiente Medellín":{home:5.0,away:4.2},
-    "Nacional":{home:5.4,away:4.5},"Universitario":{home:5.0,away:4.2},"Coquimbo Unido":{home:4.7,away:3.9},"Deportes Tolima":{home:4.8,away:4.0},
-    "Fluminense":{home:5.4,away:4.5},"Club Bolívar":{home:5.5,away:4.6},"Deportivo La Guaira":{home:4.6,away:3.8},"Independiente Rivadavia":{home:4.5,away:3.7},
-    "Boca Juniors":{home:6.0,away:5.0},"Cruzeiro":{home:5.2,away:4.3},"Universidad Católica":{home:5.2,away:4.3},"Barcelona SC":{home:5.5,away:4.6},
-    "Peñarol":{home:5.6,away:4.7},"Corinthians":{home:5.0,away:4.2},"Santa Fe":{home:4.9,away:4.1},"Platense":{home:4.6,away:3.8},
-    "Palmeiras":{home:6.2,away:5.3},"Cerro Porteño":{home:5.3,away:4.4},"Junior":{home:5.1,away:4.2},"Sporting Cristal":{home:5.1,away:4.3},
-    "LDU Quito":{home:5.7,away:4.8},"Lanús":{home:4.9,away:4.0},"Always Ready":{home:5.0,away:4.2},"Mirassol":{home:4.6,away:3.8},
-    "Independiente del Valle":{home:5.8,away:4.9},"Libertad":{home:5.1,away:4.2},"Rosario Central":{home:5.0,away:4.1},"Universidad Central":{home:4.5,away:3.7}
+    "América Mineiro":{home:4.8,away:4.0},"Athletic Club":{home:4.4,away:3.6},"Atlético Goianiense":{home:4.6,away:3.8},"Avaí FC":{home:4.5,away:3.7},"Botafogo-SP":{home:4.5,away:3.7},"Ceará SC":{home:4.7,away:3.9},"CRB":{home:4.4,away:3.6},"Criciúma":{home:4.5,away:3.7},"Cuiabá":{home:4.7,away:3.9},"Goiás":{home:4.8,away:4.0},"Londrina":{home:4.3,away:3.5},"Náutico":{home:4.4,away:3.6},"Novorizontino":{home:4.7,away:3.9},"Operário-PR":{home:4.4,away:3.6},"Ponte Preta":{home:4.6,away:3.8},"São Bernardo FC":{home:4.4,away:3.6},"Sport Recife":{home:4.8,away:4.0},"Vila Nova":{home:4.4,away:3.6},
+    "Sporting CP":{home:6.5,away:5.6},"FC Porto":{home:6.3,away:5.4},"SL Benfica":{home:6.2,away:5.3},"SC Braga":{home:5.8,away:4.9},"FC Famalicão":{home:5.0,away:4.2},"Rio Ave FC":{home:4.9,away:4.1},"CD Santa Clara":{home:4.7,away:3.9},"FC Alverca":{home:4.6,away:3.8},"GD Estoril Praia":{home:4.8,away:4.0},"Gil Vicente FC":{home:4.7,away:3.9},"Vitória SC":{home:5.0,away:4.2},"Casa Pia AC":{home:4.8,away:4.0},"FC Arouca":{home:4.6,away:3.8},"CD Tondela":{home:4.7,away:3.9},"Moreirense FC":{home:4.7,away:3.9},"CD Nacional":{home:4.5,away:3.7},"Estrela da Amadora":{home:4.5,away:3.7},"SC Farense":{home:4.4,away:3.6},
+    "Lech Poznań":{home:5.8,away:4.9},"Raków Częstochowa":{home:5.6,away:4.7},"Jagiellonia Białystok":{home:5.4,away:4.5},"Legia Warszawa":{home:5.5,away:4.6},"Pogoń Szczecin":{home:5.2,away:4.3},"Górnik Zabrze":{home:5.0,away:4.2},"Zagłębie Lubin":{home:4.9,away:4.1},"Piast Gliwice":{home:4.8,away:4.0},"Wisła Płock":{home:4.8,away:4.0},"Motor Lublin":{home:4.7,away:3.9},"GKS Katowice":{home:4.8,away:4.0},"Cracovia":{home:4.9,away:4.1},"Widzew Łódź":{home:4.7,away:3.9},"Korona Kielce":{home:4.6,away:3.8},"Radomiak Radom":{home:4.7,away:3.9},"Lechia Gdańsk":{home:4.8,away:4.0},"Arka Gdynia":{home:4.7,away:3.9},"Bruk-Bet Termalica Nieciecza":{home:4.4,away:3.6},
+    "AEK Athens":{home:6.0,away:5.1},"PAOK":{home:5.9,away:5.0},"Olympiacos":{home:5.8,away:4.9},"Panathinaikos":{home:5.6,away:4.7},"Levadiakos":{home:4.6,away:3.8},"Aris":{home:5.0,away:4.2},"OFI Crete":{home:4.7,away:3.9},"Volos NFC":{home:4.6,away:3.8},"Atromitos":{home:4.8,away:4.0},"A.E. Kifisia":{home:4.5,away:3.7},"Panetolikos":{home:4.6,away:3.8},"Panserraikos":{home:4.4,away:3.6},"Asteras Tripolis":{home:4.7,away:3.9},"AEL":{home:4.9,away:4.1},
+    "Inter Miami CF":{home:5.2,away:4.3},"LA Galaxy":{home:5.0,away:4.2},"Los Angeles FC":{home:5.1,away:4.3},"Seattle Sounders FC":{home:5.0,away:4.1},"Portland Timbers":{home:4.9,away:4.0},"Philadelphia Union":{home:4.8,away:4.0},"FC Cincinnati":{home:4.9,away:4.0},"Nashville SC":{home:4.8,away:3.9},"Columbus Crew":{home:4.9,away:4.0},"Atlanta United FC":{home:4.8,away:3.9},"New York City FC":{home:4.8,away:4.0},"New York Red Bulls":{home:4.7,away:3.9},"CF New England Revolution":{home:4.6,away:3.8},"Houston Dynamo FC":{home:4.7,away:3.9},"Real Salt Lake":{home:4.8,away:4.0},"Minnesota United FC":{home:4.7,away:3.9},"Sporting Kansas City":{home:4.7,away:3.8},"D.C. United":{home:4.6,away:3.8},"Chicago Fire FC":{home:4.6,away:3.8},"Colorado Rapids":{home:4.6,away:3.8},"FC Dallas":{home:4.7,away:3.9},"Austin FC":{home:4.8,away:4.0},"Charlotte FC":{home:4.6,away:3.8},"Orlando City SC":{home:4.7,away:3.9},"Toronto FC":{home:4.5,away:3.7},"Vancouver Whitecaps FC":{home:4.7,away:3.9},"San Jose Earthquakes":{home:4.5,away:3.7},"St. Louis City SC":{home:4.7,away:3.9},"CF Montréal":{home:4.6,away:3.8},"San Diego FC":{home:4.6,away:3.8},
+    "Flamengo":{home:6.4,away:5.5},"Estudiantes de La Plata":{home:5.4,away:4.5},"Cusco FC":{home:4.6,away:3.8},"Independiente Medellín":{home:5.0,away:4.2},"Nacional":{home:5.4,away:4.5},"Universitario":{home:5.0,away:4.2},"Coquimbo Unido":{home:4.7,away:3.9},"Deportes Tolima":{home:4.8,away:4.0},"Fluminense":{home:5.4,away:4.5},"Club Bolívar":{home:5.5,away:4.6},"Deportivo La Guaira":{home:4.6,away:3.8},"Independiente Rivadavia":{home:4.5,away:3.7},"Boca Juniors":{home:6.0,away:5.0},"Universidad Católica":{home:5.2,away:4.3},"Barcelona SC":{home:5.5,away:4.6},"Peñarol":{home:5.6,away:4.7},"Santa Fe":{home:4.9,away:4.1},"Platense":{home:4.6,away:3.8},"Cerro Porteño":{home:5.3,away:4.4},"Junior":{home:5.1,away:4.2},"Sporting Cristal":{home:5.1,away:4.3},"LDU Quito":{home:5.7,away:4.8},"Lanús":{home:4.9,away:4.0},"Always Ready":{home:5.0,away:4.2},"Mirassol":{home:4.6,away:3.8},"Independiente del Valle":{home:5.8,away:4.9},"Libertad":{home:5.1,away:4.2},"Rosario Central":{home:5.0,away:4.1},"Universidad Central":{home:4.5,away:3.7}
 };
 
 const GOAL_POWER_1T = {
@@ -394,26 +555,12 @@ const GOAL_POWER_1T = {
     "Leeds United":{home:0.70,away:0.58},"Burnley FC":{home:0.65,away:0.54},"Sheffield United":{home:0.63,away:0.52},"West Bromwich Albion":{home:0.61,away:0.50},"Norwich City":{home:0.62,away:0.51},"Hull City":{home:0.58,away:0.47},"Middlesbrough FC":{home:0.61,away:0.50},"Coventry City":{home:0.62,away:0.51},"Sunderland AFC":{home:0.61,away:0.50},"Swansea City":{home:0.59,away:0.48},"Watford FC":{home:0.62,away:0.51},"Bristol City":{home:0.58,away:0.47},"QPR":{home:0.57,away:0.46},"Stoke City":{home:0.58,away:0.47},"Sheffield Wednesday":{home:0.57,away:0.46},"Blackburn Rovers":{home:0.59,away:0.48},"Plymouth Argyle":{home:0.55,away:0.45},"Portsmouth FC":{home:0.58,away:0.47},"Derby County":{home:0.61,away:0.50},"Oxford United":{home:0.57,away:0.46},"Millwall FC":{home:0.58,away:0.47},"Cardiff City":{home:0.57,away:0.46},"Preston North End":{home:0.57,away:0.46},"Luton Town":{home:0.59,away:0.48},
     "Club Brugge KV":{home:0.76,away:0.63},"Anderlecht":{home:0.72,away:0.59},"KAA Gent":{home:0.68,away:0.56},"KRC Genk":{home:0.67,away:0.55},"R. Union Saint-Gilloise":{home:0.66,away:0.54},"Cercle Brugge KSV":{home:0.63,away:0.52},"Standard de Liège":{home:0.61,away:0.50},"KV Mechelen":{home:0.59,away:0.48},"STVV":{home:0.58,away:0.47},"OH Leuven":{home:0.57,away:0.46},"Beerschot VA":{home:0.57,away:0.46},"KV Kortrijk":{home:0.56,away:0.45},"Charleroi":{home:0.59,away:0.48},"KVC Westerlo":{home:0.56,away:0.45},"RFC Seraing":{home:0.54,away:0.43},"Zulte Waregem":{home:0.55,away:0.44},
     "América":{home:0.72,away:0.59},"Tigres UANL":{home:0.70,away:0.57},"Deportivo Guadalajara":{home:0.68,away:0.55},"Monterrey":{home:0.67,away:0.54},"Cruz Azul":{home:0.65,away:0.53},"CF Pachuca":{home:0.63,away:0.51},"UNAM Pumas":{home:0.62,away:0.50},"León":{home:0.61,away:0.49},"Atlas FC":{home:0.59,away:0.48},"Toluca FC":{home:0.61,away:0.50},"Club Necaxa":{home:0.57,away:0.46},"Santos Laguna":{home:0.59,away:0.48},"Club Tijuana":{home:0.57,away:0.46},"Atlético de San Luis":{home:0.58,away:0.47},"FC Juárez":{home:0.56,away:0.45},"Mazatlán FC":{home:0.55,away:0.44},"Querétaro FC":{home:0.54,away:0.43},"Puebla FC":{home:0.58,away:0.47},
-    // Libertadores 2026 — 32 equipos fase de grupos
-    "Flamengo":{home:0.80,away:0.66},"Estudiantes de La Plata":{home:0.67,away:0.55},"Cusco FC":{home:0.52,away:0.42},"Independiente Medellín":{home:0.60,away:0.49},
-    "Nacional":{home:0.67,away:0.55},"Universitario":{home:0.62,away:0.51},"Coquimbo Unido":{home:0.55,away:0.45},"Deportes Tolima":{home:0.58,away:0.47},
-    "Fluminense":{home:0.65,away:0.54},"Club Bolívar":{home:0.68,away:0.56},"Deportivo La Guaira":{home:0.54,away:0.44},"Independiente Rivadavia":{home:0.54,away:0.44},
-    "Boca Juniors":{home:0.74,away:0.61},"Cruzeiro":{home:0.63,away:0.52},"Universidad Católica":{home:0.64,away:0.53},"Barcelona SC":{home:0.68,away:0.55},
-    "Peñarol":{home:0.70,away:0.57},"Corinthians":{home:0.61,away:0.50},"Santa Fe":{home:0.59,away:0.48},"Platense":{home:0.56,away:0.46},
-    "Palmeiras":{home:0.78,away:0.64},"Cerro Porteño":{home:0.66,away:0.54},"Junior":{home:0.63,away:0.52},"Sporting Cristal":{home:0.63,away:0.52},
-    "LDU Quito":{home:0.72,away:0.58},"Lanús":{home:0.60,away:0.49},"Always Ready":{home:0.62,away:0.51},"Mirassol":{home:0.54,away:0.44},
-    "Independiente del Valle":{home:0.73,away:0.59},"Libertad":{home:0.63,away:0.52},"Rosario Central":{home:0.62,away:0.51},"Universidad Central":{home:0.53,away:0.43},
-    // MLS
-    "Inter Miami CF":{home:0.70,away:0.57},"LA Galaxy":{home:0.66,away:0.54},"Los Angeles FC":{home:0.67,away:0.55},
-    "Seattle Sounders FC":{home:0.65,away:0.53},"Portland Timbers":{home:0.63,away:0.52},"Philadelphia Union":{home:0.63,away:0.52},
-    "FC Cincinnati":{home:0.64,away:0.53},"Nashville SC":{home:0.62,away:0.51},"Columbus Crew":{home:0.64,away:0.53},
-    "Atlanta United FC":{home:0.62,away:0.51},"New York City FC":{home:0.63,away:0.52},"New York Red Bulls":{home:0.61,away:0.50},
-    "CF New England Revolution":{home:0.59,away:0.48},"Houston Dynamo FC":{home:0.61,away:0.50},"Real Salt Lake":{home:0.62,away:0.51},
-    "Minnesota United FC":{home:0.61,away:0.50},"Sporting Kansas City":{home:0.60,away:0.49},"D.C. United":{home:0.59,away:0.48},
-    "Chicago Fire FC":{home:0.59,away:0.48},"Colorado Rapids":{home:0.59,away:0.48},"FC Dallas":{home:0.61,away:0.50},
-    "Austin FC":{home:0.62,away:0.51},"Charlotte FC":{home:0.59,away:0.48},"Orlando City SC":{home:0.61,away:0.50},
-    "Toronto FC":{home:0.57,away:0.47},"Vancouver Whitecaps FC":{home:0.61,away:0.50},"San Jose Earthquakes":{home:0.57,away:0.47},
-    "St. Louis City SC":{home:0.61,away:0.50},"CF Montréal":{home:0.59,away:0.48},"San Diego FC":{home:0.59,away:0.48}
+    "Flamengo":{home:0.80,away:0.66},"Estudiantes de La Plata":{home:0.67,away:0.55},"Cusco FC":{home:0.52,away:0.42},"Independiente Medellín":{home:0.60,away:0.49},"Nacional":{home:0.67,away:0.55},"Universitario":{home:0.62,away:0.51},"Coquimbo Unido":{home:0.55,away:0.45},"Deportes Tolima":{home:0.58,away:0.47},"Fluminense":{home:0.65,away:0.54},"Club Bolívar":{home:0.68,away:0.56},"Deportivo La Guaira":{home:0.54,away:0.44},"Independiente Rivadavia":{home:0.54,away:0.44},"Boca Juniors":{home:0.74,away:0.61},"Universidad Católica":{home:0.64,away:0.53},"Barcelona SC":{home:0.68,away:0.55},"Peñarol":{home:0.70,away:0.57},"Santa Fe":{home:0.59,away:0.48},"Platense":{home:0.56,away:0.46},"Cerro Porteño":{home:0.66,away:0.54},"Junior":{home:0.63,away:0.52},"Sporting Cristal":{home:0.63,away:0.52},"LDU Quito":{home:0.72,away:0.58},"Lanús":{home:0.60,away:0.49},"Always Ready":{home:0.62,away:0.51},"Mirassol":{home:0.54,away:0.44},"Independiente del Valle":{home:0.73,away:0.59},"Libertad":{home:0.63,away:0.52},"Rosario Central":{home:0.62,away:0.51},"Universidad Central":{home:0.53,away:0.43},
+    "América Mineiro":{home:0.60,away:0.49},"Athletic Club":{home:0.54,away:0.44},"Atlético Goianiense":{home:0.55,away:0.45},"Avaí FC":{home:0.54,away:0.44},"Botafogo-SP":{home:0.55,away:0.45},"Ceará SC":{home:0.58,away:0.47},"CRB":{home:0.53,away:0.43},"Criciúma":{home:0.54,away:0.44},"Cuiabá":{home:0.56,away:0.46},"Goiás":{home:0.59,away:0.48},"Londrina":{home:0.51,away:0.41},"Náutico":{home:0.53,away:0.43},"Novorizontino":{home:0.57,away:0.46},"Operário-PR":{home:0.53,away:0.43},"Ponte Preta":{home:0.56,away:0.46},"São Bernardo FC":{home:0.52,away:0.42},"Sport Recife":{home:0.58,away:0.47},"Vila Nova":{home:0.52,away:0.42},
+    "Sporting CP":{home:0.83,away:0.69},"FC Porto":{home:0.80,away:0.67},"SL Benfica":{home:0.79,away:0.65},"SC Braga":{home:0.72,away:0.59},"FC Famalicão":{home:0.61,away:0.50},"Rio Ave FC":{home:0.59,away:0.48},"CD Santa Clara":{home:0.57,away:0.46},"FC Alverca":{home:0.55,away:0.45},"GD Estoril Praia":{home:0.58,away:0.47},"Gil Vicente FC":{home:0.57,away:0.46},"Vitória SC":{home:0.61,away:0.50},"Casa Pia AC":{home:0.58,away:0.47},"FC Arouca":{home:0.56,away:0.45},"CD Tondela":{home:0.57,away:0.46},"Moreirense FC":{home:0.57,away:0.46},"CD Nacional":{home:0.55,away:0.44},"Estrela da Amadora":{home:0.54,away:0.44},"SC Farense":{home:0.53,away:0.43},
+    "Lech Poznań":{home:0.71,away:0.58},"Raków Częstochowa":{home:0.68,away:0.56},"Jagiellonia Białystok":{home:0.66,away:0.54},"Legia Warszawa":{home:0.67,away:0.55},"Pogoń Szczecin":{home:0.63,away:0.52},"Górnik Zabrze":{home:0.61,away:0.50},"Zagłębie Lubin":{home:0.59,away:0.48},"Piast Gliwice":{home:0.58,away:0.47},"Wisła Płock":{home:0.58,away:0.47},"Motor Lublin":{home:0.57,away:0.46},"GKS Katowice":{home:0.58,away:0.47},"Cracovia":{home:0.59,away:0.48},"Widzew Łódź":{home:0.57,away:0.46},"Korona Kielce":{home:0.55,away:0.45},"Radomiak Radom":{home:0.57,away:0.46},"Lechia Gdańsk":{home:0.58,away:0.47},"Arka Gdynia":{home:0.56,away:0.46},"Bruk-Bet Termalica Nieciecza":{home:0.52,away:0.42},
+    "AEK Athens":{home:0.75,away:0.62},"PAOK":{home:0.73,away:0.60},"Olympiacos":{home:0.72,away:0.59},"Panathinaikos":{home:0.69,away:0.57},"Levadiakos":{home:0.55,away:0.45},"Aris":{home:0.62,away:0.51},"OFI Crete":{home:0.57,away:0.46},"Volos NFC":{home:0.55,away:0.45},"Atromitos":{home:0.58,away:0.47},"A.E. Kifisia":{home:0.54,away:0.44},"Panetolikos":{home:0.56,away:0.46},"Panserraikos":{home:0.53,away:0.43},"Asteras Tripolis":{home:0.57,away:0.46},"AEL":{home:0.60,away:0.49},
+    "Inter Miami CF":{home:0.70,away:0.57},"LA Galaxy":{home:0.66,away:0.54},"Los Angeles FC":{home:0.67,away:0.55},"Seattle Sounders FC":{home:0.65,away:0.53},"Portland Timbers":{home:0.63,away:0.52},"Philadelphia Union":{home:0.63,away:0.52},"FC Cincinnati":{home:0.64,away:0.53},"Nashville SC":{home:0.62,away:0.51},"Columbus Crew":{home:0.64,away:0.53},"Atlanta United FC":{home:0.62,away:0.51},"New York City FC":{home:0.63,away:0.52},"New York Red Bulls":{home:0.61,away:0.50},"CF New England Revolution":{home:0.59,away:0.48},"Houston Dynamo FC":{home:0.61,away:0.50},"Real Salt Lake":{home:0.62,away:0.51},"Minnesota United FC":{home:0.61,away:0.50},"Sporting Kansas City":{home:0.60,away:0.49},"D.C. United":{home:0.59,away:0.48},"Chicago Fire FC":{home:0.59,away:0.48},"Colorado Rapids":{home:0.59,away:0.48},"FC Dallas":{home:0.61,away:0.50},"Austin FC":{home:0.62,away:0.51},"Charlotte FC":{home:0.59,away:0.48},"Orlando City SC":{home:0.61,away:0.50},"Toronto FC":{home:0.57,away:0.47},"Vancouver Whitecaps FC":{home:0.61,away:0.50},"San Jose Earthquakes":{home:0.57,away:0.47},"St. Louis City SC":{home:0.61,away:0.50},"CF Montréal":{home:0.59,away:0.48},"San Diego FC":{home:0.59,away:0.48}
 };
 
 const GOAL_POWER_FULL = {
@@ -427,26 +574,12 @@ const GOAL_POWER_FULL = {
     "Leeds United":{home:1.47,away:1.13},"Burnley FC":{home:1.36,away:1.05},"Sheffield United":{home:1.32,away:1.01},"West Bromwich Albion":{home:1.28,away:0.98},"Norwich City":{home:1.30,away:0.99},"Middlesbrough FC":{home:1.28,away:0.98},"Coventry City":{home:1.30,away:0.99},"Sunderland AFC":{home:1.28,away:0.98},"Watford FC":{home:1.30,away:0.99},"Luton Town":{home:1.24,away:0.94},"Swansea City":{home:1.24,away:0.94},"Blackburn Rovers":{home:1.24,away:0.94},"Bristol City":{home:1.22,away:0.92},"Hull City":{home:1.22,away:0.92},"Portsmouth FC":{home:1.22,away:0.92},"Derby County":{home:1.28,away:0.98},"Stoke City":{home:1.22,away:0.92},"Millwall FC":{home:1.22,away:0.92},"Preston North End":{home:1.20,away:0.90},"QPR":{home:1.20,away:0.90},"Sheffield Wednesday":{home:1.20,away:0.90},"Oxford United":{home:1.20,away:0.90},"Cardiff City":{home:1.20,away:0.90},"Plymouth Argyle":{home:1.16,away:0.88},
     "Club Brugge KV":{home:1.65,away:1.30},"Anderlecht":{home:1.58,away:1.24},"KAA Gent":{home:1.48,away:1.14},"KRC Genk":{home:1.45,away:1.12},"R. Union Saint-Gilloise":{home:1.42,away:1.09},"Cercle Brugge KSV":{home:1.34,away:1.02},"Standard de Liège":{home:1.28,away:0.98},"KV Mechelen":{home:1.24,away:0.94},"STVV":{home:1.22,away:0.92},"OH Leuven":{home:1.20,away:0.90},"Beerschot VA":{home:1.20,away:0.90},"KV Kortrijk":{home:1.18,away:0.88},"Charleroi":{home:1.24,away:0.94},"KVC Westerlo":{home:1.18,away:0.88},"RFC Seraing":{home:1.14,away:0.84},"Zulte Waregem":{home:1.16,away:0.86},
     "América":{home:1.52,away:1.17},"Tigres UANL":{home:1.48,away:1.13},"Deportivo Guadalajara":{home:1.44,away:1.10},"Monterrey":{home:1.42,away:1.08},"Cruz Azul":{home:1.36,away:1.05},"CF Pachuca":{home:1.32,away:1.01},"UNAM Pumas":{home:1.30,away:0.99},"León":{home:1.28,away:0.98},"Atlas FC":{home:1.24,away:0.94},"Toluca FC":{home:1.28,away:0.98},"Club Necaxa":{home:1.20,away:0.90},"Santos Laguna":{home:1.24,away:0.94},"Club Tijuana":{home:1.20,away:0.90},"Atlético de San Luis":{home:1.22,away:0.92},"FC Juárez":{home:1.18,away:0.88},"Mazatlán FC":{home:1.16,away:0.86},"Querétaro FC":{home:1.14,away:0.84},"Puebla FC":{home:1.22,away:0.92},
-    // Libertadores 2026 — 32 equipos fase de grupos
-    "Flamengo":{home:1.70,away:1.35},"Estudiantes de La Plata":{home:1.40,away:1.08},"Cusco FC":{home:1.08,away:0.82},"Independiente Medellín":{home:1.26,away:0.96},
-    "Nacional":{home:1.40,away:1.07},"Universitario":{home:1.30,away:0.99},"Coquimbo Unido":{home:1.14,away:0.87},"Deportes Tolima":{home:1.20,away:0.92},
-    "Fluminense":{home:1.36,away:1.05},"Club Bolívar":{home:1.44,away:1.10},"Deportivo La Guaira":{home:1.12,away:0.86},"Independiente Rivadavia":{home:1.12,away:0.86},
-    "Boca Juniors":{home:1.58,away:1.24},"Cruzeiro":{home:1.32,away:1.01},"Universidad Católica":{home:1.34,away:1.03},"Barcelona SC":{home:1.44,away:1.10},
-    "Peñarol":{home:1.45,away:1.12},"Corinthians":{home:1.28,away:0.98},"Santa Fe":{home:1.24,away:0.94},"Platense":{home:1.16,away:0.88},
-    "Palmeiras":{home:1.65,away:1.32},"Cerro Porteño":{home:1.38,away:1.05},"Junior":{home:1.32,away:1.01},"Sporting Cristal":{home:1.32,away:1.01},
-    "LDU Quito":{home:1.50,away:1.15},"Lanús":{home:1.26,away:0.96},"Always Ready":{home:1.30,away:0.99},"Mirassol":{home:1.12,away:0.86},
-    "Independiente del Valle":{home:1.52,away:1.17},"Libertad":{home:1.32,away:1.01},"Rosario Central":{home:1.30,away:0.99},"Universidad Central":{home:1.10,away:0.84},
-    // MLS
-    "Inter Miami CF":{home:1.48,away:1.13},"LA Galaxy":{home:1.38,away:1.06},"Los Angeles FC":{home:1.40,away:1.08},
-    "Seattle Sounders FC":{home:1.36,away:1.05},"Portland Timbers":{home:1.32,away:1.01},"Philadelphia Union":{home:1.32,away:1.01},
-    "FC Cincinnati":{home:1.34,away:1.03},"Nashville SC":{home:1.30,away:0.99},"Columbus Crew":{home:1.34,away:1.03},
-    "Atlanta United FC":{home:1.30,away:0.99},"New York City FC":{home:1.32,away:1.01},"New York Red Bulls":{home:1.28,away:0.98},
-    "CF New England Revolution":{home:1.24,away:0.94},"Houston Dynamo FC":{home:1.28,away:0.98},"Real Salt Lake":{home:1.30,away:0.99},
-    "Minnesota United FC":{home:1.28,away:0.98},"Sporting Kansas City":{home:1.26,away:0.96},"D.C. United":{home:1.24,away:0.94},
-    "Chicago Fire FC":{home:1.24,away:0.94},"Colorado Rapids":{home:1.24,away:0.94},"FC Dallas":{home:1.28,away:0.98},
-    "Austin FC":{home:1.30,away:0.99},"Charlotte FC":{home:1.24,away:0.94},"Orlando City SC":{home:1.28,away:0.98},
-    "Toronto FC":{home:1.20,away:0.90},"Vancouver Whitecaps FC":{home:1.28,away:0.98},"San Jose Earthquakes":{home:1.20,away:0.90},
-    "St. Louis City SC":{home:1.28,away:0.98},"CF Montréal":{home:1.24,away:0.94},"San Diego FC":{home:1.24,away:0.94}
+    "Flamengo":{home:1.70,away:1.35},"Estudiantes de La Plata":{home:1.40,away:1.08},"Cusco FC":{home:1.08,away:0.82},"Independiente Medellín":{home:1.26,away:0.96},"Nacional":{home:1.40,away:1.07},"Universitario":{home:1.30,away:0.99},"Coquimbo Unido":{home:1.14,away:0.87},"Deportes Tolima":{home:1.20,away:0.92},"Fluminense":{home:1.36,away:1.05},"Club Bolívar":{home:1.44,away:1.10},"Deportivo La Guaira":{home:1.12,away:0.86},"Independiente Rivadavia":{home:1.12,away:0.86},"Boca Juniors":{home:1.58,away:1.24},"Universidad Católica":{home:1.34,away:1.03},"Barcelona SC":{home:1.44,away:1.10},"Peñarol":{home:1.45,away:1.12},"Santa Fe":{home:1.24,away:0.94},"Platense":{home:1.16,away:0.88},"Cerro Porteño":{home:1.38,away:1.05},"Junior":{home:1.32,away:1.01},"Sporting Cristal":{home:1.32,away:1.01},"LDU Quito":{home:1.50,away:1.15},"Lanús":{home:1.26,away:0.96},"Always Ready":{home:1.30,away:0.99},"Mirassol":{home:1.12,away:0.86},"Independiente del Valle":{home:1.52,away:1.17},"Libertad":{home:1.32,away:1.01},"Rosario Central":{home:1.30,away:0.99},"Universidad Central":{home:1.10,away:0.84},
+    "América Mineiro":{home:1.26,away:0.96},"Athletic Club":{home:1.12,away:0.85},"Atlético Goianiense":{home:1.16,away:0.88},"Avaí FC":{home:1.12,away:0.85},"Botafogo-SP":{home:1.14,away:0.87},"Ceará SC":{home:1.20,away:0.92},"CRB":{home:1.10,away:0.83},"Criciúma":{home:1.12,away:0.85},"Cuiabá":{home:1.16,away:0.88},"Goiás":{home:1.22,away:0.93},"Londrina":{home:1.06,away:0.80},"Náutico":{home:1.10,away:0.83},"Novorizontino":{home:1.18,away:0.90},"Operário-PR":{home:1.10,away:0.83},"Ponte Preta":{home:1.16,away:0.88},"São Bernardo FC":{home:1.08,away:0.82},"Sport Recife":{home:1.20,away:0.92},"Vila Nova":{home:1.08,away:0.82},
+    "Sporting CP":{home:1.76,away:1.42},"FC Porto":{home:1.70,away:1.36},"SL Benfica":{home:1.68,away:1.34},"SC Braga":{home:1.52,away:1.17},"FC Famalicão":{home:1.28,away:0.98},"Rio Ave FC":{home:1.24,away:0.94},"CD Santa Clara":{home:1.20,away:0.90},"FC Alverca":{home:1.14,away:0.86},"GD Estoril Praia":{home:1.22,away:0.92},"Gil Vicente FC":{home:1.20,away:0.90},"Vitória SC":{home:1.28,away:0.98},"Casa Pia AC":{home:1.22,away:0.92},"FC Arouca":{home:1.18,away:0.88},"CD Tondela":{home:1.20,away:0.90},"Moreirense FC":{home:1.20,away:0.90},"CD Nacional":{home:1.14,away:0.86},"Estrela da Amadora":{home:1.12,away:0.84},"SC Farense":{home:1.10,away:0.82},
+    "Lech Poznań":{home:1.50,away:1.15},"Raków Częstochowa":{home:1.44,away:1.10},"Jagiellonia Białystok":{home:1.40,away:1.07},"Legia Warszawa":{home:1.42,away:1.09},"Pogoń Szczecin":{home:1.34,away:1.02},"Górnik Zabrze":{home:1.28,away:0.98},"Zagłębie Lubin":{home:1.24,away:0.94},"Piast Gliwice":{home:1.22,away:0.92},"Wisła Płock":{home:1.22,away:0.92},"Motor Lublin":{home:1.20,away:0.90},"GKS Katowice":{home:1.22,away:0.92},"Cracovia":{home:1.24,away:0.94},"Widzew Łódź":{home:1.20,away:0.90},"Korona Kielce":{home:1.14,away:0.86},"Radomiak Radom":{home:1.20,away:0.90},"Lechia Gdańsk":{home:1.22,away:0.92},"Arka Gdynia":{home:1.18,away:0.88},"Bruk-Bet Termalica Nieciecza":{home:1.08,away:0.82},
+    "AEK Athens":{home:1.60,away:1.26},"PAOK":{home:1.56,away:1.22},"Olympiacos":{home:1.54,away:1.20},"Panathinaikos":{home:1.48,away:1.14},"Levadiakos":{home:1.14,away:0.86},"Aris":{home:1.30,away:0.99},"OFI Crete":{home:1.20,away:0.90},"Volos NFC":{home:1.14,away:0.86},"Atromitos":{home:1.22,away:0.92},"A.E. Kifisia":{home:1.12,away:0.84},"Panetolikos":{home:1.16,away:0.88},"Panserraikos":{home:1.10,away:0.83},"Asteras Tripolis":{home:1.20,away:0.90},"AEL":{home:1.26,away:0.96},
+    "Inter Miami CF":{home:1.48,away:1.13},"LA Galaxy":{home:1.38,away:1.06},"Los Angeles FC":{home:1.40,away:1.08},"Seattle Sounders FC":{home:1.36,away:1.05},"Portland Timbers":{home:1.32,away:1.01},"Philadelphia Union":{home:1.32,away:1.01},"FC Cincinnati":{home:1.34,away:1.03},"Nashville SC":{home:1.30,away:0.99},"Columbus Crew":{home:1.34,away:1.03},"Atlanta United FC":{home:1.30,away:0.99},"New York City FC":{home:1.32,away:1.01},"New York Red Bulls":{home:1.28,away:0.98},"CF New England Revolution":{home:1.24,away:0.94},"Houston Dynamo FC":{home:1.28,away:0.98},"Real Salt Lake":{home:1.30,away:0.99},"Minnesota United FC":{home:1.28,away:0.98},"Sporting Kansas City":{home:1.26,away:0.96},"D.C. United":{home:1.24,away:0.94},"Chicago Fire FC":{home:1.24,away:0.94},"Colorado Rapids":{home:1.24,away:0.94},"FC Dallas":{home:1.28,away:0.98},"Austin FC":{home:1.30,away:0.99},"Charlotte FC":{home:1.24,away:0.94},"Orlando City SC":{home:1.28,away:0.98},"Toronto FC":{home:1.20,away:0.90},"Vancouver Whitecaps FC":{home:1.28,away:0.98},"San Jose Earthquakes":{home:1.20,away:0.90},"St. Louis City SC":{home:1.28,away:0.98},"CF Montréal":{home:1.24,away:0.94},"San Diego FC":{home:1.24,away:0.94}
 };
 
 // ══════════════════════════════════════════
@@ -457,8 +590,8 @@ let teamMap = {};
 let apiAvailable = false;
 const statsCache = {};
 let activeMarkets = {ht:true, goles:true, btts:true, corn:true};
-// key → {bsdId, seasonId} desde la API
 let bsdLeagueMap = {};
+let eloRatings = {}; // NUEVO: Cache de ratings Elo por liga
 
 // ══════════════════════════════════════════
 // PLATT CALIBRATION
@@ -497,6 +630,100 @@ function uncertaintyBand(prob, nMatches) {
 }
 
 // ══════════════════════════════════════════
+// FASE 2: MODELO ATAQUE × DEFENSA (BIVARIADO)
+// ══════════════════════════════════════════
+function bivariateLambdas(homeAtk, homeDef, awayAtk, awayDef, leagueMean, homeAdv = 1.08) {
+    const normHomeAtk = Math.max(0.5, homeAtk / leagueMean);
+    const normHomeDef = Math.max(0.5, homeDef / leagueMean);
+    const normAwayAtk = Math.max(0.5, awayAtk / leagueMean);
+    const normAwayDef = Math.max(0.5, awayDef / leagueMean);
+    
+    return {
+        home: leagueMean * normHomeAtk * normAwayDef * homeAdv,
+        away: leagueMean * normAwayAtk * normHomeDef
+    };
+}
+
+// ══════════════════════════════════════════
+// FASE 3: ELO RATINGS DINÁMICOS
+// ══════════════════════════════════════════
+async function calculateEloRatings(leagueId, seasonId) {
+    const cacheKey = `${leagueId}_${seasonId}`;
+    if (eloRatings[cacheKey]) return eloRatings[cacheKey];
+    
+    try {
+        const events = await bsdFetchAll(`/events/?season=${seasonId}&league=${leagueId}&limit=500`);
+        events.sort((a, b) => new Date(a.start_date || a.date) - new Date(b.start_date || b.date));
+        
+        const ratings = {};
+        const K = 32;
+        
+        events.forEach(match => {
+            const home = match.home_team_obj?.name || match.home_team;
+            const away = match.away_team_obj?.name || match.away_team;
+            if (!home || !away) return;
+            
+            const homeScore = Number(match.home_score || 0);
+            const awayScore = Number(match.away_score || 0);
+            const status = (match.status || '').toUpperCase();
+            if (!['FT','FINISHED','AET','PEN','FULL_TIME'].includes(status) && !status.includes('FT')) return;
+            
+            if (!ratings[home]) ratings[home] = { elo: 1500, matches: 0 };
+            if (!ratings[away]) ratings[away] = { elo: 1500, matches: 0 };
+            
+            const homeElo = ratings[home].elo;
+            const awayElo = ratings[away].elo;
+            
+            const expectedHome = 1 / (1 + Math.pow(10, (awayElo - homeElo) / 400));
+            
+            let actualHome = homeScore > awayScore ? 1 : homeScore === awayScore ? 0.5 : 0;
+            
+            ratings[home].elo = homeElo + K * (actualHome - expectedHome);
+            ratings[away].elo = awayElo + K * ((1 - actualHome) - (1 - expectedHome));
+            ratings[home].matches++;
+            ratings[away].matches++;
+        });
+        
+        eloRatings[cacheKey] = ratings;
+        return ratings;
+    } catch(e) {
+        return {};
+    }
+}
+
+// ══════════════════════════════════════════
+// FASE 5: VENTAJA POR ALTITUD
+// ══════════════════════════════════════════
+function getAltitudeAdjustment(homeTeam, awayTeam) {
+    const homeAltitude = ALTITUDE_TEAMS[homeTeam];
+    const awayAltitude = ALTITUDE_TEAMS[awayTeam];
+    
+    let homeAdv = 1.08;
+    let awayPenalty = 1.0;
+    let contextTags = [];
+    
+    if (homeAltitude) {
+        homeAdv = homeAltitude.advantage;
+        contextTags.push({
+            text: `🏔 Altitud local: ${homeAltitude.altitude}`,
+            type: 'altitude'
+        });
+    }
+    
+    if (awayAltitude && !homeAltitude) {
+        // Visitante acostumbrado a altura, pero juega al nivel del mar
+        // Ligera ventaja física
+        homeAdv = 1.10;
+        contextTags.push({
+            text: '🏔 Visitante adaptado a altura',
+            type: 'altitude'
+        });
+    }
+    
+    return { homeAdv, awayPenalty, contextTags };
+}
+
+// ══════════════════════════════════════════
 // BSD API
 // ══════════════════════════════════════════
 async function bsdFetch(path) {
@@ -512,30 +739,49 @@ async function bsdFetchAll(path) {
         const data=await res.json();
         results=results.concat(data.results||[]);
         url=data.next||null;
-        if(results.length>=200) break;
+        if(results.length>=300) break;
     }
     return results;
 }
 
+// ══════════════════════════════════════════
+// FASE 4: xG EXTRACTION
+// ══════════════════════════════════════════
 function extractMatchStats(match, role) {
     const s=match.stats||match.statistics||{}, ls=match.live_stats||{};
-    let corners=null, goals1t=null, goalsFull=null;
+    let corners=null, goals1t=null, goalsFull=null, xG=null, goalsConceded=null;
+    
     if(s[role]?.corner_kicks!=null) corners=s[role].corner_kicks;
     else if(ls[role]?.corner_kicks!=null) corners=ls[role].corner_kicks;
     else if(role==='home'&&match.home_corners!=null) corners=match.home_corners;
     else if(role==='away'&&match.away_corners!=null) corners=match.away_corners;
+    
     if(role==='home'&&match.home_score_ht!=null) goals1t=match.home_score_ht;
     if(role==='away'&&match.away_score_ht!=null) goals1t=match.away_score_ht;
-    if(role==='home'&&match.home_score!=null) goalsFull=match.home_score;
-    if(role==='away'&&match.away_score!=null) goalsFull=match.away_score;
-    return {corners,goals1t,goalsFull};
+    
+    if(role==='home') {
+        if(match.home_score!=null) goalsFull=match.home_score;
+        if(match.away_score!=null) goalsConceded=match.away_score;
+    }
+    if(role==='away') {
+        if(match.away_score!=null) goalsFull=match.away_score;
+        if(match.home_score!=null) goalsConceded=match.home_score;
+    }
+    
+    // NUEVO: Extraer xG
+    if(s[role]?.expected_goals!=null) xG=s[role].expected_goals;
+    else if(ls[role]?.expected_goals!=null) xG=ls[role].expected_goals;
+    else if(role==='home'&&match.home_xg!=null) xG=match.home_xg;
+    else if(role==='away'&&match.away_xg!=null) xG=match.away_xg;
+    
+    return {corners,goals1t,goalsFull,xG,goalsConceded};
 }
 
 async function getTeamStats(teamId, teamName, role, seasonId) {
     const key=`${teamId}_${seasonId}_${role}`;
     if(statsCache[key]) return statsCache[key];
     try {
-        const events=await bsdFetchAll(`/events/?team=${teamId}&season=${seasonId}&limit=200`);
+        const events=await bsdFetchAll(`/events/?team=${teamId}&season=${seasonId}&limit=300`);
         const finished=events.filter(m=>{
             const st=(m.status||'').toUpperCase();
             const ok=['FT','FINISHED','AET','PEN','FULL_TIME'].includes(st)||st.includes('FT');
@@ -547,7 +793,7 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
 
         if(finished.length<3) return null;
         const weights=finished.map((_,i)=>Math.exp(0.15*i));
-        let tC=0,wC=0,tG=0,wG=0,tGF=0,wGF=0;
+        let tC=0,wC=0,tG=0,wG=0,tGF=0,wGF=0,tGC=0,wGC=0,tXG=0,wXG=0;
         const form=[];
         finished.slice(-5).forEach(m=>{
             const hs=Number(m.home_score||0),as=Number(m.away_score||0);
@@ -555,13 +801,19 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
             else{if(as>hs)form.push('w');else if(as===hs)form.push('d');else form.push('l');}
         });
         finished.forEach((m,i)=>{
-            const w=weights[i], {corners,goals1t,goalsFull}=extractMatchStats(m,role);
-            if(corners!=null){tC+=Number(corners)*w;wC+=w;}
-            if(goals1t!=null){tG+=Number(goals1t)*w;wG+=w;}
-            if(goalsFull!=null){tGF+=Number(goalsFull)*w;wGF+=w;}
+            const w=weights[i], stats=extractMatchStats(m,role);
+            if(stats.corners!=null){tC+=Number(stats.corners)*w;wC+=w;}
+            if(stats.goals1t!=null){tG+=Number(stats.goals1t)*w;wG+=w;}
+            if(stats.goalsFull!=null){tGF+=Number(stats.goalsFull)*w;wGF+=w;}
+            if(stats.goalsConceded!=null){tGC+=Number(stats.goalsConceded)*w;wGC+=w;}
+            if(stats.xG!=null){tXG+=Number(stats.xG)*w;wXG+=w;}
         });
         const result={
-            corners:wC>0?tC/wC:null, goals1t:wG>0?tG/wG:null, goalsFull:wGF>0?tGF/wGF:null,
+            corners:wC>0?tC/wC:null,
+            goals1t:wG>0?tG/wG:null,
+            goalsFull:wGF>0?tGF/wGF:null,
+            goalsConceded:wGC>0?tGC/wGC:null,
+            xG:wXG>0?tXG/wXG:null,
             matches:finished.length, form, fromApi:true
         };
         statsCache[key]=result;
@@ -599,8 +851,9 @@ function poissonOver(lambda,threshold){return Math.min(98,Math.max(2,(1-poissonP
 function negBinExact(mu,r,k){const p=r/(r+mu);let logP=0;for(let i=0;i<k;i++)logP+=Math.log(r+i)-Math.log(i+1);logP+=r*Math.log(p)+k*Math.log(1-p);return Math.exp(logP);}
 function negBinOver(mu,threshold,r=6.0){const k=Math.floor(threshold);let cdf=0;for(let i=0;i<=k;i++)cdf+=negBinExact(mu,r,i);return Math.min(98,Math.max(2,(1-cdf)*100));}
 function dixonColesTau(x,y,lH,lA,rho){if(x===0&&y===0)return 1-lH*lA*rho;if(x===0&&y===1)return 1+lH*rho;if(x===1&&y===0)return 1+lA*rho;if(x===1&&y===1)return 1-rho;return 1;}
-function calcResultProbs(lambdaH,lambdaA){
-    const rho=-0.13;let pH=0,pD=0,pA=0;
+function calcResultProbs(lambdaH,lambdaA,leagueKey='default'){
+    const rho=DIXON_COLES_RHO[leagueKey]||DIXON_COLES_RHO.default;
+    let pH=0,pD=0,pA=0;
     for(let h=0;h<=10;h++)for(let a=0;a<=10;a++){
         let p=poissonExact(lambdaH,h)*poissonExact(lambdaA,a);
         if(h<=1&&a<=1)p*=dixonColesTau(h,a,lambdaH,lambdaA,rho);
@@ -609,8 +862,8 @@ function calcResultProbs(lambdaH,lambdaA){
     const t=pH+pD+pA;
     return{home:+(pH/t*100).toFixed(1),draw:+(pD/t*100).toFixed(1),away:+(pA/t*100).toFixed(1)};
 }
-function calcBTTS(lambdaH,lambdaA){
-    const rho=-0.13;
+function calcBTTS(lambdaH,lambdaA,leagueKey='default'){
+    const rho=DIXON_COLES_RHO[leagueKey]||DIXON_COLES_RHO.default;
     const p00=poissonExact(lambdaH,0)*poissonExact(lambdaA,0)*dixonColesTau(0,0,lambdaH,lambdaA,rho);
     return Math.min(98,Math.max(2,(1-Math.exp(-lambdaH)-Math.exp(-lambdaA)+p00)*100));
 }
@@ -640,19 +893,15 @@ function cardClassFor(p){return p>=65?'high':p>=42?'mid':'low';}
 function setApiStatus(state,text){document.getElementById('api-dot').className=`api-dot ${state}`;document.getElementById('api-status-text').textContent=text;}
 
 // ══════════════════════════════════════════
-// MAPEO MEJORADO BSD → LIGAS
-// Función que compara múltiples nombres alternativos
-// para resolver el problema de ligas que no conectan
+// MAPEO BSD → LIGAS
 // ══════════════════════════════════════════
 function matchLeagueName(bsdLeagueName, ligaKey) {
     const liga = LIGAS[ligaKey];
     if (!liga) return false;
-    // Normalizar: quitar tildes, lowercase, trim
     const norm = s => s.trim().toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
         .replace(/\s+/g,' ');
     const bsdNorm = norm(bsdLeagueName);
-    // Solo comparación EXACTA — evita falsos positivos entre ligas con nombres similares
     if (bsdNorm === norm(liga.bsdName)) return true;
     if (liga.bsdNameAlt) {
         for (const alt of liga.bsdNameAlt) {
@@ -663,15 +912,13 @@ function matchLeagueName(bsdLeagueName, ligaKey) {
 }
 
 // ══════════════════════════════════════════
-// INIT: LEAGUE PILLS + BSD API
+// INIT
 // ══════════════════════════════════════════
 window.onload = async () => {
     renderLeaguePills();
     renderMarketToggles();
-    // Mostrar offline inmediatamente — se actualizará si la API responde
     setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
 
-    // Intentar conectar con la API con timeout de 8 segundos
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
@@ -708,14 +955,10 @@ window.onload = async () => {
         if (mapped > 0) {
             setApiStatus('live', '🟢 BSD API — ' + mapped + '/' + Object.keys(LIGAS).length + ' ligas activas');
             apiAvailable = true;
-            document.getElementById('engine-badge').textContent = '🛰 BSD + Dixon-Coles + Platt + NegBin-v';
-        } else {
-            setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
+            document.getElementById('engine-badge').textContent = '🛰 BSD + Elo + Atk×Def + xG + Altitud · v2.0';
         }
     } catch(e) {
         clearTimeout(timeoutId);
-        // No mostrar error en consola — modo offline es comportamiento esperado
-        setApiStatus('error', '🟡 Modo offline — datos históricos calibrados');
     }
 };
 
@@ -783,7 +1026,6 @@ async function loadTeams(key) {
     Object.keys(statsCache).forEach(k=>delete statsCache[k]);
 
     const liga=LIGAS[key];
-    // Lista offline = fuente de verdad de nombres. Sin mezcla. Sin duplicados.
     const teams = liga.teams;
 
     if(apiAvailable && bsdLeagueMap[key]){
@@ -797,14 +1039,12 @@ async function loadTeams(key) {
                 apiTeams = data.results || [];
             }
 
-            // Deduplicar por ID
             const seenIds = new Set();
             const uniq = apiTeams.filter(t => {
                 if(seenIds.has(t.id)) return false;
                 seenIds.add(t.id); return true;
             });
 
-            // Mapear: offline name -> API id (comparacion normalizada)
             const normName = s => s.trim().toLowerCase()
                 .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');
             teams.forEach(offlineName => {
@@ -819,8 +1059,13 @@ async function loadTeams(key) {
 
             const mapped = Object.keys(teamMap).length;
             setApiStatus('live','🟢 BSD — '+liga.name+' ('+mapped+'/'+teams.length+' live)');
+            
+            // NUEVO: Precargar ratings Elo
+            if(mapped > 4) {
+                calculateEloRatings(bsdLeagueMap[key].bsdId, bsdLeagueMap[key].seasonId)
+                    .catch(() => {});
+            }
         } catch(e) {
-            console.error('Error cargando equipos:', e);
             setApiStatus('error','🟡 Equipos offline — API no disponible');
         }
     } else if(apiAvailable && !bsdLeagueMap[key]){
@@ -833,13 +1078,12 @@ async function loadTeams(key) {
 function fillSelects(teams) {
     const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
     hSel.innerHTML=aSel.innerHTML='<option value="">— Seleccionar —</option>';
-    // Lista ya es unica y sin duplicados — solo ordenar
     [...teams].sort().forEach(n=>{hSel.add(new Option(n,n));aSel.add(new Option(n,n));});
     hSel.disabled=aSel.disabled=false;
 }
 
 // ══════════════════════════════════════════
-// CÁLCULO PRINCIPAL
+// CÁLCULO PRINCIPAL (MEJORADO CON TODAS LAS FASES)
 // ══════════════════════════════════════════
 document.getElementById('calc-btn').onclick = async () => {
     const hSel=document.getElementById('home-team'), aSel=document.getElementById('away-team');
@@ -857,13 +1101,31 @@ document.getElementById('calc-btn').onclick = async () => {
     const resultsEl=document.getElementById('results'), loadingEl=document.getElementById('loading-indicator'), outputEl=document.getElementById('output');
     resultsEl.classList.remove('hidden');loadingEl.classList.remove('hidden');outputEl.classList.add('hidden');
 
+    // FASE 5: Ajuste por altitud
+    const altitude = getAltitudeAdjustment(home, away);
+    let homeAdvantage = altitude.homeAdv;
+
+    // FASE 3: Obtener ratings Elo
+    let homeElo = 1500, awayElo = 1500;
+    if(bsdInfo) {
+        const eloCacheKey = `${bsdInfo.bsdId}_${bsdInfo.seasonId}`;
+        if(!eloRatings[eloCacheKey]) {
+            document.getElementById('loading-text').textContent = 'Calculando ratings Elo...';
+            document.getElementById('loading-sub').textContent = 'Análisis histórico de rendimiento';
+            await calculateEloRatings(bsdInfo.bsdId, bsdInfo.seasonId);
+        }
+        const elos = eloRatings[eloCacheKey] || {};
+        if(elos[home]) homeElo = elos[home].elo;
+        if(elos[away]) awayElo = elos[away].elo;
+    }
+
     let homeStats=null, awayStats=null;
     if(homeId&&awayId&&seasonId&&apiAvailable){
         document.getElementById('loading-text').textContent=`Analizando ${home.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent=`Ponderando últimos ${MATCHES_TO_USE} partidos`;
+        document.getElementById('loading-sub').textContent=`Ponderando últimos ${MATCHES_TO_USE} partidos (xG + goles)`;
         homeStats=await getTeamStats(homeId,home,'home',seasonId);
         document.getElementById('loading-text').textContent=`Analizando ${away.split(' ').slice(-1)[0]}...`;
-        document.getElementById('loading-sub').textContent='Calibración Platt + NegBin variable...';
+        document.getElementById('loading-sub').textContent='Modelo Ataque×Defensa + Calibración Platt...';
         awayStats=await getTeamStats(awayId,away,'away',seasonId);
     }
 
@@ -871,12 +1133,47 @@ document.getElementById('calc-btn').onclick = async () => {
     const leagueCornerMean=leagueAvg/2, leagueGoalMean=(leagueAvg/10)*1.35, leagueGoalFMean=leagueAvg/10*1.05;
     const totalMatchesUsed=homeMatchesC+awayMatchesC;
 
+    // FASE 4: Preferir xG sobre goles reales cuando esté disponible
+    let homeGoalF, awayGoalF, homeGoal1T, awayGoal1T, homeGoalsConceded, awayGoalsConceded;
+    
+    // Goles full (con preferencia xG)
+    if(homeStats?.xG && homeMatchesC >= 5) {
+        homeGoalF = regressionBlend(homeStats.xG, leagueGoalFMean*1.10, homeMatchesC);
+    } else if(homeStats?.goalsFull) {
+        homeGoalF = regressionBlend(homeStats.goalsFull, leagueGoalFMean*1.10, homeMatchesC);
+    } else {
+        homeGoalF = fallbackGoalsFull(home, 'home', leagueAvg);
+    }
+    
+    if(awayStats?.xG && awayMatchesC >= 5) {
+        awayGoalF = regressionBlend(awayStats.xG, leagueGoalFMean*0.90, awayMatchesC);
+    } else if(awayStats?.goalsFull) {
+        awayGoalF = regressionBlend(awayStats.goalsFull, leagueGoalFMean*0.90, awayMatchesC);
+    } else {
+        awayGoalF = fallbackGoalsFull(away, 'away', leagueAvg);
+    }
+    
+    // Goles 1T (sin xG específico para HT, usamos goles reales)
+    homeGoal1T = homeStats?.fromApi ? regressionBlend(homeStats.goals1t ?? fallbackGoals1T(home,'home',leagueAvg), leagueGoalMean*1.10, homeMatchesC) : fallbackGoals1T(home,'home',leagueAvg);
+    awayGoal1T = awayStats?.fromApi ? regressionBlend(awayStats.goals1t ?? fallbackGoals1T(away,'away',leagueAvg), leagueGoalMean*0.90, awayMatchesC) : fallbackGoals1T(away,'away',leagueAvg);
+    
+    // Goles en contra (para modelo ataque×defensa)
+    homeGoalsConceded = homeStats?.fromApi ? regressionBlend(homeStats.goalsConceded ?? leagueGoalFMean*0.90, leagueGoalFMean*0.90, homeMatchesC) : leagueGoalFMean*0.90;
+    awayGoalsConceded = awayStats?.fromApi ? regressionBlend(awayStats.goalsConceded ?? leagueGoalFMean*1.10, leagueGoalFMean*1.10, awayMatchesC) : leagueGoalFMean*1.10;
+    
+    // Córners
     let homeCorn=homeStats?.fromApi?regressionBlend(homeStats.corners??fallbackCorners(home,'home',leagueAvg),leagueCornerMean*1.10,homeMatchesC):fallbackCorners(home,'home',leagueAvg);
     let awayCorn=awayStats?.fromApi?regressionBlend(awayStats.corners??fallbackCorners(away,'away',leagueAvg),leagueCornerMean*0.90,awayMatchesC):fallbackCorners(away,'away',leagueAvg);
-    let homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',leagueAvg),leagueGoalMean*1.10,homeMatchesC):fallbackGoals1T(home,'home',leagueAvg);
-    let awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',leagueAvg),leagueGoalMean*0.90,awayMatchesC):fallbackGoals1T(away,'away',leagueAvg);
-    let homeGoalF=homeStats?.fromApi?regressionBlend(homeStats.goalsFull??fallbackGoalsFull(home,'home',leagueAvg),leagueGoalFMean*1.10,homeMatchesC):fallbackGoalsFull(home,'home',leagueAvg);
-    let awayGoalF=awayStats?.fromApi?regressionBlend(awayStats.goalsFull??fallbackGoalsFull(away,'away',leagueAvg),leagueGoalFMean*0.90,awayMatchesC):fallbackGoalsFull(away,'away',leagueAvg);
+
+    // FASE 3: Ajuste Elo
+    const eloDiff = (homeElo - awayElo) / 400;
+    const eloAdjustment = 1 + (eloDiff * 0.12);
+    homeGoalF *= Math.max(0.85, Math.min(1.15, eloAdjustment));
+    awayGoalF *= Math.max(0.85, Math.min(1.15, 1/eloAdjustment));
+    homeGoal1T *= Math.max(0.88, Math.min(1.12, 1 + (eloDiff * 0.08)));
+    awayGoal1T *= Math.max(0.88, Math.min(1.12, 1 - (eloDiff * 0.08)));
+    homeCorn *= Math.max(0.90, Math.min(1.10, 1 + (eloDiff * 0.06)));
+    awayCorn *= Math.max(0.90, Math.min(1.10, 1 - (eloDiff * 0.06)));
 
     // Ajuste por forma
     const hFm=formMultiplier(homeStats?.form), aFm=formMultiplier(awayStats?.form);
@@ -884,27 +1181,51 @@ document.getElementById('calc-btn').onclick = async () => {
     homeGoal1T*=hFm; awayGoal1T*=aFm;
     homeCorn*=(hFm*0.5+0.5); awayCorn*=(aFm*0.5+0.5);
 
-    const lambdaCorn=+(homeCorn+awayCorn).toFixed(2);
+    // FASE 2: Modelo Ataque × Defensa para goles full
+    const bivLambdas = bivariateLambdas(homeGoalF, homeGoalsConceded, awayGoalF, awayGoalsConceded, leagueGoalFMean, homeAdvantage);
+    const lambdaH = +bivLambdas.home.toFixed(2);
+    const lambdaA = +bivLambdas.away.toFixed(2);
+
+    // Para HT y córners usamos el método original (no hay suficientes datos de defensa HT)
     const lambdaGoal=+(homeGoal1T+awayGoal1T).toFixed(2);
-    const lambdaH=+homeGoalF.toFixed(2), lambdaA=+awayGoalF.toFixed(2);
+    const lambdaCorn=+(homeCorn+awayCorn).toFixed(2);
     const usedApi=homeStats?.fromApi||awayStats?.fromApi;
 
     loadingEl.classList.add('hidden');
-    renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,usedApi,leagueAvg,negBinR,totalMatchesUsed,liga});
+    renderOutput({
+        home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,
+        homeStats,awayStats,usedApi,leagueAvg,negBinR,
+        totalMatchesUsed,liga,homeElo,awayElo,altitude
+    });
     outputEl.classList.remove('hidden');
     requestAnimationFrame(()=>requestAnimationFrame(animateBars));
     window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
 };
 
 // ══════════════════════════════════════════
-// RENDER
+// RENDER (MEJORADO CON CONTEXTO)
 // ══════════════════════════════════════════
-function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,usedApi,negBinR,totalMatchesUsed,liga}) {
+function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,usedApi,negBinR,totalMatchesUsed,liga,homeElo,awayElo,altitude}) {
 
     const homeForm=homeStats?.form||[], awayForm=awayStats?.form||[];
     function formDots(f){return f.map(r=>`<span class="form-dot ${r}">${r.toUpperCase()}</span>`).join('');}
     const homeTag=homeStats?.fromApi?'<span class="data-tag api">LIVE</span>':'<span class="data-tag off">EST</span>';
     const awayTag=awayStats?.fromApi?'<span class="data-tag api">LIVE</span>':'<span class="data-tag off">EST</span>';
+    
+    // Context tags
+    let contextHTML = '';
+    const allContextTags = [];
+    if(homeElo !== 1500 || awayElo !== 1500) {
+        allContextTags.push({text:`Elo: ${home.split(' ').slice(-1)[0]} ${homeElo.toFixed(0)} vs ${away.split(' ').slice(-1)[0]} ${awayElo.toFixed(0)}`, type:'elo'});
+    }
+    if(altitude.contextTags.length > 0) {
+        allContextTags.push(...altitude.contextTags);
+    }
+    if(allContextTags.length > 0) {
+        contextHTML = `<div class="context-tags">${allContextTags.map(t => 
+            `<span class="context-tag ${t.type}">${t.text}</span>`
+        ).join('')}</div>`;
+    }
 
     document.getElementById('match-header-container').innerHTML=`
     <div class="match-header animate-in">
@@ -922,10 +1243,10 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
                 ${awayForm.length?`<div class="form-row">${formDots(awayForm)}</div>`:''}
             </div>
         </div>
+        ${contextHTML}
         ${renderResultBoxes(lambdaH,lambdaA)}
     </div>`;
 
-    // MERCADOS SEGÚN CONFIGURACIÓN
     let html='';
     const mkt=activeMarkets;
 
@@ -937,7 +1258,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         <div class="market-card ${cls} animate-in" style="animation-delay:${barIdx*0.06}s;opacity:0;">
             <div class="line-label">${labelLine}<small>LÍNEA</small></div>
             <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${prob}" style="background:${color};width:0%"></div></div>
+                <div class="bar-bg"><div class="bar-fill" data-target="${prob}" style="background:${color};width:0%;box-shadow:0 0 8px ${color};"></div></div>
                 <div class="bar-sub">${labelSub}: ${(100-prob).toFixed(1)}%</div>
                 <div class="uncertainty-band">IC80%: ${band.low}–${band.high}%</div>
             </div>
@@ -945,16 +1266,14 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         </div>`;
     }
 
-    // Goles partido completo
     if(mkt.goles){
         const lFull2=lambdaH+lambdaA;
-        html+=`<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${lFull2.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
+        html+=`<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${lFull2.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def</span></div>`;
         html+=mktCard('+1.5',poissonOver(lFull2,1.5),'goals_over15',0,'Under');
         html+=mktCard('+2.5',poissonOver(lFull2,2.5),'goals_over25',1,'Under');
         html+='<div class="section-divider"></div>';
     }
 
-    // Goles 1er tiempo
     if(mkt.ht){
         html+=`<div class="section-header animate-in"><span class="section-icon">⏱</span><span class="section-title">GOLES 1er TIEMPO</span><span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
         html+=mktCard('+0.5',poissonOver(lambdaGoal,0.5),'goals_ht05',2,'Under');
@@ -962,16 +1281,15 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         html+='<div class="section-divider"></div>';
     }
 
-    // BTTS
     if(mkt.btts){
-        const bttsRaw=calcBTTS(lambdaH,lambdaA);
+        const bttsRaw=calcBTTS(lambdaH,lambdaA,currentLeagueKey);
         const bttsProb=+plattCalibrate(bttsRaw,'btts').toFixed(0);
         const band=uncertaintyBand(bttsProb,Math.max(8,totalMatchesUsed));
-        html+=`<div class="section-header animate-in"><span class="section-icon">🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ Calibrado</span></div>`;
+        html+=`<div class="section-header animate-in"><span class="section-icon">🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ ρ=${(DIXON_COLES_RHO[currentLeagueKey]||DIXON_COLES_RHO.default).toFixed(3)}</span></div>`;
         html+=`<div class="market-card ${cardClassFor(bttsProb)} animate-in" style="opacity:0;">
             <div class="line-label">BTTS<small>AMBOS</small></div>
             <div class="bar-wrap">
-                <div class="bar-bg"><div class="bar-fill" data-target="${bttsProb}" style="background:${colorFor(bttsProb)};width:0%"></div></div>
+                <div class="bar-bg"><div class="bar-fill" data-target="${bttsProb}" style="background:${colorFor(bttsProb)};width:0%;box-shadow:0 0 8px ${colorFor(bttsProb)};"></div></div>
                 <div class="bar-sub">No: ${(100-bttsProb).toFixed(1)}%</div>
                 <div class="uncertainty-band">IC80%: ${band.low}–${band.high}%</div>
             </div>
@@ -980,7 +1298,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         html+='<div class="section-divider"></div>';
     }
 
-    // Córners
     if(mkt.corn){
         html+=`<div class="section-header animate-in"><span class="section-icon">⬡</span><span class="section-title">CÓRNERS</span><span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
         [7.5,8.5,9.5,10.5].forEach((line,i)=>{
@@ -990,7 +1307,6 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
 
     document.getElementById('all-markets-container').innerHTML=html;
 
-    // RECOMENDACIÓN
     const lFull2=lambdaH+lambdaA;
     const allMkts=[];
     if(mkt.goles){
@@ -1002,7 +1318,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         allMkts.push({label:'GOL HT OVER 1.5',prob:+plattCalibrate(poissonOver(lambdaGoal,1.5),'goals_ht15').toFixed(0),desc:'2+ goles en el primer tiempo',type:'ht'});
     }
     if(mkt.btts){
-        const bp=+plattCalibrate(calcBTTS(lambdaH,lambdaA),'btts').toFixed(0);
+        const bp=+plattCalibrate(calcBTTS(lambdaH,lambdaA,currentLeagueKey),'btts').toFixed(0);
         allMkts.push({label:'AMBOS MARCAN',prob:bp,desc:`${bp}% de prob. que ambos anoten`,type:'btts'});
     }
     if(mkt.corn){
@@ -1011,7 +1327,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         });
     }
 
-    const rpRaw=calcResultProbs(lambdaH,lambdaA);
+    const rpRaw=calcResultProbs(lambdaH,lambdaA,currentLeagueKey);
     const rp={home:+plattCalibrate(rpRaw.home,'resultado').toFixed(1),draw:+plattCalibrate(rpRaw.draw,'resultado').toFixed(1),away:+plattCalibrate(rpRaw.away,'resultado').toFixed(1)};
     allMkts.push({label:`VICTORIA LOCAL`,prob:rp.home,desc:`${home.split(' ').slice(-1)[0]} favorito`,type:'resultado'});
     allMkts.push({label:`VICTORIA VISITANTE`,prob:rp.away,desc:`${away.split(' ').slice(-1)[0]} favorito`,type:'resultado'});
@@ -1019,8 +1335,8 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
     const rec=buildRecommendation(allMkts);
     if(!rec.top){
         document.getElementById('recomendacion-container').innerHTML=`
-        <div class="recomendacion animate-in" style="border-color:rgba(230,57,70,0.2);">
-            <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
+        <div class="recomendacion animate-in" style="border-color:rgba(255,77,90,0.25);">
+            <div class="rec-title" style="color:var(--accent);">RECOMENDACIÓN DE VALOR</div>
             <div class="rec-main" style="color:var(--accent);font-size:1.2rem;">SIN APUESTA CLARA</div>
             <div class="rec-sub">Ningún mercado supera el umbral de confianza mínimo</div>
         </div>`;
@@ -1028,16 +1344,16 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
         const t=rec.top;
         const clsColor=t.prob>=70?'var(--green)':t.prob>=60?'var(--yellow)':'var(--accent)';
         const secondHtml=rec.second?`
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);">
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);">
             <div style="font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">SEGUNDA OPCIÓN</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:1px;color:var(--muted);">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:1px;color:var(--muted);">
                 ${rec.second.label} <span style="color:${colorFor(rec.second.prob)};margin-left:6px;">${rec.second.prob}%</span>
             </div>
         </div>`:'';
         document.getElementById('recomendacion-container').innerHTML=`
         <div class="recomendacion animate-in">
             <div class="rec-title">RECOMENDACIÓN DE VALOR</div>
-            <div class="rec-main" style="color:${clsColor}">${t.label} ${t.diamond||''}</div>
+            <div class="rec-main" style="color:${clsColor};text-shadow:0 0 20px ${clsColor==='var(--green)'?'rgba(46,204,113,0.4)':clsColor==='var(--yellow)'?'rgba(255,182,39,0.4)':'rgba(255,77,90,0.4)'};">${t.label} ${t.diamond||''}</div>
             <div class="rec-sub">${t.desc}</div>
             <div class="rec-confidence">
                 <span class="rc-pct" style="color:${clsColor}">${t.prob.toFixed(0)}%</span>
@@ -1049,7 +1365,7 @@ function renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats
 }
 
 function renderResultBoxes(lambdaH,lambdaA) {
-    const rpRaw=calcResultProbs(lambdaH,lambdaA);
+    const rpRaw=calcResultProbs(lambdaH,lambdaA,currentLeagueKey);
     const rp={
         home:+plattCalibrate(rpRaw.home,'resultado').toFixed(1),
         draw:+plattCalibrate(rpRaw.draw,'resultado').toFixed(1),
@@ -1057,19 +1373,20 @@ function renderResultBoxes(lambdaH,lambdaA) {
     };
     const maxRP=Math.max(rp.home,rp.draw,rp.away);
     const rpColor=v=>v===maxRP?'var(--green)':v>=30?'var(--yellow)':'var(--accent)';
+    const rpGlow=v=>v===maxRP?'rgba(46,204,113,0.3)':v>=30?'rgba(255,182,39,0.3)':'rgba(255,77,90,0.3)';
     return `
     <div class="result-boxes">
         <div class="result-box">
             <div class="rb-label">🏠 Local</div>
-            <div class="rb-pct" style="color:${rpColor(rp.home)}">${rp.home}%</div>
+            <div class="rb-pct" style="color:${rpColor(rp.home)};text-shadow:0 0 15px ${rpGlow(rp.home)};">${rp.home}%</div>
         </div>
         <div class="result-box rb-center">
             <div class="rb-label">🟡 Empate</div>
-            <div class="rb-pct" style="color:${rpColor(rp.draw)}">${rp.draw}%</div>
+            <div class="rb-pct" style="color:${rpColor(rp.draw)};text-shadow:0 0 15px ${rpGlow(rp.draw)};">${rp.draw}%</div>
         </div>
         <div class="result-box">
             <div class="rb-label">✈️ Visitante</div>
-            <div class="rb-pct" style="color:${rpColor(rp.away)}">${rp.away}%</div>
+            <div class="rb-pct" style="color:${rpColor(rp.away)};text-shadow:0 0 15px ${rpGlow(rp.away)};">${rp.away}%</div>
         </div>
     </div>`;
 }
