@@ -166,7 +166,7 @@
 </div>
 
 <script>
-const BSD_TOKEN      = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
+const BSD_TOKEN      = 'd1c591c865f3f9dd0d9f8d60337c895a94c4683e';
 const BSD_BASE       = 'https://sports.bzzoiro.com/api';
 const MATCHES_TO_USE = 15;
 const API_TIMEOUT    = 6000;
@@ -380,7 +380,7 @@ let bsdLeagueMap={},eloRatings={};
 function normalizeTeamName(s) {
     return s.trim().toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        // Quita prefijos/sufijos que confunden
+        // Quita prefijos/sufijos comunes que confunden
         .replace(/\b(fc|cf|sc|ac|as|ss|rc|rb|kv|krc|kaa|afc|rcd|ud|ca|oh|sv|vfl|vfb|fsv|tsg|rkc|pec|nec|ssc|acf|cd|og|aj|sl|ae|bv|sv|bayer|borussia|atletico|olympique|deportivo|real|club|sporting|sport)\b/gi, '')
         .replace(/[^a-z0-9\s]/g, '')
         .replace(/\s+/g, ' ').trim();
@@ -551,7 +551,67 @@ async function loadTeams(key) {
 function plattCalibrate(rawProb,marketType){const p=Math.max(0.001,Math.min(0.999,rawProb/100));const logit=Math.log(p/(1-p));const params=PLATT_PARAMS[marketType]||{A:0.93,B:-0.04};const calibP=1/(1+Math.exp(-(params.A*logit+params.B)));return Math.min(98,Math.max(2,calibP*100));}
 function formMultiplier(form){if(!form||form.length===0)return 1.0;const score=form.reduce((acc,r)=>acc+(r==='w'?3:r==='d'?1:0),0);const adj=(score/(form.length*3)-0.38)*0.23;return Math.max(0.88,Math.min(1.12,1.0+adj));}
 function uncertaintyBand(prob,nMatches){const p=prob/100,se=Math.sqrt(p*(1-p)/Math.max(5,nMatches));const low=Math.max(0,(p-1.282*se)*100),high=Math.min(100,(p+1.282*se)*100);return{low:low.toFixed(0),high:high.toFixed(0)};}
-function bivariateLambdas(homeAtk,homeDef,awayAtk,awayDef,goalsAvg,homeAdv=1.08){const leagueMean=goalsAvg/2;const normHomeAtk=Math.max(0.5,homeAtk/leagueMean);const normHomeDef=Math.max(0.5,homeDef/leagueMean);const normAwayAtk=Math.max(0.5,awayAtk/leagueMean);const normAwayDef=Math.max(0.5,awayDef/leagueMean);return{home:leagueMean*normHomeAtk*normAwayDef*homeAdv,away:leagueMean*normAwayAtk*normHomeDef};}
+// ── MOTOR DE LAMBDAS ────────────────────────────────────────────────────────
+// Calcula medias de corners por rol en la liga (para normalizar)
+function getLeagueCornerMeans(ligaKey) {
+    const liga = LIGAS[ligaKey];
+    if (!liga) return { homeMean: 5.5, awayMean: 4.5 };
+    const homeVals = liga.teams.map(t => CORNER_POWER[t]?.home).filter(v => v != null);
+    const awayVals = liga.teams.map(t => CORNER_POWER[t]?.away).filter(v => v != null);
+    if (homeVals.length < 2) return { homeMean: liga.cornersAvg * 0.55, awayMean: liga.cornersAvg * 0.45 };
+    const homeMean = homeVals.reduce((a,b)=>a+b,0)/homeVals.length;
+    const awayMean = awayVals.reduce((a,b)=>a+b,0)/awayVals.length;
+    return { homeMean, awayMean };
+}
+
+// Ratio de fuerza de ataque relativa a la liga (1.0 = promedio)
+function attackRatio(name, role, ligaKey) {
+    const cp = CORNER_POWER[name];
+    const { homeMean, awayMean } = getLeagueCornerMeans(ligaKey);
+    if (!cp) return 1.0;
+    const val = cp[role];
+    const mean = role === 'home' ? homeMean : awayMean;
+    // Suavizado: ratio con raíz cuadrada para no exagerar diferencias
+    return Math.pow(val / mean, 0.55);
+}
+
+// lambdaH = leagueMean * atkRatioHome * (1/atkRatioAway)^0.4 * homeAdv
+// Esto produce λ diferente por partido manteniendo el total ~goalsAvg
+function computeLambdas(homeTeam, awayTeam, goalsAvg, homeAdv, ligaKey) {
+    const leagueMean = goalsAvg / 2;
+    const hAtk = attackRatio(homeTeam, 'home', ligaKey);
+    const aAtk = attackRatio(awayTeam, 'away', ligaKey);
+    // Defensa: proxy inverso del ataque (equipo fuerte ataca Y defiende mejor)
+    const hDef = Math.pow(1/hAtk, 0.40); // mayor ataque → mejor defensa → menos goles en contra
+    const aDef = Math.pow(1/aAtk, 0.40);
+    const lH = leagueMean * hAtk * aDef * homeAdv;
+    const lA = leagueMean * aAtk * hDef;
+    return { home: Math.max(0.30, lH), away: Math.max(0.20, lA) };
+}
+
+// Versión con datos API (attack = xG/goals scored, defense = goals conceded)
+function computeLambdasFromStats(homeGoalF, homeGC, awayGoalF, awayGC, goalsAvg, homeAdv) {
+    const leagueMean = goalsAvg / 2;
+    // Dixon-Coles estándar: λH = leagueMean * (homeAtk/mean) * (awayDef/mean) * homeAdv
+    const lH = (homeGoalF / leagueMean) * (awayGC / leagueMean) * leagueMean * homeAdv;
+    const lA = (awayGoalF / leagueMean) * (homeGC / leagueMean) * leagueMean;
+    return { home: Math.max(0.30, lH), away: Math.max(0.20, lA) };
+}
+
+// Fallback corners (sin cambio)
+function fallbackCorners(name, role, liga) {
+    if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+    const base = liga.cornersAvg / 2;
+    return role === 'home' ? base * 1.10 : base * 0.90;
+}
+
+// Fallback goals HT usando attackRatio
+function fallbackGoals1T(name, role, liga) {
+    const ratio = attackRatio(name, role, currentLeagueKey || 'PL');
+    const base = liga.goalsAvg / 2;
+    const htPct = role === 'home' ? 0.44 : 0.40;
+    return base * ratio * htPct;
+}
 
 async function bsdFetch(path,timeoutMs=API_TIMEOUT){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),timeoutMs);try{const res=await fetch(`${BSD_BASE}${path}`,{headers:{'Authorization':`Token ${BSD_TOKEN}`},signal:controller.signal});clearTimeout(timeout);if(!res.ok)throw new Error(`BSD ${res.status}`);return res.json();}catch(e){clearTimeout(timeout);throw e;}}
 async function bsdFetchAll(path,timeoutMs=API_TIMEOUT){let results=[],url=`${BSD_BASE}${path}`;let pageCount=0;while(url&&pageCount<5){try{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),timeoutMs);const res=await fetch(url,{headers:{'Authorization':`Token ${BSD_TOKEN}`},signal:controller.signal});clearTimeout(timeout);if(!res.ok)break;const data=await res.json();results=results.concat(data.results||[]);url=data.next||null;pageCount++;if(results.length>=200)break;}catch(e){break;}}return results;}
@@ -561,9 +621,53 @@ async function calculateEloRatings(leagueId,seasonId){const cacheKey=`${leagueId
 function getAltitudeAdjustment(homeTeam,awayTeam){const homeAltitude=ALTITUDE_TEAMS[homeTeam];let homeAdv=1.08,contextTags=[];if(homeAltitude){homeAdv=homeAltitude.advantage;contextTags.push({text:`🏔 Altitud local: ${homeAltitude.altitude}`,type:'altitude'});}return{homeAdv,contextTags};}
 function extractMatchStats(match,role){const s=match.stats||match.statistics||{},ls=match.live_stats||{};let corners=null,goals1t=null,goalsFull=null,xG=null,goalsConceded=null;if(s[role]?.corner_kicks!=null)corners=s[role].corner_kicks;else if(ls[role]?.corner_kicks!=null)corners=ls[role].corner_kicks;else if(role==='home'&&match.home_corners!=null)corners=match.home_corners;else if(role==='away'&&match.away_corners!=null)corners=match.away_corners;if(role==='home'&&match.home_score_ht!=null)goals1t=match.home_score_ht;if(role==='away'&&match.away_score_ht!=null)goals1t=match.away_score_ht;if(role==='home'){if(match.home_score!=null)goalsFull=match.home_score;if(match.away_score!=null)goalsConceded=match.away_score;}if(role==='away'){if(match.away_score!=null)goalsFull=match.away_score;if(match.home_score!=null)goalsConceded=match.home_score;}if(s[role]?.expected_goals!=null)xG=s[role].expected_goals;else if(ls[role]?.expected_goals!=null)xG=ls[role].expected_goals;else if(role==='home'&&match.home_xg!=null)xG=match.home_xg;else if(role==='away'&&match.away_xg!=null)xG=match.away_xg;return{corners,goals1t,goalsFull,xG,goalsConceded};}
 async function getTeamStats(teamId,teamName,role,seasonId){const key=`${teamId}_${seasonId}_${role}`;if(statsCache[key])return statsCache[key];try{let events=[];try{events=await bsdFetchAll(`/events/?team=${teamId}&season=${seasonId}&limit=300`);}catch(e){return null;}const finished=events.filter(m=>{const st=(m.status||'').toUpperCase();const ok=['FT','FINISHED','AET','PEN','FULL_TIME'].includes(st)||st.includes('FT');if(!ok)return false;return role==='home'?(m.home_team_obj?.id===teamId||m.home_team===teamName):(m.away_team_obj?.id===teamId||m.away_team===teamName);}).slice(-MATCHES_TO_USE);if(finished.length<3)return null;const weights=finished.map((_,i)=>Math.exp(0.15*i));let tC=0,wC=0,tG=0,wG=0,tGF=0,wGF=0,tGC=0,wGC=0,tXG=0,wXG=0;const form=[];finished.slice(-5).forEach(m=>{const hs=Number(m.home_score||0),as=Number(m.away_score||0);if(role==='home'){if(hs>as)form.push('w');else if(hs===as)form.push('d');else form.push('l');}else{if(as>hs)form.push('w');else if(as===hs)form.push('d');else form.push('l');}});finished.forEach((m,i)=>{const w=weights[i],stats=extractMatchStats(m,role);if(stats.corners!=null){tC+=Number(stats.corners)*w;wC+=w;}if(stats.goals1t!=null){tG+=Number(stats.goals1t)*w;wG+=w;}if(stats.goalsFull!=null){tGF+=Number(stats.goalsFull)*w;wGF+=w;}if(stats.goalsConceded!=null){tGC+=Number(stats.goalsConceded)*w;wGC+=w;}if(stats.xG!=null){tXG+=Number(stats.xG)*w;wXG+=w;}});const result={corners:wC>0?tC/wC:null,goals1t:wG>0?tG/wG:null,goalsFull:wGF>0?tGF/wGF:null,goalsConceded:wGC>0?tGC/wGC:null,xG:wXG>0?tXG/wXG:null,matches:finished.length,form,fromApi:true};statsCache[key]=result;return result;}catch{return null;}}
-function fallbackCorners(name,role,liga){if(CORNER_POWER[name]?.[role])return CORNER_POWER[name][role];const base=liga.cornersAvg/2;return role==='home'?base*1.10:base*0.90;}
-function fallbackGoals(name,role,liga){const base=liga.goalsAvg/2;return role==='home'?base*1.15:base*0.85;}
-function fallbackGoals1T(name,role,liga){const baseTotal=liga.goalsAvg/2;return role==='home'?baseTotal*1.08*0.44:baseTotal*0.92*0.40;}
+// Calcula el rango de corners de la liga para normalizar
+function getLeagueCornerRange(ligaKey) {
+    const liga = LIGAS[ligaKey];
+    if (!liga) return { minV: 3.5, maxV: 7.5 };
+    const allVals = liga.teams
+        .map(t => CORNER_POWER[t])
+        .filter(Boolean)
+        .flatMap(v => [v.home, v.away]);
+    if (allVals.length < 2) return { minV: liga.cornersAvg * 0.45, maxV: liga.cornersAvg * 0.75 };
+    return { minV: Math.min(...allVals), maxV: Math.max(...allVals) };
+}
+
+// Fuerza relativa del equipo [0.70, 1.30] basada en corners (proxy de calidad)
+function teamStrength(name, role, ligaKey) {
+    const cp = CORNER_POWER[name];
+    if (!cp) return role === 'home' ? 1.05 : 0.95;
+    const val = cp[role];
+    const { minV, maxV } = getLeagueCornerRange(ligaKey);
+    const span = maxV - minV;
+    if (span < 0.1) return role === 'home' ? 1.05 : 0.95;
+    // Mapeo a [0.70, 1.30]
+    return 0.70 + ((val - minV) / span) * 0.60;
+}
+
+function fallbackCorners(name, role, liga) {
+    if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+    const base = liga.cornersAvg / 2;
+    return role === 'home' ? base * 1.10 : base * 0.90;
+}
+
+// CORREGIDO: usa teamStrength para diferenciar equipos en modo offline
+function fallbackGoals(name, role, liga) {
+    const leagueKey = currentLeagueKey || 'default';
+    const str = teamStrength(name, role, leagueKey);
+    const base = liga.goalsAvg / 2;
+    const homeAdv = role === 'home' ? 1.08 : 1.0;
+    return base * str * homeAdv;
+}
+
+function fallbackGoals1T(name, role, liga) {
+    const leagueKey = currentLeagueKey || 'default';
+    const str = teamStrength(name, role, leagueKey);
+    const base = liga.goalsAvg / 2;
+    const htRatio = role === 'home' ? 0.44 : 0.40;
+    const homeAdv = role === 'home' ? 1.05 : 1.0;
+    return base * str * homeAdv * htRatio;
+}
 function regressionBlend(teamVal,leagueMean,nMatches){const trust=Math.min(0.85,0.40+(nMatches/MATCHES_TO_USE)*0.45);return teamVal*trust+leagueMean*(1-trust);}
 function poissonProb(lambda,k){let p=Math.exp(-lambda),term=p;for(let i=1;i<=k;i++){term*=lambda/i;p+=term;}return p;}
 function poissonExact(lambda,k){let term=Math.exp(-lambda);for(let i=0;i<k;i++)term*=lambda/(i+1);return term;}
@@ -578,21 +682,102 @@ function colorFor(p){return p>=65?'var(--green)':p>=42?'var(--yellow)':'var(--ac
 function cardClassFor(p){return p>=65?'high':p>=42?'mid':'low';}
 function setApiStatus(state,text){document.getElementById('api-dot').className=`api-dot ${state}`;document.getElementById('api-status-text').textContent=text;}
 
-function matchLeagueName(bsdLeagueName,ligaKey){const liga=LIGAS[ligaKey];if(!liga)return false;const norm=s=>s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ');const bsdNorm=norm(bsdLeagueName);if(bsdNorm===norm(liga.bsdName))return true;if(liga.bsdNameAlt){for(const alt of liga.bsdNameAlt){if(bsdNorm===norm(alt))return true;}}const mainWords=norm(liga.bsdName).split(' ');if(mainWords.every(word=>bsdNorm.includes(word)))return true;return false;}
+// ── LEAGUE MATCHING — fingerprints únicos + blockers anti-contaminación ──
+const LEAGUE_FINGERPRINTS = {
+    'PL': ['premier league','premier'],
+    'BL1': ['bundesliga'],
+    'DED': ['eredivisie'],
+    'JPL': ['jupiler','belgian','pro league','first division a','first division b'],
+    'FL1': ['ligue 1','ligue un','ligue1'],
+    'BSA': ['brasileiro serie a','brasileirao','campeonato brasileiro ser','serie a bra','brasileirao serie a'],
+    'ELC': ['championship','efl championship','sky bet championship'],
+    'PD': ['la liga','primera division','laliga'],
+    'SA': ['serie a','serie a tim','italian serie','calcio serie a'],
+    'MXL': ['liga mx','liga bbva','mexican liga','liga mex','liga mx clausura','liga mx apertura'],
+    'LIB': ['libertadores','conmebol libertadores','copa libertadores'],
+    'MLS': ['major league soccer',' mls ','mls regular','mls eastern','mls western'],
+    'BSB': ['brasileiro serie b','serie b bra','brasileirao serie b','campeonato brasileiro serie b'],
+    'PPT': ['liga portugal','primeira liga','ligaportugal','liga nos','liga bwin'],
+    'EKS': ['ekstraklasa'],
+    'SLG': ['super league greece','greek super','super league 1','stoiximan super','super league hellas'],
+};
+const LEAGUE_BLOCKERS = {
+    'PD': ['brasileiro','brasileirao','portugal','mx','mexico','liga mx'],
+    'SA': ['brasileiro','brasileirao','serie b','spanish','portugal','serie a bra'],
+    'MXL': ['la liga','primera division','portugal','brasileiro','laliga'],
+    'PPT': ['la liga','primera division','mx','mexican','laliga'],
+    'BSA': ['serie b','segunda','serie b bra'],
+    'BSB': ['serie a bra','campeonato brasileiro serie a','primeira','primeiro'],
+    'BL1': ['2. bundesliga','bundesliga 2','bundesliga ii'],
+    'FL1': ['ligue 2'],
+    'MLS': ['liga mx','la liga'],
+};
+function normStr(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();}
+function matchLeagueName(bsdLeagueName,ligaKey){
+    const apiNorm=normStr(bsdLeagueName);
+    const fps=LEAGUE_FINGERPRINTS[ligaKey]||[];
+    const blockers=LEAGUE_BLOCKERS[ligaKey]||[];
+    if(blockers.some(b=>apiNorm.includes(normStr(b))))return false;
+    return fps.some(fp=>apiNorm.includes(normStr(fp)));
+}
 
 window.onload=async()=>{
     renderLeaguePills();renderMarketToggles();
     setApiStatus('error','🟡 Modo offline — datos históricos calibrados');
-    const controller=new AbortController();const timeoutId=setTimeout(()=>controller.abort(),8000);
-    try{
-        let allLeagues=[],url=BSD_BASE+'/leagues/?page_size=100',pageCount=0;
-        while(url&&pageCount<5){const res=await fetch(url,{headers:{'Authorization':'Token '+BSD_TOKEN},signal:controller.signal});if(!res.ok)throw new Error('BSD '+res.status);const data=await res.json();allLeagues=allLeagues.concat(data.results||[]);url=data.next||null;pageCount++;}
-        clearTimeout(timeoutId);
-        allLeagues.forEach(l=>{if(l.is_women)return;if(!l.current_season?.id)return;for(const code of Object.keys(LIGAS)){if(matchLeagueName(l.name,code)&&!bsdLeagueMap[code]){bsdLeagueMap[code]={bsdId:l.id,seasonId:l.current_season.id};}}});
-        const mapped=Object.keys(bsdLeagueMap).length;
-        if(mapped>0){setApiStatus('live','🟢 BSD API — '+mapped+'/'+Object.keys(LIGAS).length+' ligas activas');apiAvailable=true;document.getElementById('engine-badge').textContent='🛰 BSD + Elo + Atk×Def + xG + Altitud · v2.1';}
-    }catch(e){clearTimeout(timeoutId);}
+    await initBsdApi();
 };
+
+async function initBsdApi(){
+    const controller=new AbortController();
+    const timeoutId=setTimeout(()=>controller.abort(),12000);
+    try{
+        // Fetch ALL leagues (paginate up to 500)
+        let allLeagues=[],url=BSD_BASE+'/leagues/?page_size=200',pageCount=0;
+        while(url&&pageCount<5){
+            const res=await fetch(url,{headers:{'Authorization':'Token '+BSD_TOKEN},signal:controller.signal});
+            if(!res.ok)throw new Error('BSD '+res.status);
+            const data=await res.json();
+            allLeagues=allLeagues.concat(data.results||[]);
+            url=data.next||null;
+            pageCount++;
+        }
+        clearTimeout(timeoutId);
+
+        // Log all available league names for debugging
+        const active=allLeagues.filter(l=>!l.is_women&&l.current_season?.id);
+        console.log('[BSD] Total active leagues:',active.length);
+        active.forEach(l=>console.log(' -',JSON.stringify(l.name),'| season:',l.current_season?.id));
+
+        // Match each liga
+        active.forEach(l=>{
+            for(const code of Object.keys(LIGAS)){
+                if(!bsdLeagueMap[code]&&matchLeagueName(l.name,code)){
+                    bsdLeagueMap[code]={bsdId:l.id,seasonId:l.current_season.id};
+                    console.log('[LIGA ✅]',code,'→',l.name,'(season:',l.current_season.id+')');
+                }
+            }
+        });
+
+        // Log unmatched ligas
+        Object.keys(LIGAS).forEach(code=>{
+            if(!bsdLeagueMap[code]) console.warn('[LIGA ❌] Sin match:',code,LIGAS[code].name);
+        });
+
+        const mapped=Object.keys(bsdLeagueMap).length;
+        const total=Object.keys(LIGAS).length;
+        if(mapped>0){
+            setApiStatus('live','🟢 BSD API — '+mapped+'/'+total+' ligas activas');
+            apiAvailable=true;
+            document.getElementById('engine-badge').textContent='🛰 BSD Live · '+mapped+'/'+total+' ligas · v2.1';
+        } else {
+            setApiStatus('error','🟡 Modo offline — sin conexión API');
+        }
+    }catch(e){
+        clearTimeout(timeoutId);
+        console.warn('[BSD] initBsdApi error:',e.message);
+        setApiStatus('error','🟡 Modo offline — '+e.message.substring(0,30));
+    }
+}
 
 function renderLeaguePills(){const container=document.getElementById('league-pills');container.innerHTML='';for(const[key,liga]of Object.entries(LIGAS)){const pill=document.createElement('button');pill.className='league-pill';pill.textContent=liga.name;pill.dataset.key=key;pill.onclick=()=>selectLeague(key);container.appendChild(pill);}}
 function renderMarketToggles(){const container=document.getElementById('market-toggles');const defs=[{key:'ht',label:'⏱ Goles HT'},{key:'goles',label:'⚽ Goles +1.5/2.5'},{key:'btts',label:'🤝 BTTS'},{key:'corn',label:'⬡ Córners'}];container.innerHTML='';const liga=currentLeagueKey?LIGAS[currentLeagueKey]:null;defs.forEach(d=>{const btn=document.createElement('button');btn.className='mkt-toggle';btn.textContent=d.label;btn.dataset.key=d.key;const available=!liga||(liga.markets[d.key]===true);if(!available){btn.classList.add('unavailable');activeMarkets[d.key]=false;}else{if(activeMarkets[d.key])btn.classList.add('on');btn.onclick=()=>{activeMarkets[d.key]=!activeMarkets[d.key];btn.classList.toggle('on');};}container.appendChild(btn);});}
@@ -617,30 +802,39 @@ document.getElementById('calc-btn').onclick=async()=>{
     if(homeId&&awayId&&seasonId&&apiAvailable){document.getElementById('loading-text').textContent=`Analizando ${home.split(' ').slice(-1)[0]}...`;document.getElementById('loading-sub').textContent=`Ponderando últimos ${MATCHES_TO_USE} partidos (xG + goles)`;try{homeStats=await getTeamStats(homeId,home,'home',seasonId);}catch(e){homeStats=null;}document.getElementById('loading-text').textContent=`Analizando ${away.split(' ').slice(-1)[0]}...`;document.getElementById('loading-sub').textContent='Modelo Ataque×Defensa + Calibración Platt...';try{awayStats=await getTeamStats(awayId,away,'away',seasonId);}catch(e){awayStats=null;}}
     const homeMatchesC=homeStats?.matches||0,awayMatchesC=awayStats?.matches||0;
     const leagueGoalMean=goalsAvg/2;const totalMatchesUsed=homeMatchesC+awayMatchesC;
-    let homeGoalF,awayGoalF,homeGoal1T,awayGoal1T,homeGoalsConceded,awayGoalsConceded;
-    if(homeStats?.xG&&homeMatchesC>=5)homeGoalF=regressionBlend(homeStats.xG,leagueGoalMean*1.10,homeMatchesC);
-    else if(homeStats?.goalsFull)homeGoalF=regressionBlend(homeStats.goalsFull,leagueGoalMean*1.10,homeMatchesC);
-    else homeGoalF=fallbackGoals(home,'home',liga);
-    if(awayStats?.xG&&awayMatchesC>=5)awayGoalF=regressionBlend(awayStats.xG,leagueGoalMean*0.90,awayMatchesC);
-    else if(awayStats?.goalsFull)awayGoalF=regressionBlend(awayStats.goalsFull,leagueGoalMean*0.90,awayMatchesC);
-    else awayGoalF=fallbackGoals(away,'away',liga);
-    homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',liga),leagueGoalMean*1.10,homeMatchesC):fallbackGoals1T(home,'home',liga);
-    awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',liga),leagueGoalMean*0.90,awayMatchesC):fallbackGoals1T(away,'away',liga);
-    homeGoalsConceded=homeStats?.fromApi?regressionBlend(homeStats.goalsConceded??leagueGoalMean*0.90,leagueGoalMean*0.90,homeMatchesC):leagueGoalMean*0.90;
-    awayGoalsConceded=awayStats?.fromApi?regressionBlend(awayStats.goalsConceded??leagueGoalMean*1.10,leagueGoalMean*1.10,awayMatchesC):leagueGoalMean*1.10;
+    const hFm=formMultiplier(homeStats?.form),aFm=formMultiplier(awayStats?.form);
+    const eloDiff=(homeElo-awayElo)/400;
+    const eloMult=Math.max(0.88,Math.min(1.12,1+(eloDiff*0.10)));
+    let lambdaH,lambdaA;
+    const hasHomeData=homeStats?.fromApi&&homeMatchesC>=4&&(homeStats.xG||homeStats.goalsFull)&&homeStats.goalsConceded!=null;
+    const hasAwayData=awayStats?.fromApi&&awayMatchesC>=4&&(awayStats.xG||awayStats.goalsFull)&&awayStats.goalsConceded!=null;
+    if(hasHomeData&&hasAwayData){
+        const homeAtk=homeStats.xG??homeStats.goalsFull;
+        const awayAtk=awayStats.xG??awayStats.goalsFull;
+        const hAtkB=regressionBlend(homeAtk,leagueGoalMean,homeMatchesC);
+        const aAtkB=regressionBlend(awayAtk,leagueGoalMean,awayMatchesC);
+        const hGCB=regressionBlend(homeStats.goalsConceded,leagueGoalMean,homeMatchesC);
+        const aGCB=regressionBlend(awayStats.goalsConceded,leagueGoalMean,awayMatchesC);
+        const lams=computeLambdasFromStats(hAtkB,hGCB,aAtkB,aGCB,goalsAvg,homeAdvantage);
+        lambdaH=lams.home*hFm*eloMult;
+        lambdaA=lams.away*aFm/eloMult;
+    }else{
+        const lams=computeLambdas(home,away,goalsAvg,homeAdvantage,currentLeagueKey);
+        lambdaH=lams.home*hFm*eloMult;
+        lambdaA=lams.away*aFm/eloMult;
+    }
+    lambdaH=Math.max(0.30,Math.min(4.0,lambdaH));
+    lambdaA=Math.max(0.20,Math.min(3.5,lambdaA));
     let homeCorn=homeStats?.fromApi?regressionBlend(homeStats.corners??fallbackCorners(home,'home',liga),cornersAvg/2*1.10,homeMatchesC):fallbackCorners(home,'home',liga);
     let awayCorn=awayStats?.fromApi?regressionBlend(awayStats.corners??fallbackCorners(away,'away',liga),cornersAvg/2*0.90,awayMatchesC):fallbackCorners(away,'away',liga);
-    const eloDiff=(homeElo-awayElo)/400;const eloAdjustment=1+(eloDiff*0.12);
-    homeGoalF*=Math.max(0.85,Math.min(1.15,eloAdjustment));awayGoalF*=Math.max(0.85,Math.min(1.15,1/eloAdjustment));
-    homeGoal1T*=Math.max(0.88,Math.min(1.12,1+(eloDiff*0.08)));awayGoal1T*=Math.max(0.88,Math.min(1.12,1-(eloDiff*0.08)));
-    homeCorn*=Math.max(0.90,Math.min(1.10,1+(eloDiff*0.06)));awayCorn*=Math.max(0.90,Math.min(1.10,1-(eloDiff*0.06)));
-    const hFm=formMultiplier(homeStats?.form),aFm=formMultiplier(awayStats?.form);
-    homeGoalF*=hFm;awayGoalF*=aFm;homeGoal1T*=hFm;awayGoal1T*=aFm;homeCorn*=(hFm*0.5+0.5);awayCorn*=(aFm*0.5+0.5);
-    const bivLambdas=bivariateLambdas(homeGoalF,homeGoalsConceded,awayGoalF,awayGoalsConceded,goalsAvg,homeAdvantage);
-    const lambdaH=+bivLambdas.home.toFixed(2),lambdaA=+bivLambdas.away.toFixed(2);
+    homeCorn*=Math.max(0.90,Math.min(1.10,1+(eloDiff*0.06)))*(hFm*0.5+0.5);
+    awayCorn*=Math.max(0.90,Math.min(1.10,1-(eloDiff*0.06)))*(aFm*0.5+0.5);
+    const homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',liga),leagueGoalMean*0.44,homeMatchesC):fallbackGoals1T(home,'home',liga);
+    const awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',liga),leagueGoalMean*0.40,awayMatchesC):fallbackGoals1T(away,'away',liga);
+    const lambdaHfinal=+lambdaH.toFixed(2),lambdaAfinal=+lambdaA.toFixed(2);
     const lambdaGoal=+(homeGoal1T+awayGoal1T).toFixed(2),lambdaCorn=+(homeCorn+awayCorn).toFixed(2);
     loadingEl.classList.add('hidden');
-    renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH,lambdaA,homeStats,awayStats,negBinR,totalMatchesUsed,liga,homeElo,awayElo,altitude});
+    renderOutput({home,away,lambdaCorn,lambdaGoal,lambdaH:lambdaHfinal,lambdaA:lambdaAfinal,homeStats,awayStats,negBinR,totalMatchesUsed,liga,homeElo,awayElo,altitude});
     outputEl.classList.remove('hidden');
     requestAnimationFrame(()=>requestAnimationFrame(animateBars));
     window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
