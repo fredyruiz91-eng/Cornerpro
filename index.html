@@ -166,7 +166,7 @@
 </div>
 
 <script>
-const BSD_TOKEN      = 'd1c591c865f3f9dd0d9f8d60337c895a94c4683e';
+const BSD_TOKEN      = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
 const BSD_BASE       = 'https://sports.bzzoiro.com/api';
 const MATCHES_TO_USE = 15;
 const API_TIMEOUT    = 6000;
@@ -380,7 +380,7 @@ let bsdLeagueMap={},eloRatings={};
 function normalizeTeamName(s) {
     return s.trim().toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        // Quita prefijos/sufijos comunes que confunden
+        // Quita prefijos/sufijos que confunden
         .replace(/\b(fc|cf|sc|ac|as|ss|rc|rb|kv|krc|kaa|afc|rcd|ud|ca|oh|sv|vfl|vfb|fsv|tsg|rkc|pec|nec|ssc|acf|cd|og|aj|sl|ae|bv|sv|bayer|borussia|atletico|olympique|deportivo|real|club|sporting|sport)\b/gi, '')
         .replace(/[^a-z0-9\s]/g, '')
         .replace(/\s+/g, ' ').trim();
