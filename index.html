@@ -369,108 +369,108 @@ const API_TIMEOUT    = 6000; // 6 segundos máximo por llamada
 // ══════════════════════════════════════════
 const LIGAS = {
     "PL":  {
-        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", leagueAvg:10.1, negBinR:5.4,
+        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", cornersAvg:10.1, goalsAvg:2.85, negBinR:5.4,
         markets:{ht:true, goles:true, btts:true, corn:true},
         bsdName:"Premier League",
         teams:["Arsenal FC","Aston Villa FC","AFC Bournemouth","Brentford FC","Brighton & Hove Albion FC","Chelsea FC","Crystal Palace FC","Everton FC","Fulham FC","Liverpool FC","Manchester City FC","Manchester United FC","Newcastle United FC","Nottingham Forest FC","Tottenham Hotspur FC","West Ham United FC","Wolverhampton Wanderers FC","Leeds United","Burnley FC","Sunderland AFC"]
     },
     "BL1": {
-        name:"🇩🇪 Bundesliga", leagueAvg:9.8, negBinR:5.9,
+        name:"🇩🇪 Bundesliga", cornersAvg:9.8, goalsAvg:3.00, negBinR:5.9,
         markets:{ht:true, goles:true, btts:true, corn:true},
         bsdName:"Bundesliga",
         teams:["1. FC Heidenheim 1846","1. FC Union Berlin","1. FSV Mainz 05","Bayer 04 Leverkusen","Borussia Dortmund","Borussia Mönchengladbach","Eintracht Frankfurt","FC Augsburg","FC Bayern München","RB Leipzig","SC Freiburg","SV Werder Bremen","TSG 1899 Hoffenheim","VfB Stuttgart","VfL Bochum 1848","VfL Wolfsburg","FC St. Pauli","Holstein Kiel"]
     },
     "DED": {
-        name:"🇳🇱 Eredivisie", leagueAvg:9.6, negBinR:5.7,
+        name:"🇳🇱 Eredivisie", cornersAvg:9.6, goalsAvg:3.10, negBinR:5.7,
         markets:{ht:true, goles:true, btts:true, corn:true},
         bsdName:"Eredivisie",
         teams:["AZ Alkmaar","Ajax","Almere City FC","FC Groningen","FC Twente","FC Utrecht","Feyenoord","Fortuna Sittard","Go Ahead Eagles","Heracles Almelo","NAC Breda","NEC Nijmegen","PEC Zwolle","PSV Eindhoven","RKC Waalwijk","Sparta Rotterdam","Willem II","sc Heerenveen"]
     },
     "JPL": {
-        name:"🇧🇪 Jupiler Pro League", leagueAvg:9.2, negBinR:6.0,
+        name:"🇧🇪 Jupiler Pro League", cornersAvg:9.2, goalsAvg:2.90, negBinR:6.0,
         markets:{ht:true, goles:true, btts:true, corn:true},
         bsdName:"Belgian Pro League",
         bsdNameAlt:["First Division A","Jupiler Pro League","Pro League"],
         teams:["Anderlecht","Club Brugge KV","KAA Gent","KRC Genk","Cercle Brugge KSV","Standard de Liège","R. Union Saint-Gilloise","KV Mechelen","STVV","Beerschot VA","OH Leuven","KV Kortrijk","Charleroi","KVC Westerlo","RFC Seraing","Zulte Waregem"]
     },
     "FL1": {
-        name:"🇫🇷 Ligue 1", leagueAvg:9.3, negBinR:6.2,
+        name:"🇫🇷 Ligue 1", cornersAvg:9.3, goalsAvg:2.70, negBinR:6.2,
         markets:{ht:true, goles:true, btts:false, corn:false},
         bsdName:"Ligue 1",
         teams:["AJ Auxerre","AS Monaco FC","Le Havre AC","Lille OSC","Montpellier HSC","OGC Nice","Olympique Lyonnais","Olympique de Marseille","Paris Saint-Germain FC","RC Lens","RC Strasbourg Alsace","Stade Brestois 29","Stade Rennais FC","Stade de Reims","Toulouse FC","FC Nantes","FC Lorient","ESTAC Troyes"]
     },
     "BSA": {
-        name:"🇧🇷 Brasileirão", leagueAvg:9.4, negBinR:5.8,
+        name:"🇧🇷 Brasileirão", cornersAvg:9.4, goalsAvg:2.45, negBinR:5.8,
         markets:{ht:false, goles:true, btts:false, corn:true},
         bsdName:"Campeonato Brasileiro Série A",
         bsdNameAlt:["Brasileirão Série A","Brasileirao Serie A","Serie A (Brazil)","Brazilian Serie A"],
-        teams:["Athletico Paranaense","Atlético Goianiense","Atlético Mineiro","Bahia","Botafogo","Corinthians","Criciúma","Cruzeiro","Cuiabá","Flamengo","Fluminense","Fortaleza","Grêmio","Internacional","Juventude","Palmeiras","Red Bull Bragantino","São Paulo","Vasco da Gama","Vitória"]
+        teams:["Athletico Paranaense","Atlético Mineiro","Bahia","Botafogo","Chapecoense","Corinthians","Coritiba","Cruzeiro","Flamengo","Fluminense","Grêmio","Internacional","Mirassol","Palmeiras","Red Bull Bragantino","Remo","Santos","São Paulo","Vasco da Gama","Vitória"]
     },
     "ELC": {
-        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", leagueAvg:9.7, negBinR:5.5,
+        name:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", cornersAvg:9.7, goalsAvg:2.65, negBinR:5.5,
         markets:{ht:false, goles:false, btts:true, corn:true},
         bsdName:"Championship",
         bsdNameAlt:["EFL Championship","English Championship"],
         teams:["Blackburn Rovers","Bristol City","Cardiff City","Coventry City","Derby County","Hull City","Luton Town","Middlesbrough FC","Millwall FC","Norwich City","Oxford United","Plymouth Argyle","Portsmouth FC","Preston North End","QPR","Sheffield United","Sheffield Wednesday","Stoke City","Swansea City","Watford FC","West Bromwich Albion","Leicester City FC","Ipswich Town FC","Southampton FC"]
     },
     "PD":  {
-        name:"🇪🇸 La Liga", leagueAvg:9.5, negBinR:6.6,
+        name:"🇪🇸 La Liga", cornersAvg:9.5, goalsAvg:2.55, negBinR:6.6,
         markets:{ht:false, goles:true, btts:false, corn:true},
         bsdName:"La Liga",
         bsdNameAlt:["Primera División","LaLiga"],
-        teams:["Athletic Club","Atlético de Madrid","CA Osasuna","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Mallorca","Rayo Vallecano","Real Betis Balompié","Real Madrid CF","Real Sociedad","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF","RCD Espanyol de Barcelona","CD Leganés","Real Valladolid CF"]
+        teams:["Athletic Club","Levante ud","Atlético de Madrid","CA Osasuna","Deportivo Alavés","FC Barcelona","Getafe CF","Girona FC","RC Celta de Vigo","RCD Mallorca","Rayo Vallecano","Real Betis Balompié","Real Madrid CF","Real Sociedad","Sevilla FC","UD Las Palmas","Valencia CF","Villarreal CF","RCD Espanyol de Barcelona","CD Leganés","Real Valladolid CF"]
     },
     "SA":  {
-        name:"🇮🇹 Serie A", leagueAvg:9.0, negBinR:7.1,
+        name:"🇮🇹 Serie A", cornersAvg:9.0, goalsAvg:2.65, negBinR:7.1,
         markets:{ht:true, goles:true, btts:false, corn:true},
         bsdName:"Serie A",
         bsdNameAlt:["Serie A (Italy)","Italian Serie A"],
         teams:["AC Milan","AC Monza","ACF Fiorentina","AS Roma","Atalanta BC","Bologna FC 1909","Cagliari Calcio","Como 1907","Empoli FC","Genoa CFC","Hellas Verona FC","Inter Milano","Juventus FC","Parma Calcio 1913","SS Lazio","SSC Napoli","Torino FC","Udinese Calcio","US Lecce","Sassuolo"]
     },
     "MXL": {
-        name:"🇲🇽 Liga MX", leagueAvg:8.5, negBinR:6.3,
+        name:"🇲🇽 Liga MX", cornersAvg:8.5, goalsAvg:2.70, negBinR:6.3,
         markets:{ht:true, goles:true, btts:false, corn:true},
         bsdName:"Liga MX",
         bsdNameAlt:["Liga BBVA MX","Mexican Liga MX","Liga MX Apertura","Liga MX Clausura","Primera Division Mexico","Mexico Liga MX"],
         teams:["América","Atlas FC","Atlético de San Luis","CF Pachuca","Club Necaxa","Club Tijuana","Cruz Azul","Deportivo Guadalajara","FC Juárez","León","Mazatlán FC","Monterrey","Puebla FC","Querétaro FC","Santos Laguna","Tigres UANL","Toluca FC","UNAM Pumas"]
     },
     "LIB": {
-        name:"🏆 Libertadores", leagueAvg:9.2, negBinR:6.1,
+        name:"🏆 Libertadores", cornersAvg:9.2, goalsAvg:2.50, negBinR:6.1,
         markets:{ht:true, goles:true, btts:true, corn:true},
         bsdName:"Copa Libertadores",
         bsdNameAlt:["CONMEBOL Libertadores","Copa CONMEBOL Libertadores","Copa CONMEBOL Libertadores 2026"],
         teams:["Flamengo","Estudiantes de La Plata","Cusco FC","Independiente Medellín","Nacional","Universitario","Coquimbo Unido","Deportes Tolima","Fluminense","Club Bolívar","Deportivo La Guaira","Independiente Rivadavia","Boca Juniors","Cruzeiro","Universidad Católica","Barcelona SC","Peñarol","Corinthians","Santa Fe","Platense","Palmeiras","Cerro Porteño","Junior","Sporting Cristal","LDU Quito","Lanús","Always Ready","Mirassol","Independiente del Valle","Libertad","Rosario Central","Universidad Central"]
     },
     "MLS": {
-        name:"🇺🇸 MLS", leagueAvg:9.1, negBinR:6.2,
+        name:"🇺🇸 MLS", cornersAvg:9.1, goalsAvg:2.85, negBinR:6.2,
         markets:{ht:true, goles:true, btts:true, corn:false},
         bsdName:"Major League Soccer",
         bsdNameAlt:["MLS","MLS Regular Season"],
         teams:["Inter Miami CF","CF Montréal","Charlotte FC","Chicago Fire FC","FC Cincinnati","Columbus Crew","D.C. United","CF New England Revolution","Nashville SC","New York City FC","New York Red Bulls","Orlando City SC","Philadelphia Union","Atlanta United FC","Toronto FC","Austin FC","Colorado Rapids","FC Dallas","Houston Dynamo FC","LA Galaxy","Los Angeles FC","Minnesota United FC","Portland Timbers","Real Salt Lake","San Jose Earthquakes","Seattle Sounders FC","Sporting Kansas City","St. Louis City SC","Vancouver Whitecaps FC","San Diego FC"]
     },
     "BSB": {
-        name:"🇧🇷 Brasileirão B", leagueAvg:8.8, negBinR:6.4,
+        name:"🇧🇷 Brasileirão B", cornersAvg:8.8, goalsAvg:2.30, negBinR:6.4,
         markets:{ht:false, goles:true, btts:true, corn:false},
         bsdName:"Campeonato Brasileiro Série B",
         bsdNameAlt:["Brasileirão Série B","Serie B (Brazil)","Brazilian Serie B"],
         teams:["América Mineiro","Athletic Club","Atlético Goianiense","Avaí FC","Botafogo-SP","Ceará SC","CRB","Criciúma","Cuiabá","Fortaleza","Goiás","Juventude","Londrina","Náutico","Novorizontino","Operário-PR","Ponte Preta","São Bernardo FC","Sport Recife","Vila Nova"]
     },
     "PPT": {
-        name:"🇵🇹 Liga Portugal", leagueAvg:9.4, negBinR:6.1,
+        name:"🇵🇹 Liga Portugal", cornersAvg:9.4, goalsAvg:2.60, negBinR:6.1,
         markets:{ht:false, goles:true, btts:true, corn:true},
         bsdName:"Liga Portugal",
         bsdNameAlt:["Primeira Liga","Liga Portugal Betclic","Liga NOS"],
         teams:["Sporting CP","FC Porto","SL Benfica","SC Braga","FC Famalicão","Rio Ave FC","CD Santa Clara","FC Alverca","GD Estoril Praia","Gil Vicente FC","Vitória SC","Casa Pia AC","FC Arouca","CD Tondela","Moreirense FC","CD Nacional","Estrela da Amadora","SC Farense"]
     },
     "EKS": {
-        name:"🇵🇱 Ekstraklasa", leagueAvg:9.3, negBinR:6.2,
+        name:"🇵🇱 Ekstraklasa", cornersAvg:9.3, goalsAvg:2.55, negBinR:6.2,
         markets:{ht:false, goles:true, btts:true, corn:true},
         bsdName:"Ekstraklasa",
         bsdNameAlt:["PKO Bank Polski Ekstraklasa","PKO BP Ekstraklasa","Poland Ekstraklasa"],
         teams:["Lech Poznań","Raków Częstochowa","Jagiellonia Białystok","Legia Warszawa","Pogoń Szczecin","Górnik Zabrze","Zagłębie Lubin","Piast Gliwice","Wisła Płock","Motor Lublin","GKS Katowice","Cracovia","Widzew Łódź","Korona Kielce","Radomiak Radom","Lechia Gdańsk","Arka Gdynia","Bruk-Bet Termalica Nieciecza"]
     },
     "SLG": {
-        name:"🇬🇷 Super Liga Grecia", leagueAvg:9.0, negBinR:6.3,
+        name:"🇬🇷 Super Liga Grecia", cornersAvg:9.0, goalsAvg:2.60, negBinR:6.3,
         markets:{ht:false, goles:true, btts:true, corn:true},
         bsdName:"Super League Greece",
         bsdNameAlt:["Stoiximan Super League","Super League 1","Greek Super League"],
@@ -547,7 +547,8 @@ function uncertaintyBand(prob, nMatches) {
     return {low:low.toFixed(0), high:high.toFixed(0)};
 }
 
-function bivariateLambdas(homeAtk, homeDef, awayAtk, awayDef, leagueMean, homeAdv = 1.08) {
+function bivariateLambdas(homeAtk, homeDef, awayAtk, awayDef, goalsAvg, homeAdv = 1.08) {
+    const leagueMean = goalsAvg / 2;  // goles por equipo sin ventaja local
     const normHomeAtk = Math.max(0.5, homeAtk / leagueMean);
     const normHomeDef = Math.max(0.5, homeDef / leagueMean);
     const normAwayAtk = Math.max(0.5, awayAtk / leagueMean);
@@ -695,10 +696,25 @@ async function getTeamStats(teamId, teamName, role, seasonId) {
     } catch{return null;}
 }
 
-function fallbackCorners(name, role, avg) { if(CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role]; return Math.min(8.0,Math.max(3.2,role==='home'?avg/2*1.10:avg/2*0.90)); }
-function fallbackGoals(name, role, avg) { return Math.min(2.10,Math.max(0.60,role==='home'?(avg/10)*1.20:(avg/10)*0.90)); }
-function fallbackGoals1T(name, role, avg) { return Math.min(0.90,Math.max(0.30,role==='home'?(avg/10)*1.15*1.08:(avg/10)*1.15*0.92)); }
-function regressionBlend(teamVal,leagueMean,nMatches) { const trust=Math.min(0.85,0.40+(nMatches/MATCHES_TO_USE)*0.45); return teamVal*trust+leagueMean*(1-trust); }
+function fallbackCorners(name, role, liga) {
+    if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+    const base = liga.cornersAvg / 2;
+    return role === 'home' ? base * 1.10 : base * 0.90;
+}
+function fallbackGoals(name, role, liga) {
+    const base = liga.goalsAvg / 2; // goles por equipo (sin ventaja)
+    return role === 'home' ? base * 1.15 : base * 0.85;
+}
+function fallbackGoals1T(name, role, liga) {
+    const baseTotal = liga.goalsAvg / 2; // goles totales por equipo en partido completo
+    // 1T ~44% local, 40% visitante
+    return role === 'home' ? baseTotal * 1.08 * 0.44 : baseTotal * 0.92 * 0.40;
+}
+
+function regressionBlend(teamVal,leagueMean,nMatches) {
+    const trust=Math.min(0.85,0.40+(nMatches/MATCHES_TO_USE)*0.45);
+    return teamVal*trust+leagueMean*(1-trust);
+}
 
 function poissonProb(lambda,k){let p=Math.exp(-lambda),term=p;for(let i=1;i<=k;i++){term*=lambda/i;p+=term;}return p;}
 function poissonExact(lambda,k){let term=Math.exp(-lambda);for(let i=0;i<k;i++)term*=lambda/(i+1);return term;}
@@ -818,7 +834,7 @@ document.getElementById('calc-btn').onclick = async () => {
     if(!home||!away){alert('Selecciona ambos equipos.');return;}
     if(home===away){alert('Los equipos deben ser diferentes.');return;}
 
-    const liga=LIGAS[currentLeagueKey];const leagueAvg=liga.leagueAvg,negBinR=liga.negBinR;
+    const liga=LIGAS[currentLeagueKey];const {cornersAvg, goalsAvg, negBinR} = liga;
     const bsdInfo=bsdLeagueMap[currentLeagueKey];const homeId=teamMap[home]?.bsdId,awayId=teamMap[away]?.bsdId;
     const seasonId=bsdInfo?.seasonId;
 
@@ -845,22 +861,22 @@ document.getElementById('calc-btn').onclick = async () => {
     }
 
     const homeMatchesC=homeStats?.matches||0,awayMatchesC=awayStats?.matches||0;
-    const leagueCornerMean=leagueAvg/2,leagueGoalMean=(leagueAvg/10)*1.35,leagueGoalFMean=leagueAvg/10*1.05;
+    const leagueGoalMean = goalsAvg / 2;  // goles por equipo (base)
     const totalMatchesUsed=homeMatchesC+awayMatchesC;
 
     let homeGoalF,awayGoalF,homeGoal1T,awayGoal1T,homeGoalsConceded,awayGoalsConceded;
-    if(homeStats?.xG&&homeMatchesC>=5){homeGoalF=regressionBlend(homeStats.xG,leagueGoalFMean*1.10,homeMatchesC);}
-    else if(homeStats?.goalsFull){homeGoalF=regressionBlend(homeStats.goalsFull,leagueGoalFMean*1.10,homeMatchesC);}
-    else{homeGoalF=fallbackGoals(home,'home',leagueAvg);}
-    if(awayStats?.xG&&awayMatchesC>=5){awayGoalF=regressionBlend(awayStats.xG,leagueGoalFMean*0.90,awayMatchesC);}
-    else if(awayStats?.goalsFull){awayGoalF=regressionBlend(awayStats.goalsFull,leagueGoalFMean*0.90,awayMatchesC);}
-    else{awayGoalF=fallbackGoals(away,'away',leagueAvg);}
-    homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',leagueAvg),leagueGoalMean*1.10,homeMatchesC):fallbackGoals1T(home,'home',leagueAvg);
-    awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',leagueAvg),leagueGoalMean*0.90,awayMatchesC):fallbackGoals1T(away,'away',leagueAvg);
-    homeGoalsConceded=homeStats?.fromApi?regressionBlend(homeStats.goalsConceded??leagueGoalFMean*0.90,leagueGoalFMean*0.90,homeMatchesC):leagueGoalFMean*0.90;
-    awayGoalsConceded=awayStats?.fromApi?regressionBlend(awayStats.goalsConceded??leagueGoalFMean*1.10,leagueGoalFMean*1.10,awayMatchesC):leagueGoalFMean*1.10;
-    let homeCorn=homeStats?.fromApi?regressionBlend(homeStats.corners??fallbackCorners(home,'home',leagueAvg),leagueCornerMean*1.10,homeMatchesC):fallbackCorners(home,'home',leagueAvg);
-    let awayCorn=awayStats?.fromApi?regressionBlend(awayStats.corners??fallbackCorners(away,'away',leagueAvg),leagueCornerMean*0.90,awayMatchesC):fallbackCorners(away,'away',leagueAvg);
+    if(homeStats?.xG&&homeMatchesC>=5){homeGoalF=regressionBlend(homeStats.xG,leagueGoalMean*1.10,homeMatchesC);}
+    else if(homeStats?.goalsFull){homeGoalF=regressionBlend(homeStats.goalsFull,leagueGoalMean*1.10,homeMatchesC);}
+    else{homeGoalF=fallbackGoals(home,'home',liga);}
+    if(awayStats?.xG&&awayMatchesC>=5){awayGoalF=regressionBlend(awayStats.xG,leagueGoalMean*0.90,awayMatchesC);}
+    else if(awayStats?.goalsFull){awayGoalF=regressionBlend(awayStats.goalsFull,leagueGoalMean*0.90,awayMatchesC);}
+    else{awayGoalF=fallbackGoals(away,'away',liga);}
+    homeGoal1T=homeStats?.fromApi?regressionBlend(homeStats.goals1t??fallbackGoals1T(home,'home',liga),leagueGoalMean*1.10,homeMatchesC):fallbackGoals1T(home,'home',liga);
+    awayGoal1T=awayStats?.fromApi?regressionBlend(awayStats.goals1t??fallbackGoals1T(away,'away',liga),leagueGoalMean*0.90,awayMatchesC):fallbackGoals1T(away,'away',liga);
+    homeGoalsConceded=homeStats?.fromApi?regressionBlend(homeStats.goalsConceded??leagueGoalMean*0.90,leagueGoalMean*0.90,homeMatchesC):leagueGoalMean*0.90;
+    awayGoalsConceded=awayStats?.fromApi?regressionBlend(awayStats.goalsConceded??leagueGoalMean*1.10,leagueGoalMean*1.10,awayMatchesC):leagueGoalMean*1.10;
+    let homeCorn=homeStats?.fromApi?regressionBlend(homeStats.corners??fallbackCorners(home,'home',liga),cornersAvg/2*1.10,homeMatchesC):fallbackCorners(home,'home',liga);
+    let awayCorn=awayStats?.fromApi?regressionBlend(awayStats.corners??fallbackCorners(away,'away',liga),cornersAvg/2*0.90,awayMatchesC):fallbackCorners(away,'away',liga);
 
     const eloDiff=(homeElo-awayElo)/400;const eloAdjustment=1+(eloDiff*0.12);
     homeGoalF*=Math.max(0.85,Math.min(1.15,eloAdjustment));awayGoalF*=Math.max(0.85,Math.min(1.15,1/eloAdjustment));
@@ -870,7 +886,7 @@ document.getElementById('calc-btn').onclick = async () => {
     const hFm=formMultiplier(homeStats?.form),aFm=formMultiplier(awayStats?.form);
     homeGoalF*=hFm;awayGoalF*=aFm;homeGoal1T*=hFm;awayGoal1T*=aFm;homeCorn*=(hFm*0.5+0.5);awayCorn*=(aFm*0.5+0.5);
 
-    const bivLambdas=bivariateLambdas(homeGoalF,homeGoalsConceded,awayGoalF,awayGoalsConceded,leagueGoalFMean,homeAdvantage);
+    const bivLambdas=bivariateLambdas(homeGoalF,homeGoalsConceded,awayGoalF,awayGoalsConceded,goalsAvg,homeAdvantage);
     const lambdaH=+bivLambdas.home.toFixed(2),lambdaA=+bivLambdas.away.toFixed(2);
     const lambdaGoal=+(homeGoal1T+awayGoal1T).toFixed(2),lambdaCorn=+(homeCorn+awayCorn).toFixed(2);
 
