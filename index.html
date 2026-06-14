@@ -120,6 +120,37 @@
             box-shadow: 0 0 20px rgba(255, 77, 90, 0.1);
         }
 
+        .saved-badge-header {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+            padding: 4px 12px;
+            background: rgba(151, 117, 250, 0.15);
+            border: 1px solid rgba(151, 117, 250, 0.3);
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #c4b5fd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .saved-badge-header:hover {
+            background: rgba(151, 117, 250, 0.25);
+            box-shadow: 0 0 20px rgba(151, 117, 250, 0.2);
+        }
+        .saved-badge-header.has-items {
+            color: var(--green);
+            border-color: rgba(46, 204, 113, 0.4);
+            background: rgba(46, 204, 113, 0.1);
+        }
+        .saved-count {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+        }
+
         .card {
             background: var(--card);
             backdrop-filter: blur(24px);
@@ -387,6 +418,37 @@
 
         .calc-btn:active {
             transform: scale(0.97);
+        }
+
+        .save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 10px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, rgba(151, 117, 250, 0.15), rgba(77, 171, 247, 0.1));
+            color: #c4b5fd;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .save-btn:hover {
+            background: linear-gradient(135deg, rgba(151, 117, 250, 0.3), rgba(77, 171, 247, 0.2));
+            border-color: rgba(151, 117, 250, 0.5);
+            box-shadow: 0 0 25px rgba(151, 117, 250, 0.25);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .save-btn.saved {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(46, 204, 113, 0.1));
+            border-color: rgba(46, 204, 113, 0.4);
+            color: var(--green);
+            pointer-events: none;
         }
 
         .loading-state {
@@ -844,13 +906,161 @@
         .pulse {
             animation: pulse 2s ease-in-out infinite;
         }
+
+        /* ============ GUARDAR PREDICCIONES ============ */
+        .saved-panel {
+            background: var(--card);
+            backdrop-filter: blur(24px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-top: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .saved-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent);
+            opacity: 0.8;
+        }
+        .saved-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .saved-panel-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: var(--text);
+        }
+        .saved-panel-clear {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 77, 90, 0.25);
+            background: rgba(255, 77, 90, 0.08);
+            transition: all 0.25s ease;
+        }
+        .saved-panel-clear:hover {
+            background: rgba(255, 77, 90, 0.2);
+        }
+        .saved-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            border-radius: 14px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            transition: all 0.25s ease;
+            animation: fadeUp 0.4s ease-out;
+        }
+        .saved-item:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+        .saved-item-date {
+            font-size: 0.6rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        .saved-item-teams {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .saved-item-teams small {
+            display: block;
+            font-size: 0.58rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .saved-item-pick {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-align: right;
+            line-height: 1.1;
+        }
+        .saved-item-delete {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 77, 90, 0.2);
+            background: rgba(255, 77, 90, 0.08);
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s ease;
+        }
+        .saved-item-delete:hover {
+            background: rgba(255, 77, 90, 0.25);
+            border-color: var(--accent);
+        }
+        .saved-empty {
+            text-align: center;
+            padding: 20px;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid rgba(46, 204, 113, 0.4);
+            backdrop-filter: blur(20px);
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--green);
+            z-index: 999;
+            animation: toastIn 0.35s ease-out, toastOut 0.35s 1.8s ease-in forwards;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes toastOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo">FOOTBALL<span>BET</span></div>
-            <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.4 PRO</div>
+            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;">
+                <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.4 PRO</div>
+                <span class="saved-badge-header" id="saved-badge-header" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
+                    📋 <span class="saved-count" id="saved-count">0</span>
+                </span>
+            </div>
         </div>
         <div class="card">
             <div class="api-status">
@@ -878,6 +1088,15 @@
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
+                <div class="saved-panel hidden" id="saved-panel">
+                    <div class="saved-panel-header">
+                        <span class="saved-panel-title">📋 MIS PREDICCIONES GUARDADAS</span>
+                        <button class="saved-panel-clear" onclick="clearAllSaved()" id="saved-clear-btn" style="display:none;">🗑 LIMPIAR TODO</button>
+                    </div>
+                    <div id="saved-list">
+                        <div class="saved-empty">Aún no has guardado ninguna predicción</div>
+                    </div>
+                </div>
                 <p class="disclaimer">FOOTBALL BET v2.4 PRO · Dixon‑Coles (ρ por liga) · Ataque×Defensa · Elo · xG · NegBin · Platt Calibración Mejorada · Altitud/Contexto · Bandas incertidumbre realistas. Solo uso personal.</p>
             </div>
         </div>
@@ -889,6 +1108,12 @@
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
         const API_TIMEOUT = 6000;
+
+        // Variables de guardado
+        let lastPrediction = null;
+        let savedPredictions = [];
+        const MAX_SAVED = 15;
+        const SAVED_KEY = 'footballbet_pro_saved';
 
         const LIGAS = {
             "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", cornersAvg: 10.1, goalsAvg: 2.85, negBinR: 5.4, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Premier League", teams: ["Arsenal FC", "Aston Villa FC", "AFC Bournemouth", "Brentford FC", "Brighton & Hove Albion FC", "Chelsea FC", "Crystal Palace FC", "Everton FC", "Fulham FC", "Liverpool FC", "Manchester City FC", "Manchester United FC", "Newcastle United FC", "Nottingham Forest FC", "Tottenham Hotspur FC", "West Ham United FC", "Wolverhampton Wanderers FC", "Leeds United", "Burnley FC", "Sunderland AFC"] },
@@ -1570,6 +1795,10 @@
             if (!home || !away) { alert('Selecciona ambos equipos'); return; }
             if (home === away) { alert('Equipos diferentes'); return; }
 
+            // Resetear botón de guardar
+            const saveBtn = document.getElementById('save-pred-btn');
+            if (saveBtn) { saveBtn.classList.remove('saved'); saveBtn.textContent = '💾 GUARDAR PREDICCIÓN'; }
+
             const liga = LIGAS[currentLeagueKey];
             const { goalsAvg, cornersAvg, negBinR } = liga;
             const bsdInfo = bsdLeagueMap[currentLeagueKey];
@@ -1875,6 +2104,17 @@
             all.push({ label: 'VICTORIA VISITANTE', prob: rpa, desc: `${away.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
 
             const rec = buildRecommendation(all);
+
+            // Guardar datos para el botón de guardar
+            lastPrediction = {
+                home, away,
+                ligaName: liga.name,
+                top: rec.top,
+                top3: rec.top3,
+                isAggressive: rec.isAggressive,
+                allMarkets: all
+            };
+
             if (!rec.top) {
                 document.getElementById('recomendacion-container').innerHTML = `<div class="recomendacion animate-in" style="border-color:rgba(255,77,90,0.25);"><div class="rec-title" style="color:var(--accent);">SIN APUESTA CLARA</div><div class="rec-main" style="color:var(--accent);font-size:1.2rem;">SIN APUESTA CLARA</div><div class="rec-sub">Ningún mercado supera el umbral de confianza mínimo</div></div>`;
             } else {
@@ -1896,6 +2136,7 @@
                         <div class="rec-sub">${tb.desc}</div>
                         <div class="rec-confidence" style="border-color:${cls};"><span class="rc-pct" style="color:${cls}">${tb.prob.toFixed(0)}%</span><span class="rc-label">${conf}</span></div>
                         ${top3h ? `<div style="margin-top:14px;text-align:left;"><div style="font-size:0.6rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">🔎 OTRAS OPCIONES</div>${top3h}</div>` : ''}
+                        <button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>
                     </div>`;
             }
         }
@@ -1917,10 +2158,132 @@
             document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
         }
 
+        // ============ GUARDAR PREDICCIONES ============
+        function loadSavedPredictions() {
+            try {
+                const raw = localStorage.getItem(SAVED_KEY);
+                savedPredictions = raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                savedPredictions = [];
+            }
+            updateSavedBadge();
+            renderSavedList();
+        }
+
+        function saveCurrentPrediction() {
+            if (!lastPrediction) return;
+            if (savedPredictions.length >= MAX_SAVED) {
+                savedPredictions.shift();
+            }
+            const entry = {
+                id: Date.now(),
+                fecha: new Date().toLocaleString('es', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                liga: lastPrediction.ligaName || '',
+                home: lastPrediction.home,
+                away: lastPrediction.away,
+                topPick: lastPrediction.top?.label || '',
+                topProb: lastPrediction.top?.prob || 0,
+                topColor: lastPrediction.top?.prob >= 70 ? 'var(--green)' : lastPrediction.top?.prob >= 60 ? 'var(--yellow)' : 'var(--accent)',
+                top3: lastPrediction.top3?.map(t => ({ label: t.label, prob: t.prob })) || [],
+                timestamp: Date.now()
+            };
+            savedPredictions.push(entry);
+            try {
+                localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            } catch (e) {
+                savedPredictions.pop();
+                showToast('⚠️ Almacenamiento lleno');
+                return;
+            }
+            updateSavedBadge();
+            renderSavedList();
+            showToast('✅ Predicción guardada');
+            const btn = document.getElementById('save-pred-btn');
+            if (btn) { btn.classList.add('saved'); btn.textContent = '✅ GUARDADO'; }
+        }
+
+        function deleteSavedPrediction(id) {
+            savedPredictions = savedPredictions.filter(p => p.id !== id);
+            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            updateSavedBadge();
+            renderSavedList();
+            showToast('🗑 Eliminada');
+        }
+
+        function clearAllSaved() {
+            if (confirm('¿Eliminar todas las predicciones guardadas?')) {
+                savedPredictions = [];
+                localStorage.removeItem(SAVED_KEY);
+                updateSavedBadge();
+                renderSavedList();
+                showToast('🗑 Todas eliminadas');
+            }
+        }
+
+        function updateSavedBadge() {
+            const badge = document.getElementById('saved-badge-header');
+            const count = document.getElementById('saved-count');
+            const clearBtn = document.getElementById('saved-clear-btn');
+            count.textContent = savedPredictions.length;
+            if (savedPredictions.length > 0) {
+                badge.classList.add('has-items');
+                if (clearBtn) clearBtn.style.display = 'inline-block';
+            } else {
+                badge.classList.remove('has-items');
+                if (clearBtn) clearBtn.style.display = 'none';
+            }
+        }
+
+        function toggleSavedPanel() {
+            const panel = document.getElementById('saved-panel');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                panel.classList.add('hidden');
+            }
+            renderSavedList();
+        }
+
+        function renderSavedList() {
+            const container = document.getElementById('saved-list');
+            if (!container) return;
+            if (savedPredictions.length === 0) {
+                container.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
+                return;
+            }
+            const reversed = [...savedPredictions].reverse();
+            container.innerHTML = reversed.map(p => `
+                <div class="saved-item">
+                    <span class="saved-item-date">${p.fecha}</span>
+                    <span class="saved-item-teams">
+                        ${p.home} vs ${p.away}
+                        <small>${p.liga}</small>
+                    </span>
+                    <span class="saved-item-pick" style="color:${p.topColor}">
+                        ${p.topPick}
+                        <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
+                    </span>
+                    <button class="saved-item-delete" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2300);
+        }
+
         window.onload = async () => {
             renderLeaguePills();
             renderMarketToggles();
             setApiStatus('error', '🟡 Conectando con BSD API...');
+            loadSavedPredictions();
             try {
                 let all = [], url = BSD_BASE + '/leagues/?page_size=100', p = 0;
                 while (url && p < 5) {
