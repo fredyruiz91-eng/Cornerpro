@@ -8,8 +8,8 @@
     <style>
         :root {
             --bg: #0a0e17;
-            --card: rgba(16, 20, 32, 0.7);
-            --card2: rgba(22, 27, 42, 0.8);
+            --card: rgba(16, 20, 32, 0.55);
+            --card2: rgba(22, 27, 42, 0.7);
             --border: rgba(255, 255, 255, 0.08);
             --text: #f0f2f8;
             --muted: #7b8aa6;
@@ -22,6 +22,11 @@
             --blue: #4dabf7;
             --purple: #9775fa;
             --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-bg-strong: rgba(255, 255, 255, 0.06);
+            --text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            --radius-lg: 22px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
         }
 
         * {
@@ -38,29 +43,67 @@
             display: flex;
             justify-content: center;
             padding: 20px 15px 60px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo animado con partículas y malla */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
             background-image:
-                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 77, 90, 0.15) 0%, transparent 70%),
-                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 35% at 20% 60%, rgba(77, 171, 247, 0.06) 0%, transparent 50%),
-                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255, 255, 255, 0.015) 39px, rgba(255, 255, 255, 0.015) 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255, 255, 255, 0.015) 39px, rgba(255, 255, 255, 0.015) 40px);
+                radial-gradient(circle at 20% 20%, rgba(255, 77, 90, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(77, 171, 247, 0.06) 0%, transparent 60%);
+            z-index: 0;
+            animation: bgPulse 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1.5px 1.5px at 70% 30%, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 15% 85%, rgba(255,182,39,0.4), transparent),
+                radial-gradient(1px 1px at 55% 45%, rgba(46,204,113,0.4), transparent);
+            background-size: 200% 200%;
+            animation: particleDrift 30s linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
             text-align: center;
             padding: 28px 20px 20px;
             margin-bottom: 8px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            background: rgba(20, 25, 40, 0.5);
+            backdrop-filter: blur(25px);
+            border-radius: var(--radius-lg);
             border: 1px solid rgba(255, 255, 255, 0.06);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
 
         .header::before {
@@ -70,9 +113,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, var(--accent-glow), transparent, var(--green-glow), transparent);
-            animation: rotateGlow 8s linear infinite;
-            opacity: 0.3;
+            background: conic-gradient(from 0deg, transparent, rgba(255,77,90,0.3), transparent, rgba(46,204,113,0.3), transparent);
+            animation: rotateGlow 12s linear infinite;
+            opacity: 0.4;
         }
 
         @keyframes rotateGlow {
@@ -86,15 +129,16 @@
 
         .logo {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 3rem;
-            letter-spacing: 4px;
+            font-size: 3.2rem;
+            letter-spacing: 5px;
             color: white;
             line-height: 1;
-            text-shadow: 0 0 30px var(--accent-glow), 0 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 0 30px var(--accent-glow), 0 2px 10px rgba(0,0,0,0.6);
             background: linear-gradient(135deg, #ffffff 0%, #ff8a95 50%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 8px;
         }
 
         .logo span {
@@ -106,27 +150,26 @@
 
         .badge {
             display: inline-block;
-            margin-top: 8px;
             padding: 4px 14px;
-            background: linear-gradient(135deg, rgba(255, 77, 90, 0.15), rgba(77, 171, 247, 0.1));
-            border: 1px solid rgba(255, 77, 90, 0.25);
+            background: rgba(255, 77, 90, 0.1);
+            border: 1px solid rgba(255, 77, 90, 0.3);
             border-radius: 20px;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 700;
             letter-spacing: 2px;
             color: var(--accent);
             text-transform: uppercase;
             backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 77, 90, 0.1);
+            box-shadow: 0 0 20px rgba(255, 77, 90, 0.15);
+            margin: 0 4px;
         }
 
         .saved-badge-header {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            margin-left: 10px;
             padding: 4px 12px;
-            background: rgba(151, 117, 250, 0.15);
+            background: rgba(151, 117, 250, 0.12);
             border: 1px solid rgba(151, 117, 250, 0.3);
             border-radius: 20px;
             font-size: 0.65rem;
@@ -139,12 +182,13 @@
         }
         .saved-badge-header:hover {
             background: rgba(151, 117, 250, 0.25);
-            box-shadow: 0 0 20px rgba(151, 117, 250, 0.2);
+            box-shadow: 0 0 20px rgba(151, 117, 250, 0.25);
+            transform: translateY(-2px);
         }
         .saved-badge-header.has-items {
             color: var(--green);
-            border-color: rgba(46, 204, 113, 0.4);
-            background: rgba(46, 204, 113, 0.1);
+            border-color: rgba(46, 204, 113, 0.5);
+            background: rgba(46, 204, 113, 0.12);
         }
         .saved-count {
             font-family: 'Bebas Neue', sans-serif;
@@ -152,11 +196,11 @@
         }
 
         .card {
-            background: var(--card);
-            backdrop-filter: blur(24px);
-            border-radius: 20px;
+            background: rgba(20, 25, 40, 0.45);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
             padding: 22px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             margin-bottom: 14px;
             position: relative;
             overflow: hidden;
@@ -165,8 +209,8 @@
         }
 
         .card:hover {
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .card::before {
@@ -175,20 +219,9 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), var(--yellow), var(--green), transparent);
-            opacity: 0.7;
-        }
-
-        .card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(ellipse at top left, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
-            pointer-events: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            opacity: 0.5;
         }
 
         .api-status {
@@ -201,7 +234,7 @@
             text-transform: uppercase;
             margin-bottom: 16px;
             padding: 8px 14px;
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
@@ -236,30 +269,31 @@
         .league-pill {
             padding: 6px 13px;
             border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--glass-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
             color: var(--muted);
             font-size: 0.72rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.25s ease;
             letter-spacing: 0.5px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
         }
 
         .league-pill:hover {
             border-color: var(--accent);
             color: var(--text);
             background: rgba(255, 77, 90, 0.1);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(255, 77, 90, 0.2);
         }
 
         .league-pill.active {
-            background: linear-gradient(135deg, rgba(255, 77, 90, 0.2), rgba(77, 171, 247, 0.15));
+            background: linear-gradient(135deg, rgba(255, 77, 90, 0.25), rgba(77, 171, 247, 0.2));
             border-color: var(--accent);
             color: white;
-            box-shadow: 0 0 20px rgba(255, 77, 90, 0.2);
+            box-shadow: 0 0 20px rgba(255, 77, 90, 0.3);
+            transform: scale(1.03);
         }
 
         label {
@@ -275,9 +309,10 @@
         select {
             width: 100%;
             padding: 12px 15px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--glass-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(20, 25, 40, 0.4);
+            backdrop-filter: blur(15px);
             color: var(--text);
             font-family: 'DM Sans', sans-serif;
             font-size: 0.88rem;
@@ -287,13 +322,12 @@
             background-position: right 14px center;
             cursor: pointer;
             transition: all 0.25s ease;
-            backdrop-filter: blur(10px);
         }
 
         select:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(255, 77, 90, 0.1);
+            box-shadow: 0 0 15px rgba(255, 77, 90, 0.15);
         }
 
         select:disabled {
@@ -328,7 +362,7 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
         }
 
         .markets-label {
@@ -351,26 +385,27 @@
         .mkt-toggle {
             padding: 6px 12px;
             border-radius: 16px;
-            border: 1px solid var(--border);
-            background: var(--glass-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
             color: var(--muted);
             font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.25s ease;
             letter-spacing: 0.5px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(5px);
         }
 
         .mkt-toggle:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            border-color: rgba(255,255,255,0.2);
         }
 
         .mkt-toggle.on {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(77, 171, 247, 0.1));
-            border-color: rgba(46, 204, 113, 0.4);
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(77, 171, 247, 0.15));
+            border-color: rgba(46, 204, 113, 0.5);
             color: var(--green);
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
         }
 
         .mkt-toggle.unavailable {
@@ -381,22 +416,23 @@
 
         .calc-btn {
             width: 100%;
-            padding: 14px;
-            border-radius: 14px;
+            padding: 16px;
+            border-radius: var(--radius-md);
             border: none;
             background: linear-gradient(135deg, var(--accent), #ff6b7a, var(--accent));
             background-size: 200% 100%;
             color: white;
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.15rem;
-            letter-spacing: 2px;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
             margin-top: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 6px 25px rgba(255, 77, 90, 0.3);
+            box-shadow: 0 8px 30px rgba(255, 77, 90, 0.4);
             animation: shimmer 3s ease-in-out infinite;
+            text-transform: uppercase;
         }
 
         @keyframes shimmer {
@@ -408,12 +444,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
         }
 
         .calc-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 35px rgba(255, 77, 90, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(255, 77, 90, 0.6);
         }
 
         .calc-btn:active {
@@ -423,12 +459,13 @@
         .save-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             margin-top: 14px;
             padding: 10px 20px;
             border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: linear-gradient(135deg, rgba(151, 117, 250, 0.15), rgba(77, 171, 247, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(151, 117, 250, 0.15);
             color: #c4b5fd;
             font-family: 'Bebas Neue', sans-serif;
             font-size: 0.85rem;
@@ -438,15 +475,15 @@
             backdrop-filter: blur(10px);
         }
         .save-btn:hover {
-            background: linear-gradient(135deg, rgba(151, 117, 250, 0.3), rgba(77, 171, 247, 0.2));
-            border-color: rgba(151, 117, 250, 0.5);
-            box-shadow: 0 0 25px rgba(151, 117, 250, 0.25);
+            background: rgba(151, 117, 250, 0.3);
+            border-color: rgba(151, 117, 250, 0.6);
+            box-shadow: 0 0 25px rgba(151, 117, 250, 0.3);
             transform: translateY(-2px);
             color: white;
         }
         .save-btn.saved {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(46, 204, 113, 0.1));
-            border-color: rgba(46, 204, 113, 0.4);
+            background: rgba(46, 204, 113, 0.2);
+            border-color: rgba(46, 204, 113, 0.5);
             color: var(--green);
             pointer-events: none;
         }
@@ -462,11 +499,11 @@
         .spinner {
             width: 30px;
             height: 30px;
-            border: 2px solid var(--border);
+            border: 2px solid rgba(255,255,255,0.1);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            margin: 0 auto 12px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 14px;
         }
 
         @keyframes spin {
@@ -474,15 +511,15 @@
         }
 
         .match-header {
-            background: var(--card);
-            backdrop-filter: blur(24px);
-            border-radius: 20px;
+            background: rgba(20, 25, 40, 0.5);
+            backdrop-filter: blur(25px);
+            border-radius: var(--radius-lg);
             padding: 22px 18px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             margin-bottom: 14px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
 
         .match-header::before {
@@ -493,7 +530,7 @@
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--accent), var(--yellow), var(--green), transparent);
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .teams-row {
@@ -512,21 +549,23 @@
 
         .team-name {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1.2rem;
             letter-spacing: 1px;
             color: white;
             text-align: center;
             line-height: 1.2;
+            text-shadow: var(--text-shadow);
         }
 
         .vs-center {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             background: linear-gradient(135deg, var(--accent), var(--yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
+            text-shadow: none;
         }
 
         .form-row {
@@ -548,23 +587,9 @@
             backdrop-filter: blur(5px);
         }
 
-        .form-dot.w {
-            background: rgba(46, 204, 113, 0.25);
-            color: var(--green);
-            box-shadow: 0 0 6px rgba(46, 204, 113, 0.2);
-        }
-
-        .form-dot.d {
-            background: rgba(255, 182, 39, 0.25);
-            color: var(--yellow);
-            box-shadow: 0 0 6px rgba(255, 182, 39, 0.2);
-        }
-
-        .form-dot.l {
-            background: rgba(255, 77, 90, 0.25);
-            color: var(--accent);
-            box-shadow: 0 0 6px rgba(255, 77, 90, 0.2);
-        }
+        .form-dot.w { background: rgba(46, 204, 113, 0.3); color: var(--green); box-shadow: 0 0 8px rgba(46, 204, 113, 0.3); }
+        .form-dot.d { background: rgba(255, 182, 39, 0.3); color: var(--yellow); box-shadow: 0 0 8px rgba(255, 182, 39, 0.3); }
+        .form-dot.l { background: rgba(255, 77, 90, 0.3); color: var(--accent); box-shadow: 0 0 8px rgba(255, 77, 90, 0.3); }
 
         .data-tag {
             font-size: 0.58rem;
@@ -575,16 +600,28 @@
             text-transform: uppercase;
         }
 
-        .data-tag.api {
-            background: rgba(46, 204, 113, 0.12);
-            color: var(--green);
-            border: 1px solid rgba(46, 204, 113, 0.25);
+        .data-tag.api { background: rgba(46, 204, 113, 0.15); color: var(--green); border: 1px solid rgba(46, 204, 113, 0.3); }
+        .data-tag.off { background: rgba(255, 182, 39, 0.15); color: var(--yellow); border: 1px solid rgba(255, 182, 39, 0.3); }
+
+        .stats-summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
         }
 
-        .data-tag.off {
-            background: rgba(255, 182, 39, 0.12);
-            color: var(--yellow);
-            border: 1px solid rgba(255, 182, 39, 0.25);
+        .stats-summary span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .result-boxes {
@@ -595,12 +632,12 @@
         }
 
         .result-box {
-            background: var(--glass-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            background: rgba(20, 25, 40, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-md);
             padding: 12px 8px;
             text-align: center;
-            backdrop-filter: blur(15px);
             transition: all 0.3s ease;
         }
 
@@ -640,7 +677,7 @@
 
         .section-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.95rem;
+            font-size: 1rem;
             letter-spacing: 2px;
             color: var(--text);
         }
@@ -660,7 +697,7 @@
         .section-divider {
             height: 1px;
             margin: 16px 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
         }
 
         .cal-badge {
@@ -679,12 +716,12 @@
         }
 
         .market-card {
-            background: var(--glass-bg);
+            background: rgba(20, 25, 40, 0.3);
             backdrop-filter: blur(15px);
-            border-radius: 14px;
+            border-radius: var(--radius-md);
             padding: 14px 16px;
             margin-bottom: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             display: grid;
             grid-template-columns: auto 1fr auto;
             align-items: center;
@@ -693,28 +730,29 @@
         }
 
         .market-card:hover {
-            transform: translateX(2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transform: translateX(3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255,255,255,0.1);
         }
 
         .market-card.high {
-            border-color: rgba(46, 204, 113, 0.35);
+            border-left: 3px solid var(--green);
             background: rgba(46, 204, 113, 0.03);
         }
 
         .market-card.mid {
-            border-color: rgba(255, 182, 39, 0.3);
+            border-left: 3px solid var(--yellow);
             background: rgba(255, 182, 39, 0.03);
         }
 
         .market-card.low {
-            border-color: rgba(255, 77, 90, 0.25);
+            border-left: 3px solid var(--accent);
             background: rgba(255, 77, 90, 0.03);
         }
 
         .line-label {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             line-height: 1;
             color: white;
             letter-spacing: 1px;
@@ -736,18 +774,19 @@
 
         .bar-bg {
             background: rgba(255, 255, 255, 0.05);
-            height: 7px;
-            border-radius: 4px;
+            height: 8px;
+            border-radius: 5px;
             overflow: hidden;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .bar-fill {
             height: 100%;
-            border-radius: 4px;
+            border-radius: 5px;
             width: 0%;
-            transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 0 8px currentColor;
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 12px currentColor;
         }
 
         .bar-sub {
@@ -764,7 +803,7 @@
 
         .pct-label {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
             line-height: 1;
             text-align: right;
@@ -785,7 +824,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
-            margin-top: 2px;
+            margin-top: 4px;
             font-size: 0.58rem;
         }
 
@@ -806,16 +845,16 @@
         }
 
         .recomendacion {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(77, 171, 247, 0.05));
+            background: rgba(20, 25, 40, 0.5);
+            backdrop-filter: blur(25px);
             border: 1px solid rgba(46, 204, 113, 0.3);
-            border-radius: 20px;
-            padding: 20px 18px;
+            border-radius: var(--radius-lg);
+            padding: 22px 20px;
             margin-top: 8px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
 
         .recomendacion::before {
@@ -826,46 +865,53 @@
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--green), var(--blue), transparent);
+            animation: glowLine 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowLine {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .rec-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             letter-spacing: 3px;
             color: var(--green);
             opacity: 0.9;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .rec-main {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.7rem;
+            font-size: 2rem;
             letter-spacing: 2px;
             color: white;
             line-height: 1.1;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
 
         .rec-sub {
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--muted);
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
         .rec-confidence {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 12px;
-            padding: 6px 16px;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 8px 20px;
             border-radius: 20px;
-            background: rgba(46, 204, 113, 0.1);
-            border: 1px solid rgba(46, 204, 113, 0.2);
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.25);
             backdrop-filter: blur(10px);
         }
 
         .rc-pct {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--green);
         }
 
@@ -879,15 +925,13 @@
         .disclaimer {
             text-align: center;
             color: var(--muted);
-            font-size: 0.63rem;
+            font-size: 0.6rem;
             margin-top: 20px;
             line-height: 1.6;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
-        .hidden {
-            display: none;
-        }
+        .hidden { display: none; }
 
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -903,23 +947,21 @@
             50% { opacity: 0.7; }
         }
 
-        .pulse {
-            animation: pulse 2s ease-in-out infinite;
-        }
+        .pulse { animation: pulse 2s ease-in-out infinite; }
 
-        /* ============ GUARDAR PREDICCIONES ============ */
+        /* Panel de guardados mejorado */
         .saved-panel {
-            background: var(--card);
-            backdrop-filter: blur(24px);
-            border-radius: 20px;
+            background: rgba(20, 25, 40, 0.5);
+            backdrop-filter: blur(25px);
+            border-radius: var(--radius-lg);
             padding: 20px;
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             margin-top: 14px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
+
         .saved-panel::before {
             content: '';
             position: absolute;
@@ -928,20 +970,23 @@
             right: 0;
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent);
-            opacity: 0.8;
+            opacity: 0.9;
         }
+
         .saved-panel-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 14px;
         }
+
         .saved-panel-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 2px;
             color: var(--text);
         }
+
         .saved-panel-clear {
             font-size: 0.6rem;
             font-weight: 700;
@@ -957,6 +1002,7 @@
         .saved-panel-clear:hover {
             background: rgba(255, 77, 90, 0.2);
         }
+
         .saved-item {
             display: grid;
             grid-template-columns: auto 1fr auto auto;
@@ -964,58 +1010,109 @@
             gap: 10px;
             padding: 12px 14px;
             margin-bottom: 6px;
-            border-radius: 14px;
-            background: var(--glass-bg);
-            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: rgba(20, 25, 40, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.25s ease;
             animation: fadeUp 0.4s ease-out;
         }
+
         .saved-item:hover {
             border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            transform: translateX(2px);
         }
+
+        .saved-item.won {
+            border-color: rgba(46, 204, 113, 0.5);
+            background: rgba(46, 204, 113, 0.06);
+        }
+        .saved-item.lost {
+            border-color: rgba(255, 77, 90, 0.5);
+            background: rgba(255, 77, 90, 0.05);
+        }
+
         .saved-item-date {
             font-size: 0.6rem;
             color: var(--muted);
             letter-spacing: 1px;
             font-weight: 700;
         }
+
         .saved-item-teams {
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.5px;
         }
+
         .saved-item-teams small {
             display: block;
             font-size: 0.58rem;
             color: var(--muted);
             font-weight: 500;
         }
+
         .saved-item-pick {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             letter-spacing: 1px;
             text-align: right;
             line-height: 1.1;
         }
-        .saved-item-delete {
+
+        .saved-item-actions {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .action-btn {
             width: 28px;
             height: 28px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 77, 90, 0.2);
-            background: rgba(255, 77, 90, 0.08);
-            color: var(--accent);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--muted);
             cursor: pointer;
             font-size: 0.7rem;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.25s ease;
+            backdrop-filter: blur(5px);
         }
-        .saved-item-delete:hover {
-            background: rgba(255, 77, 90, 0.25);
+        .action-btn.win-btn:hover {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: var(--green);
+            color: var(--green);
+            box-shadow: 0 0 12px rgba(46, 204, 113, 0.25);
+        }
+        .action-btn.loss-btn:hover {
+            background: rgba(255, 77, 90, 0.2);
             border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 12px rgba(255, 77, 90, 0.25);
         }
+        .action-btn.delete-btn:hover {
+            background: rgba(255, 182, 39, 0.2);
+            border-color: var(--yellow);
+            color: var(--yellow);
+            box-shadow: 0 0 12px rgba(255, 182, 39, 0.25);
+        }
+        .action-btn.active-win {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: var(--green);
+            color: var(--green);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        .action-btn.active-loss {
+            background: rgba(255, 77, 90, 0.3);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(255, 77, 90, 0.2);
+        }
+
         .saved-empty {
             text-align: center;
             padding: 20px;
@@ -1023,13 +1120,14 @@
             font-size: 0.72rem;
             letter-spacing: 1px;
         }
+
         .toast {
             position: fixed;
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(46, 204, 113, 0.15);
-            border: 1px solid rgba(46, 204, 113, 0.4);
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.5);
             backdrop-filter: blur(20px);
             padding: 10px 24px;
             border-radius: 20px;
@@ -1039,7 +1137,7 @@
             color: var(--green);
             z-index: 999;
             animation: toastIn 0.35s ease-out, toastOut 0.35s 1.8s ease-in forwards;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
         @keyframes toastIn {
             from { opacity: 0; transform: translateX(-50%) translateY(30px); }
@@ -1052,10 +1150,11 @@
     </style>
 </head>
 <body>
+    <div class="particles"></div>
     <div class="container">
         <div class="header">
             <div class="logo">FOOTBALL<span>BET</span></div>
-            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px;">
                 <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.4 PRO</div>
                 <span class="saved-badge-header" id="saved-badge-header" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
                     📋 <span class="saved-count" id="saved-count">0</span>
@@ -1109,7 +1208,6 @@
         const MATCHES_TO_USE = 15;
         const API_TIMEOUT = 6000;
 
-        // Variables de guardado
         let lastPrediction = null;
         let savedPredictions = [];
         const MAX_SAVED = 15;
@@ -1404,7 +1502,7 @@
             }
         };
 
-        // ============ FUNCIONES AUXILIARES ============
+        // ============ FUNCIONES AUXILIARES (sin cambios) ============
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
@@ -1795,7 +1893,6 @@
             if (!home || !away) { alert('Selecciona ambos equipos'); return; }
             if (home === away) { alert('Equipos diferentes'); return; }
 
-            // Resetear botón de guardar
             const saveBtn = document.getElementById('save-pred-btn');
             if (saveBtn) { saveBtn.classList.remove('saved'); saveBtn.textContent = '💾 GUARDAR PREDICCIÓN'; }
 
@@ -2004,6 +2101,16 @@
             if (altitude.contextTags.length) tags.push(...altitude.contextTags);
             if (tags.length) ctx = `<div class="context-tags">${tags.map(t => `<span class="context-tag ${t.type}">${t.text}</span>`).join('')}</div>`;
 
+            // Nueva barra de resumen de estadísticas
+            const statsSummary = `
+                <div class="stats-summary">
+                    <span>📊 Partidos: ${totalMatchesUsed || '—'}</span>
+                    <span>⚖️ Elo dif: ${(homeElo - awayElo).toFixed(0)}</span>
+                    <span>🏠 Ventaja local: ${(HOME_ADVANTAGE_BY_LEAGUE[currentLeagueKey] || 1.08).toFixed(2)}</span>
+                    ${altitude.contextTags.length ? '<span>🏔️ Altitud</span>' : ''}
+                </div>
+            `;
+
             document.getElementById('match-header-container').innerHTML = `
                 <div class="match-header animate-in">
                     <div style="text-align:center;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:12px;font-weight:700;text-transform:uppercase;">${liga.name}</div>
@@ -2013,6 +2120,7 @@
                         <div class="team-side">${aTag}<div class="team-name">${away}</div>${aF.length ? `<div class="form-row">${aF.map(r => `<span class="form-dot ${r}">${r.toUpperCase()}</span>`).join('')}</div>` : ''}</div>
                     </div>
                     ${ctx}
+                    ${statsSummary}
                     ${renderResultBoxes(lambdaH, lambdaA)}
                 </div>`;
 
@@ -2105,7 +2213,6 @@
 
             const rec = buildRecommendation(all);
 
-            // Guardar datos para el botón de guardar
             lastPrediction = {
                 home, away,
                 ligaName: liga.name,
@@ -2158,7 +2265,7 @@
             document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
         }
 
-        // ============ GUARDAR PREDICCIONES ============
+        // ============ GUARDAR PREDICCIONES (sin cambios) ============
         function loadSavedPredictions() {
             try {
                 const raw = localStorage.getItem(SAVED_KEY);
@@ -2185,6 +2292,7 @@
                 topProb: lastPrediction.top?.prob || 0,
                 topColor: lastPrediction.top?.prob >= 70 ? 'var(--green)' : lastPrediction.top?.prob >= 60 ? 'var(--yellow)' : 'var(--accent)',
                 top3: lastPrediction.top3?.map(t => ({ label: t.label, prob: t.prob })) || [],
+                result: null,
                 timestamp: Date.now()
             };
             savedPredictions.push(entry);
@@ -2208,6 +2316,17 @@
             updateSavedBadge();
             renderSavedList();
             showToast('🗑 Eliminada');
+        }
+
+        function markPredictionResult(id, result) {
+            const pred = savedPredictions.find(p => p.id === id);
+            if (!pred) return;
+            pred.result = pred.result === result ? null : result;
+            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            updateSavedBadge();
+            renderSavedList();
+            const msg = pred.result === 'win' ? '✔ Marcada como Ganada' : pred.result === 'loss' ? '✘ Marcada como Perdida' : '↩ Estado reiniciado';
+            showToast(msg);
         }
 
         function clearAllSaved() {
@@ -2253,8 +2372,12 @@
                 return;
             }
             const reversed = [...savedPredictions].reverse();
-            container.innerHTML = reversed.map(p => `
-                <div class="saved-item">
+            container.innerHTML = reversed.map(p => {
+                const isWin = p.result === 'win';
+                const isLoss = p.result === 'loss';
+                const itemClass = isWin ? 'won' : isLoss ? 'lost' : '';
+                return `
+                <div class="saved-item ${itemClass}">
                     <span class="saved-item-date">${p.fecha}</span>
                     <span class="saved-item-teams">
                         ${p.home} vs ${p.away}
@@ -2264,9 +2387,13 @@
                         ${p.topPick}
                         <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
                     </span>
-                    <button class="saved-item-delete" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
-                </div>
-            `).join('');
+                    <div class="saved-item-actions">
+                        <button class="action-btn win-btn ${isWin ? 'active-win' : ''}" onclick="markPredictionResult(${p.id}, 'win')" title="Marcar Ganada">✔</button>
+                        <button class="action-btn loss-btn ${isLoss ? 'active-loss' : ''}" onclick="markPredictionResult(${p.id}, 'loss')" title="Marcar Perdida">✘</button>
+                        <button class="action-btn delete-btn" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function showToast(msg) {
