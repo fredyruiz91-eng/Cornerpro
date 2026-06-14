@@ -200,7 +200,6 @@
             font-size: 0.9rem;
         }
 
-        /* 🔵 BOTÓN FLOTANTE (FAB) PARA APUESTAS GUARDADAS */
         .fab-saved {
             position: fixed;
             bottom: 28px;
@@ -1024,7 +1023,6 @@
 
         .pulse { animation: pulse 2s ease-in-out infinite; }
 
-        /* Panel de guardados mejorado */
         .saved-panel {
             background: rgba(20, 25, 40, 0.5);
             backdrop-filter: blur(25px);
@@ -1224,7 +1222,6 @@
             to { opacity: 0; transform: translateX(-50%) translateY(20px); }
         }
 
-        /* Responsive para el FAB en móviles */
         @media (max-width: 480px) {
             .fab-saved {
                 bottom: 20px;
@@ -1244,7 +1241,7 @@
 <body>
     <div class="particles"></div>
 
-    <!-- 🔵 BOTÓN FLOTANTE PARA REVISAR APUESTAS GUARDADAS -->
+    <!-- Botón flotante de apuestas guardadas -->
     <button class="fab-saved" id="fab-saved-btn" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
         📋
         <span class="fab-badge" id="fab-badge-count">0</span>
@@ -1289,7 +1286,6 @@
                 <p class="disclaimer">FOOTBALL BET v2.4 PRO · Dixon‑Coles (ρ por liga) · Ataque×Defensa · Elo · xG · NegBin · Platt Calibración Mejorada · Altitud/Contexto · Bandas incertidumbre realistas. Solo uso personal.</p>
             </div>
         </div>
-        <!-- Panel de guardados movido fuera de #output para acceso independiente -->
         <div class="saved-panel hidden" id="saved-panel">
             <div class="saved-panel-header">
                 <span class="saved-panel-title">📋 MIS PREDICCIONES GUARDADAS</span>
@@ -1302,7 +1298,6 @@
     </div>
 
     <script>
-        // ============ CONFIGURACIÓN Y DATOS ============
         const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
@@ -1331,17 +1326,17 @@
             "EKS": { name: "🇵🇱 Ekstraklasa", cornersAvg: 9.3, goalsAvg: 2.55, negBinR: 6.2, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Ekstraklasa", bsdNameAlt: ["PKO Bank Polski Ekstraklasa", "PKO BP Ekstraklasa", "Poland Ekstraklasa"], teams: ["Lech Poznań", "Raków Częstochowa", "Jagiellonia Białystok", "Legia Warszawa", "Pogoń Szczecin", "Górnik Zabrze", "Zagłębie Lubin", "Piast Gliwice", "Wisła Płock", "Motor Lublin", "GKS Katowice", "Cracovia", "Widzew Łódź", "Korona Kielce", "Radomiak Radom", "Lechia Gdańsk", "Arka Gdynia", "Bruk-Bet Termalica Nieciecza"] },
             "SLG": { name: "🇬🇷 Super Liga Grecia", cornersAvg: 9.0, goalsAvg: 2.60, negBinR: 6.3, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Super League Greece", bsdNameAlt: ["Stoiximan Super League", "Super League 1", "Greek Super League"], teams: ["AEK Athens", "PAOK", "Olympiacos", "Panathinaikos", "Levadiakos", "Aris", "OFI Crete", "Volos NFC", "Atromitos", "A.E. Kifisia", "Panetolikos", "Panserraikos", "Asteras Tripolis", "AEL"] },
             "WC26": { name: "🏆 Mundial 2026", cornersAvg: 8.9, goalsAvg: 2.50, negBinR: 5.6, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "FIFA World Cup", bsdNameAlt: ["World Cup 2026", "FIFA World Cup 2026", "2026 FIFA World Cup", "Mundial 2026", "World Cup"], teams: [
-                "Mexico", "South Africa", "South Korea", "Czech Republic",
+                "Mexico", "South Africa", "Korea Republic", "Czechia",
                 "Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland",
                 "Brazil", "Morocco", "Haiti", "Scotland",
                 "United States", "Paraguay", "Australia", "Turkey",
-                "Germany", "Curacao", "Côte d'Ivoire", "Ecuador",
+                "Germany", "Curaçao", "Côte d'Ivoire", "Ecuador",
                 "Netherlands", "Japan", "Sweden", "Tunisia",
-                "Belgium", "Egypt", "Iran", "New Zealand",
-                "Spain", "Cape Verde", "Saudi Arabia", "Uruguay",
+                "Belgium", "Egypt", "IR Iran", "New Zealand",
+                "Spain", "Cabo Verde", "Saudi Arabia", "Uruguay",
                 "France", "Senegal", "Iraq", "Norway",
                 "Argentina", "Algeria", "Austria", "Jordan",
-                "Portugal", "Congo DR", "Uzbekistan", "Colombia",
+                "Portugal", "DR Congo", "Uzbekistan", "Colombia",
                 "England", "Croatia", "Ghana", "Panama"
             ] }
         };
@@ -1465,21 +1460,21 @@
                 "Vancouver Whitecaps FC": ["Vancouver"], "San Diego FC": ["San Diego"]
             },
             "WC26": {
-                "Mexico": ["México"], "South Africa": ["Sudáfrica"], "South Korea": ["Korea Republic", "Corea del Sur"],
-                "Czech Republic": ["Czechia", "República Checa"], "Canada": ["Canadá"],
+                "Mexico": ["México"], "South Africa": ["Sudáfrica"], "Korea Republic": ["South Korea", "Corea del Sur"],
+                "Czechia": ["Czech Republic", "República Checa"], "Canada": ["Canadá"],
                 "Bosnia and Herzegovina": ["Bosnia & Herzegovina", "Bosnia"], "Qatar": ["Catar"], "Switzerland": ["Suiza"],
                 "Brazil": ["Brasil"], "Morocco": ["Marruecos"], "Haiti": ["Haití"], "Scotland": ["Escocia"],
                 "United States": ["USA", "Estados Unidos"], "Paraguay": ["Paraguay National Team"],
                 "Australia": ["Australia National Team"], "Turkey": ["Türkiye", "Turquía"],
-                "Germany": ["Alemania"], "Curacao": ["Curaçao"], "Côte d'Ivoire": ["Ivory Coast", "Costa de Marfil"],
+                "Germany": ["Alemania"], "Curaçao": ["Curacao"], "Côte d'Ivoire": ["Ivory Coast", "Costa de Marfil"],
                 "Ecuador": ["Ecuador National Team"], "Netherlands": ["Países Bajos"], "Japan": ["Japón"],
                 "Sweden": ["Suecia"], "Tunisia": ["Túnez"], "Belgium": ["Bélgica"], "Egypt": ["Egipto"],
-                "Iran": ["IR Iran", "Irán"], "New Zealand": ["Nueva Zelanda"], "Spain": ["España"],
-                "Cape Verde": ["Cabo Verde"], "Saudi Arabia": ["Arabia Saudita"], "Uruguay": ["Uruguay National Team"],
+                "IR Iran": ["Iran", "Irán"], "New Zealand": ["Nueva Zelanda"], "Spain": ["España"],
+                "Cabo Verde": ["Cape Verde"], "Saudi Arabia": ["Arabia Saudita"], "Uruguay": ["Uruguay National Team"],
                 "France": ["Francia"], "Senegal": ["Senegal National Team"], "Iraq": ["Irak"], "Norway": ["Noruega"],
                 "Argentina": ["Argentina National Team"], "Algeria": ["Argelia"], "Austria": ["Austria National Team"],
                 "Jordan": ["Jordania"], "Portugal": ["Portugal National Team"],
-                "Congo DR": ["RD Congo", "DR Congo", "Democratic Republic of the Congo"],
+                "DR Congo": ["Congo DR", "RD Congo", "Democratic Republic of the Congo"],
                 "Uzbekistan": ["Uzbekistán"], "Colombia": ["Colombia National Team"], "England": ["Inglaterra"],
                 "Croatia": ["Croacia"], "Ghana": ["Ghana National Team"], "Panama": ["Panamá"]
             }
@@ -1536,15 +1531,15 @@
             "Netherlands": { home: 5.8, away: 4.9 }, "Belgium": { home: 5.7, away: 4.8 }, "Croatia": { home: 5.3, away: 4.4 },
             "Japan": { home: 5.2, away: 4.3 }, "Morocco": { home: 5.0, away: 4.1 }, "United States": { home: 5.1, away: 4.2 },
             "Mexico": { home: 5.2, away: 4.3 }, "Senegal": { home: 4.9, away: 4.0 }, "Ecuador": { home: 5.0, away: 4.1 },
-            "South Korea": { home: 4.8, away: 3.9 }, "Iran": { home: 4.5, away: 3.7 }, "Australia": { home: 4.6, away: 3.8 },
+            "Korea Republic": { home: 4.8, away: 3.9 }, "IR Iran": { home: 4.5, away: 3.7 }, "Australia": { home: 4.6, away: 3.8 },
             "Canada": { home: 4.7, away: 3.9 }, "Egypt": { home: 4.8, away: 4.0 }, "Ghana": { home: 4.5, away: 3.7 },
             "Côte d'Ivoire": { home: 4.8, away: 4.0 }, "Algeria": { home: 4.9, away: 4.1 }, "South Africa": { home: 4.6, away: 3.8 },
             "Switzerland": { home: 5.3, away: 4.4 }, "Austria": { home: 5.0, away: 4.2 }, "Turkey": { home: 5.4, away: 4.5 },
             "Sweden": { home: 5.1, away: 4.2 }, "Paraguay": { home: 4.5, away: 3.7 }, "Saudi Arabia": { home: 4.4, away: 3.6 },
             "Panama": { home: 4.3, away: 3.5 }, "New Zealand": { home: 4.1, away: 3.3 },
             "Iraq": { home: 4.4, away: 3.6 }, "Jordan": { home: 4.5, away: 3.7 }, "Qatar": { home: 4.7, away: 3.9 },
-            "Curacao": { home: 4.3, away: 3.5 }, "Haiti": { home: 4.2, away: 3.4 }, "Cape Verde": { home: 4.6, away: 3.8 },
-            "Congo DR": { home: 4.8, away: 4.0 }, "Czech Republic": { home: 5.3, away: 4.5 },
+            "Curaçao": { home: 4.3, away: 3.5 }, "Haiti": { home: 4.2, away: 3.4 }, "Cabo Verde": { home: 4.6, away: 3.8 },
+            "DR Congo": { home: 4.8, away: 4.0 }, "Czechia": { home: 5.3, away: 4.5 },
             "Bosnia and Herzegovina": { home: 5.0, away: 4.2 }, "Norway": { home: 6.0, away: 5.1 }, "Scotland": { home: 5.8, away: 4.9 },
             "Tunisia": { home: 4.5, away: 3.7 }, "Uzbekistan": { home: 4.3, away: 3.5 }
         };
@@ -1587,22 +1582,21 @@
                 "England": [1.31, 0.75, 1.07], "Portugal": [1.28, 0.78, 1.07], "Netherlands": [1.24, 0.81, 1.06],
                 "Belgium": [1.20, 0.84, 1.06], "Croatia": [1.18, 0.86, 1.06], "Switzerland": [1.15, 0.90, 1.05],
                 "Austria": [1.14, 0.91, 1.05], "Turkey": [1.12, 0.93, 1.05], "Sweden": [1.08, 0.97, 1.05],
-                "Scotland": [1.10, 0.94, 1.05], "Norway": [1.22, 0.83, 1.06], "Czech Republic": [1.12, 0.92, 1.06],
+                "Scotland": [1.10, 0.94, 1.05], "Norway": [1.22, 0.83, 1.06], "Czechia": [1.12, 0.92, 1.06],
                 "Bosnia and Herzegovina": [1.08, 0.96, 1.05],
-                "Japan": [1.22, 0.83, 1.06], "Iran": [1.08, 0.97, 1.05], "South Korea": [1.16, 0.89, 1.06],
+                "Japan": [1.22, 0.83, 1.06], "IR Iran": [1.08, 0.97, 1.05], "Korea Republic": [1.16, 0.89, 1.06],
                 "Saudi Arabia": [0.96, 1.06, 1.04], "Australia": [1.04, 1.01, 1.05], "Uzbekistan": [0.94, 1.08, 1.04],
                 "Iraq": [1.02, 1.02, 1.05], "Jordan": [1.06, 0.98, 1.05], "Qatar": [1.08, 0.96, 1.05],
                 "Egypt": [1.10, 0.95, 1.05], "Morocco": [1.25, 0.80, 1.06], "Senegal": [1.20, 0.84, 1.06],
                 "Ghana": [1.06, 1.00, 1.05], "Côte d'Ivoire": [1.15, 0.90, 1.05], "Algeria": [1.10, 0.95, 1.05],
-                "South Africa": [1.02, 1.03, 1.05], "Tunisia": [1.04, 1.01, 1.05], "Cape Verde": [1.06, 0.99, 1.05],
-                "Congo DR": [1.10, 0.94, 1.05],
+                "South Africa": [1.02, 1.03, 1.05], "Tunisia": [1.04, 1.01, 1.05], "Cabo Verde": [1.06, 0.99, 1.05],
+                "DR Congo": [1.10, 0.94, 1.05],
                 "United States": [1.18, 0.87, 1.08], "Mexico": [1.16, 0.89, 1.07], "Canada": [1.12, 0.93, 1.07],
-                "Panama": [0.94, 1.08, 1.05], "Curacao": [1.02, 1.04, 1.05], "Haiti": [1.00, 1.06, 1.05],
+                "Panama": [0.94, 1.08, 1.05], "Curaçao": [1.02, 1.04, 1.05], "Haiti": [1.00, 1.06, 1.05],
                 "New Zealand": [0.88, 1.14, 1.04]
             }
         };
 
-        // ============ FUNCIONES AUXILIARES ============
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
@@ -2364,7 +2358,6 @@
             document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
         }
 
-        // ============ GUARDAR PREDICCIONES ============
         function loadSavedPredictions() {
             try {
                 const raw = localStorage.getItem(SAVED_KEY);
