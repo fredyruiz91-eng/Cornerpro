@@ -21,6 +21,7 @@
             --green-glow: rgba(46, 204, 113, 0.5);
             --blue: #4dabf7;
             --purple: #9775fa;
+            --purple-glow: rgba(151, 117, 250, 0.5);
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-bg-strong: rgba(255, 255, 255, 0.06);
             --text-shadow: 0 2px 5px rgba(0,0,0,0.5);
@@ -47,7 +48,6 @@
             overflow-x: hidden;
         }
 
-        /* Fondo animado con partículas y malla */
         body::before {
             content: '';
             position: fixed;
@@ -168,11 +168,11 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 12px;
+            padding: 6px 14px;
             background: rgba(151, 117, 250, 0.12);
             border: 1px solid rgba(151, 117, 250, 0.3);
             border-radius: 20px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 1px;
             color: #c4b5fd;
@@ -189,10 +189,85 @@
             color: var(--green);
             border-color: rgba(46, 204, 113, 0.5);
             background: rgba(46, 204, 113, 0.12);
+            animation: pulseBadge 2s ease-in-out infinite;
+        }
+        @keyframes pulseBadge {
+            0%, 100% { box-shadow: 0 0 12px rgba(46, 204, 113, 0.25); }
+            50% { box-shadow: 0 0 22px rgba(46, 204, 113, 0.5); }
         }
         .saved-count {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 0.9rem;
+        }
+
+        /* 🔵 BOTÓN FLOTANTE (FAB) PARA APUESTAS GUARDADAS */
+        .fab-saved {
+            position: fixed;
+            bottom: 28px;
+            right: 24px;
+            z-index: 999;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid rgba(151, 117, 250, 0.4);
+            background: rgba(22, 18, 45, 0.8);
+            backdrop-filter: blur(20px);
+            color: #c4b5fd;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 8px 30px rgba(151, 117, 250, 0.25), 0 0 0 0 rgba(151, 117, 250, 0.4);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fabPulse 2.5s ease-in-out infinite;
+        }
+        .fab-saved:hover {
+            transform: scale(1.1);
+            background: rgba(151, 117, 250, 0.25);
+            border-color: rgba(151, 117, 250, 0.7);
+            box-shadow: 0 12px 40px rgba(151, 117, 250, 0.45);
+            color: white;
+        }
+        .fab-saved:active {
+            transform: scale(0.95);
+        }
+        .fab-saved.has-items {
+            border-color: rgba(46, 204, 113, 0.5);
+            color: var(--green);
+            background: rgba(22, 32, 28, 0.85);
+            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.3);
+            animation: fabPulseGreen 2s ease-in-out infinite;
+        }
+        @keyframes fabPulse {
+            0%, 100% { box-shadow: 0 8px 30px rgba(151, 117, 250, 0.25), 0 0 0 0 rgba(151, 117, 250, 0.35); }
+            50% { box-shadow: 0 8px 30px rgba(151, 117, 250, 0.4), 0 0 0 14px rgba(151, 117, 250, 0); }
+        }
+        @keyframes fabPulseGreen {
+            0%, 100% { box-shadow: 0 8px 30px rgba(46, 204, 113, 0.3), 0 0 0 0 rgba(46, 204, 113, 0.35); }
+            50% { box-shadow: 0 8px 30px rgba(46, 204, 113, 0.5), 0 0 0 14px rgba(46, 204, 113, 0); }
+        }
+        .fab-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0,0,0,0.5);
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .fab-saved.has-items .fab-badge {
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(46, 204, 113, 0.5);
         }
 
         .card {
@@ -960,6 +1035,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            animation: fadeUp 0.4s ease-out;
         }
 
         .saved-panel::before {
@@ -1135,7 +1211,7 @@
             font-weight: 700;
             letter-spacing: 1px;
             color: var(--green);
-            z-index: 999;
+            z-index: 1000;
             animation: toastIn 0.35s ease-out, toastOut 0.35s 1.8s ease-in forwards;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
@@ -1147,10 +1223,33 @@
             from { opacity: 1; }
             to { opacity: 0; transform: translateX(-50%) translateY(20px); }
         }
+
+        /* Responsive para el FAB en móviles */
+        @media (max-width: 480px) {
+            .fab-saved {
+                bottom: 20px;
+                right: 16px;
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
+            }
+            .fab-badge {
+                width: 20px;
+                height: 20px;
+                font-size: 0.65rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="particles"></div>
+
+    <!-- 🔵 BOTÓN FLOTANTE PARA REVISAR APUESTAS GUARDADAS -->
+    <button class="fab-saved" id="fab-saved-btn" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
+        📋
+        <span class="fab-badge" id="fab-badge-count">0</span>
+    </button>
+
     <div class="container">
         <div class="header">
             <div class="logo">FOOTBALL<span>BET</span></div>
@@ -1187,16 +1286,17 @@
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
-                <div class="saved-panel hidden" id="saved-panel">
-                    <div class="saved-panel-header">
-                        <span class="saved-panel-title">📋 MIS PREDICCIONES GUARDADAS</span>
-                        <button class="saved-panel-clear" onclick="clearAllSaved()" id="saved-clear-btn" style="display:none;">🗑 LIMPIAR TODO</button>
-                    </div>
-                    <div id="saved-list">
-                        <div class="saved-empty">Aún no has guardado ninguna predicción</div>
-                    </div>
-                </div>
                 <p class="disclaimer">FOOTBALL BET v2.4 PRO · Dixon‑Coles (ρ por liga) · Ataque×Defensa · Elo · xG · NegBin · Platt Calibración Mejorada · Altitud/Contexto · Bandas incertidumbre realistas. Solo uso personal.</p>
+            </div>
+        </div>
+        <!-- Panel de guardados movido fuera de #output para acceso independiente -->
+        <div class="saved-panel hidden" id="saved-panel">
+            <div class="saved-panel-header">
+                <span class="saved-panel-title">📋 MIS PREDICCIONES GUARDADAS</span>
+                <button class="saved-panel-clear" onclick="clearAllSaved()" id="saved-clear-btn" style="display:none;">🗑 LIMPIAR TODO</button>
+            </div>
+            <div id="saved-list">
+                <div class="saved-empty">Aún no has guardado ninguna predicción</div>
             </div>
         </div>
     </div>
@@ -1502,7 +1602,7 @@
             }
         };
 
-        // ============ FUNCIONES AUXILIARES (sin cambios) ============
+        // ============ FUNCIONES AUXILIARES ============
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
@@ -2101,7 +2201,6 @@
             if (altitude.contextTags.length) tags.push(...altitude.contextTags);
             if (tags.length) ctx = `<div class="context-tags">${tags.map(t => `<span class="context-tag ${t.type}">${t.text}</span>`).join('')}</div>`;
 
-            // Nueva barra de resumen de estadísticas
             const statsSummary = `
                 <div class="stats-summary">
                     <span>📊 Partidos: ${totalMatchesUsed || '—'}</span>
@@ -2265,7 +2364,7 @@
             document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
         }
 
-        // ============ GUARDAR PREDICCIONES (sin cambios) ============
+        // ============ GUARDAR PREDICCIONES ============
         function loadSavedPredictions() {
             try {
                 const raw = localStorage.getItem(SAVED_KEY);
@@ -2274,6 +2373,7 @@
                 savedPredictions = [];
             }
             updateSavedBadge();
+            updateFabBadge();
             renderSavedList();
         }
 
@@ -2304,6 +2404,7 @@
                 return;
             }
             updateSavedBadge();
+            updateFabBadge();
             renderSavedList();
             showToast('✅ Predicción guardada');
             const btn = document.getElementById('save-pred-btn');
@@ -2314,6 +2415,7 @@
             savedPredictions = savedPredictions.filter(p => p.id !== id);
             localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
             updateSavedBadge();
+            updateFabBadge();
             renderSavedList();
             showToast('🗑 Eliminada');
         }
@@ -2324,6 +2426,7 @@
             pred.result = pred.result === result ? null : result;
             localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
             updateSavedBadge();
+            updateFabBadge();
             renderSavedList();
             const msg = pred.result === 'win' ? '✔ Marcada como Ganada' : pred.result === 'loss' ? '✘ Marcada como Perdida' : '↩ Estado reiniciado';
             showToast(msg);
@@ -2334,6 +2437,7 @@
                 savedPredictions = [];
                 localStorage.removeItem(SAVED_KEY);
                 updateSavedBadge();
+                updateFabBadge();
                 renderSavedList();
                 showToast('🗑 Todas eliminadas');
             }
@@ -2353,15 +2457,26 @@
             }
         }
 
+        function updateFabBadge() {
+            const fab = document.getElementById('fab-saved-btn');
+            const fabBadge = document.getElementById('fab-badge-count');
+            if (fabBadge) fabBadge.textContent = savedPredictions.length;
+            if (savedPredictions.length > 0) {
+                fab.classList.add('has-items');
+            } else {
+                fab.classList.remove('has-items');
+            }
+        }
+
         function toggleSavedPanel() {
             const panel = document.getElementById('saved-panel');
             if (panel.classList.contains('hidden')) {
                 panel.classList.remove('hidden');
+                renderSavedList();
                 panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 panel.classList.add('hidden');
             }
-            renderSavedList();
         }
 
         function renderSavedList() {
