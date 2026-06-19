@@ -1222,7 +1222,7 @@
             to { opacity: 0; transform: translateX(-50%) translateY(20px); }
         }
 
-        /* NUEVOS ESTILOS para el panel de estadísticas de aciertos */
+        /* NUEVOS ESTILOS para el panel de estadísticas de guardados */
         .saved-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1298,13 +1298,21 @@
 </head>
 <body>
     <div class="particles"></div>
-    <button class="fab-saved" id="fab-saved-btn" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">📋<span class="fab-badge" id="fab-badge-count">0</span></button>
+
+    <!-- Botón flotante de apuestas guardadas -->
+    <button class="fab-saved" id="fab-saved-btn" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
+        📋
+        <span class="fab-badge" id="fab-badge-count">0</span>
+    </button>
+
     <div class="container">
         <div class="header">
             <div class="logo">FOOTBALL<span>BET</span></div>
             <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px;">
                 <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.4 PRO</div>
-                <span class="saved-badge-header" id="saved-badge-header" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">📋 <span class="saved-count" id="saved-count">0</span></span>
+                <span class="saved-badge-header" id="saved-badge-header" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
+                    📋 <span class="saved-count" id="saved-count">0</span>
+                </span>
             </div>
         </div>
         <div class="card">
@@ -1349,7 +1357,6 @@
     </div>
 
     <script>
-        // ----- CONSTANTES Y CONFIGURACIÓN (sin cambios) -----
         const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
@@ -1364,93 +1371,1052 @@
             "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", cornersAvg: 10.1, goalsAvg: 2.85, negBinR: 5.4, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Premier League", teams: ["Arsenal FC", "Aston Villa FC", "AFC Bournemouth", "Brentford FC", "Brighton & Hove Albion FC", "Chelsea FC", "Crystal Palace FC", "Everton FC", "Fulham FC", "Liverpool FC", "Manchester City FC", "Manchester United FC", "Newcastle United FC", "Nottingham Forest FC", "Tottenham Hotspur FC", "West Ham United FC", "Wolverhampton Wanderers FC", "Leeds United", "Burnley FC", "Sunderland AFC"] },
             "BL1": { name: "🇩🇪 Bundesliga", cornersAvg: 9.8, goalsAvg: 3.00, negBinR: 5.9, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Bundesliga", teams: ["Borussia Dortmund", "FC Bayern München", "RB Leipzig", "VfB Stuttgart", "TSG Hoffenheim", "Bayer 04 Leverkusen", "SC Freiburg", "Eintracht Frankfurt", "FC Augsburg", "1. FSV Mainz 05", "1. FC Union Berlin", "Borussia M'gladbach", "Hamburger SV", "1. FC Köln", "SV Werder Bremen", "VfL Wolfsburg", "1. FC Heidenheim", "FC St. Pauli"] },
             "DED": { name: "🇳🇱 Eredivisie", cornersAvg: 9.6, goalsAvg: 3.10, negBinR: 5.7, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Eredivisie", teams: ["AZ Alkmaar", "Ajax", "Almere City FC", "FC Groningen", "FC Twente", "FC Utrecht", "Feyenoord", "Fortuna Sittard", "Go Ahead Eagles", "Heracles Almelo", "NAC Breda", "NEC Nijmegen", "PEC Zwolle", "PSV Eindhoven", "RKC Waalwijk", "Sparta Rotterdam", "Willem II", "sc Heerenveen"] },
-            // ... (todas las ligas originales se mantienen, no las repito para no alargar) ...
+            "JPL": { name: "🇧🇪 Jupiler Pro League", cornersAvg: 9.2, goalsAvg: 2.90, negBinR: 6.0, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Belgian Pro League", bsdNameAlt: ["First Division A", "Jupiler Pro League", "Pro League"], teams: ["Anderlecht", "Club Brugge KV", "KAA Gent", "Antwerp", "KRC Genk", "Cercle Brugge KSV", "Standard de Liège", "R. Union Saint-Gilloise", "KV Mechelen", "STVV", "Beerschot VA", "OH Leuven", "KV Kortrijk", "Charleroi", "KVC Westerlo", "RFC Seraing", "Zulte Waregem"] },
+            "FL1": { name: "🇫🇷 Ligue 1", cornersAvg: 9.3, goalsAvg: 2.70, negBinR: 6.2, markets: { ht: true, goles: true, btts: false, corn: false }, bsdName: "Ligue 1", teams: ["AJ Auxerre", "AS Monaco FC", "Le Havre AC", "Lille OSC", "Montpellier HSC", "OGC Nice", "Olympique Lyonnais", "Olympique de Marseille", "Paris Saint-Germain FC", "RC Lens", "RC Strasbourg Alsace", "Stade Brestois 29", "Stade Rennais FC", "Stade de Reims", "Toulouse FC", "FC Nantes", "FC Lorient", "ESTAC Troyes"] },
+            "BSA": { name: "🇧🇷 Brasileirão", cornersAvg: 9.4, goalsAvg: 2.45, negBinR: 5.8, markets: { ht: false, goles: true, btts: false, corn: true }, bsdName: "Campeonato Brasileiro Série A", bsdNameAlt: ["Brasileirão Série A", "Brasileirao Serie A", "Serie A (Brazil)", "Brazilian Serie A"], teams: ["Athletico Paranaense", "Atlético Mineiro", "Bahia", "Botafogo", "Chapecoense", "Corinthians", "Coritiba", "Cruzeiro", "Flamengo", "Fluminense", "Grêmio", "Internacional", "Mirassol", "Palmeiras", "Red Bull Bragantino", "Remo", "Santos", "São Paulo", "Vasco da Gama", "Vitória"] },
+            "ELC": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", cornersAvg: 9.7, goalsAvg: 2.65, negBinR: 5.5, markets: { ht: false, goles: false, btts: true, corn: true }, bsdName: "Championship", bsdNameAlt: ["EFL Championship", "English Championship"], teams: ["Blackburn Rovers", "Bristol City", "Cardiff City", "Coventry City", "Derby County", "Hull City", "Luton Town", "Middlesbrough FC", "Millwall FC", "Norwich City", "Oxford United", "Plymouth Argyle", "Portsmouth FC", "Preston North End", "QPR", "Sheffield United", "Sheffield Wednesday", "Stoke City", "Swansea City", "Watford FC", "West Bromwich Albion", "Leicester City FC", "Ipswich Town FC", "Southampton FC"] },
+            "PD": { name: "🇪🇸 La Liga", cornersAvg: 9.5, goalsAvg: 2.55, negBinR: 6.6, markets: { ht: false, goles: true, btts: false, corn: true }, bsdName: "La Liga", bsdNameAlt: ["Primera División", "LaLiga"], teams: ["Athletic Club", "Atlético de Madrid", "CA Osasuna", "Deportivo Alavés", "FC Barcelona", "Getafe CF", "Real Oviedo", "Girona FC", "RC Celta de Vigo", "RCD Mallorca", "Rayo Vallecano", "Real Betis Balompié", "Real Madrid CF", "Elche CF", "Real Sociedad", "Sevilla FC", "UD Las Palmas", "Valencia CF", "Villarreal CF", "RCD Espanyol de Barcelona", "CD Leganés", "Levante UD", "Real Valladolid CF"] },
+            "SA": { name: "🇮🇹 Serie A", cornersAvg: 9.0, goalsAvg: 2.65, negBinR: 7.1, markets: { ht: true, goles: true, btts: false, corn: true }, bsdName: "Serie A", bsdNameAlt: ["Serie A (Italy)", "Italian Serie A"], teams: ["AC Milan", "AC Monza", "ACF Fiorentina", "AS Roma", "Atalanta BC", "Bologna FC 1909", "Cagliari Calcio", "Como 1907", "Empoli FC", "Genoa CFC", "Hellas Verona FC", "Inter Milano", "Juventus FC", "Parma Calcio 1913", "SS Lazio", "SSC Napoli", "Torino FC", "Udinese Calcio", "US Lecce", "Sassuolo"] },
+            "MXL": { name: "🇲🇽 Liga MX", cornersAvg: 8.5, goalsAvg: 2.70, negBinR: 6.3, markets: { ht: true, goles: true, btts: false, corn: true }, bsdName: "Liga MX", bsdNameAlt: ["Liga BBVA MX", "Mexican Liga MX", "Liga MX Apertura", "Liga MX Clausura", "Primera Division Mexico", "Mexico Liga MX"], teams: ["América", "Atlas FC", "Atlético de San Luis", "CF Pachuca", "Club Necaxa", "Club Tijuana", "Cruz Azul", "Deportivo Guadalajara", "FC Juárez", "León", "Mazatlán FC", "Monterrey", "Puebla FC", "Querétaro FC", "Santos Laguna", "Tigres UANL", "Toluca FC", "UNAM Pumas"] },
+            "LIB": { name: "🏆 Libertadores", cornersAvg: 9.2, goalsAvg: 2.50, negBinR: 6.1, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Copa Libertadores", bsdNameAlt: ["CONMEBOL Libertadores", "Copa CONMEBOL Libertadores", "Copa CONMEBOL Libertadores 2026"], teams: ["Flamengo", "Estudiantes de La Plata", "Cusco FC", "Independiente Medellín", "Nacional", "Universitario", "Coquimbo Unido", "Deportes Tolima", "Fluminense", "Club Bolívar", "Deportivo La Guaira", "Independiente Rivadavia", "Boca Juniors", "Cruzeiro", "Universidad Católica", "Barcelona SC", "Peñarol", "Corinthians", "Santa Fe", "Platense", "Palmeiras", "Cerro Porteño", "Junior", "Sporting Cristal", "LDU Quito", "Lanús", "Always Ready", "Mirassol", "Independiente del Valle", "Libertad", "Rosario Central", "Universidad Central"] },
+            "MLS": { name: "🇺🇸 MLS", cornersAvg: 9.1, goalsAvg: 2.85, negBinR: 6.2, markets: { ht: true, goles: true, btts: true, corn: false }, bsdName: "Major League Soccer", bsdNameAlt: ["MLS", "MLS Regular Season"], teams: ["Inter Miami CF", "CF Montréal", "Charlotte FC", "Chicago Fire FC", "FC Cincinnati", "Columbus Crew", "D.C. United", "CF New England Revolution", "Nashville SC", "New York City FC", "New York Red Bulls", "Orlando City SC", "Philadelphia Union", "Atlanta United FC", "Toronto FC", "Austin FC", "Colorado Rapids", "FC Dallas", "Houston Dynamo FC", "LA Galaxy", "Los Angeles FC", "Minnesota United FC", "Portland Timbers", "Real Salt Lake", "San Jose Earthquakes", "Seattle Sounders FC", "Sporting Kansas City", "St. Louis City SC", "Vancouver Whitecaps FC", "San Diego FC"] },
+            "BSB": { name: "🇧🇷 Brasileirão B", cornersAvg: 8.8, goalsAvg: 2.30, negBinR: 6.4, markets: { ht: false, goles: true, btts: true, corn: false }, bsdName: "Campeonato Brasileiro Série B", bsdNameAlt: ["Brasileirão Série B", "Serie B (Brazil)", "Brazilian Serie B"], teams: ["América Mineiro", "Athletic Club", "Atlético Goianiense", "Avaí FC", "Botafogo-SP", "Ceará SC", "CRB", "Criciúma", "Cuiabá", "Fortaleza", "Goiás", "Juventude", "Londrina", "Náutico", "Novorizontino", "Operário-PR", "Ponte Preta", "São Bernardo FC", "Sport Recife", "Vila Nova"] },
+            "PPT": { name: "🇵🇹 Liga Portugal", cornersAvg: 9.4, goalsAvg: 2.60, negBinR: 6.1, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Liga Portugal", bsdNameAlt: ["Primeira Liga", "Liga Portugal Betclic", "Liga NOS"], teams: ["Sporting CP", "FC Porto", "SL Benfica", "SC Braga", "FC Famalicão", "Rio Ave FC", "CD Santa Clara", "FC Alverca", "GD Estoril Praia", "Gil Vicente FC", "Vitória SC", "Casa Pia AC", "FC Arouca", "CD Tondela", "Moreirense FC", "CD Nacional", "Estrela da Amadora", "SC Farense"] },
+            "EKS": { name: "🇵🇱 Ekstraklasa", cornersAvg: 9.3, goalsAvg: 2.55, negBinR: 6.2, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Ekstraklasa", bsdNameAlt: ["PKO Bank Polski Ekstraklasa", "PKO BP Ekstraklasa", "Poland Ekstraklasa"], teams: ["Lech Poznań", "Raków Częstochowa", "Jagiellonia Białystok", "Legia Warszawa", "Pogoń Szczecin", "Górnik Zabrze", "Zagłębie Lubin", "Piast Gliwice", "Wisła Płock", "Motor Lublin", "GKS Katowice", "Cracovia", "Widzew Łódź", "Korona Kielce", "Radomiak Radom", "Lechia Gdańsk", "Arka Gdynia", "Bruk-Bet Termalica Nieciecza"] },
+            "SLG": { name: "🇬🇷 Super Liga Grecia", cornersAvg: 9.0, goalsAvg: 2.60, negBinR: 6.3, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Super League Greece", bsdNameAlt: ["Stoiximan Super League", "Super League 1", "Greek Super League"], teams: ["AEK Athens", "PAOK", "Olympiacos", "Panathinaikos", "Levadiakos", "Aris", "OFI Crete", "Volos NFC", "Atromitos", "A.E. Kifisia", "Panetolikos", "Panserraikos", "Asteras Tripolis", "AEL"] },
+            "WC26": { name: "🏆 Mundial 2026", cornersAvg: 8.9, goalsAvg: 2.50, negBinR: 5.6, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "FIFA World Cup", bsdNameAlt: ["World Cup 2026", "FIFA World Cup 2026", "2026 FIFA World Cup", "Mundial 2026", "World Cup"], teams: [
+                "Mexico", "South Africa", "Korea Republic", "Czechia",
+                "Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland",
+                "Brazil", "Morocco", "Haiti", "Scotland",
+                "United States", "Paraguay", "Australia", "Turkey",
+                "Germany", "Curaçao", "Côte d'Ivoire", "Ecuador",
+                "Netherlands", "Japan", "Sweden", "Tunisia",
+                "Belgium", "Egypt", "IR Iran", "New Zealand",
+                "Spain", "Cabo Verde", "Saudi Arabia", "Uruguay",
+                "France", "Senegal", "Iraq", "Norway",
+                "Argentina", "Argelia", "Austria", "Jordan",
+                "Portugal", "DR Congo", "Uzbekistan", "Colombia",
+                "England", "Croatia", "Ghana", "Panama"
+            ] }
         };
 
-        // Las demás variables y funciones (setApiStatus, renderLeaguePills, etc.) son exactamente las mismas que en tu código original.
-        // Solo se modifica la función renderSavedList para incluir las estadísticas.
+        const HOME_ADVANTAGE_BY_LEAGUE = {
+            "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05, "FL1": 1.06, "DED": 1.08,
+            "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06, "LIB": 1.10, "MLS": 1.11,
+            "BSB": 1.10, "PPT": 1.06, "EKS": 1.05, "SLG": 1.05, "WC26": 1.04
+        };
 
-        // ----- FUNCIÓN MODIFICADA: renderSavedList con estadísticas -----
-        function renderSavedList() {
-            const container = document.getElementById('saved-list');
-            const statsContainer = document.getElementById('saved-stats');
-            if (!container) return;
+        const PLATT_PARAMS_IMPROVED = {
+            goals15: { A: 0.951, B: -0.038 },
+            goals25: { A: 0.933, B: -0.055 },
+            btts: { A: 0.956, B: -0.034 },
+            corners: { A: 0.970, B: -0.022 },
+            goals_ht05: { A: 0.960, B: -0.030 },
+            goals_ht15: { A: 0.938, B: -0.048 },
+            resultado: { A: 0.918, B: -0.068 }
+        };
 
-            // Calcular estadísticas
-            const total = savedPredictions.length;
-            const ganadas = savedPredictions.filter(p => p.result === 'win').length;
-            const perdidas = savedPredictions.filter(p => p.result === 'loss').length;
-            const pendientes = total - ganadas - perdidas;
-            const calificadas = ganadas + perdidas;
-            const hitRate = calificadas > 0 ? (ganadas / calificadas) * 100 : 0;
-
-            // Renderizar panel de estadísticas
-            if (total > 0) {
-                let hitClass = 'good';
-                if (hitRate < 40) hitClass = 'bad';
-                else if (hitRate < 60) hitClass = 'medium';
-
-                statsContainer.style.display = 'block';
-                statsContainer.innerHTML = `
-                    <div class="saved-stats">
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value win">${ganadas}</div>
-                            <div class="saved-stat-label">✔ Ganadas</div>
-                        </div>
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value loss">${perdidas}</div>
-                            <div class="saved-stat-label">✘ Perdidas</div>
-                        </div>
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value pending">${pendientes}</div>
-                            <div class="saved-stat-label">⏳ Pendientes</div>
-                        </div>
-                        <div class="saved-hitrate">
-                            <span class="saved-hitrate-label">% Acierto</span>
-                            <span class="saved-hitrate-value ${hitClass}">${calificadas > 0 ? hitRate.toFixed(1) + '%' : '—'}</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                statsContainer.style.display = 'none';
-                statsContainer.innerHTML = '';
+        const TEAM_ALIASES = {
+            "PL": {
+                "Arsenal FC": ["Arsenal"], "Aston Villa FC": ["Aston Villa"], "AFC Bournemouth": ["Bournemouth"], "Brentford FC": ["Brentford"],
+                "Brighton & Hove Albion FC": ["Brighton", "Brighton & Hove Albion"], "Chelsea FC": ["Chelsea"], "Crystal Palace FC": ["Crystal Palace"],
+                "Everton FC": ["Everton"], "Fulham FC": ["Fulham"], "Liverpool FC": ["Liverpool"], "Manchester City FC": ["Manchester City", "Man City"],
+                "Manchester United FC": ["Manchester United", "Man Utd", "Man United"], "Newcastle United FC": ["Newcastle United", "Newcastle"],
+                "Nottingham Forest FC": ["Nottingham Forest", "Notts Forest"], "Tottenham Hotspur FC": ["Tottenham Hotspur", "Tottenham", "Spurs"],
+                "West Ham United FC": ["West Ham United", "West Ham"], "Wolverhampton Wanderers FC": ["Wolverhampton Wanderers", "Wolves", "Wolverhampton"],
+                "Leeds United": ["Leeds"], "Burnley FC": ["Burnley"], "Sunderland AFC": ["Sunderland"]
+            },
+            "BL1": {
+                "FC Bayern München": ["Bayern Munich", "FC Bayern Munich", "Bayern", "FC Bayern"], "Borussia Dortmund": ["Dortmund", "BVB"],
+                "Bayer 04 Leverkusen": ["Bayer Leverkusen", "Leverkusen"], "RB Leipzig": ["Leipzig"], "VfB Stuttgart": ["Stuttgart"],
+                "Eintracht Frankfurt": ["Frankfurt"], "SC Freiburg": ["Freiburg"], "TSG Hoffenheim": ["TSG 1899 Hoffenheim", "Hoffenheim"],
+                "SV Werder Bremen": ["Werder Bremen", "Werder"], "1. FC Heidenheim 1846": ["1. FC Heidenheim", "Heidenheim"],
+                "FC Augsburg": ["Augsburg"], "VfL Wolfsburg": ["Wolfsburg"], "1. FSV Mainz 05": ["Mainz 05", "Mainz"],
+                "Borussia M'gladbach": ["Borussia Mönchengladbach", "Gladbach", "M'gladbach"], "1. FC Union Berlin": ["Union Berlin", "Union"],
+                "FC St. Pauli": ["St. Pauli"], "Hamburger SV": ["Hamburg"], "1. FC Köln": ["FC Cologne", "Cologne", "Köln"]
+            },
+            "DED": {
+                "AZ Alkmaar": ["AZ"], "Ajax": ["Ajax Amsterdam"], "Almere City FC": ["Almere City"], "FC Groningen": ["Groningen"],
+                "FC Twente": ["Twente"], "FC Utrecht": ["Utrecht"], "Feyenoord": ["Feyenoord Rotterdam"], "Fortuna Sittard": ["Fortuna"],
+                "Go Ahead Eagles": ["GA Eagles"], "Heracles Almelo": ["Heracles"], "NAC Breda": ["NAC"], "NEC Nijmegen": ["NEC"],
+                "PEC Zwolle": ["Zwolle"], "PSV Eindhoven": ["PSV"], "RKC Waalwijk": ["RKC"], "Sparta Rotterdam": ["Sparta"],
+                "Willem II": ["Willem"], "sc Heerenveen": ["Heerenveen"]
+            },
+            "JPL": {
+                "Anderlecht": ["RSC Anderlecht"], "Club Brugge KV": ["Club Brugge"], "KAA Gent": ["Gent"], "Antwerp": ["Royal Antwerp FC"],
+                "KRC Genk": ["Genk"], "Cercle Brugge KSV": ["Cercle Brugge"], "Standard de Liège": ["Standard Liege"],
+                "R. Union Saint-Gilloise": ["Union Saint-Gilloise", "Union SG"], "KV Mechelen": ["Mechelen"], "STVV": ["Sint-Truiden"],
+                "Beerschot VA": ["Beerschot"], "OH Leuven": ["OHL"], "KV Kortrijk": ["Kortrijk"], "Charleroi": ["Sporting Charleroi"],
+                "KVC Westerlo": ["Westerlo"], "RFC Seraing": ["Seraing"], "Zulte Waregem": ["Essevee"]
+            },
+            "FL1": {
+                "Paris Saint-Germain FC": ["PSG"], "Olympique Lyonnais": ["Lyon"], "Olympique de Marseille": ["Marseille", "OM"],
+                "AS Monaco FC": ["Monaco"], "Lille OSC": ["Lille"], "OGC Nice": ["Nice"], "RC Lens": ["Lens"], "Stade Rennais FC": ["Rennes"],
+                "Stade de Reims": ["Reims"], "Toulouse FC": ["Toulouse"], "Montpellier HSC": ["Montpellier"], "RC Strasbourg Alsace": ["Strasbourg"],
+                "Le Havre AC": ["Le Havre"], "FC Nantes": ["Nantes"], "Stade Brestois 29": ["Brest"], "AJ Auxerre": ["Auxerre"],
+                "FC Lorient": ["Lorient"], "ESTAC Troyes": ["Troyes"]
+            },
+            "BSA": {
+                "Athletico Paranaense": ["Paranaense"], "Atlético Mineiro": ["Atletico Mineiro"], "Bahia": ["EC Bahia"],
+                "Botafogo": ["Botafogo FR"], "Chapecoense": ["Chapecoense"], "Corinthians": ["Sport Club Corinthians"],
+                "Coritiba": ["Coritiba FC"], "Cruzeiro": ["Cruzeiro EC"], "Flamengo": ["CR Flamengo"], "Fluminense": ["Fluminense FC"],
+                "Grêmio": ["Gremio"], "Internacional": ["SC Internacional"], "Mirassol": ["Mirassol FC"], "Palmeiras": ["SE Palmeiras"],
+                "Red Bull Bragantino": ["Bragantino"], "Remo": ["Clube do Remo"], "Santos": ["Santos FC"], "São Paulo": ["Sao Paulo"],
+                "Vasco da Gama": ["Vasco"], "Vitória": ["Vitoria"]
+            },
+            "ELC": {
+                "Blackburn Rovers": ["Blackburn"], "Bristol City": ["Bristol City"], "Cardiff City": ["Cardiff"], "Coventry City": ["Coventry"],
+                "Derby County": ["Derby"], "Hull City": ["Hull"], "Luton Town": ["Luton"], "Middlesbrough FC": ["Middlesbrough"],
+                "Millwall FC": ["Millwall"], "Norwich City": ["Norwich"], "Oxford United": ["Oxford"], "Plymouth Argyle": ["Plymouth"],
+                "Portsmouth FC": ["Portsmouth"], "Preston North End": ["Preston"], "QPR": ["Queens Park Rangers"],
+                "Sheffield United": ["Sheffield Utd"], "Sheffield Wednesday": ["Sheffield Wed"], "Stoke City": ["Stoke"],
+                "Swansea City": ["Swansea"], "Watford FC": ["Watford"], "West Bromwich Albion": ["West Brom"]
+            },
+            "PD": {
+                "Athletic Club": ["Athletic Bilbao"], "Atlético de Madrid": ["Atletico Madrid"], "CA Osasuna": ["Osasuna"],
+                "Deportivo Alavés": ["Alaves"], "FC Barcelona": ["Barcelona"], "Getafe CF": ["Getafe"], "Girona FC": ["Girona"],
+                "RC Celta de Vigo": ["Celta Vigo"], "RCD Mallorca": ["Mallorca"], "Rayo Vallecano": ["Rayo"],
+                "Real Betis Balompié": ["Real Betis"], "Real Madrid CF": ["Real Madrid"], "Real Sociedad": ["Sociedad"],
+                "Sevilla FC": ["Sevilla"], "UD Las Palmas": ["Las Palmas"], "Valencia CF": ["Valencia"], "Villarreal CF": ["Villarreal"],
+                "RCD Espanyol de Barcelona": ["Espanyol"], "CD Leganés": ["Leganes"], "Real Valladolid CF": ["Valladolid"]
+            },
+            "SA": {
+                "AC Milan": ["Milan"], "AC Monza": ["Monza"], "ACF Fiorentina": ["Fiorentina"], "AS Roma": ["Roma"],
+                "Atalanta BC": ["Atalanta"], "Bologna FC 1909": ["Bologna"], "Cagliari Calcio": ["Cagliari"], "Como 1907": ["Como"],
+                "Empoli FC": ["Empoli"], "Genoa CFC": ["Genoa"], "Hellas Verona FC": ["Hellas Verona"], "Inter Milano": ["Inter Milan"],
+                "Juventus FC": ["Juventus"], "Parma Calcio 1913": ["Parma"], "SS Lazio": ["Lazio"], "SSC Napoli": ["Napoli"],
+                "Torino FC": ["Torino"], "Udinese Calcio": ["Udinese"], "US Lecce": ["Lecce"], "Sassuolo": ["US Sassuolo"]
+            },
+            "MXL": {
+                "América": ["Club America"], "Atlas FC": ["Atlas"], "Atlético de San Luis": ["Atletico San Luis"],
+                "CF Pachuca": ["Pachuca"], "Club Necaxa": ["Necaxa"], "Club Tijuana": ["Tijuana"], "Cruz Azul": ["Cruz Azul FC"],
+                "Deportivo Guadalajara": ["Chivas"], "FC Juárez": ["Juarez"], "León": ["Club Leon"], "Mazatlán FC": ["Mazatlan"],
+                "Monterrey": ["CF Monterrey"], "Puebla FC": ["Puebla"], "Querétaro FC": ["Queretaro"], "Santos Laguna": ["Santos"],
+                "Tigres UANL": ["Tigres"], "Toluca FC": ["Toluca"], "UNAM Pumas": ["Pumas"]
+            },
+            "LIB": {
+                "Flamengo": ["CR Flamengo"], "Estudiantes de La Plata": ["Estudiantes"], "Cusco FC": ["Cusco"],
+                "Independiente Medellín": ["Medellin"], "Nacional": ["Club Nacional"], "Universitario": ["Universitario de Deportes"],
+                "Coquimbo Unido": ["Coquimbo"], "Deportes Tolima": ["Tolima"], "Fluminense": ["Fluminense FC"],
+                "Club Bolívar": ["Bolivar"], "Deportivo La Guaira": ["La Guaira"], "Boca Juniors": ["Boca Juniors CA"],
+                "Cruzeiro": ["Cruzeiro EC"], "Universidad Católica": ["U. Catolica"], "Barcelona SC": ["Barcelona SC Guayaquil"],
+                "Peñarol": ["Penarol"], "Corinthians": ["Sport Club Corinthians"], "Santa Fe": ["Independiente Santa Fe"],
+                "Palmeiras": ["SE Palmeiras"], "Cerro Porteño": ["Cerro Porteno"], "Junior": ["Junior FC"],
+                "Sporting Cristal": ["Cristal"], "LDU Quito": ["Liga de Quito"], "Lanús": ["Lanus"],
+                "Always Ready": ["Always Ready FC"], "Independiente del Valle": ["Ind. del Valle"], "Libertad": ["Club Libertad"],
+                "Rosario Central": ["CA Rosario Central"]
+            },
+            "MLS": {
+                "Inter Miami CF": ["Inter Miami"], "CF Montréal": ["Montreal"], "Charlotte FC": ["Charlotte"],
+                "Chicago Fire FC": ["Chicago Fire"], "FC Cincinnati": ["Cincinnati"], "Columbus Crew": ["Columbus"],
+                "D.C. United": ["DC United"], "New England Revolution": ["Revolution"], "Nashville SC": ["Nashville"],
+                "New York City FC": ["NYCFC"], "New York Red Bulls": ["NY Red Bulls"], "Orlando City SC": ["Orlando City"],
+                "Philadelphia Union": ["Philadelphia"], "Atlanta United FC": ["Atlanta United"], "Toronto FC": ["Toronto"],
+                "Austin FC": ["Austin"], "Colorado Rapids": ["Colorado"], "FC Dallas": ["Dallas"], "Houston Dynamo FC": ["Houston Dynamo"],
+                "LA Galaxy": ["LA Galaxy"], "Los Angeles FC": ["LAFC"], "Minnesota United FC": ["Minnesota United"],
+                "Portland Timbers": ["Portland"], "Real Salt Lake": ["RSL"], "San Jose Earthquakes": ["San Jose"],
+                "Seattle Sounders FC": ["Seattle"], "Sporting Kansas City": ["Sporting KC"], "St. Louis City SC": ["St. Louis City"],
+                "Vancouver Whitecaps FC": ["Vancouver"], "San Diego FC": ["San Diego"]
+            },
+            "WC26": {
+                "Mexico": ["México"], "South Africa": ["Sudáfrica"], "Korea Republic": ["South Korea", "Corea del Sur"],
+                "Czechia": ["Czech Republic", "República Checa"], "Canada": ["Canadá"],
+                "Bosnia and Herzegovina": ["Bosnia & Herzegovina", "Bosnia"], "Qatar": ["Catar"], "Switzerland": ["Suiza"],
+                "Brazil": ["Brasil"], "Morocco": ["Marruecos"], "Haiti": ["Haití"], "Scotland": ["Escocia"],
+                "United States": ["USA", "Estados Unidos"], "Paraguay": ["Paraguay National Team"],
+                "Australia": ["Australia National Team"], "Turkey": ["Türkiye", "Turquía"],
+                "Germany": ["Alemania"], "Curaçao": ["Curacao"], "Côte d'Ivoire": ["Ivory Coast", "Costa de Marfil"],
+                "Ecuador": ["Ecuador National Team"], "Netherlands": ["Países Bajos"], "Japan": ["Japón"],
+                "Sweden": ["Suecia"], "Tunisia": ["Túnez"], "Belgium": ["Bélgica"], "Egypt": ["Egipto"],
+                "IR Iran": ["Iran", "Irán"], "New Zealand": ["Nueva Zelanda"], "Spain": ["España"],
+                "Cabo Verde": ["Cape Verde"], "Saudi Arabia": ["Arabia Saudita"], "Uruguay": ["Uruguay National Team"],
+                "France": ["Francia"], "Senegal": ["Senegal National Team"], "Iraq": ["Irak"], "Norway": ["Noruega"],
+                "Argentina": ["Argentina National Team"], "Argelia": ["Algeria", "Argelia"], "Austria": ["Austria National Team"],
+                "Jordan": ["Jordania"], "Portugal": ["Portugal National Team"],
+                "DR Congo": ["Congo DR", "RD Congo", "Democratic Republic of the Congo"],
+                "Uzbekistan": ["Uzbekistán"], "Colombia": ["Colombia National Team"], "England": ["Inglaterra"],
+                "Croatia": ["Croacia"], "Ghana": ["Ghana National Team"], "Panama": ["Panamá"]
             }
+        };
 
-            // Lista de predicciones guardadas (sin cambios)
-            if (savedPredictions.length === 0) {
-                container.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
-                return;
+        const CORNER_POWER = {
+            "Manchester City FC": { home: 7.8, away: 6.8 }, "Liverpool FC": { home: 7.4, away: 6.1 }, "Arsenal FC": { home: 7.0, away: 5.9 },
+            "Chelsea FC": { home: 6.5, away: 5.5 }, "Tottenham Hotspur FC": { home: 6.4, away: 5.3 }, "Aston Villa FC": { home: 6.3, away: 5.2 },
+            "Newcastle United FC": { home: 6.0, away: 5.0 }, "Manchester United FC": { home: 5.8, away: 4.9 }, "Brighton & Hove Albion FC": { home: 6.2, away: 5.4 },
+            "West Ham United FC": { home: 5.5, away: 4.6 }, "Crystal Palace FC": { home: 4.9, away: 4.1 }, "AFC Bournemouth": { home: 5.0, away: 4.2 },
+            "Fulham FC": { home: 5.2, away: 4.3 }, "Wolverhampton Wanderers FC": { home: 5.1, away: 4.3 }, "Everton FC": { home: 4.8, away: 4.0 },
+            "Brentford FC": { home: 5.3, away: 4.5 }, "Nottingham Forest FC": { home: 4.9, away: 4.0 },
+            "FC Bayern München": { home: 7.2, away: 6.2 }, "Borussia Dortmund": { home: 6.4, away: 5.4 }, "Bayer 04 Leverkusen": { home: 6.7, away: 5.7 },
+            "RB Leipzig": { home: 6.3, away: 5.3 }, "VfB Stuttgart": { home: 5.9, away: 5.0 }, "Eintracht Frankfurt": { home: 5.7, away: 4.8 },
+            "SC Freiburg": { home: 5.4, away: 4.5 }, "TSG 1899 Hoffenheim": { home: 5.5, away: 4.6 }, "SV Werder Bremen": { home: 5.3, away: 4.4 },
+            "1. FC Heidenheim 1846": { home: 4.9, away: 4.1 }, "FC Augsburg": { home: 4.8, away: 4.0 }, "VfL Wolfsburg": { home: 5.2, away: 4.3 },
+            "1. FSV Mainz 05": { home: 5.0, away: 4.2 }, "Borussia Mönchengladbach": { home: 5.3, away: 4.4 }, "1. FC Union Berlin": { home: 4.7, away: 3.9 },
+            "FC St. Pauli": { home: 4.8, away: 4.0 },
+            "PSV Eindhoven": { home: 6.5, away: 5.6 }, "Feyenoord": { home: 6.2, away: 5.3 }, "Ajax": { home: 6.0, away: 5.1 },
+            "FC Twente": { home: 5.6, away: 4.7 }, "AZ Alkmaar": { home: 5.8, away: 4.9 }, "FC Utrecht": { home: 5.2, away: 4.3 },
+            "Sparta Rotterdam": { home: 4.8, away: 4.0 }, "sc Heerenveen": { home: 4.8, away: 4.0 }, "NEC Nijmegen": { home: 4.9, away: 4.1 },
+            "Go Ahead Eagles": { home: 4.7, away: 3.9 }, "Fortuna Sittard": { home: 4.5, away: 3.7 }, "PEC Zwolle": { home: 4.6, away: 3.8 },
+            "Almere City FC": { home: 4.5, away: 3.7 }, "Heracles Almelo": { home: 4.7, away: 3.9 }, "RKC Waalwijk": { home: 4.4, away: 3.6 },
+            "Willem II": { home: 4.6, away: 3.8 }, "NAC Breda": { home: 4.8, away: 4.0 }, "FC Groningen": { home: 4.5, away: 3.7 },
+            "Club Brugge KV": { home: 6.2, away: 5.2 }, "Anderlecht": { home: 5.9, away: 5.0 }, "KAA Gent": { home: 5.6, away: 4.7 },
+            "KRC Genk": { home: 5.5, away: 4.6 }, "R. Union Saint-Gilloise": { home: 5.4, away: 4.5 }, "Cercle Brugge KSV": { home: 5.2, away: 4.3 },
+            "Standard de Liège": { home: 5.0, away: 4.2 }, "KV Mechelen": { home: 4.9, away: 4.1 }, "STVV": { home: 4.8, away: 4.0 },
+            "OH Leuven": { home: 4.7, away: 3.9 }, "Beerschot VA": { home: 4.7, away: 3.9 }, "KV Kortrijk": { home: 4.6, away: 3.8 },
+            "Charleroi": { home: 4.8, away: 4.0 }, "KVC Westerlo": { home: 4.6, away: 3.8 }, "RFC Seraing": { home: 4.4, away: 3.6 },
+            "Zulte Waregem": { home: 4.5, away: 3.7 },
+            "Paris Saint-Germain FC": { home: 6.7, away: 5.7 }, "AS Monaco FC": { home: 6.0, away: 5.1 }, "Lille OSC": { home: 5.6, away: 4.7 },
+            "OGC Nice": { home: 5.4, away: 4.5 }, "Olympique Lyonnais": { home: 5.5, away: 4.6 }, "Olympique de Marseille": { home: 5.5, away: 4.6 },
+            "RC Lens": { home: 5.3, away: 4.4 }, "Stade Rennais FC": { home: 5.1, away: 4.2 }, "Stade de Reims": { home: 4.9, away: 4.1 },
+            "Toulouse FC": { home: 4.8, away: 4.0 }, "Montpellier HSC": { home: 4.7, away: 3.9 }, "RC Strasbourg Alsace": { home: 4.8, away: 4.0 },
+            "Le Havre AC": { home: 4.6, away: 3.8 }, "FC Nantes": { home: 4.7, away: 3.9 }, "Stade Brestois 29": { home: 5.2, away: 4.3 },
+            "AJ Auxerre": { home: 4.6, away: 3.8 }, "FC Lorient": { home: 4.8, away: 4.0 }, "ESTAC Troyes": { home: 4.3, away: 3.5 },
+            "Real Madrid CF": { home: 6.6, away: 5.7 }, "FC Barcelona": { home: 6.4, away: 5.5 }, "Atlético de Madrid": { home: 5.8, away: 4.9 },
+            "Athletic Club": { home: 5.5, away: 4.6 }, "Real Sociedad": { home: 5.4, away: 4.5 }, "Real Betis Balompié": { home: 5.3, away: 4.4 },
+            "Villarreal CF": { home: 5.0, away: 4.2 }, "Valencia CF": { home: 5.1, away: 4.2 }, "Sevilla FC": { home: 5.2, away: 4.3 },
+            "Girona FC": { home: 5.6, away: 4.7 }, "CA Osasuna": { home: 4.9, away: 4.0 }, "Getafe CF": { home: 4.5, away: 3.7 },
+            "RC Celta de Vigo": { home: 5.0, away: 4.1 }, "RCD Mallorca": { home: 4.7, away: 3.9 }, "Rayo Vallecano": { home: 4.6, away: 3.8 },
+            "UD Las Palmas": { home: 4.8, away: 4.0 }, "Deportivo Alavés": { home: 4.7, away: 3.9 }, "RCD Espanyol de Barcelona": { home: 4.8, away: 4.0 },
+            "CD Leganés": { home: 4.5, away: 3.7 }, "Real Valladolid CF": { home: 4.4, away: 3.6 },
+            "Inter Milano": { home: 6.0, away: 5.1 }, "AC Milan": { home: 5.8, away: 4.9 }, "Juventus FC": { home: 5.6, away: 4.7 },
+            "Atalanta BC": { home: 5.9, away: 5.0 }, "SSC Napoli": { home: 5.7, away: 4.8 }, "AS Roma": { home: 5.5, away: 4.6 },
+            "SS Lazio": { home: 5.3, away: 4.4 }, "ACF Fiorentina": { home: 5.4, away: 4.5 }, "Torino FC": { home: 4.8, away: 4.0 },
+            "Bologna FC 1909": { home: 5.2, away: 4.3 }, "Genoa CFC": { home: 4.7, away: 3.9 }, "AC Monza": { home: 4.6, away: 3.8 },
+            "Hellas Verona FC": { home: 4.5, away: 3.7 }, "Udinese Calcio": { home: 4.6, away: 3.8 }, "Cagliari Calcio": { home: 4.5, away: 3.7 },
+            "Empoli FC": { home: 4.7, away: 3.9 }, "Como 1907": { home: 5.0, away: 4.2 }, "Parma Calcio 1913": { home: 4.8, away: 4.0 },
+            "US Lecce": { home: 4.4, away: 3.6 }, "Sassuolo": { home: 5.0, away: 4.2 },
+            "Argentina": { home: 6.2, away: 5.3 }, "Brazil": { home: 6.6, away: 5.7 }, "Uruguay": { home: 5.4, away: 4.5 },
+            "Colombia": { home: 5.3, away: 4.4 }, "Germany": { home: 6.8, away: 5.9 }, "Spain": { home: 6.4, away: 5.5 },
+            "France": { home: 6.5, away: 5.6 }, "England": { home: 6.3, away: 5.4 }, "Portugal": { home: 6.1, away: 5.2 },
+            "Netherlands": { home: 5.8, away: 4.9 }, "Belgium": { home: 5.7, away: 4.8 }, "Croatia": { home: 5.3, away: 4.4 },
+            "Japan": { home: 5.2, away: 4.3 }, "Morocco": { home: 5.0, away: 4.1 }, "United States": { home: 5.1, away: 4.2 },
+            "Mexico": { home: 5.2, away: 4.3 }, "Senegal": { home: 4.9, away: 4.0 }, "Ecuador": { home: 5.0, away: 4.1 },
+            "Korea Republic": { home: 4.8, away: 3.9 }, "IR Iran": { home: 4.5, away: 3.7 }, "Australia": { home: 4.6, away: 3.8 },
+            "Canada": { home: 4.7, away: 3.9 }, "Egypt": { home: 4.8, away: 4.0 }, "Ghana": { home: 4.5, away: 3.7 },
+            "Côte d'Ivoire": { home: 4.8, away: 4.0 }, "Algeria": { home: 4.9, away: 4.1 }, "Argelia": { home: 4.9, away: 4.1 },
+            "South Africa": { home: 4.6, away: 3.8 },
+            "Switzerland": { home: 5.3, away: 4.4 }, "Austria": { home: 5.0, away: 4.2 }, "Turkey": { home: 5.4, away: 4.5 },
+            "Sweden": { home: 5.1, away: 4.2 }, "Paraguay": { home: 4.5, away: 3.7 }, "Saudi Arabia": { home: 4.4, away: 3.6 },
+            "Panama": { home: 4.3, away: 3.5 }, "New Zealand": { home: 4.1, away: 3.3 },
+            "Iraq": { home: 4.4, away: 3.6 }, "Jordan": { home: 4.5, away: 3.7 }, "Qatar": { home: 4.7, away: 3.9 },
+            "Curaçao": { home: 4.3, away: 3.5 }, "Haiti": { home: 4.2, away: 3.4 }, "Cabo Verde": { home: 4.6, away: 3.8 },
+            "DR Congo": { home: 4.8, away: 4.0 }, "Czechia": { home: 5.3, away: 4.5 },
+            "Bosnia and Herzegovina": { home: 5.0, away: 4.2 }, "Norway": { home: 6.0, away: 5.1 }, "Scotland": { home: 5.8, away: 4.9 },
+            "Tunisia": { home: 4.5, away: 3.7 }, "Uzbekistan": { home: 4.3, away: 3.5 }
+        };
+
+        const DIXON_COLES_RHO = {
+            "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072,
+            "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070,
+            "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "WC26": -0.055, "default": -0.13
+        };
+
+        const ALTITUDE_TEAMS = {
+            "Club Bolívar": { advantage: 1.12, altitude: "3600m" }, "Always Ready": { advantage: 1.18, altitude: "4100m" },
+            "LDU Quito": { advantage: 1.08, altitude: "2800m" }, "Cusco FC": { advantage: 1.06, altitude: "3400m" },
+            "Universitario": { advantage: 1.04, altitude: "2800m" }, "Independiente del Valle": { advantage: 1.03, altitude: "2500m" },
+            "Ecuador": { advantage: 1.07, altitude: "2800m (Quito)" }
+        };
+
+        const TEAM_STRENGTH_DB = {
+            "PL": {
+                "Arsenal FC": [1.24, 0.82, 1.10], "Aston Villa FC": [1.17, 0.92, 1.08], "AFC Bournemouth": [0.95, 1.08, 1.05],
+                "Brentford FC": [1.02, 1.03, 1.06], "Brighton & Hove Albion FC": [1.11, 0.96, 1.07], "Chelsea FC": [1.15, 0.89, 1.09],
+                "Crystal Palace FC": [0.98, 1.05, 1.04], "Everton FC": [0.92, 1.10, 1.05], "Fulham FC": [1.04, 1.01, 1.06],
+                "Liverpool FC": [1.28, 0.79, 1.12], "Manchester City FC": [1.30, 0.77, 1.13], "Manchester United FC": [1.18, 0.88, 1.09],
+                "Newcastle United FC": [1.13, 0.94, 1.08], "Nottingham Forest FC": [0.96, 1.07, 1.05], "Tottenham Hotspur FC": [1.16, 0.90, 1.09],
+                "West Ham United FC": [1.06, 1.00, 1.06], "Wolverhampton Wanderers FC": [1.03, 1.02, 1.06], "Leeds United": [1.01, 1.04, 1.06],
+                "Burnley FC": [0.93, 1.09, 1.04], "Sunderland AFC": [0.94, 1.08, 1.04]
+            },
+            "BL1": {
+                "FC Bayern München": [1.32, 0.76, 1.13], "Borussia Dortmund": [1.24, 0.83, 1.10], "Bayer 04 Leverkusen": [1.27, 0.80, 1.12],
+                "RB Leipzig": [1.22, 0.85, 1.10], "VfB Stuttgart": [1.16, 0.91, 1.08], "Eintracht Frankfurt": [1.14, 0.93, 1.08],
+                "SC Freiburg": [1.09, 0.98, 1.07], "TSG 1899 Hoffenheim": [1.10, 0.97, 1.07], "SV Werder Bremen": [1.05, 1.02, 1.06],
+                "1. FC Heidenheim 1846": [0.94, 1.08, 1.04], "FC Augsburg": [1.00, 1.05, 1.05], "VfL Wolfsburg": [1.04, 1.01, 1.06],
+                "1. FSV Mainz 05": [1.02, 1.03, 1.06], "Borussia Mönchengladbach": [1.08, 0.99, 1.07], "1. FC Union Berlin": [0.98, 1.06, 1.05],
+                "FC St. Pauli": [0.96, 1.07, 1.05]
+            },
+            "WC26": {
+                "Argentina": [1.35, 0.72, 1.08], "Brazil": [1.32, 0.75, 1.08], "Uruguay": [1.22, 0.82, 1.07],
+                "Colombia": [1.20, 0.84, 1.07], "Ecuador": [1.18, 0.86, 1.08], "Paraguay": [1.05, 1.00, 1.05],
+                "Germany": [1.30, 0.76, 1.07], "Spain": [1.33, 0.74, 1.07], "France": [1.34, 0.73, 1.07],
+                "England": [1.31, 0.75, 1.07], "Portugal": [1.28, 0.78, 1.07], "Netherlands": [1.24, 0.81, 1.06],
+                "Belgium": [1.20, 0.84, 1.06], "Croatia": [1.18, 0.86, 1.06], "Switzerland": [1.15, 0.90, 1.05],
+                "Austria": [1.14, 0.91, 1.05], "Turkey": [1.12, 0.93, 1.05], "Sweden": [1.08, 0.97, 1.05],
+                "Scotland": [1.10, 0.94, 1.05], "Norway": [1.22, 0.83, 1.06], "Czechia": [1.12, 0.92, 1.06],
+                "Bosnia and Herzegovina": [1.08, 0.96, 1.05],
+                "Japan": [1.22, 0.83, 1.06], "IR Iran": [1.08, 0.97, 1.05], "Korea Republic": [1.16, 0.89, 1.06],
+                "Saudi Arabia": [0.96, 1.06, 1.04], "Australia": [1.04, 1.01, 1.05], "Uzbekistan": [0.94, 1.08, 1.04],
+                "Iraq": [1.02, 1.02, 1.05], "Jordan": [1.06, 0.98, 1.05], "Qatar": [1.08, 0.96, 1.05],
+                "Egypt": [1.10, 0.95, 1.05], "Morocco": [1.25, 0.80, 1.06], "Senegal": [1.20, 0.84, 1.06],
+                "Ghana": [1.06, 1.00, 1.05], "Côte d'Ivoire": [1.15, 0.90, 1.05], "Argelia": [1.10, 0.95, 1.05],
+                "South Africa": [1.02, 1.03, 1.05], "Tunisia": [1.04, 1.01, 1.05], "Cabo Verde": [1.06, 0.99, 1.05],
+                "DR Congo": [1.10, 0.94, 1.05],
+                "United States": [1.18, 0.87, 1.08], "Mexico": [1.16, 0.89, 1.07], "Canada": [1.12, 0.93, 1.07],
+                "Panama": [0.94, 1.08, 1.05], "Curaçao": [1.02, 1.04, 1.05], "Haiti": [1.00, 1.06, 1.05],
+                "New Zealand": [0.88, 1.14, 1.04]
             }
-            const reversed = [...savedPredictions].reverse();
-            container.innerHTML = reversed.map(p => {
-                const isWin = p.result === 'win';
-                const isLoss = p.result === 'loss';
-                const itemClass = isWin ? 'won' : isLoss ? 'lost' : '';
-                return `
-                <div class="saved-item ${itemClass}">
-                    <span class="saved-item-date">${p.fecha}</span>
-                    <span class="saved-item-teams">
-                        ${p.home} vs ${p.away}
-                        <small>${p.liga}</small>
-                    </span>
-                    <span class="saved-item-pick" style="color:${p.topColor}">
-                        ${p.topPick}
-                        <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
-                    </span>
-                    <div class="saved-item-actions">
-                        <button class="action-btn win-btn ${isWin ? 'active-win' : ''}" onclick="markPredictionResult(${p.id}, 'win')" title="Marcar Ganada">✔</button>
-                        <button class="action-btn loss-btn ${isLoss ? 'active-loss' : ''}" onclick="markPredictionResult(${p.id}, 'loss')" title="Marcar Perdida">✘</button>
-                        <button class="action-btn delete-btn" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
-                    </div>
-                </div>`;
-            }).join('');
+        };
+
+        function setApiStatus(s, t) {
+            document.getElementById('api-dot').className = 'api-dot ' + s;
+            document.getElementById('api-status-text').textContent = t;
         }
 
-        // ----- RESTO DE FUNCIONES (sin cambios) -----
-        // Las funciones loadSavedPredictions, saveCurrentPrediction, deleteSavedPrediction, markPredictionResult, etc. se mantienen igual.
-        // Solo me aseguro de que updateSavedBadge y updateFabBadge sigan funcionando.
+        function renderLeaguePills() {
+            const c = document.getElementById('league-pills');
+            c.innerHTML = '';
+            for (const [k, v] of Object.entries(LIGAS)) {
+                const b = document.createElement('button');
+                b.className = 'league-pill';
+                b.textContent = v.name;
+                b.dataset.key = k;
+                b.onclick = () => selectLeague(k);
+                c.appendChild(b);
+            }
+        }
 
-        // Incluyo aquí las funciones faltantes para que el código sea completo y funcional:
+        function renderMarketToggles() {
+            const c = document.getElementById('market-toggles');
+            const d = [{ key: 'ht', label: '⏱ Goles HT' }, { key: 'goles', label: '⚽ Goles +1.5/2.5' }, { key: 'btts', label: '🤝 BTTS' }, { key: 'corn', label: '⬡ Córners' }];
+            c.innerHTML = '';
+            const liga = currentLeagueKey ? LIGAS[currentLeagueKey] : null;
+            d.forEach(x => {
+                const b = document.createElement('button');
+                b.className = 'mkt-toggle';
+                b.textContent = x.label;
+                b.dataset.key = x.key;
+                const avail = !liga || (liga.markets[x.key] === true);
+                if (!avail) {
+                    b.classList.add('unavailable');
+                    activeMarkets[x.key] = false;
+                } else {
+                    if (activeMarkets[x.key]) b.classList.add('on');
+                    b.onclick = () => {
+                        activeMarkets[x.key] = !activeMarkets[x.key];
+                        b.classList.toggle('on');
+                    };
+                }
+                c.appendChild(b);
+            });
+        }
+
+        async function bsdFetch(path, ms = API_TIMEOUT) {
+            const fp = fetch(`${BSD_BASE}${path}`, { headers: { 'Authorization': `Token ${BSD_TOKEN}` } });
+            const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
+            const r = await Promise.race([fp, tp]);
+            if (!r.ok) throw new Error(`BSD ${r.status}`);
+            return r.json();
+        }
+
+        async function bsdFetchAll(path, ms = API_TIMEOUT) {
+            let res = [], url = `${BSD_BASE}${path}`, p = 0;
+            while (url && p < 5) {
+                try {
+                    const fp = fetch(url, { headers: { 'Authorization': `Token ${BSD_TOKEN}` } });
+                    const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
+                    const r = await Promise.race([fp, tp]);
+                    if (!r.ok) break;
+                    const d = await r.json();
+                    res = res.concat(d.results || []);
+                    url = d.next || null;
+                    p++;
+                    if (res.length >= 200) break;
+                } catch (e) { break; }
+            }
+            return res;
+        }
+
+        function matchLeagueName(n, k) {
+            const l = LIGAS[k];
+            if (!l) return false;
+            const norm = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+            const bn = norm(n);
+            if (bn === norm(l.bsdName)) return true;
+            if (l.bsdNameAlt) {
+                for (const a of l.bsdNameAlt) if (bn === norm(a)) return true;
+            }
+            return norm(l.bsdName).split(' ').every(w => bn.includes(w));
+        }
+
+        function normalizeTeamName(s) {
+            return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\b(fc|cf|sc|ac|as|ss|rc|rb|kv|krc|kaa|afc|rcd|ud|ca|oh|sv|vfl|vfb|fsv|tsg|rkc|pec|nec|ssc|acf|cd|og|aj|sl|ae|bv|sv|bayer|borussia|atletico|olympique|deportivo|real|club|sporting|sport)\b/gi, '').replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+        }
+
+        function tokenOverlap(a, b) {
+            const tA = new Set(a.split(' ').filter(t => t.length > 2));
+            const tB = new Set(b.split(' ').filter(t => t.length > 2));
+            if (!tA.size || !tB.size) return 0;
+            let s = 0;
+            tA.forEach(t => { if (tB.has(t)) s++; });
+            return s / Math.min(tA.size, tB.size);
+        }
+
+        function findTeamInAPI(offlineName, apiTeams) {
+            const norm = normalizeTeamName;
+            const tn = norm(offlineName);
+            const aliases = (TEAM_ALIASES[currentLeagueKey]?.[offlineName]) || [];
+            let f = apiTeams.find(t => t.name.trim().toLowerCase() === offlineName.trim().toLowerCase());
+            if (f) return f;
+            f = apiTeams.find(t => norm(t.name) === tn);
+            if (f) return f;
+            for (const a of aliases) {
+                f = apiTeams.find(t => t.name.trim().toLowerCase() === a.trim().toLowerCase() || norm(t.name) === norm(a));
+                if (f) return f;
+            }
+            f = apiTeams.find(t => {
+                const n = norm(t.name);
+                return n.length > 3 && tn.length > 3 && (n.includes(tn) || tn.includes(n));
+            });
+            if (f) return f;
+            for (const a of aliases) {
+                const an = norm(a);
+                f = apiTeams.find(t => {
+                    const n = norm(t.name);
+                    return n.length > 3 && an.length > 3 && (n.includes(an) || an.includes(n));
+                });
+                if (f) return f;
+            }
+            let best = 0, bestT = null;
+            apiTeams.forEach(t => {
+                const sc = tokenOverlap(tn, norm(t.name));
+                if (sc > best) { best = sc; bestT = t; }
+            });
+            if (best >= 0.65) return bestT;
+            for (const a of aliases) {
+                const an = norm(a);
+                let as = 0, at = null;
+                apiTeams.forEach(t => {
+                    const sc = tokenOverlap(an, norm(t.name));
+                    if (sc > as) { as = sc; at = t; }
+                });
+                if (as >= 0.5 && as > best) return at;
+            }
+            return null;
+        }
+
+        function isValidTeamName(name) {
+            if (!name || name.trim().length < 4) return false;
+            const c = name.trim().toLowerCase();
+            if (/^\d{1,2}[a-zA-Z]$/.test(c)) return false;
+            if (/^[a-zA-Z]\d{1,2}$/.test(c)) return false;
+            if (/^[a-zA-Z]{2}\s?[a-zA-Z]{2,}$/.test(c) && c.length <= 6) return false;
+            if (!/[aeiouáéíóú]/.test(c)) return false;
+            return true;
+        }
+
+        let currentLeagueKey = null, teamMap = {}, apiAvailable = false;
+        let activeMarkets = { ht: true, goles: true, btts: true, corn: true };
+        let bsdLeagueMap = {}, eloRatings = {}, teamSeasonStats = {};
+
+        function selectLeague(key) {
+            if (currentLeagueKey === key) return;
+            currentLeagueKey = key;
+            document.querySelectorAll('.league-pill').forEach(p => p.classList.toggle('active', p.dataset.key === key));
+            const liga = LIGAS[key];
+            activeMarkets = { ht: liga.markets.ht, goles: liga.markets.goles, btts: liga.markets.btts, corn: liga.markets.corn };
+            renderMarketToggles();
+            loadTeams(key);
+            document.getElementById('results').classList.add('hidden');
+        }
+
+        async function loadTeams(key) {
+            const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
+            hSel.innerHTML = aSel.innerHTML = '<option value="">— Cargando... —</option>';
+            hSel.disabled = aSel.disabled = true;
+            const liga = LIGAS[key];
+            const teams = [...liga.teams].sort();
+            teamMap = {};
+
+            if (apiAvailable && bsdLeagueMap[key]) {
+                try {
+                    setApiStatus('live', '🟢 Buscando IDs de equipos...');
+                    let apiTeams = [];
+                    try {
+                        const d = await bsdFetch('/teams/?league=' + bsdLeagueMap[key].bsdId + '&page_size=200');
+                        apiTeams = d.results || [];
+                    } catch (e) { }
+                    try {
+                        const d = await bsdFetch('/teams/?season=' + bsdLeagueMap[key].seasonId + '&page_size=200');
+                        const extra = d.results || [];
+                        const ids = new Set(apiTeams.map(t => t.id));
+                        extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
+                    } catch (e) { }
+                    if (apiTeams.length < 6) {
+                        try {
+                            const ev = await bsdFetchAll('/events/?season=' + bsdLeagueMap[key].seasonId + '&limit=100');
+                            const m = new Map();
+                            ev.forEach(e => {
+                                if (e.home_team_obj?.id) m.set(e.home_team_obj.id, e.home_team_obj);
+                                if (e.away_team_obj?.id) m.set(e.away_team_obj.id, e.away_team_obj);
+                            });
+                            const fe = [...m.values()];
+                            const ids = new Set(apiTeams.map(t => t.id));
+                            fe.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
+                        } catch (e) { }
+                    }
+                    const uniq = Array.from(new Map(apiTeams.map(t => [t.id, t])).values());
+                    let matched = 0;
+                    teams.forEach(offName => {
+                        const apiTeam = findTeamInAPI(offName, uniq);
+                        if (apiTeam && isValidTeamName(apiTeam.name)) {
+                            teamMap[offName] = { bsdId: apiTeam.id, offlineName: offName };
+                            matched++;
+                        } else {
+                            teamMap[offName] = { bsdId: '', offlineName: offName };
+                        }
+                    });
+                    fillSelects(teams, teamMap);
+                    setApiStatus('live', `🟢 ${matched}/${teams.length} equipos vinculados a API`);
+                    if (matched > 4) {
+                        try { await calculateEloAndSeasonStats(bsdLeagueMap[key].bsdId, bsdLeagueMap[key].seasonId); } catch (e) { }
+                    }
+                    return;
+                } catch (e) { console.error(e); }
+            }
+
+            setApiStatus('error', '🟡 Equipos offline');
+            teams.forEach(name => { teamMap[name] = { bsdId: '', offlineName: name }; });
+            fillSelects(teams, teamMap);
+        }
+
+        function fillSelects(teamList, metaMap = {}) {
+            const h = document.getElementById('home-team'), a = document.getElementById('away-team');
+            h.innerHTML = a.innerHTML = '<option value="">— Seleccionar —</option>';
+            teamList.forEach(name => {
+                const opt = new Option(name, name);
+                if (metaMap[name]) {
+                    opt.dataset.bsdId = metaMap[name].bsdId || '';
+                    opt.dataset.offlineName = metaMap[name].offlineName || name;
+                } else {
+                    teamMap[name] = { bsdId: '', offlineName: name };
+                    opt.dataset.bsdId = '';
+                    opt.dataset.offlineName = name;
+                }
+                h.add(opt.cloneNode(true));
+                a.add(opt.cloneNode(true));
+            });
+            h.disabled = a.disabled = false;
+        }
+
+        async function calculateEloAndSeasonStats(leagueId, seasonId) {
+            const ck = `${leagueId}_${seasonId}`;
+            if (eloRatings[ck]) return;
+            try {
+                const events = await bsdFetchAll(`/events/?season=${seasonId}&league=${leagueId}&limit=500`);
+                if (!events || events.length < 10) return;
+                events.sort((a, b) => new Date(a.start_date || a.date || 0) - new Date(b.start_date || b.date || 0));
+                const ratings = {}, goals = {};
+                events.forEach(m => {
+                    const hn = m.home_team_obj?.name, an = m.away_team_obj?.name;
+                    if (!hn || !an) return;
+                    const hs = Number(m.home_score || 0), as = Number(m.away_score || 0);
+                    const st = (m.status || '').toUpperCase();
+                    if (!['FT', 'FINISHED', 'AET', 'PEN', 'FULL_TIME'].includes(st) && !st.includes('FT')) return;
+                    if (!ratings[hn]) ratings[hn] = { elo: 1500, m: 0 };
+                    if (!ratings[an]) ratings[an] = { elo: 1500, m: 0 };
+                    const eH = ratings[hn].elo, eA = ratings[an].elo, expH = 1 / (1 + Math.pow(10, (eA - eH) / 400));
+                    const actH = hs > as ? 1 : hs === as ? 0.5 : 0;
+                    ratings[hn].elo = eH + 32 * (actH - expH);
+                    ratings[an].elo = eA + 32 * ((1 - actH) - (1 - expH));
+                    ratings[hn].m++;
+                    ratings[an].m++;
+                    if (!goals[hn]) goals[hn] = { gf: 0, ga: 0, p: 0 };
+                    if (!goals[an]) goals[an] = { gf: 0, ga: 0, p: 0 };
+                    goals[hn].gf += hs;
+                    goals[hn].ga += as;
+                    goals[hn].p++;
+                    goals[an].gf += as;
+                    goals[an].ga += hs;
+                    goals[an].p++;
+                });
+                eloRatings[ck] = ratings;
+                teamSeasonStats[ck] = {};
+                for (const [t, s] of Object.entries(goals)) if (s.p > 0) teamSeasonStats[ck][t] = { gf: s.gf / s.p, ga: s.ga / s.p };
+            } catch (e) { }
+        }
+
+        function plattCalibrate(raw, type) {
+            const p = Math.max(0.001, Math.min(0.999, raw / 100));
+            const logit = Math.log(p / (1 - p));
+            const par = PLATT_PARAMS_IMPROVED[type] || { A: 0.93, B: -0.04 };
+            const cp = 1 / (1 + Math.exp(-(par.A * logit + par.B)));
+            return Math.min(98, Math.max(2, cp * 100));
+        }
+
+        function regressionBlend(tv, lm, n) {
+            const trust = 1 - Math.exp(-n / 12);
+            return tv * trust + lm * (1 - trust);
+        }
+
+        function formMultiplier(form) {
+            if (!form || form.length === 0) return 1;
+            const s = form.reduce((a, r) => a + (r === 'w' ? 3 : r === 'd' ? 1 : 0), 0);
+            const adj = (s / (form.length * 3) - 0.38) * 0.23;
+            return Math.max(0.88, Math.min(1.12, 1 + adj));
+        }
+
+        function poissonExact(lambda, k) { let t = Math.exp(-lambda); for (let i = 0; i < k; i++) t *= lambda / (i + 1); return t; }
+        function poissonProb(lambda, k) { let p = Math.exp(-lambda), t = p; for (let i = 1; i <= k; i++) { t *= lambda / i; p += t; } return p; }
+        function poissonOver(lambda, th) { return Math.min(98, Math.max(2, (1 - poissonProb(lambda, Math.floor(th))) * 100)); }
+        function negBinExact(mu, r, k) { const p = r / (r + mu); let logP = 0; for (let i = 0; i < k; i++) logP += Math.log(r + i) - Math.log(i + 1); logP += r * Math.log(p) + k * Math.log(1 - p); return Math.exp(logP); }
+        function negBinOver(mu, th, r = 6.0) { const k = Math.floor(th); let cdf = 0; for (let i = 0; i <= k; i++) cdf += negBinExact(mu, r, i); return Math.min(98, Math.max(2, (1 - cdf) * 100)); }
+
+        function dixonColesTau(x, y, lH, lA, rho) {
+            if (x === 0 && y === 0) return 1 - lH * lA * rho;
+            if (x === 0 && y === 1) return 1 + lH * rho;
+            if (x === 1 && y === 0) return 1 + lA * rho;
+            if (x === 1 && y === 1) return 1 - rho;
+            return 1;
+        }
+
+        function calcBTTS(lH, lA, lk = 'default') {
+            const rho = DIXON_COLES_RHO[lk] || DIXON_COLES_RHO.default;
+            const p00 = poissonExact(lH, 0) * poissonExact(lA, 0) * dixonColesTau(0, 0, lH, lA, rho);
+            return Math.min(98, Math.max(2, (1 - Math.exp(-lH) - Math.exp(-lA) + p00) * 100));
+        }
+
+        function calcResultProbs(lH, lA, lk = 'default') {
+            const rho = DIXON_COLES_RHO[lk] || DIXON_COLES_RHO.default;
+            let pH = 0, pD = 0, pA = 0;
+            for (let h = 0; h <= 10; h++) for (let a = 0; a <= 10; a++) {
+                let p = poissonExact(lH, h) * poissonExact(lA, a);
+                if (h <= 1 && a <= 1) p *= dixonColesTau(h, a, lH, lA, rho);
+                if (h > a) pH += p; else if (h === a) pD += p; else pA += p;
+            }
+            const t = pH + pD + pA;
+            return { home: +(pH / t * 100).toFixed(1), draw: +(pD / t * 100).toFixed(1), away: +(pA / t * 100).toFixed(1) };
+        }
+
+        function bivariateLambdas(hAtk, hDef, aAtk, aDef, gAvg, hAdv = 1.08) {
+            const lm = gAvg / 2;
+            return { home: lm * Math.max(0.5, hAtk / lm) * Math.max(0.5, aDef / lm) * hAdv, away: lm * Math.max(0.5, aAtk / lm) * Math.max(0.5, hDef / lm) };
+        }
+
+        function colorFor(p) { return p >= 65 ? 'var(--green)' : p >= 42 ? 'var(--yellow)' : 'var(--accent)'; }
+        function cardClassFor(p) { return p >= 65 ? 'high' : p >= 42 ? 'mid' : 'low'; }
+
+        function getTeamStrength(name, key) {
+            const def = { atk: 1, def: 1, homeAdv: 1.06 };
+            const db = TEAM_STRENGTH_DB[key];
+            if (!db) return def;
+            const s = db[name];
+            if (s) return { atk: s[0], def: s[1], homeAdv: s[2] || 1.06 };
+            const hash = (name || 'a').charCodeAt(0) % 7 - 3;
+            return { atk: 1 + hash * 0.06, def: 1 - hash * 0.04, homeAdv: 1.06 + hash * 0.01 };
+        }
+
+        function uncertaintyBandRealistic(lambda, n, type = 'goals', threshold = null) {
+            const seLambda = Math.sqrt(lambda / Math.max(1, n));
+            const delta = 1.44 * seLambda;
+            const probFunc = (l) => {
+                switch (type) {
+                    case 'goals15': return poissonOver(l, threshold ?? 1.5);
+                    case 'goals25': return poissonOver(l, threshold ?? 2.5);
+                    case 'goals_ht05': return poissonOver(l, threshold ?? 0.5);
+                    case 'goals_ht15': return poissonOver(l, threshold ?? 1.5);
+                    case 'corners': return negBinOver(l, threshold ?? 8.5, 6);
+                    default: return poissonOver(l, threshold ?? 1.5);
+                }
+            };
+            const mid = probFunc(lambda);
+            const low = probFunc(Math.max(0.1, lambda - delta));
+            const high = probFunc(lambda + delta);
+            return { mid, low: low.toFixed(0), high: high.toFixed(0) };
+        }
+
+        function buildRecommendation(mkts) {
+            const sorted = [...mkts].sort((a, b) => b.prob - a.prob);
+            const top3 = sorted.slice(0, 3).map(c => ({
+                ...c,
+                confidenceLevel: c.prob >= 70 ? 'alta' : c.prob >= 60 ? 'media' : 'riesgo',
+                diamond: c.prob >= 80 ? '💎' : c.prob >= 72 ? '⭐' : c.prob >= 64 ? '🔥' : ''
+            }));
+            if (top3.length === 0) {
+                const best = mkts.reduce((a, b) => a.prob > b.prob ? a : b, mkts[0]);
+                return { top: best, top3: [best], isAggressive: true };
+            }
+            const top = top3[0];
+            const isAggressive = top.prob < 55;
+            return { top, top3, isAggressive };
+        }
+
+        document.getElementById('calc-btn').onclick = async () => {
+            const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
+            const home = hSel.value, away = aSel.value;
+            if (!currentLeagueKey) { alert('Selecciona una liga'); return; }
+            if (!home || !away) { alert('Selecciona ambos equipos'); return; }
+            if (home === away) { alert('Equipos diferentes'); return; }
+
+            const saveBtn = document.getElementById('save-pred-btn');
+            if (saveBtn) { saveBtn.classList.remove('saved'); saveBtn.textContent = '💾 GUARDAR PREDICCIÓN'; }
+
+            const liga = LIGAS[currentLeagueKey];
+            const { goalsAvg, cornersAvg, negBinR } = liga;
+            const bsdInfo = bsdLeagueMap[currentLeagueKey];
+            const homeOpt = hSel.selectedOptions[0], awayOpt = aSel.selectedOptions[0];
+            const homeId = homeOpt?.dataset?.bsdId || teamMap[home]?.bsdId;
+            const awayId = awayOpt?.dataset?.bsdId || teamMap[away]?.bsdId;
+            const homeOff = homeOpt?.dataset?.offlineName || teamMap[home]?.offlineName || home;
+            const awayOff = awayOpt?.dataset?.offlineName || teamMap[away]?.offlineName || away;
+            const seasonId = bsdInfo?.seasonId;
+
+            const resEl = document.getElementById('results'), loadEl = document.getElementById('loading-indicator'), outEl = document.getElementById('output');
+            resEl.classList.remove('hidden');
+            loadEl.classList.remove('hidden');
+            outEl.classList.add('hidden');
+
+            const baseHomeAdv = HOME_ADVANTAGE_BY_LEAGUE[currentLeagueKey] || 1.08;
+            const alt = getAltitudeAdjustment(homeOff, awayOff);
+            let hAdv = alt.homeAdv || baseHomeAdv;
+            let hElo = 1500, aElo = 1500, hSgf = null, hSga = null, aSgf = null, aSga = null;
+
+            if (bsdInfo) {
+                const ck = `${bsdInfo.bsdId}_${bsdInfo.seasonId}`;
+                if (!eloRatings[ck]) {
+                    loadText('Calculando ratings Elo...', 'Análisis histórico');
+                    try { await calculateEloAndSeasonStats(bsdInfo.bsdId, bsdInfo.seasonId); } catch (e) { }
+                }
+                const elos = eloRatings[ck] || {};
+                if (elos[homeOff]) hElo = elos[homeOff].elo;
+                if (elos[awayOff]) aElo = elos[awayOff].elo;
+                const savg = teamSeasonStats[ck] || {};
+                if (savg[homeOff]) { hSgf = savg[homeOff].gf; hSga = savg[homeOff].ga; }
+                if (savg[awayOff]) { aSgf = savg[awayOff].gf; aSga = savg[awayOff].ga; }
+            }
+
+            let hStats = null, aStats = null;
+            if (homeId && awayId && seasonId && apiAvailable) {
+                loadText(`Analizando ${homeOff.split(' ').slice(-1)[0]}...`, `Últimos ${MATCHES_TO_USE} partidos`);
+                try { hStats = await getTeamStats(homeId, home, 'home', seasonId); } catch (e) { }
+                loadText(`Analizando ${awayOff.split(' ').slice(-1)[0]}...`, 'Modelo Ataque×Defensa + Platt');
+                try { aStats = await getTeamStats(awayId, away, 'away', seasonId); } catch (e) { }
+            }
+
+            const hMC = hStats?.matches || 0, aMC = aStats?.matches || 0;
+            const lgm = goalsAvg / 2;
+
+            let hGf = (hStats?.fromApi && hStats.xG && hMC >= 5) ? regressionBlend(hStats.xG, lgm * 1.1, hMC) :
+                (hStats?.fromApi && hStats.goalsFull) ? regressionBlend(hStats.goalsFull, lgm * 1.1, hMC) :
+                    hSgf != null ? regressionBlend(hSgf, lgm * 1.1, 10) :
+                        fallbackGoals(homeOff, 'home', liga, currentLeagueKey);
+
+            let aGf = (aStats?.fromApi && aStats.xG && aMC >= 5) ? regressionBlend(aStats.xG, lgm * 0.9, aMC) :
+                (aStats?.fromApi && aStats.goalsFull) ? regressionBlend(aStats.goalsFull, lgm * 0.9, aMC) :
+                    aSgf != null ? regressionBlend(aSgf, lgm * 0.9, 10) :
+                        fallbackGoals(awayOff, 'away', liga, currentLeagueKey);
+
+            let hG1t = hStats?.fromApi ? regressionBlend(hStats.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey), lgm * 1.1, hMC) : fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey);
+            let aG1t = aStats?.fromApi ? regressionBlend(aStats.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey), lgm * 0.9, aMC) : fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey);
+
+            let hGc = (hStats?.fromApi && hStats.goalsConceded) ? regressionBlend(hStats.goalsConceded, lgm * 0.9, hMC) : hSga != null ? regressionBlend(hSga, lgm * 0.9, 10) : lgm * 0.9;
+            let aGc = (aStats?.fromApi && aStats.goalsConceded) ? regressionBlend(aStats.goalsConceded, lgm * 1.1, aMC) : aSga != null ? regressionBlend(aSga, lgm * 1.1, 10) : lgm * 1.1;
+
+            let hC = hStats?.fromApi ? regressionBlend(hStats.corners ?? fallbackCorners(homeOff, 'home', liga), cornersAvg / 2 * 1.1, hMC) : fallbackCorners(homeOff, 'home', liga);
+            let aC = aStats?.fromApi ? regressionBlend(aStats.corners ?? fallbackCorners(awayOff, 'away', liga), cornersAvg / 2 * 0.9, aMC) : fallbackCorners(awayOff, 'away', liga);
+
+            const eloDiff = (hElo - aElo) / 400, eloAdj = 1 + eloDiff * 0.04;
+            hGf *= Math.max(0.85, Math.min(1.15, eloAdj));
+            aGf *= Math.max(0.85, Math.min(1.15, 1 / eloAdj));
+            hG1t *= Math.max(0.88, Math.min(1.12, 1 + eloDiff * 0.04));
+            aG1t *= Math.max(0.88, Math.min(1.12, 1 - eloDiff * 0.04));
+            hC *= Math.max(0.9, Math.min(1.1, 1 + eloDiff * 0.03));
+            aC *= Math.max(0.9, Math.min(1.1, 1 - eloDiff * 0.03));
+
+            const hFm = formMultiplier(hStats?.form), aFm = formMultiplier(aStats?.form);
+            hGf *= hFm;
+            aGf *= aFm;
+            hG1t *= hFm;
+            aG1t *= aFm;
+            hC *= hFm * 0.5 + 0.5;
+            aC *= aFm * 0.5 + 0.5;
+
+            const bl = bivariateLambdas(hGf, hGc, aGf, aGc, goalsAvg, hAdv);
+            const lH = +bl.home.toFixed(2), lA = +bl.away.toFixed(2), lGoal = +(hG1t + aG1t).toFixed(2), lCorn = +(hC + aC).toFixed(2);
+
+            loadEl.classList.add('hidden');
+            renderOutput({ home: homeOff, away: awayOff, lambdaCorn: lCorn, lambdaGoal: lGoal, lambdaH: lH, lambdaA: lA, homeStats: hStats, awayStats: aStats, negBinR, totalMatchesUsed: hMC + aMC, liga, homeElo: hElo, awayElo: aElo, altitude: alt });
+            outEl.classList.remove('hidden');
+            requestAnimationFrame(() => requestAnimationFrame(animateBars));
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        };
+
+        function loadText(t, s) {
+            document.getElementById('loading-text').textContent = t;
+            document.getElementById('loading-sub').textContent = s;
+        }
+
+        function getAltitudeAdjustment(h, a) {
+            const ha = ALTITUDE_TEAMS[h];
+            let adv = 1.08, tags = [];
+            if (ha) {
+                adv = ha.advantage;
+                tags.push({ text: `🏔️ Altitud local: ${ha.altitude}`, type: 'altitude' });
+            }
+            return { homeAdv: adv, contextTags: tags };
+        }
+
+        const statsCache = {};
+        async function getTeamStats(tid, tn, role, sid) {
+            const key = `${tid}_${sid}_${role}`;
+            if (statsCache[key]) return statsCache[key];
+            try {
+                let ev = await bsdFetchAll(`/events/?team=${tid}&season=${sid}&limit=300`);
+                if (!ev || ev.length < 3) return null;
+                ev.sort((a, b) => new Date(a.start_date || a.date || 0) - new Date(b.start_date || b.date || 0));
+                const finished = ev.filter(m => {
+                    const st = (m.status || '').toUpperCase();
+                    if (!['FT', 'FINISHED', 'AET', 'PEN', 'FULL_TIME'].includes(st) && !st.includes('FT')) return false;
+                    const teamIdField = role === 'home' ? (m.home_team_obj?.id ?? m.home_team) : (m.away_team_obj?.id ?? m.away_team);
+                    return Number(teamIdField) === Number(tid);
+                });
+                if (finished.length < 3) return null;
+                const lastMatches = finished.slice(-MATCHES_TO_USE);
+                const weights = lastMatches.map((_, i) => Math.exp(0.15 * i));
+                let tC = 0, wC = 0, tG = 0, wG = 0, tGF = 0, wGF = 0, tGC = 0, wGC = 0, tXG = 0, wXG = 0;
+                const form = [];
+                lastMatches.slice(-5).forEach(m => {
+                    const hs = Number(m.home_score || 0), as = Number(m.away_score || 0);
+                    if (role === 'home') {
+                        if (hs > as) form.push('w');
+                        else if (hs === as) form.push('d');
+                        else form.push('l');
+                    } else {
+                        if (as > hs) form.push('w');
+                        else if (as === hs) form.push('d');
+                        else form.push('l');
+                    }
+                });
+                lastMatches.forEach((m, i) => {
+                    const wt = weights[i], st = extractMatchStats(m, role);
+                    if (st.corners != null) { tC += Number(st.corners) * wt; wC += wt; }
+                    if (st.goals1t != null) { tG += Number(st.goals1t) * wt; wG += wt; }
+                    if (st.goalsFull != null) { tGF += Number(st.goalsFull) * wt; wGF += wt; }
+                    if (st.goalsConceded != null) { tGC += Number(st.goalsConceded) * wt; wGC += wt; }
+                    if (st.xG != null) { tXG += Number(st.xG) * wt; wXG += wt; }
+                });
+                const res = {
+                    corners: wC > 0 ? tC / wC : null,
+                    goals1t: wG > 0 ? tG / wG : null,
+                    goalsFull: wGF > 0 ? tGF / wGF : null,
+                    goalsConceded: wGC > 0 ? tGC / wGC : null,
+                    xG: wXG > 0 ? tXG / wXG : null,
+                    matches: lastMatches.length,
+                    form,
+                    fromApi: true
+                };
+                statsCache[key] = res;
+                return res;
+            } catch (e) { return null; }
+        }
+
+        function extractMatchStats(m, role) {
+            const s = m.stats || m.statistics || {}, ls = m.live_stats || {};
+            let c = null, g1 = null, gf = null, xg = null, gc = null;
+            if (s[role]?.corner_kicks != null) c = s[role].corner_kicks;
+            else if (ls[role]?.corner_kicks != null) c = ls[role].corner_kicks;
+            else if (role === 'home' && m.home_corners != null) c = m.home_corners;
+            else if (role === 'away' && m.away_corners != null) c = m.away_corners;
+            if (role === 'home' && m.home_score_ht != null) g1 = m.home_score_ht;
+            if (role === 'away' && m.away_score_ht != null) g1 = m.away_score_ht;
+            if (role === 'home') { if (m.home_score != null) gf = m.home_score; if (m.away_score != null) gc = m.away_score; }
+            if (role === 'away') { if (m.away_score != null) gf = m.away_score; if (m.home_score != null) gc = m.home_score; }
+            if (s[role]?.expected_goals != null) xg = s[role].expected_goals;
+            else if (ls[role]?.expected_goals != null) xg = ls[role].expected_goals;
+            else if (role === 'home' && m.home_xg != null) xg = m.home_xg;
+            else if (role === 'away' && m.away_xg != null) xg = m.away_xg;
+            return { corners: c, goals1t: g1, goalsFull: gf, xG: xg, goalsConceded: gc };
+        }
+
+        function fallbackGoals(name, role, liga, key) {
+            const s = getTeamStrength(name, key);
+            const base = liga.goalsAvg / 2;
+            const mult = role === 'home' ? s.atk * s.homeAdv : s.atk * 0.92;
+            return base * mult;
+        }
+
+        function fallbackGoals1T(name, role, liga, key) {
+            return fallbackGoals(name, role, liga, key) * (role === 'home' ? 0.44 : 0.40);
+        }
+
+        function fallbackCorners(name, role, liga) {
+            if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+            const base = liga.cornersAvg / 2;
+            return role === 'home' ? base * 1.10 : base * 0.90;
+        }
+
+        function renderOutput(o) {
+            const { home, away, lambdaCorn, lambdaGoal, lambdaH, lambdaA, homeStats, awayStats, negBinR, totalMatchesUsed, liga, homeElo, awayElo, altitude } = o;
+            const hF = homeStats?.form || [], aF = awayStats?.form || [];
+            const hTag = homeStats?.fromApi ? '<span class="data-tag api">LIVE</span>' : '<span class="data-tag off">EST</span>';
+            const aTag = awayStats?.fromApi ? '<span class="data-tag api">LIVE</span>' : '<span class="data-tag off">EST</span>';
+            let ctx = '';
+            const tags = [];
+            if (homeElo !== 1500 || awayElo !== 1500) tags.push({ text: `Elo: ${home.split(' ').slice(-1)[0]} ${homeElo.toFixed(0)} vs ${away.split(' ').slice(-1)[0]} ${awayElo.toFixed(0)}`, type: 'elo' });
+            if (altitude.contextTags.length) tags.push(...altitude.contextTags);
+            if (tags.length) ctx = `<div class="context-tags">${tags.map(t => `<span class="context-tag ${t.type}">${t.text}</span>`).join('')}</div>`;
+
+            const statsSummary = `
+                <div class="stats-summary">
+                    <span>📊 Partidos: ${totalMatchesUsed || '—'}</span>
+                    <span>⚖️ Elo dif: ${(homeElo - awayElo).toFixed(0)}</span>
+                    <span>🏠 Ventaja local: ${(HOME_ADVANTAGE_BY_LEAGUE[currentLeagueKey] || 1.08).toFixed(2)}</span>
+                    ${altitude.contextTags.length ? '<span>🏔️ Altitud</span>' : ''}
+                </div>
+            `;
+
+            document.getElementById('match-header-container').innerHTML = `
+                <div class="match-header animate-in">
+                    <div style="text-align:center;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:12px;font-weight:700;text-transform:uppercase;">${liga.name}</div>
+                    <div class="teams-row">
+                        <div class="team-side">${hTag}<div class="team-name">${home}</div>${hF.length ? `<div class="form-row">${hF.map(r => `<span class="form-dot ${r}">${r.toUpperCase()}</span>`).join('')}</div>` : ''}</div>
+                        <div class="vs-center">VS</div>
+                        <div class="team-side">${aTag}<div class="team-name">${away}</div>${aF.length ? `<div class="form-row">${aF.map(r => `<span class="form-dot ${r}">${r.toUpperCase()}</span>`).join('')}</div>` : ''}</div>
+                    </div>
+                    ${ctx}
+                    ${statsSummary}
+                    ${renderResultBoxes(lambdaH, lambdaA)}
+                </div>`;
+
+            let html = '';
+            const mkt = activeMarkets;
+
+            const mktCard = (label, raw, type, idx, sub, lambdaUsed, nUsed, threshold = null) => {
+                const p = +plattCalibrate(raw, type).toFixed(1);
+                const c = colorFor(p), cl = cardClassFor(p);
+                let bandLow, bandHigh;
+                if (lambdaUsed && nUsed) {
+                    const band = uncertaintyBandRealistic(lambdaUsed, nUsed, type, threshold);
+                    bandLow = band.low;
+                    bandHigh = band.high;
+                } else {
+                    bandLow = (p * 0.85).toFixed(0);
+                    bandHigh = (p * 1.12).toFixed(0);
+                }
+                return `<div class="market-card ${cl} animate-in" style="animation-delay:${idx * 0.06}s;opacity:0;">
+                    <div class="line-label">${label}<small>LÍNEA</small></div>
+                    <div class="bar-wrap">
+                        <div class="bar-bg"><div class="bar-fill" data-target="${p}" style="background:${c};width:0%;box-shadow:0 0 8px ${c};"></div></div>
+                        <div class="bar-sub">${sub}: ${(100 - p).toFixed(1)}%</div>
+                        <div class="uncertainty-band">IC 85%: ${bandLow}–${bandHigh}%</div>
+                    </div>
+                    <div class="pct-label" style="color:${c}">${p.toFixed(0)}%<small>OVER</small></div>
+                </div>`;
+            };
+
+            if (mkt.goles) {
+                const l = lambdaH + lambdaA;
+                html += `<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def</span></div>`;
+                html += mktCard('+1.5', poissonOver(l, 1.5), 'goals15', 0, 'Under', l, totalMatchesUsed);
+                html += mktCard('+2.5', poissonOver(l, 2.5), 'goals25', 1, 'Under', l, totalMatchesUsed);
+                html += '<div class="section-divider"></div>';
+            }
+            if (mkt.ht) {
+                html += `<div class="section-header animate-in"><span class="section-icon">⏱</span><span class="section-title">GOLES 1er TIEMPO</span><span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
+                html += mktCard('+0.5', poissonOver(lambdaGoal, 0.5), 'goals_ht05', 2, 'Under', lambdaGoal, totalMatchesUsed);
+                html += mktCard('+1.5', poissonOver(lambdaGoal, 1.5), 'goals_ht15', 3, 'Under', lambdaGoal, totalMatchesUsed);
+                html += '<div class="section-divider"></div>';
+            }
+            if (mkt.btts) {
+                const bttsR = calcBTTS(lambdaH, lambdaA, currentLeagueKey);
+                const bp = +plattCalibrate(bttsR, 'btts').toFixed(0);
+                html += `<div class="section-header animate-in"><span class="section-icon">🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ ρ=${(DIXON_COLES_RHO[currentLeagueKey] || DIXON_COLES_RHO.default).toFixed(3)}</span></div>`;
+                html += `<div class="market-card ${cardClassFor(bp)} animate-in" style="opacity:0;">
+                    <div class="line-label">BTTS<small>AMBOS</small></div>
+                    <div class="bar-wrap">
+                        <div class="bar-bg"><div class="bar-fill" data-target="${bp}" style="background:${colorFor(bp)};width:0%;box-shadow:0 0 8px ${colorFor(bp)};"></div></div>
+                        <div class="bar-sub">No: ${(100 - bp).toFixed(1)}%</div>
+                        <div class="uncertainty-band">IC 85%: ${(bp * 0.85).toFixed(0)}–${(bp * 1.12).toFixed(0)}%</div>
+                    </div>
+                    <div class="pct-label" style="color:${colorFor(bp)}">${bp}%<small>SÍ</small></div>
+                </div>`;
+                html += '<div class="section-divider"></div>';
+            }
+            if (mkt.corn) {
+                html += `<div class="section-header animate-in"><span class="section-icon">⬡</span><span class="section-title">CÓRNERS</span><span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
+                [7.5, 8.5, 9.5, 10.5].forEach((line, i) => {
+                    html += mktCard('+' + line, negBinOver(lambdaCorn, line, negBinR), 'corners', i + 4, 'Under', lambdaCorn, totalMatchesUsed, line);
+                });
+            }
+
+            document.getElementById('all-markets-container').innerHTML = html;
+
+            const all = [];
+            if (mkt.goles) {
+                const l = lambdaH + lambdaA;
+                all.push({ label: 'GOLES OVER 1.5', prob: +plattCalibrate(poissonOver(l, 1.5), 'goals15').toFixed(0), desc: 'Alta prob. de partido con goles', type: 'goles' });
+                all.push({ label: 'GOLES OVER 2.5', prob: +plattCalibrate(poissonOver(l, 2.5), 'goals25').toFixed(0), desc: '3+ goles en el partido', type: 'goles' });
+            }
+            if (mkt.ht) {
+                all.push({ label: 'GOL HT OVER 0.5', prob: +plattCalibrate(poissonOver(lambdaGoal, 0.5), 'goals_ht05').toFixed(0), desc: 'Al menos un gol antes del descanso', type: 'ht' });
+                all.push({ label: 'GOL HT OVER 1.5', prob: +plattCalibrate(poissonOver(lambdaGoal, 1.5), 'goals_ht15').toFixed(0), desc: '2+ goles en el primer tiempo', type: 'ht' });
+            }
+            if (mkt.btts) {
+                const bp = +plattCalibrate(calcBTTS(lambdaH, lambdaA, currentLeagueKey), 'btts').toFixed(0);
+                all.push({ label: 'AMBOS MARCAN', prob: bp, desc: `${bp}% de prob. que ambos anoten`, type: 'btts' });
+            }
+            if (mkt.corn) {
+                [7.5, 8.5, 9.5].forEach(line => {
+                    all.push({ label: `CÓRNERS OVER ${line}`, prob: +plattCalibrate(negBinOver(lambdaCorn, line, negBinR), 'corners').toFixed(0), desc: `Sobre ${line} córners`, type: 'corners' });
+                });
+            }
+            const rp = calcResultProbs(lambdaH, lambdaA, currentLeagueKey);
+            const rph = +plattCalibrate(rp.home, 'resultado').toFixed(1), rpd = +plattCalibrate(rp.draw, 'resultado').toFixed(1), rpa = +plattCalibrate(rp.away, 'resultado').toFixed(1);
+            all.push({ label: 'VICTORIA LOCAL', prob: rph, desc: `${home.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
+            all.push({ label: 'VICTORIA VISITANTE', prob: rpa, desc: `${away.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
+
+            const rec = buildRecommendation(all);
+
+            lastPrediction = {
+                home, away,
+                ligaName: liga.name,
+                top: rec.top,
+                top3: rec.top3,
+                isAggressive: rec.isAggressive,
+                allMarkets: all
+            };
+
+            if (!rec.top) {
+                document.getElementById('recomendacion-container').innerHTML = `<div class="recomendacion animate-in" style="border-color:rgba(255,77,90,0.25);"><div class="rec-title" style="color:var(--accent);">SIN APUESTA CLARA</div><div class="rec-main" style="color:var(--accent);font-size:1.2rem;">SIN APUESTA CLARA</div><div class="rec-sub">Ningún mercado supera el umbral de confianza mínimo</div></div>`;
+            } else {
+                const tb = rec.top;
+                const cls = tb.prob >= 70 ? 'var(--green)' : tb.prob >= 60 ? 'var(--yellow)' : 'var(--accent)';
+                const gl = cls === 'var(--green)' ? 'rgba(46,204,113,0.5)' : cls === 'var(--yellow)' ? 'rgba(255,182,39,0.5)' : 'rgba(255,77,90,0.5)';
+                const conf = tb.confidenceLevel === 'alta' ? 'CONFIANZA ALTA' : tb.confidenceLevel === 'media' ? 'CONFIANZA MEDIA' : 'ALTO RIESGO';
+                let top3h = '';
+                if (rec.top3.length > 1) {
+                    top3h = rec.top3.slice(1).map((b, i) => {
+                        const c = b.prob >= 70 ? 'var(--green)' : b.prob >= 60 ? 'var(--yellow)' : 'var(--accent)';
+                        return `<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);"><span style="font-size:0.75rem;opacity:0.6;">#${i + 2}</span><span style="flex:1;font-weight:600;font-size:0.8rem;">${b.label}</span><span style="font-family:'Bebas Neue';font-size:1rem;color:${c};">${b.prob.toFixed(0)}%</span>${b.diamond ? `<span style="font-size:0.9rem;">${b.diamond}</span>` : ''}</div>`;
+                    }).join('');
+                }
+                document.getElementById('recomendacion-container').innerHTML = `
+                    <div class="recomendacion animate-in" style="border-color:${rec.isAggressive ? 'rgba(255,77,90,0.4)' : 'rgba(46,204,113,0.4)'};">
+                        <div class="rec-title" style="color:${rec.isAggressive ? 'var(--accent)' : 'var(--green)'};">${rec.isAggressive ? '⚡ APUESTA AGRESIVA' : '🎯 MEJOR APUESTA'}</div>
+                        <div class="rec-main" style="color:${cls};text-shadow:0 0 20px ${gl};">${tb.label} ${tb.diamond || ''}</div>
+                        <div class="rec-sub">${tb.desc}</div>
+                        <div class="rec-confidence" style="border-color:${cls};"><span class="rc-pct" style="color:${cls}">${tb.prob.toFixed(0)}%</span><span class="rc-label">${conf}</span></div>
+                        ${top3h ? `<div style="margin-top:14px;text-align:left;"><div style="font-size:0.6rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">🔎 OTRAS OPCIONES</div>${top3h}</div>` : ''}
+                        <button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>
+                    </div>`;
+            }
+        }
+
+        function renderResultBoxes(lH, lA) {
+            const rp = calcResultProbs(lH, lA, currentLeagueKey);
+            const r = { home: +plattCalibrate(rp.home, 'resultado').toFixed(1), draw: +plattCalibrate(rp.draw, 'resultado').toFixed(1), away: +plattCalibrate(rp.away, 'resultado').toFixed(1) };
+            const mx = Math.max(r.home, r.draw, r.away);
+            const rc = v => v === mx ? 'var(--green)' : v >= 30 ? 'var(--yellow)' : 'var(--accent)';
+            const rg = v => v === mx ? 'rgba(46,204,113,0.3)' : v >= 30 ? 'rgba(255,182,39,0.3)' : 'rgba(255,77,90,0.3)';
+            return `<div class="result-boxes">
+                <div class="result-box"><div class="rb-label">🏠 Local</div><div class="rb-pct" style="color:${rc(r.home)};text-shadow:0 0 15px ${rg(r.home)};">${r.home}%</div></div>
+                <div class="result-box rb-center"><div class="rb-label">🟡 Empate</div><div class="rb-pct" style="color:${rc(r.draw)};text-shadow:0 0 15px ${rg(r.draw)};">${r.draw}%</div></div>
+                <div class="result-box"><div class="rb-label">✈️ Visitante</div><div class="rb-pct" style="color:${rc(r.away)};text-shadow:0 0 15px ${rg(r.away)};">${r.away}%</div></div>
+            </div>`;
+        }
+
+        function animateBars() {
+            document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
+        }
 
         function loadSavedPredictions() {
             try {
@@ -1566,6 +2532,81 @@
             }
         }
 
+        function renderSavedList() {
+            const container = document.getElementById('saved-list');
+            const statsContainer = document.getElementById('saved-stats');
+            if (!container) return;
+
+            // Calcular estadísticas
+            const total = savedPredictions.length;
+            const ganadas = savedPredictions.filter(p => p.result === 'win').length;
+            const perdidas = savedPredictions.filter(p => p.result === 'loss').length;
+            const pendientes = total - ganadas - perdidas;
+            const calificadas = ganadas + perdidas;
+            const hitRate = calificadas > 0 ? (ganadas / calificadas) * 100 : 0;
+
+            // Renderizar panel de estadísticas
+            if (total > 0) {
+                let hitClass = 'good';
+                if (hitRate < 40) hitClass = 'bad';
+                else if (hitRate < 60) hitClass = 'medium';
+
+                statsContainer.style.display = 'block';
+                statsContainer.innerHTML = `
+                    <div class="saved-stats">
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value win">${ganadas}</div>
+                            <div class="saved-stat-label">✔ Ganadas</div>
+                        </div>
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value loss">${perdidas}</div>
+                            <div class="saved-stat-label">✘ Perdidas</div>
+                        </div>
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value pending">${pendientes}</div>
+                            <div class="saved-stat-label">⏳ Pendientes</div>
+                        </div>
+                        <div class="saved-hitrate">
+                            <span class="saved-hitrate-label">% Acierto</span>
+                            <span class="saved-hitrate-value ${hitClass}">${calificadas > 0 ? hitRate.toFixed(1) + '%' : '—'}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                statsContainer.style.display = 'none';
+                statsContainer.innerHTML = '';
+            }
+
+            // Lista de predicciones guardadas
+            if (savedPredictions.length === 0) {
+                container.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
+                return;
+            }
+            const reversed = [...savedPredictions].reverse();
+            container.innerHTML = reversed.map(p => {
+                const isWin = p.result === 'win';
+                const isLoss = p.result === 'loss';
+                const itemClass = isWin ? 'won' : isLoss ? 'lost' : '';
+                return `
+                <div class="saved-item ${itemClass}">
+                    <span class="saved-item-date">${p.fecha}</span>
+                    <span class="saved-item-teams">
+                        ${p.home} vs ${p.away}
+                        <small>${p.liga}</small>
+                    </span>
+                    <span class="saved-item-pick" style="color:${p.topColor}">
+                        ${p.topPick}
+                        <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
+                    </span>
+                    <div class="saved-item-actions">
+                        <button class="action-btn win-btn ${isWin ? 'active-win' : ''}" onclick="markPredictionResult(${p.id}, 'win')" title="Marcar Ganada">✔</button>
+                        <button class="action-btn loss-btn ${isLoss ? 'active-loss' : ''}" onclick="markPredictionResult(${p.id}, 'loss')" title="Marcar Perdida">✘</button>
+                        <button class="action-btn delete-btn" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         function showToast(msg) {
             const existing = document.querySelector('.toast');
             if (existing) existing.remove();
@@ -1576,16 +2617,41 @@
             setTimeout(() => t.remove(), 2300);
         }
 
-        // El resto del script (renderLeaguePills, renderMarketToggles, etc.) es exactamente igual al original.
-        // Incluye todas las funciones de cálculo, carga de API, etc. sin modificaciones.
-
-        // Inicialización al cargar
         window.onload = async () => {
             renderLeaguePills();
             renderMarketToggles();
             setApiStatus('error', '🟡 Conectando con BSD API...');
             loadSavedPredictions();
-            // ... (lógica de conexión a BSD sin cambios) ...
+            try {
+                let all = [], url = BSD_BASE + '/leagues/?page_size=100', p = 0;
+                while (url && p < 5) {
+                    const fp = fetch(url, { headers: { 'Authorization': 'Token ' + BSD_TOKEN } });
+                    const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 8000));
+                    const r = await Promise.race([fp, tp]);
+                    if (!r.ok) throw new Error('BSD ' + r.status);
+                    const d = await r.json();
+                    all = all.concat(d.results || []);
+                    url = d.next || null;
+                    p++;
+                }
+                all.forEach(l => {
+                    if (l.is_women) return;
+                    if (!l.current_season?.id) return;
+                    for (const c of Object.keys(LIGAS)) {
+                        if (matchLeagueName(l.name, c) && !bsdLeagueMap[c]) {
+                            bsdLeagueMap[c] = { bsdId: l.id, seasonId: l.current_season.id };
+                        }
+                    }
+                });
+                const mapped = Object.keys(bsdLeagueMap).length;
+                if (mapped > 0) {
+                    setApiStatus('live', '🟢 BSD API — ' + mapped + '/' + Object.keys(LIGAS).length + ' ligas activas');
+                    apiAvailable = true;
+                    document.getElementById('engine-badge').textContent = '⚡ BSD + Elo + Atk×Def + xG + Altitud · v2.4 PRO';
+                }
+            } catch (e) {
+                setApiStatus('error', '🟡 Sin conexión — usando datos offline');
+            }
         };
     </script>
 </body>
