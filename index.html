@@ -1232,7 +1232,7 @@
     </div>
 
     <script>
-        // ====================== CONSTANTES Y CONFIGURACIÓN ORIGINALES (mantenidas) ======================
+        // ====================== CONSTANTES Y CONFIGURACIÓN ======================
         const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
@@ -1461,7 +1461,7 @@
             return 1 + (score - 1.5) * 0.15;
         }
 
-        // ====================== FUNCIONES ORIGINALES (se mantienen exactamente, excepto pequeñas actualizaciones) ======================
+        // ====================== FUNCIONES ORIGINALES ======================
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
@@ -1772,7 +1772,6 @@
             const hMC = hStats?.combined?.matches || 0, aMC = aStats?.combined?.matches || 0;
             const lgm = goalsAvg / 2;
 
-            // Usar splits home/away siempre que estén disponibles
             const hAtkStat = hStats?.home?.goalsFull ?? hStats?.combined?.goalsFull ?? fallbackGoals(homeOff, 'home', liga, currentLeagueKey);
             const hDefStat = hStats?.home?.goalsConceded ?? hStats?.combined?.goalsConceded ?? (hSga != null ? hSga : lgm * 0.9);
             const aAtkStat = aStats?.away?.goalsFull ?? aStats?.combined?.goalsFull ?? fallbackGoals(awayOff, 'away', liga, currentLeagueKey);
@@ -1780,17 +1779,14 @@
 
             let hGf = hAtkStat, hGc = hDefStat, aGf = aAtkStat, aGc = aDefStat;
 
-            // Goles primer tiempo
             const hG1tStat = hStats?.home?.goals1t ?? hStats?.combined?.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey);
             const aG1tStat = aStats?.away?.goals1t ?? aStats?.combined?.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey);
             let hG1t = hG1tStat, aG1t = aG1tStat;
 
-            // Córners
             const hCornerStat = hStats?.home?.corners ?? hStats?.combined?.corners ?? fallbackCorners(homeOff, 'home', liga);
             const aCornerStat = aStats?.away?.corners ?? aStats?.combined?.corners ?? fallbackCorners(awayOff, 'away', liga);
             let hC = hCornerStat, aC = aCornerStat;
 
-            // Ajustes por Elo
             const eloDiff = (hElo - aElo) / 400, eloAdj = 1 + eloDiff * 0.04;
             hGf *= Math.max(0.85, Math.min(1.15, eloAdj));
             aGf *= Math.max(0.85, Math.min(1.15, 1 / eloAdj));
@@ -1799,26 +1795,22 @@
             hC *= Math.max(0.9, Math.min(1.1, 1 + eloDiff * 0.03));
             aC *= Math.max(0.9, Math.min(1.1, 1 - eloDiff * 0.03));
 
-            // Forma
             const hFm = formMultiplier(hStats?.form), aFm = formMultiplier(aStats?.form);
             hGf *= hFm; aGf *= aFm; hG1t *= hFm; aG1t *= aFm;
             hC *= hFm * 0.5 + 0.5; aC *= aFm * 0.5 + 0.5;
 
-            // Fatiga
             const fatigueAdj = (factor) => 1 - factor * 0.5;
             const hFatigue = hStats?.fatigueFactor || 0;
             const aFatigue = aStats?.fatigueFactor || 0;
             hGf *= fatigueAdj(hFatigue); aGf *= fatigueAdj(aFatigue);
             hG1t *= fatigueAdj(hFatigue); aG1t *= fatigueAdj(aFatigue);
 
-            // Strength of Schedule (Elo medio rival)
             const eloAvgLeague = 1500;
             const oppStrengthH = hStats?.avgOppElo ? (hStats.avgOppElo - eloAvgLeague) / 400 * 0.04 : 0;
             const oppStrengthA = aStats?.avgOppElo ? (aStats.avgOppElo - eloAvgLeague) / 400 * 0.04 : 0;
             hGf *= (1 - oppStrengthH);
             aGf *= (1 - oppStrengthA);
 
-            // Ajuste de ventaja local por altitud
             hGf *= hAdv;
 
             const bl = bivariateLambdas(hGf, hGc, aGf, aGc, goalsAvg, hAdv);
@@ -1851,9 +1843,7 @@
         }
 
         const statsCache = {};
-        async function getTeamStats(tid, tn, role, sid) {
-            // La versión original se mantiene por compatibilidad si se requiere, pero ahora se usa getTeamStatsEnhanced
-        }
+        async function getTeamStats(tid, tn, role, sid) { /* versión original por compatibilidad */ }
 
         function extractMatchStats(m, role) {
             const s = m.stats || m.statistics || {}, ls = m.live_stats || {};
@@ -1960,7 +1950,6 @@
             }
             if (activeMarkets.btts) {
                 let bttsR = calcBTTS(lambdaH, lambdaA, currentLeagueKey);
-                // Correlación con Over 2.5
                 if (activeMarkets.goles) {
                     const pOver25 = +plattCalibrate(poissonOver(lambdaH + lambdaA, 2.5), 'goals25');
                     bttsR *= (1 + 0.12 * (pOver25/100 - 0.5));
@@ -2060,17 +2049,202 @@
             document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
         }
 
-        // ====================== GESTIÓN DE PREDICCIONES GUARDADAS (sin cambios) ======================
-        function loadSavedPredictions() { /* ... */ }
-        function saveCurrentPrediction() { /* ... */ }
-        function deleteSavedPrediction(id) { /* ... */ }
-        function markPredictionResult(id, result) { /* ... */ }
-        function clearAllSaved() { /* ... */ }
-        function updateSavedBadge() { /* ... */ }
-        function updateFabBadge() { /* ... */ }
-        function toggleSavedPanel() { /* ... */ }
-        function renderSavedList() { /* ... */ }
-        function showToast(msg) { /* ... */ }
+        // ====================== GESTIÓN DE PREDICCIONES GUARDADAS (COMPLETA) ======================
+        function loadSavedPredictions() {
+            try {
+                const raw = localStorage.getItem(SAVED_KEY);
+                savedPredictions = raw ? JSON.parse(raw) : [];
+            } catch (e) {
+                savedPredictions = [];
+            }
+            updateSavedBadge();
+            updateFabBadge();
+            renderSavedList();
+        }
+
+        function saveCurrentPrediction() {
+            if (!lastPrediction) return;
+            if (savedPredictions.length >= MAX_SAVED) {
+                savedPredictions.shift();
+            }
+            const entry = {
+                id: Date.now(),
+                fecha: new Date().toLocaleString('es', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                liga: lastPrediction.ligaName || '',
+                home: lastPrediction.home,
+                away: lastPrediction.away,
+                topPick: lastPrediction.top?.label || '',
+                topProb: lastPrediction.top?.prob || 0,
+                topColor: lastPrediction.top?.prob >= 70 ? 'var(--green)' : lastPrediction.top?.prob >= 60 ? 'var(--yellow)' : 'var(--accent)',
+                top3: lastPrediction.top3?.map(t => ({ label: t.label, prob: t.prob })) || [],
+                result: null,
+                timestamp: Date.now()
+            };
+            savedPredictions.push(entry);
+            try {
+                localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            } catch (e) {
+                savedPredictions.pop();
+                showToast('⚠️ Almacenamiento lleno');
+                return;
+            }
+            updateSavedBadge();
+            updateFabBadge();
+            renderSavedList();
+            showToast('✅ Predicción guardada');
+            const btn = document.getElementById('save-pred-btn');
+            if (btn) { btn.classList.add('saved'); btn.textContent = '✅ GUARDADO'; }
+        }
+
+        function deleteSavedPrediction(id) {
+            savedPredictions = savedPredictions.filter(p => p.id !== id);
+            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            updateSavedBadge();
+            updateFabBadge();
+            renderSavedList();
+            showToast('🗑 Eliminada');
+        }
+
+        function markPredictionResult(id, result) {
+            const pred = savedPredictions.find(p => p.id === id);
+            if (!pred) return;
+            pred.result = pred.result === result ? null : result;
+            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+            updateSavedBadge();
+            updateFabBadge();
+            renderSavedList();
+            const msg = pred.result === 'win' ? '✔ Marcada como Ganada' : pred.result === 'loss' ? '✘ Marcada como Perdida' : '↩ Estado reiniciado';
+            showToast(msg);
+        }
+
+        function clearAllSaved() {
+            if (confirm('¿Eliminar todas las predicciones guardadas?')) {
+                savedPredictions = [];
+                localStorage.removeItem(SAVED_KEY);
+                updateSavedBadge();
+                updateFabBadge();
+                renderSavedList();
+                showToast('🗑 Todas eliminadas');
+            }
+        }
+
+        function updateSavedBadge() {
+            const badge = document.getElementById('saved-badge-header');
+            const count = document.getElementById('saved-count');
+            const clearBtn = document.getElementById('saved-clear-btn');
+            count.textContent = savedPredictions.length;
+            if (savedPredictions.length > 0) {
+                badge.classList.add('has-items');
+                if (clearBtn) clearBtn.style.display = 'inline-block';
+            } else {
+                badge.classList.remove('has-items');
+                if (clearBtn) clearBtn.style.display = 'none';
+            }
+        }
+
+        function updateFabBadge() {
+            const fab = document.getElementById('fab-saved-btn');
+            const fabBadge = document.getElementById('fab-badge-count');
+            if (fabBadge) fabBadge.textContent = savedPredictions.length;
+            if (savedPredictions.length > 0) {
+                fab.classList.add('has-items');
+            } else {
+                fab.classList.remove('has-items');
+            }
+        }
+
+        function toggleSavedPanel() {
+            const panel = document.getElementById('saved-panel');
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                renderSavedList();
+                panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function renderSavedList() {
+            const container = document.getElementById('saved-list');
+            const statsContainer = document.getElementById('saved-stats');
+            if (!container) return;
+
+            const total = savedPredictions.length;
+            const ganadas = savedPredictions.filter(p => p.result === 'win').length;
+            const perdidas = savedPredictions.filter(p => p.result === 'loss').length;
+            const pendientes = total - ganadas - perdidas;
+            const calificadas = ganadas + perdidas;
+            const hitRate = calificadas > 0 ? (ganadas / calificadas) * 100 : 0;
+
+            if (total > 0) {
+                let hitClass = 'good';
+                if (hitRate < 40) hitClass = 'bad';
+                else if (hitRate < 60) hitClass = 'medium';
+
+                statsContainer.style.display = 'block';
+                statsContainer.innerHTML = `
+                    <div class="saved-stats">
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value win">${ganadas}</div>
+                            <div class="saved-stat-label">✔ Ganadas</div>
+                        </div>
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value loss">${perdidas}</div>
+                            <div class="saved-stat-label">✘ Perdidas</div>
+                        </div>
+                        <div class="saved-stat-item">
+                            <div class="saved-stat-value pending">${pendientes}</div>
+                            <div class="saved-stat-label">⏳ Pendientes</div>
+                        </div>
+                        <div class="saved-hitrate">
+                            <span class="saved-hitrate-label">% Acierto</span>
+                            <span class="saved-hitrate-value ${hitClass}">${calificadas > 0 ? hitRate.toFixed(1) + '%' : '—'}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                statsContainer.style.display = 'none';
+                statsContainer.innerHTML = '';
+            }
+
+            if (savedPredictions.length === 0) {
+                container.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
+                return;
+            }
+            const reversed = [...savedPredictions].reverse();
+            container.innerHTML = reversed.map(p => {
+                const isWin = p.result === 'win';
+                const isLoss = p.result === 'loss';
+                const itemClass = isWin ? 'won' : isLoss ? 'lost' : '';
+                return `
+                <div class="saved-item ${itemClass}">
+                    <span class="saved-item-date">${p.fecha}</span>
+                    <span class="saved-item-teams">
+                        ${p.home} vs ${p.away}
+                        <small>${p.liga}</small>
+                    </span>
+                    <span class="saved-item-pick" style="color:${p.topColor}">
+                        ${p.topPick}
+                        <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
+                    </span>
+                    <div class="saved-item-actions">
+                        <button class="action-btn win-btn ${isWin ? 'active-win' : ''}" onclick="markPredictionResult(${p.id}, 'win')" title="Marcar Ganada">✔</button>
+                        <button class="action-btn loss-btn ${isLoss ? 'active-loss' : ''}" onclick="markPredictionResult(${p.id}, 'loss')" title="Marcar Perdida">✘</button>
+                        <button class="action-btn delete-btn" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showToast(msg) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2300);
+        }
 
         // ====================== INICIALIZACIÓN ======================
         window.onload = async () => {
