@@ -29,11 +29,7 @@
             --radius-md: 14px;
             --radius-sm: 10px;
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: var(--bg);
             color: var(--text);
@@ -47,8 +43,7 @@
         }
         body::before {
             content: '';
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background-image:
                 radial-gradient(circle at 20% 20%, rgba(255, 77, 90, 0.12) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
@@ -56,15 +51,9 @@
             z-index: 0;
             animation: bgPulse 12s ease-in-out infinite alternate;
         }
-        @keyframes bgPulse {
-            0% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
+        @keyframes bgPulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
         .particles {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image:
                 radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
                 radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.3), transparent),
@@ -75,154 +64,62 @@
             background-size: 200% 200%;
             animation: particleDrift 30s linear infinite;
         }
-        @keyframes particleDrift {
-            0% { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
+        @keyframes particleDrift { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+        .container { width: 100%; max-width: 500px; position: relative; z-index: 1; }
         .header {
-            text-align: center;
-            padding: 28px 20px 20px;
-            margin-bottom: 8px;
-            background: rgba(20, 25, 40, 0.5);
-            backdrop-filter: blur(25px);
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            text-align: center; padding: 28px 20px 20px; margin-bottom: 8px;
+            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px);
+            border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.06);
+            position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
         .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: conic-gradient(from 0deg, transparent, rgba(255,77,90,0.3), transparent, rgba(46,204,113,0.3), transparent);
-            animation: rotateGlow 12s linear infinite;
-            opacity: 0.4;
+            animation: rotateGlow 12s linear infinite; opacity: 0.4;
         }
-        @keyframes rotateGlow {
-            to { transform: rotate(360deg); }
-        }
-        .header>* {
-            position: relative;
-            z-index: 1;
-        }
+        @keyframes rotateGlow { to { transform: rotate(360deg); } }
+        .header>* { position: relative; z-index: 1; }
         .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 3.2rem;
-            letter-spacing: 5px;
-            color: white;
-            line-height: 1;
-            text-shadow: 0 0 30px var(--accent-glow), 0 2px 10px rgba(0,0,0,0.6);
+            font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; letter-spacing: 5px;
+            color: white; line-height: 1; text-shadow: 0 0 30px var(--accent-glow), 0 2px 10px rgba(0,0,0,0.6);
             background: linear-gradient(135deg, #ffffff 0%, #ff8a95 50%, #ffffff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             margin-bottom: 8px;
         }
         .logo span {
             -webkit-text-fill-color: transparent;
             background: linear-gradient(135deg, var(--accent), #ff8a95);
-            -webkit-background-clip: text;
-            background-clip: text;
+            -webkit-background-clip: text; background-clip: text;
         }
         .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            background: rgba(255, 77, 90, 0.1);
-            border: 1px solid rgba(255, 77, 90, 0.3);
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: var(--accent);
-            text-transform: uppercase;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 77, 90, 0.15);
-            margin: 0 4px;
+            display: inline-block; padding: 4px 14px; background: rgba(255, 77, 90, 0.1);
+            border: 1px solid rgba(255, 77, 90, 0.3); border-radius: 20px; font-size: 0.65rem;
+            font-weight: 700; letter-spacing: 2px; color: var(--accent); text-transform: uppercase;
+            backdrop-filter: blur(10px); box-shadow: 0 0 20px rgba(255, 77, 90, 0.15); margin: 0 4px;
         }
         .saved-badge-header {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: rgba(151, 117, 250, 0.12);
-            border: 1px solid rgba(151, 117, 250, 0.3);
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: #c4b5fd;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px;
+            background: rgba(151, 117, 250, 0.12); border: 1px solid rgba(151, 117, 250, 0.3);
+            border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+            color: #c4b5fd; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);
         }
-        .saved-badge-header:hover {
-            background: rgba(151, 117, 250, 0.25);
-            box-shadow: 0 0 20px rgba(151, 117, 250, 0.25);
-            transform: translateY(-2px);
-        }
-        .saved-badge-header.has-items {
-            color: var(--green);
-            border-color: rgba(46, 204, 113, 0.5);
-            background: rgba(46, 204, 113, 0.12);
-            animation: pulseBadge 2s ease-in-out infinite;
-        }
-        @keyframes pulseBadge {
-            0%, 100% { box-shadow: 0 0 12px rgba(46, 204, 113, 0.25); }
-            50% { box-shadow: 0 0 22px rgba(46, 204, 113, 0.5); }
-        }
-        .saved-count {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.9rem;
-        }
+        .saved-badge-header:hover { background: rgba(151, 117, 250, 0.25); box-shadow: 0 0 20px rgba(151, 117, 250, 0.25); transform: translateY(-2px); }
+        .saved-badge-header.has-items { color: var(--green); border-color: rgba(46, 204, 113, 0.5); background: rgba(46, 204, 113, 0.12); animation: pulseBadge 2s ease-in-out infinite; }
+        @keyframes pulseBadge { 0%, 100% { box-shadow: 0 0 12px rgba(46, 204, 113, 0.25); } 50% { box-shadow: 0 0 22px rgba(46, 204, 113, 0.5); } }
+        .saved-count { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; }
 
         .fab-saved {
-            position: fixed;
-            bottom: 28px;
-            right: 24px;
-            z-index: 999;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 1px solid rgba(151, 117, 250, 0.4);
-            background: rgba(22, 18, 45, 0.8);
-            backdrop-filter: blur(20px);
-            color: #c4b5fd;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
+            position: fixed; bottom: 28px; right: 24px; z-index: 999; width: 56px; height: 56px;
+            border-radius: 50%; border: 1px solid rgba(151, 117, 250, 0.4);
+            background: rgba(22, 18, 45, 0.8); backdrop-filter: blur(20px); color: #c4b5fd;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
             box-shadow: 0 8px 30px rgba(151, 117, 250, 0.25), 0 0 0 0 rgba(151, 117, 250, 0.4);
             transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             animation: fabPulse 2.5s ease-in-out infinite;
         }
-        .fab-saved:hover {
-            transform: scale(1.1);
-            background: rgba(151, 117, 250, 0.25);
-            border-color: rgba(151, 117, 250, 0.7);
-            box-shadow: 0 12px 40px rgba(151, 117, 250, 0.45);
-            color: white;
-        }
-        .fab-saved:active {
-            transform: scale(0.95);
-        }
-        .fab-saved.has-items {
-            border-color: rgba(46, 204, 113, 0.5);
-            color: var(--green);
-            background: rgba(22, 32, 28, 0.85);
-            box-shadow: 0 8px 30px rgba(46, 204, 113, 0.3);
-            animation: fabPulseGreen 2s ease-in-out infinite;
-        }
+        .fab-saved:hover { transform: scale(1.1); background: rgba(151, 117, 250, 0.25); border-color: rgba(151, 117, 250, 0.7); box-shadow: 0 12px 40px rgba(151, 117, 250, 0.45); color: white; }
+        .fab-saved:active { transform: scale(0.95); }
+        .fab-saved.has-items { border-color: rgba(46, 204, 113, 0.5); color: var(--green); background: rgba(22, 32, 28, 0.85); box-shadow: 0 8px 30px rgba(46, 204, 113, 0.3); animation: fabPulseGreen 2s ease-in-out infinite; }
         @keyframes fabPulse {
             0%, 100% { box-shadow: 0 8px 30px rgba(151, 117, 250, 0.25), 0 0 0 0 rgba(151, 117, 250, 0.35); }
             50% { box-shadow: 0 8px 30px rgba(151, 117, 250, 0.4), 0 0 0 14px rgba(151, 117, 250, 0); }
@@ -232,952 +129,233 @@
             50% { box-shadow: 0 8px 30px rgba(46, 204, 113, 0.5), 0 0 0 14px rgba(46, 204, 113, 0); }
         }
         .fab-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: var(--purple);
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(0,0,0,0.5);
-            letter-spacing: 0.5px;
-            transition: all 0.3s ease;
+            position: absolute; top: -4px; right: -4px; width: 22px; height: 22px; border-radius: 50%;
+            background: var(--purple); color: white; font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem;
+            display: flex; align-items: center; justify-content: center; border: 2px solid rgba(0,0,0,0.5);
+            letter-spacing: 0.5px; transition: all 0.3s ease;
         }
-        .fab-saved.has-items .fab-badge {
-            background: var(--green);
-            box-shadow: 0 0 12px rgba(46, 204, 113, 0.5);
-        }
+        .fab-saved.has-items .fab-badge { background: var(--green); box-shadow: 0 0 12px rgba(46, 204, 113, 0.5); }
 
         .card {
-            background: rgba(20, 25, 40, 0.45);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            padding: 22px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-bottom: 14px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: rgba(20, 25, 40, 0.45); backdrop-filter: blur(20px); border-radius: var(--radius-lg);
+            padding: 22px; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 14px;
+            position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
-        .card:hover {
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            opacity: 0.5;
-        }
+        .card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.1); }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); opacity: 0.5; }
         .api-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.66rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-            padding: 8px 14px;
-            border-radius: var(--radius-sm);
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
+            display: flex; align-items: center; gap: 10px; font-size: 0.66rem; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; padding: 8px 14px;
+            border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06); backdrop-filter: blur(10px);
         }
-        .api-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--muted);
-            flex-shrink: 0;
-            transition: all 0.3s;
-        }
-        .api-dot.live {
-            background: var(--green);
-            box-shadow: 0 0 10px var(--green-glow), 0 0 20px var(--green-glow);
-        }
-        .api-dot.error {
-            background: var(--yellow);
-            box-shadow: 0 0 10px var(--yellow-glow);
-        }
-        .league-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
+        .api-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; transition: all 0.3s; }
+        .api-dot.live { background: var(--green); box-shadow: 0 0 10px var(--green-glow), 0 0 20px var(--green-glow); }
+        .api-dot.error { background: var(--yellow); box-shadow: 0 0 10px var(--yellow-glow); }
+        .league-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
         .league-pill {
-            padding: 6px 13px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.03);
-            color: var(--muted);
-            font-size: 0.72rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(5px);
+            padding: 6px 13px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03); color: var(--muted); font-size: 0.72rem; font-weight: 700;
+            cursor: pointer; transition: all 0.25s ease; letter-spacing: 0.5px; backdrop-filter: blur(5px);
         }
-        .league-pill:hover {
-            border-color: var(--accent);
-            color: var(--text);
-            background: rgba(255, 77, 90, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 77, 90, 0.2);
-        }
-        .league-pill.active {
-            background: linear-gradient(135deg, rgba(255, 77, 90, 0.25), rgba(77, 171, 247, 0.2));
-            border-color: var(--accent);
-            color: white;
-            box-shadow: 0 0 20px rgba(255, 77, 90, 0.3);
-            transform: scale(1.03);
-        }
-        label {
-            display: block;
-            margin: 14px 0 5px;
-            color: var(--muted);
-            font-size: 0.66rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
+        .league-pill:hover { border-color: var(--accent); color: var(--text); background: rgba(255, 77, 90, 0.1); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(255, 77, 90, 0.2); }
+        .league-pill.active { background: linear-gradient(135deg, rgba(255, 77, 90, 0.25), rgba(77, 171, 247, 0.2)); border-color: var(--accent); color: white; box-shadow: 0 0 20px rgba(255, 77, 90, 0.3); transform: scale(1.03); }
+        label { display: block; margin: 14px 0 5px; color: var(--muted); font-size: 0.66rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
         select {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: var(--radius-sm);
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(20, 25, 40, 0.4);
-            backdrop-filter: blur(15px);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.88rem;
-            appearance: none;
+            width: 100%; padding: 12px 15px; border-radius: var(--radius-sm);
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(20, 25, 40, 0.4);
+            backdrop-filter: blur(15px); color: var(--text); font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem; appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237b8aa6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            cursor: pointer;
-            transition: all 0.25s ease;
+            background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; transition: all 0.25s ease;
         }
-        select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(255, 77, 90, 0.15);
-        }
-        select:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .team-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .team-col label {
-            margin-top: 0;
-        }
+        select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px rgba(255, 77, 90, 0.15); }
+        select:disabled { opacity: 0.4; cursor: not-allowed; }
+        .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .team-col label { margin-top: 0; }
         .vs-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 6px 0;
-            color: var(--muted);
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            gap: 12px;
+            display: flex; align-items: center; justify-content: center; margin: 6px 0;
+            color: var(--muted); font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+            letter-spacing: 3px; gap: 12px;
         }
-        .vs-divider::before,
-        .vs-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-        }
-        .markets-label {
-            display: block;
-            margin: 14px 0 8px;
-            color: var(--muted);
-            font-size: 0.66rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-        }
-        .market-toggles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 4px;
-        }
+        .vs-divider::before, .vs-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
+        .markets-label { display: block; margin: 14px 0 8px; color: var(--muted); font-size: 0.66rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+        .market-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
         .mkt-toggle {
-            padding: 6px 12px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.03);
-            color: var(--muted);
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(5px);
+            padding: 6px 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03); color: var(--muted); font-size: 0.7rem; font-weight: 700;
+            cursor: pointer; transition: all 0.25s ease; letter-spacing: 0.5px; backdrop-filter: blur(5px);
         }
-        .mkt-toggle:hover {
-            transform: translateY(-2px);
-            border-color: rgba(255,255,255,0.2);
-        }
-        .mkt-toggle.on {
-            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(77, 171, 247, 0.15));
-            border-color: rgba(46, 204, 113, 0.5);
-            color: var(--green);
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
-        }
-        .mkt-toggle.unavailable {
-            opacity: 0.25;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
+        .mkt-toggle:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.2); }
+        .mkt-toggle.on { background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(77, 171, 247, 0.15)); border-color: rgba(46, 204, 113, 0.5); color: var(--green); box-shadow: 0 0 15px rgba(46, 204, 113, 0.2); }
+        .mkt-toggle.unavailable { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
         .calc-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: var(--radius-md);
-            border: none;
+            width: 100%; padding: 16px; border-radius: var(--radius-md); border: none;
             background: linear-gradient(135deg, var(--accent), #ff6b7a, var(--accent));
-            background-size: 200% 100%;
-            color: white;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 3px;
-            margin-top: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(255, 77, 90, 0.4);
-            animation: shimmer 3s ease-in-out infinite;
+            background-size: 200% 100%; color: white; font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem; letter-spacing: 3px; margin-top: 18px; cursor: pointer;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+            box-shadow: 0 8px 30px rgba(255, 77, 90, 0.4); animation: shimmer 3s ease-in-out infinite;
             text-transform: uppercase;
         }
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .calc-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
-        }
-        .calc-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 14px 40px rgba(255, 77, 90, 0.6);
-        }
-        .calc-btn:active {
-            transform: scale(0.97);
-        }
+        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .calc-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%); }
+        .calc-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(255, 77, 90, 0.6); }
+        .calc-btn:active { transform: scale(0.97); }
         .save-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 14px;
-            padding: 10px 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(151, 117, 250, 0.15);
-            color: #c4b5fd;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 14px;
+            padding: 10px 20px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(151, 117, 250, 0.15); color: #c4b5fd; font-family: 'Bebas Neue', sans-serif;
+            font-size: 0.85rem; letter-spacing: 2px; cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);
         }
-        .save-btn:hover {
-            background: rgba(151, 117, 250, 0.3);
-            border-color: rgba(151, 117, 250, 0.6);
-            box-shadow: 0 0 25px rgba(151, 117, 250, 0.3);
-            transform: translateY(-2px);
-            color: white;
-        }
-        .save-btn.saved {
-            background: rgba(46, 204, 113, 0.2);
-            border-color: rgba(46, 204, 113, 0.5);
-            color: var(--green);
-            pointer-events: none;
-        }
-        .loading-state {
-            text-align: center;
-            padding: 32px;
-            color: var(--muted);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-        .spinner {
-            width: 30px;
-            height: 30px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 14px;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        .save-btn:hover { background: rgba(151, 117, 250, 0.3); border-color: rgba(151, 117, 250, 0.6); box-shadow: 0 0 25px rgba(151, 117, 250, 0.3); transform: translateY(-2px); color: white; }
+        .save-btn.saved { background: rgba(46, 204, 113, 0.2); border-color: rgba(46, 204, 113, 0.5); color: var(--green); pointer-events: none; }
+        .loading-state { text-align: center; padding: 32px; color: var(--muted); font-size: 0.8rem; letter-spacing: 1px; }
+        .spinner { width: 30px; height: 30px; border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         .match-header {
-            background: rgba(20, 25, 40, 0.5);
-            backdrop-filter: blur(25px);
-            border-radius: var(--radius-lg);
-            padding: 22px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-bottom: 14px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
+            padding: 22px 18px; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 14px;
+            position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
-        .match-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), var(--yellow), var(--green), transparent);
-            opacity: 0.9;
-        }
-        .teams-row {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 10px;
-        }
-        .team-side {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .team-name {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-            color: white;
-            text-align: center;
-            line-height: 1.2;
-            text-shadow: var(--text-shadow);
-        }
-        .vs-center {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, var(--accent), var(--yellow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 4px;
-            text-shadow: none;
-        }
-        .form-row {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-            margin-top: 4px;
-        }
-        .form-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.55rem;
-            font-weight: 700;
-            backdrop-filter: blur(5px);
-        }
+        .match-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), var(--yellow), var(--green), transparent); opacity: 0.9; }
+        .teams-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+        .team-side { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .team-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 1px; color: white; text-align: center; line-height: 1.2; text-shadow: var(--text-shadow); }
+        .vs-center { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; background: linear-gradient(135deg, var(--accent), var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 4px; text-shadow: none; }
+        .form-row { display: flex; gap: 3px; justify-content: center; margin-top: 4px; }
+        .form-dot { width: 20px; height: 20px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; backdrop-filter: blur(5px); }
         .form-dot.w { background: rgba(46, 204, 113, 0.3); color: var(--green); box-shadow: 0 0 8px rgba(46, 204, 113, 0.3); }
         .form-dot.d { background: rgba(255, 182, 39, 0.3); color: var(--yellow); box-shadow: 0 0 8px rgba(255, 182, 39, 0.3); }
         .form-dot.l { background: rgba(255, 77, 90, 0.3); color: var(--accent); box-shadow: 0 0 8px rgba(255, 77, 90, 0.3); }
-        .data-tag {
-            font-size: 0.58rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 2px 8px;
-            border-radius: 8px;
-            text-transform: uppercase;
-        }
+        .data-tag { font-size: 0.58rem; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 8px; text-transform: uppercase; }
         .data-tag.api { background: rgba(46, 204, 113, 0.15); color: var(--green); border: 1px solid rgba(46, 204, 113, 0.3); }
         .data-tag.off { background: rgba(255, 182, 39, 0.15); color: var(--yellow); border: 1px solid rgba(255, 182, 39, 0.3); }
-        .stats-summary {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 14px;
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: var(--muted);
-            padding: 8px 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-        }
-        .stats-summary span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .result-boxes {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 8px;
-            margin-top: 16px;
-        }
-        .result-box {
-            background: rgba(20, 25, 40, 0.3);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: var(--radius-md);
-            padding: 12px 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        .result-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-        .result-box.rb-center {
-            border-color: rgba(255, 182, 39, 0.3);
-            background: rgba(255, 182, 39, 0.05);
-            min-width: 80px;
-        }
-        .rb-label {
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-        .rb-pct {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.6rem;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 18px 0 10px;
-        }
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            color: var(--text);
-        }
-        .section-lambda {
-            margin-left: auto;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            color: var(--muted);
-        }
-        .section-lambda span {
-            color: var(--yellow);
-        }
-        .section-divider {
-            height: 1px;
-            margin: 16px 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-        }
-        .cal-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.58rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 3px 9px;
-            border-radius: 12px;
-            background: rgba(151, 117, 250, 0.12);
-            border: 1px solid rgba(151, 117, 250, 0.25);
-            color: var(--purple);
-            text-transform: uppercase;
-        }
+        .stats-summary { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 14px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.5px; color: var(--muted); padding: 8px 12px; background: rgba(0,0,0,0.2); border-radius: 12px; }
+        .stats-summary span { display: flex; align-items: center; gap: 4px; }
+        .result-boxes { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; margin-top: 16px; }
+        .result-box { background: rgba(20, 25, 40, 0.3); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 12px 8px; text-align: center; transition: all 0.3s ease; }
+        .result-box:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); }
+        .result-box.rb-center { border-color: rgba(255, 182, 39, 0.3); background: rgba(255, 182, 39, 0.05); min-width: 80px; }
+        .rb-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+        .rb-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; line-height: 1; }
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; }
+        .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; color: var(--text); }
+        .section-lambda { margin-left: auto; font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; letter-spacing: 1px; color: var(--muted); }
+        .section-lambda span { color: var(--yellow); }
+        .section-divider { height: 1px; margin: 16px 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
+        .cal-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 0.58rem; font-weight: 700; letter-spacing: 1px; padding: 3px 9px; border-radius: 12px; background: rgba(151, 117, 250, 0.12); border: 1px solid rgba(151, 117, 250, 0.25); color: var(--purple); text-transform: uppercase; }
         .market-card {
-            background: rgba(20, 25, 40, 0.3);
-            backdrop-filter: blur(15px);
-            border-radius: var(--radius-md);
-            padding: 14px 16px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 12px;
+            background: rgba(20, 25, 40, 0.3); backdrop-filter: blur(15px); border-radius: var(--radius-md);
+            padding: 14px 16px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06);
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px;
             transition: all 0.3s ease;
         }
-        .market-card:hover {
-            transform: translateX(3px);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255,255,255,0.1);
-        }
-        .market-card.high {
-            border-left: 3px solid var(--green);
-            background: rgba(46, 204, 113, 0.03);
-        }
-        .market-card.mid {
-            border-left: 3px solid var(--yellow);
-            background: rgba(255, 182, 39, 0.03);
-        }
-        .market-card.low {
-            border-left: 3px solid var(--accent);
-            background: rgba(255, 77, 90, 0.03);
-        }
-        .line-label {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            line-height: 1;
-            color: white;
-            letter-spacing: 1px;
-            min-width: 48px;
-        }
-        .line-label small {
-            display: block;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.56rem;
-            color: var(--muted);
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .bar-wrap {
-            flex: 1;
-        }
-        .bar-bg {
-            background: rgba(255, 255, 255, 0.05);
-            height: 8px;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 4px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-        }
-        .bar-fill {
-            height: 100%;
-            border-radius: 5px;
-            width: 0%;
-            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 0 12px currentColor;
-        }
-        .bar-sub {
-            font-size: 0.62rem;
-            color: var(--muted);
-        }
-        .uncertainty-band {
-            font-size: 0.58rem;
-            color: var(--muted);
-            margin-top: 2px;
-            letter-spacing: 0.5px;
-        }
-        .pct-label {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
-            line-height: 1;
-            text-align: right;
-            min-width: 52px;
-        }
-        .pct-label small {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.56rem;
-            color: var(--muted);
-            font-weight: 700;
-            letter-spacing: 1px;
-            display: block;
-        }
-        .context-tags {
-            grid-column: 1/-1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 4px;
-            font-size: 0.58rem;
-        }
-        .context-tag {
-            padding: 2px 7px;
-            border-radius: 8px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            background: rgba(151, 117, 250, 0.1);
-            border: 1px solid rgba(151, 117, 250, 0.2);
-            color: var(--purple);
-        }
-        .context-tag.altitude {
-            background: rgba(255, 182, 39, 0.1);
-            border: 1px solid rgba(255, 182, 39, 0.2);
-            color: var(--yellow);
-        }
+        .market-card:hover { transform: translateX(3px); box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3); border-color: rgba(255,255,255,0.1); }
+        .market-card.high { border-left: 3px solid var(--green); background: rgba(46, 204, 113, 0.03); }
+        .market-card.mid { border-left: 3px solid var(--yellow); background: rgba(255, 182, 39, 0.03); }
+        .market-card.low { border-left: 3px solid var(--accent); background: rgba(255, 77, 90, 0.03); }
+        .line-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; line-height: 1; color: white; letter-spacing: 1px; min-width: 48px; }
+        .line-label small { display: block; font-family: 'DM Sans', sans-serif; font-size: 0.56rem; color: var(--muted); font-weight: 700; letter-spacing: 1px; }
+        .bar-wrap { flex: 1; }
+        .bar-bg { background: rgba(255, 255, 255, 0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 4px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); }
+        .bar-fill { height: 100%; border-radius: 5px; width: 0%; transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 0 12px currentColor; }
+        .bar-sub { font-size: 0.62rem; color: var(--muted); }
+        .uncertainty-band { font-size: 0.58rem; color: var(--muted); margin-top: 2px; letter-spacing: 0.5px; }
+        .pct-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1px; line-height: 1; text-align: right; min-width: 52px; }
+        .pct-label small { font-family: 'DM Sans', sans-serif; font-size: 0.56rem; color: var(--muted); font-weight: 700; letter-spacing: 1px; display: block; }
+        .context-tags { grid-column: 1/-1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; font-size: 0.58rem; }
+        .context-tag { padding: 2px 7px; border-radius: 8px; font-weight: 700; letter-spacing: 0.5px; background: rgba(151, 117, 250, 0.1); border: 1px solid rgba(151, 117, 250, 0.2); color: var(--purple); }
+        .context-tag.altitude { background: rgba(255, 182, 39, 0.1); border: 1px solid rgba(255, 182, 39, 0.2); color: var(--yellow); }
         .recomendacion {
-            background: rgba(20, 25, 40, 0.5);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(46, 204, 113, 0.3);
-            border-radius: var(--radius-lg);
-            padding: 22px 20px;
-            margin-top: 8px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px); border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: var(--radius-lg); padding: 22px 20px; margin-top: 8px; text-align: center;
+            position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
-        .recomendacion::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--green), var(--blue), transparent);
-            animation: glowLine 3s ease-in-out infinite alternate;
-        }
-        @keyframes glowLine {
-            0% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        .rec-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            color: var(--green);
-            opacity: 0.9;
-            margin-bottom: 14px;
-        }
-        .rec-main {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 2px;
-            color: white;
-            line-height: 1.1;
-            text-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
-        .rec-sub {
-            font-size: 0.72rem;
-            color: var(--muted);
-            margin-top: 8px;
-        }
-        .rec-confidence {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 14px;
-            padding: 8px 20px;
-            border-radius: 20px;
-            background: rgba(46, 204, 113, 0.08);
-            border: 1px solid rgba(46, 204, 113, 0.25);
-            backdrop-filter: blur(10px);
-        }
-        .rc-pct {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.3rem;
-            color: var(--green);
-        }
-        .rc-label {
-            font-size: 0.62rem;
-            color: var(--muted);
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .disclaimer {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.6rem;
-            margin-top: 20px;
-            line-height: 1.6;
-            opacity: 0.5;
-        }
+        .recomendacion::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--green), var(--blue), transparent); animation: glowLine 3s ease-in-out infinite alternate; }
+        @keyframes glowLine { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+        .rec-title { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--green); opacity: 0.9; margin-bottom: 14px; }
+        .rec-main { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 2px; color: white; line-height: 1.1; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .rec-sub { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+        .rec-confidence { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 8px 20px; border-radius: 20px; background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46, 204, 113, 0.25); backdrop-filter: blur(10px); }
+        .rc-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--green); }
+        .rc-label { font-size: 0.62rem; color: var(--muted); font-weight: 700; letter-spacing: 1px; }
+        .disclaimer { text-align: center; color: var(--muted); font-size: 0.6rem; margin-top: 20px; line-height: 1.6; opacity: 0.5; }
         .hidden { display: none; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-in {
-            animation: fadeUp 0.5s ease-out forwards;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeUp 0.5s ease-out forwards; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
         .pulse { animation: pulse 2s ease-in-out infinite; }
         .saved-panel {
-            background: rgba(20, 25, 40, 0.5);
-            backdrop-filter: blur(25px);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            margin-top: 14px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-            animation: fadeUp 0.4s ease-out;
+            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
+            padding: 20px; border: 1px solid rgba(255, 255, 255, 0.06); margin-top: 14px;
+            position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4); animation: fadeUp 0.4s ease-out;
         }
-        .saved-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent);
-            opacity: 0.9;
-        }
-        .saved-panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-        .saved-panel-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-            color: var(--text);
-        }
-        .saved-panel-clear {
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--accent);
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 77, 90, 0.25);
-            background: rgba(255, 77, 90, 0.08);
-            transition: all 0.25s ease;
-        }
-        .saved-panel-clear:hover {
-            background: rgba(255, 77, 90, 0.2);
-        }
+        .saved-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent); opacity: 0.9; }
+        .saved-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .saved-panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--text); }
+        .saved-panel-clear { font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; color: var(--accent); cursor: pointer; padding: 4px 12px; border-radius: 12px; border: 1px solid rgba(255, 77, 90, 0.25); background: rgba(255, 77, 90, 0.08); transition: all 0.25s ease; }
+        .saved-panel-clear:hover { background: rgba(255, 77, 90, 0.2); }
         .saved-item {
-            display: grid;
-            grid-template-columns: auto 1fr auto auto;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 14px;
-            margin-bottom: 6px;
-            border-radius: var(--radius-md);
-            background: rgba(20, 25, 40, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.25s ease;
-            animation: fadeUp 0.4s ease-out;
+            display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 10px;
+            padding: 12px 14px; margin-bottom: 6px; border-radius: var(--radius-md);
+            background: rgba(20, 25, 40, 0.3); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.06); transition: all 0.25s ease; animation: fadeUp 0.4s ease-out;
         }
-        .saved-item:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            transform: translateX(2px);
-        }
-        .saved-item.won {
-            border-color: rgba(46, 204, 113, 0.5);
-            background: rgba(46, 204, 113, 0.06);
-        }
-        .saved-item.lost {
-            border-color: rgba(255, 77, 90, 0.5);
-            background: rgba(255, 77, 90, 0.05);
-        }
-        .saved-item-date {
-            font-size: 0.6rem;
-            color: var(--muted);
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-        .saved-item-teams {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-        .saved-item-teams small {
-            display: block;
-            font-size: 0.58rem;
-            color: var(--muted);
-            font-weight: 500;
-        }
-        .saved-item-pick {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-            text-align: right;
-            line-height: 1.1;
-        }
-        .saved-item-actions {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        .action-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--muted);
-            cursor: pointer;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(5px);
-        }
-        .action-btn.win-btn:hover {
-            background: rgba(46, 204, 113, 0.2);
-            border-color: var(--green);
-            color: var(--green);
-            box-shadow: 0 0 12px rgba(46, 204, 113, 0.25);
-        }
-        .action-btn.loss-btn:hover {
-            background: rgba(255, 77, 90, 0.2);
-            border-color: var(--accent);
-            color: var(--accent);
-            box-shadow: 0 0 12px rgba(255, 77, 90, 0.25);
-        }
-        .action-btn.delete-btn:hover {
-            background: rgba(255, 182, 39, 0.2);
-            border-color: var(--yellow);
-            color: var(--yellow);
-            box-shadow: 0 0 12px rgba(255, 182, 39, 0.25);
-        }
-        .action-btn.active-win {
-            background: rgba(46, 204, 113, 0.3);
-            border-color: var(--green);
-            color: var(--green);
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
-        }
-        .action-btn.active-loss {
-            background: rgba(255, 77, 90, 0.3);
-            border-color: var(--accent);
-            color: var(--accent);
-            box-shadow: 0 0 10px rgba(255, 77, 90, 0.2);
-        }
-        .saved-empty {
-            text-align: center;
-            padding: 20px;
-            color: var(--muted);
-            font-size: 0.72rem;
-            letter-spacing: 1px;
-        }
+        .saved-item:hover { border-color: rgba(255, 255, 255, 0.12); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); transform: translateX(2px); }
+        .saved-item.won { border-color: rgba(46, 204, 113, 0.5); background: rgba(46, 204, 113, 0.06); }
+        .saved-item.lost { border-color: rgba(255, 77, 90, 0.5); background: rgba(255, 77, 90, 0.05); }
+        .saved-item-date { font-size: 0.6rem; color: var(--muted); letter-spacing: 1px; font-weight: 700; }
+        .saved-item-teams { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
+        .saved-item-teams small { display: block; font-size: 0.58rem; color: var(--muted); font-weight: 500; }
+        .saved-item-pick { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 1px; text-align: right; line-height: 1.1; }
+        .saved-item-actions { display: flex; gap: 4px; align-items: center; }
+        .action-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.04); color: var(--muted); cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; transition: all 0.25s ease; backdrop-filter: blur(5px); }
+        .action-btn.win-btn:hover { background: rgba(46, 204, 113, 0.2); border-color: var(--green); color: var(--green); box-shadow: 0 0 12px rgba(46, 204, 113, 0.25); }
+        .action-btn.loss-btn:hover { background: rgba(255, 77, 90, 0.2); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 12px rgba(255, 77, 90, 0.25); }
+        .action-btn.delete-btn:hover { background: rgba(255, 182, 39, 0.2); border-color: var(--yellow); color: var(--yellow); box-shadow: 0 0 12px rgba(255, 182, 39, 0.25); }
+        .action-btn.active-win { background: rgba(46, 204, 113, 0.3); border-color: var(--green); color: var(--green); box-shadow: 0 0 10px rgba(46, 204, 113, 0.2); }
+        .action-btn.active-loss { background: rgba(255, 77, 90, 0.3); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(255, 77, 90, 0.2); }
+        .saved-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 0.72rem; letter-spacing: 1px; }
         .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid rgba(46, 204, 113, 0.5);
-            backdrop-filter: blur(20px);
-            padding: 10px 24px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--green);
-            z-index: 1000;
-            animation: toastIn 0.35s ease-out, toastOut 0.35s 1.8s ease-in forwards;
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            background: rgba(46, 204, 113, 0.2); border: 1px solid rgba(46, 204, 113, 0.5);
+            backdrop-filter: blur(20px); padding: 10px 24px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: var(--green);
+            z-index: 1000; animation: toastIn 0.35s ease-out, toastOut 0.35s 1.8s ease-in forwards;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(30px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        @keyframes toastOut {
-            from { opacity: 1; }
-            to { opacity: 0; transform: translateX(-50%) translateY(20px); }
-        }
+        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(30px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(-50%) translateY(20px); } }
         .saved-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: var(--radius-md);
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;
+            padding: 14px; background: rgba(255, 255, 255, 0.02); border-radius: var(--radius-md);
             border: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .saved-stat-item {
-            text-align: center;
-        }
-        .saved-stat-value {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.6rem;
-            letter-spacing: 1px;
-            line-height: 1;
-        }
+        .saved-stat-item { text-align: center; }
+        .saved-stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; line-height: 1; }
         .saved-stat-value.win { color: var(--green); text-shadow: 0 0 12px rgba(46, 204, 113, 0.4); }
         .saved-stat-value.loss { color: var(--accent); text-shadow: 0 0 12px rgba(255, 77, 90, 0.4); }
         .saved-stat-value.pending { color: var(--yellow); text-shadow: 0 0 12px rgba(255, 182, 39, 0.3); }
-        .saved-stat-label {
-            font-size: 0.58rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-        .saved-hitrate {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .saved-hitrate-label {
-            font-size: 0.6rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-        .saved-hitrate-value {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 1px;
-        }
+        .saved-stat-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+        .saved-hitrate { grid-column: 1 / -1; text-align: center; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.06); margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .saved-hitrate-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+        .saved-hitrate-value { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; }
         .saved-hitrate-value.good { color: var(--green); }
         .saved-hitrate-value.medium { color: var(--yellow); }
         .saved-hitrate-value.bad { color: var(--accent); }
 
         @media (max-width: 480px) {
-            .fab-saved {
-                bottom: 20px;
-                right: 16px;
-                width: 48px;
-                height: 48px;
-                font-size: 1.3rem;
-            }
-            .fab-badge {
-                width: 20px;
-                height: 20px;
-                font-size: 0.65rem;
-            }
+            .fab-saved { bottom: 20px; right: 16px; width: 48px; height: 48px; font-size: 1.3rem; }
+            .fab-badge { width: 20px; height: 20px; font-size: 0.65rem; }
         }
     </style>
 </head>
 <body>
     <div class="particles"></div>
     <button class="fab-saved" id="fab-saved-btn" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
-        📋
-        <span class="fab-badge" id="fab-badge-count">0</span>
+        📋 <span class="fab-badge" id="fab-badge-count">0</span>
     </button>
     <div class="container">
         <div class="header">
@@ -1242,37 +420,30 @@
         const MAX_SAVED = 15;
         const SAVED_KEY = 'footballbet_pro_saved';
 
-        // ⭐ ALIAS DE EQUIPOS (API → Local)
+        // Alias actualizados con los nombres exactos de la API (World Cup 2026)
         const TEAM_ALIASES = {
-            "Czech Republic": "Czechia", "Czechia": "Czechia",
-            "Korea Republic": "Korea Republic",
+            "South Korea": "Korea Republic", "Korea Republic": "Korea Republic",
+            "USA": "United States", "United States": "United States",
+            "Türkiye": "Turkey", "Turkey": "Turkey",
             "Iran": "IR Iran", "IR Iran": "IR Iran",
-            "Côte d'Ivoire": "Côte d'Ivoire", "Ivory Coast": "Côte d'Ivoire",
-            "Turkey": "Turkey", "Türkiye": "Turkey",
-            "Bosnia and Herzegovina": "Bosnia and Herzegovina", "Bosnia & Herzegovina": "Bosnia and Herzegovina",
-            "DR Congo": "DR Congo", "Congo DR": "DR Congo",
-            "Cabo Verde": "Cabo Verde", "Cape Verde": "Cabo Verde",
-            "Saudi Arabia": "Saudi Arabia",
-            "Argelia": "Argelia", "Algeria": "Argelia",
-            "Haiti": "Haiti", "Scotland": "Scotland",
-            "Paraguay": "Paraguay", "Australia": "Australia",
-            "Curaçao": "Curaçao", "Ecuador": "Ecuador",
-            "Japan": "Japan", "Sweden": "Sweden",
-            "Tunisia": "Tunisia", "Egypt": "Egypt",
-            "New Zealand": "New Zealand", "Uruguay": "Uruguay",
-            "Senegal": "Senegal", "Iraq": "Iraq",
-            "Norway": "Norway", "Jordan": "Jordan",
-            "Uzbekistan": "Uzbekistan", "Colombia": "Colombia",
-            "Croatia": "Croatia", "Ghana": "Ghana",
-            "Panama": "Panama", "United States": "United States", "USA": "United States",
-            "Mexico": "Mexico", "South Africa": "South Africa",
-            "Qatar": "Qatar", "Switzerland": "Switzerland",
-            "Brazil": "Brazil", "Morocco": "Morocco",
-            "Germany": "Germany", "Netherlands": "Netherlands",
-            "Belgium": "Belgium", "Spain": "Spain",
-            "France": "France", "Argentina": "Argentina",
-            "Portugal": "Portugal", "England": "England",
-            "Canada": "Canada", "Austria": "Austria"
+            "Bosnia & Herzegovina": "Bosnia and Herzegovina", "Bosnia and Herzegovina": "Bosnia and Herzegovina",
+            "Czechia": "Czechia",
+            "Côte d'Ivoire": "Côte d'Ivoire",
+            "Cabo Verde": "Cabo Verde",
+            "DR Congo": "DR Congo",
+            "England": "England", "France": "France", "Germany": "Germany",
+            "Spain": "Spain", "Argentina": "Argentina", "Brazil": "Brazil",
+            "Netherlands": "Netherlands", "Portugal": "Portugal", "Belgium": "Belgium",
+            "Switzerland": "Switzerland", "Colombia": "Colombia", "Uruguay": "Uruguay",
+            "Croatia": "Croatia", "Japan": "Japan", "Morocco": "Morocco",
+            "Mexico": "Mexico", "Canada": "Canada", "Australia": "Australia",
+            "Scotland": "Scotland", "Sweden": "Sweden", "Tunisia": "Tunisia",
+            "Egypt": "Egypt", "New Zealand": "New Zealand", "Ghana": "Ghana",
+            "Paraguay": "Paraguay", "Ecuador": "Ecuador", "Qatar": "Qatar",
+            "Saudi Arabia": "Saudi Arabia", "Curaçao": "Curaçao", "Haiti": "Haiti",
+            "Senegal": "Senegal", "Iraq": "Iraq", "Norway": "Norway",
+            "Jordan": "Jordan", "Austria": "Austria", "Uzbekistan": "Uzbekistan",
+            "Panama": "Panama", "Algeria": "Argelia", "Argelia": "Argelia",
         };
 
         const LIGAS = {
@@ -1300,7 +471,6 @@
             "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06, "LIB": 1.10, "MLS": 1.11,
             "BSB": 1.10, "PPT": 1.06, "EKS": 1.05, "SLG": 1.05, "WC26": 1.04
         };
-
         const PLATT_PARAMS_IMPROVED = {
             goals15: { A: 0.951, B: -0.038 },
             goals25: { A: 0.933, B: -0.055 },
@@ -1310,8 +480,6 @@
             goals_ht15: { A: 0.938, B: -0.048 },
             resultado: { A: 0.918, B: -0.068 }
         };
-
-        const CORNER_POWER = {};
         const DIXON_COLES_RHO = {
             "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072,
             "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070,
@@ -1324,19 +492,13 @@
             "Ecuador": { advantage: 1.07, altitude: "2800m (Quito)" }
         };
         const TEAM_STRENGTH_DB = {};
+        const CORNER_POWER = {};
 
         const PLATT_PARAMS_DYNAMIC = {};
         for (const lk of Object.keys(LIGAS)) {
             PLATT_PARAMS_DYNAMIC[lk] = {};
             for (const mk of ['goals15','goals25','btts','corners','goals_ht05','goals_ht15','resultado']) {
                 PLATT_PARAMS_DYNAMIC[lk][mk] = { ...PLATT_PARAMS_IMPROVED[mk] };
-            }
-        }
-
-        function updatePlattParams(leagueKey, market, newA, newB) {
-            if (PLATT_PARAMS_DYNAMIC[leagueKey]?.[market]) {
-                PLATT_PARAMS_DYNAMIC[leagueKey][market].A = newA;
-                PLATT_PARAMS_DYNAMIC[leagueKey][market].B = newB;
             }
         }
 
@@ -1500,24 +662,21 @@
                 if (directMatch) return directMatch;
             }
             const norm = normalizeTeamName(offlineName);
+            for (const t of apiTeams) {
+                const apiName = t.name || t.short_name || '';
+                if (normalizeTeamName(apiName) === norm) return t;
+            }
             let best = null, bestScore = 0;
             for (const t of apiTeams) {
                 const apiName = t.name || t.short_name || '';
-                const apiNorm = normalizeTeamName(apiName);
-                if (apiNorm === norm) return t;
-                const reverseAlias = TEAM_ALIASES[apiName] || TEAM_ALIASES[apiNorm];
-                if (reverseAlias && normalizeTeamName(reverseAlias) === norm) return t;
-                const score = tokenOverlap(norm, apiNorm);
-                if (score > bestScore && score > 0.5) {
+                const score = tokenOverlap(norm, normalizeTeamName(apiName));
+                if (score > bestScore && score > 0.4) {
                     bestScore = score;
                     best = t;
                 }
             }
             return best || null;
         }
-
-        function isValidTeamName(name) { return name && name.trim().length > 0; }
-        function matchLeagueName(n, k) { return true; }
 
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
@@ -1633,7 +792,7 @@
                     let matched = 0;
                     teams.forEach(offName => {
                         const apiTeam = findTeamInAPI(offName, uniq);
-                        teamMap[offName] = { bsdId: (apiTeam && isValidTeamName(apiTeam.name)) ? apiTeam.id : '', offlineName: offName };
+                        teamMap[offName] = { bsdId: (apiTeam && apiTeam.name) ? apiTeam.id : '', offlineName: offName };
                         if (teamMap[offName].bsdId) matched++;
                     });
                     fillSelects(teams, teamMap);
@@ -1844,10 +1003,8 @@
 
             const eloDiff = (hElo - aElo) / 400;
             const eloFactor = 1 + eloDiff * 0.06;
-
             const hFormMult = formMultiplier(hStats?.form);
             const aFormMult = formMultiplier(aStats?.form);
-
             const hFatigue = 1 - (hStats?.fatigueFactor || 0) * 0.4;
             const aFatigue = 1 - (aStats?.fatigueFactor || 0) * 0.4;
 
@@ -1860,20 +1017,18 @@
                 aGfAway * (1 / eloFactor) * aFormMult * aFatigue,
                 aGcHome * eloFactor,
                 aGcAway * eloFactor,
-                goalsAvg,
-                hAdv
+                goalsAvg, hAdv
             );
 
-            const lH = +bl.home.toFixed(2);
-            const lA = +bl.away.toFixed(2);
+            const lH = +bl.home.toFixed(2), lA = +bl.away.toFixed(2);
             const lGoal = +((hStats?.combined?.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey)) + (aStats?.combined?.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey))).toFixed(2);
             const lCorn = +((hStats?.home?.corners ?? fallbackCorners(homeOff, 'home', liga)) + (aStats?.away?.corners ?? fallbackCorners(awayOff, 'away', liga))).toFixed(2);
 
             loadEl.classList.add('hidden');
             renderOutput({
                 home: homeOff, away: awayOff, lambdaCorn: lCorn, lambdaGoal: lGoal, lambdaH: lH, lambdaA: lA,
-                homeStats: hStats, awayStats: aStats, negBinR, totalMatchesUsed: hMC + aMC, liga, homeElo: hElo, awayElo: aElo, altitude: alt,
-                activeMarkets
+                homeStats: hStats, awayStats: aStats, negBinR, totalMatchesUsed: hMC + aMC, liga,
+                homeElo: hElo, awayElo: aElo, altitude: alt, activeMarkets
             });
             outEl.classList.remove('hidden');
             requestAnimationFrame(() => requestAnimationFrame(animateBars));
@@ -1888,10 +1043,7 @@
         function getAltitudeAdjustment(h, a) {
             const ha = ALTITUDE_TEAMS[h];
             let adv = 1.08, tags = [];
-            if (ha) {
-                adv = ha.advantage;
-                tags.push({ text: `🏔️ Altitud local: ${ha.altitude}`, type: 'altitude' });
-            }
+            if (ha) { adv = ha.advantage; tags.push({ text: `🏔️ Altitud local: ${ha.altitude}`, type: 'altitude' }); }
             return { homeAdv: adv, contextTags: tags };
         }
 
@@ -1980,11 +1132,9 @@
                 let bandLow, bandHigh;
                 if (lambdaUsed && nUsed) {
                     const band = uncertaintyBandRealistic(lambdaUsed, nUsed, type, threshold);
-                    bandLow = band.low;
-                    bandHigh = band.high;
+                    bandLow = band.low; bandHigh = band.high;
                 } else {
-                    bandLow = (p * 0.85).toFixed(0);
-                    bandHigh = (p * 1.12).toFixed(0);
+                    bandLow = (p * 0.85).toFixed(0); bandHigh = (p * 1.12).toFixed(0);
                 }
                 return `<div class="market-card ${cl} animate-in" style="animation-delay:${idx * 0.06}s;opacity:0;">
                     <div class="line-label">${label}<small>LÍNEA</small></div>
@@ -1999,13 +1149,13 @@
 
             if (activeMarkets.goles) {
                 const l = lambdaH + lambdaA;
-                html += `<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def v2</span></div>`;
+                html += `<div class="section-header animate-in"><span>⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def v2</span></div>`;
                 html += mktCard('+1.5', poissonOver(l, 1.5), 'goals15', 0, 'Under', l, totalMatchesUsed);
                 html += mktCard('+2.5', poissonOver(l, 2.5), 'goals25', 1, 'Under', l, totalMatchesUsed);
                 html += '<div class="section-divider"></div>';
             }
             if (activeMarkets.ht) {
-                html += `<div class="section-header animate-in"><span class="section-icon">⏱</span><span class="section-title">GOLES 1er TIEMPO</span><span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
+                html += `<div class="section-header animate-in"><span>⏱</span><span class="section-title">GOLES 1er TIEMPO</span><span class="section-lambda">λ <span>${lambdaGoal.toFixed(2)}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
                 html += mktCard('+0.5', poissonOver(lambdaGoal, 0.5), 'goals_ht05', 2, 'Under', lambdaGoal, totalMatchesUsed);
                 html += mktCard('+1.5', poissonOver(lambdaGoal, 1.5), 'goals_ht15', 3, 'Under', lambdaGoal, totalMatchesUsed);
                 html += '<div class="section-divider"></div>';
@@ -2017,20 +1167,18 @@
                     bttsR *= (1 + 0.12 * (pOver25/100 - 0.5));
                 }
                 const bp = +plattCalibrate(bttsR, 'btts').toFixed(0);
-                html += `<div class="section-header animate-in"><span class="section-icon">🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ ρ=${(DIXON_COLES_RHO[currentLeagueKey] || DIXON_COLES_RHO.default).toFixed(3)}</span></div>`;
+                html += `<div class="section-header animate-in"><span>🤝</span><span class="section-title">AMBOS MARCAN</span><span class="cal-badge">✓ ρ=${(DIXON_COLES_RHO[currentLeagueKey] || DIXON_COLES_RHO.default).toFixed(3)}</span></div>`;
                 html += `<div class="market-card ${cardClassFor(bp)} animate-in" style="opacity:0;">
                     <div class="line-label">BTTS<small>AMBOS</small></div>
-                    <div class="bar-wrap">
-                        <div class="bar-bg"><div class="bar-fill" data-target="${bp}" style="background:${colorFor(bp)};width:0%;box-shadow:0 0 8px ${colorFor(bp)};"></div></div>
-                        <div class="bar-sub">No: ${(100 - bp).toFixed(1)}%</div>
-                        <div class="uncertainty-band">IC 85%: ${(bp * 0.85).toFixed(0)}–${(bp * 1.12).toFixed(0)}%</div>
-                    </div>
+                    <div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${bp}" style="background:${colorFor(bp)};width:0%;box-shadow:0 0 8px ${colorFor(bp)};"></div></div>
+                    <div class="bar-sub">No: ${(100 - bp).toFixed(1)}%</div>
+                    <div class="uncertainty-band">IC 85%: ${(bp * 0.85).toFixed(0)}–${(bp * 1.12).toFixed(0)}%</div></div>
                     <div class="pct-label" style="color:${colorFor(bp)}">${bp}%<small>SÍ</small></div>
                 </div>`;
                 html += '<div class="section-divider"></div>';
             }
             if (activeMarkets.corn) {
-                html += `<div class="section-header animate-in"><span class="section-icon">⬡</span><span class="section-title">CÓRNERS</span><span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
+                html += `<div class="section-header animate-in"><span>⬡</span><span class="section-title">CÓRNERS</span><span class="section-lambda">λ <span>${lambdaCorn} · r=${negBinR}</span></span><span class="cal-badge">✓ Calibrado</span></div>`;
                 [7.5, 8.5, 9.5, 10.5].forEach((line, i) => {
                     html += mktCard('+' + line, negBinOver(lambdaCorn, line, negBinR), 'corners', i + 4, 'Under', lambdaCorn, totalMatchesUsed, line);
                 });
@@ -2051,7 +1199,7 @@
             if (activeMarkets.btts) {
                 let bttsR2 = calcBTTS(lambdaH, lambdaA, currentLeagueKey);
                 if (activeMarkets.goles) bttsR2 *= (1 + 0.12 * (plattCalibrate(poissonOver(lambdaH + lambdaA, 2.5), 'goals25')/100 - 0.5));
-                all.push({ label: 'AMBOS MARCAN', prob: +plattCalibrate(bttsR2, 'btts').toFixed(0), desc: `Ambos anotan`, type: 'btts' });
+                all.push({ label: 'AMBOS MARCAN', prob: +plattCalibrate(bttsR2, 'btts').toFixed(0), desc: 'Ambos anotan', type: 'btts' });
             }
             if (activeMarkets.corn) {
                 [7.5, 8.5, 9.5].forEach(line => {
@@ -2059,9 +1207,8 @@
                 });
             }
             const rp = calcResultProbs(lambdaH, lambdaA, currentLeagueKey);
-            const rph = +plattCalibrate(rp.home, 'resultado').toFixed(1), rpd = +plattCalibrate(rp.draw, 'resultado').toFixed(1), rpa = +plattCalibrate(rp.away, 'resultado').toFixed(1);
-            all.push({ label: 'VICTORIA LOCAL', prob: rph, desc: `${home.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
-            all.push({ label: 'VICTORIA VISITANTE', prob: rpa, desc: `${away.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
+            all.push({ label: 'VICTORIA LOCAL', prob: +plattCalibrate(rp.home, 'resultado').toFixed(1), desc: `${home.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
+            all.push({ label: 'VICTORIA VISITANTE', prob: +plattCalibrate(rp.away, 'resultado').toFixed(1), desc: `${away.split(' ').slice(-1)[0]} favorito`, type: 'resultado' });
 
             const rec = buildRecommendation(all);
             lastPrediction = {
@@ -2106,10 +1253,7 @@
         // ====================== GUARDADO DE PREDICCIONES ======================
         function saveCurrentPrediction() {
             if (!lastPrediction) return;
-            if (savedPredictions.length >= MAX_SAVED) {
-                showToast('⚠️ Máximo 15 predicciones guardadas');
-                return;
-            }
+            if (savedPredictions.length >= MAX_SAVED) { showToast('⚠️ Máximo 15 predicciones guardadas'); return; }
             const now = new Date();
             const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
             const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
@@ -2132,18 +1276,14 @@
             showToast('✅ Predicción guardada');
         }
 
-        function saveToStorage() {
-            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
-        }
+        function saveToStorage() { localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions)); }
 
         function loadSavedPredictions() {
             try {
                 const data = localStorage.getItem(SAVED_KEY);
                 if (data) savedPredictions = JSON.parse(data);
                 if (!Array.isArray(savedPredictions)) savedPredictions = [];
-            } catch (e) {
-                savedPredictions = [];
-            }
+            } catch (e) { savedPredictions = []; }
             updateSavedBadges();
             renderSavedPanel();
         }
@@ -2154,13 +1294,8 @@
             document.getElementById('fab-badge-count').textContent = count;
             const badge = document.getElementById('saved-badge-header');
             const fab = document.getElementById('fab-saved-btn');
-            if (count > 0) {
-                badge.classList.add('has-items');
-                fab.classList.add('has-items');
-            } else {
-                badge.classList.remove('has-items');
-                fab.classList.remove('has-items');
-            }
+            if (count > 0) { badge.classList.add('has-items'); fab.classList.add('has-items'); }
+            else { badge.classList.remove('has-items'); fab.classList.remove('has-items'); }
         }
 
         function renderSavedPanel() {
@@ -2168,7 +1303,6 @@
             const list = document.getElementById('saved-list');
             const statsEl = document.getElementById('saved-stats');
             const clearBtn = document.getElementById('saved-clear-btn');
-
             updateSavedBadges();
 
             if (savedPredictions.length === 0) {
@@ -2215,11 +1349,7 @@
 
         function markPrediction(id, status) {
             const pred = savedPredictions.find(p => p.id === id);
-            if (pred) {
-                pred.status = status;
-                saveToStorage();
-                renderSavedPanel();
-            }
+            if (pred) { pred.status = status; saveToStorage(); renderSavedPanel(); }
         }
 
         function deletePrediction(id) {
@@ -2255,7 +1385,7 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN DE LA API (con fix Mundial 2026) ======================
+        // ====================== INICIALIZACIÓN FINAL ======================
         async function initApp() {
             setApiStatus('live', '🔄 Conectando con BSD API...');
             try {
@@ -2267,7 +1397,6 @@
                 for (const [key, liga] of Object.entries(LIGAS)) {
                     const namesToTry = [liga.bsdName, ...(liga.bsdNameAlt || [])];
                     let matchedLeague = null;
-
                     for (const name of namesToTry) {
                         matchedLeague = leaguesData.results.find(l => {
                             const ln = (l.name || '').toLowerCase();
@@ -2275,41 +1404,33 @@
                         });
                         if (matchedLeague) break;
                     }
-
                     if (matchedLeague) {
                         const season = seasonsData.results.find(s => s.league_id === matchedLeague.id);
-                        bsdLeagueMap[key] = { bsdId: matchedLeague.id, seasonId: season?.id };
+                        bsdLeagueMap[key] = { bsdId: matchedLeague.id, seasonId: season?.id || null };
                     }
                 }
 
-                // ⚠️ FIX ESPECÍFICO MUNDIAL 2026 (ID 27)
+                // Forzar Mundial 2026 (ID 27)
                 if (!bsdLeagueMap["WC26"]) {
-                    const worldCupLeague = leaguesData.results.find(l => l.id === 27);
-                    if (worldCupLeague) {
+                    const wc = leaguesData.results.find(l => l.id === 27);
+                    if (wc) {
                         let wcSeason = seasonsData.results.find(s => s.league_id === 27);
                         if (!wcSeason) {
-                            try {
-                                const wcSeasons = await bsdFetch('/seasons/?league=27');
-                                wcSeason = wcSeasons.results?.[0];
-                            } catch (e) {}
+                            try { const wcSeasons = await bsdFetch('/seasons/?league=27'); wcSeason = wcSeasons.results?.[0]; } catch (e) {}
                         }
-                        bsdLeagueMap["WC26"] = {
-                            bsdId: 27,
-                            seasonId: wcSeason?.id || null
-                        };
+                        bsdLeagueMap["WC26"] = { bsdId: 27, seasonId: wcSeason?.id || null };
                     }
                 }
 
                 apiAvailable = Object.keys(bsdLeagueMap).length > 0;
                 setApiStatus(apiAvailable ? 'live' : 'error',
-                    apiAvailable ? `🟢 API BSD conectada (${Object.keys(bsdLeagueMap).length} ligas)` : '🟡 Modo offline');
+                    apiAvailable ? `🟢 API BSD (${Object.keys(bsdLeagueMap).length} ligas)` : '🟡 Modo offline');
 
                 const firstKey = Object.keys(LIGAS)[0];
                 if (firstKey) selectLeague(firstKey);
-
             } catch (e) {
-                setApiStatus('error', '🔴 Error de conexión con BSD API');
-                console.error('Error initApp:', e);
+                setApiStatus('error', '🔴 Error de conexión');
+                console.error(e);
             }
         }
 
