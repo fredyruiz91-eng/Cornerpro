@@ -7,52 +7,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* =============================================
-           ESTILOS COMPLETOS (SIN CAMBIOS)
+           TODOS LOS ESTILOS SE MANTIENEN EXACTAMENTE IGUAL
            ============================================= */
         :root {
-            --bg: #0a0e17;
-            --card: rgba(16, 20, 32, 0.55);
-            --card2: rgba(22, 27, 42, 0.7);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #f0f2f8;
-            --muted: #7b8aa6;
-            --accent: #ff4d5a;
-            --accent-glow: rgba(255, 77, 90, 0.5);
-            --yellow: #ffb627;
-            --yellow-glow: rgba(255, 182, 39, 0.5);
-            --green: #2ecc71;
-            --green-glow: rgba(46, 204, 113, 0.5);
-            --blue: #4dabf7;
-            --purple: #9775fa;
-            --purple-glow: rgba(151, 117, 250, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-bg-strong: rgba(255, 255, 255, 0.06);
-            --text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            --radius-lg: 22px;
-            --radius-md: 14px;
-            --radius-sm: 10px;
+            --bg: #0a0e17; --card: rgba(16, 20, 32, 0.55); --card2: rgba(22, 27, 42, 0.7);
+            --border: rgba(255, 255, 255, 0.08); --text: #f0f2f8; --muted: #7b8aa6;
+            --accent: #ff4d5a; --accent-glow: rgba(255, 77, 90, 0.5); --yellow: #ffb627;
+            --yellow-glow: rgba(255, 182, 39, 0.5); --green: #2ecc71; --green-glow: rgba(46, 204, 113, 0.5);
+            --blue: #4dabf7; --purple: #9775fa; --purple-glow: rgba(151, 117, 250, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.03); --glass-bg-strong: rgba(255, 255, 255, 0.06);
+            --text-shadow: 0 2px 5px rgba(0,0,0,0.5); --radius-lg: 22px; --radius-md: 14px; --radius-sm: 10px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px 15px 60px;
-            position: relative;
-            overflow-x: hidden;
+            background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif;
+            min-height: 100vh; display: flex; justify-content: center; padding: 20px 15px 60px;
+            position: relative; overflow-x: hidden;
         }
         body::before {
-            content: '';
-            position: fixed; inset: 0;
+            content: ''; position: fixed; inset: 0;
             background-image:
                 radial-gradient(circle at 20% 20%, rgba(255, 77, 90, 0.12) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(46, 204, 113, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 50% 10%, rgba(77, 171, 247, 0.06) 0%, transparent 60%);
-            z-index: 0;
-            animation: bgPulse 12s ease-in-out infinite alternate;
+            z-index: 0; animation: bgPulse 12s ease-in-out infinite alternate;
         }
         @keyframes bgPulse { 0% { opacity: 0.7; } 100% { opacity: 1; } }
         .particles {
@@ -64,8 +42,7 @@
                 radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.3), transparent),
                 radial-gradient(2px 2px at 15% 85%, rgba(255,182,39,0.4), transparent),
                 radial-gradient(1px 1px at 55% 45%, rgba(46,204,113,0.4), transparent);
-            background-size: 200% 200%;
-            animation: particleDrift 30s linear infinite;
+            background-size: 200% 200%; animation: particleDrift 30s linear infinite;
         }
         @keyframes particleDrift { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
         .container { width: 100%; max-width: 500px; position: relative; z-index: 1; }
@@ -142,8 +119,7 @@
         .card {
             background: rgba(20, 25, 40, 0.45); backdrop-filter: blur(20px); border-radius: var(--radius-lg);
             padding: 22px; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 14px;
-            position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); transition: all 0.3s ease;
         }
         .card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5); border-color: rgba(255, 255, 255, 0.1); }
         .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); opacity: 0.5; }
@@ -252,8 +228,7 @@
         .market-card {
             background: rgba(20, 25, 40, 0.3); backdrop-filter: blur(15px); border-radius: var(--radius-md);
             padding: 14px 16px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06);
-            display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px;
-            transition: all 0.3s ease;
+            display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; transition: all 0.3s ease;
         }
         .market-card:hover { transform: translateX(3px); box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3); border-color: rgba(255,255,255,0.1); }
         .market-card.high { border-left: 3px solid var(--green); background: rgba(46, 204, 113, 0.03); }
@@ -416,13 +391,14 @@
         const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
-        const API_TIMEOUT = 6000;
+        const API_TIMEOUT = 8000;
 
         let lastPrediction = null;
         let savedPredictions = [];
         const MAX_SAVED = 15;
         const SAVED_KEY = 'footballbet_pro_saved';
 
+        // ⭐ Alias completos para todas las selecciones del Mundial 2026
         const TEAM_ALIASES = {
             "South Korea": "Korea Republic", "Korea Republic": "Korea Republic",
             "USA": "United States", "United States": "United States",
@@ -772,12 +748,28 @@
             if (apiAvailable && bsdLeagueMap[key]) {
                 try {
                     setApiStatus('live', '🟢 Buscando IDs de equipos...');
+                    const leagueId = bsdLeagueMap[key].bsdId;
+                    const seasonId = bsdLeagueMap[key].seasonId;
+
                     let apiTeams = [];
-                    try { const d = await bsdFetch('/teams/?league=' + bsdLeagueMap[key].bsdId + '&page_size=200'); apiTeams = d.results || []; } catch (e) {}
-                    try { const d = await bsdFetch('/teams/?season=' + bsdLeagueMap[key].seasonId + '&page_size=200'); const extra = d.results || []; const ids = new Set(apiTeams.map(t => t.id)); extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); }); } catch (e) {}
-                    if (apiTeams.length < 6) {
+                    // Obtener por liga
+                    try {
+                        const d = await bsdFetch(`/teams/?league=${leagueId}&page_size=200`);
+                        apiTeams = d.results || [];
+                    } catch (e) {}
+                    // Obtener por temporada (solo si existe seasonId)
+                    if (seasonId) {
                         try {
-                            const ev = await bsdFetchAll('/events/?season=' + bsdLeagueMap[key].seasonId + '&limit=100');
+                            const d = await bsdFetch(`/teams/?season=${seasonId}&page_size=200`);
+                            const extra = d.results || [];
+                            const ids = new Set(apiTeams.map(t => t.id));
+                            extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
+                        } catch (e) {}
+                    }
+                    // Si hay pocos equipos, buscar en eventos
+                    if (apiTeams.length < 6 && seasonId) {
+                        try {
+                            const ev = await bsdFetchAll(`/events/?season=${seasonId}&limit=100`);
                             const m = new Map();
                             ev.forEach(e => {
                                 if (e.home_team_obj?.id) m.set(e.home_team_obj.id, e.home_team_obj);
@@ -797,9 +789,11 @@
                     });
                     fillSelects(teams, teamMap);
                     setApiStatus('live', `🟢 ${matched}/${teams.length} equipos vinculados a API`);
-                    if (matched > 4) try { await calculateEloAndSeasonStats(bsdLeagueMap[key].bsdId, bsdLeagueMap[key].seasonId); } catch (e) {}
+                    if (matched > 4) try { await calculateEloAndSeasonStats(leagueId, seasonId); } catch (e) {}
                     return;
-                } catch (e) { console.error(e); }
+                } catch (e) {
+                    console.error('Error en loadTeams:', e);
+                }
             }
             setApiStatus('error', '🟡 Equipos offline');
             teams.forEach(name => { teamMap[name] = { bsdId: '', offlineName: name }; });
@@ -1249,6 +1243,9 @@
                     </div>`;
             }
 
+            // Eliminar botón anterior para evitar duplicados
+            const oldBtn = document.getElementById('save-pred-btn');
+            if (oldBtn) oldBtn.remove();
             const saveBtnHtml = `<button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>`;
             document.getElementById('recomendacion-container').insertAdjacentHTML('afterend', saveBtnHtml);
         }
@@ -1395,7 +1392,7 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN (CORREGIDA) ======================
+        // ====================== INICIALIZACIÓN (MANEJO ROBUSTO DE SEASON) ======================
         async function initApp() {
             setApiStatus('live', '🔄 Conectando con BSD API...');
             try {
@@ -1420,6 +1417,7 @@
                     }
                 }
 
+                // Forzar Mundial 2026 (ID 27)
                 if (!bsdLeagueMap["WC26"]) {
                     const wc = leaguesData.results.find(l => l.id === 27);
                     if (wc) {
