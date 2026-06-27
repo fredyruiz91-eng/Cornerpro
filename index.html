@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* =============================================
-           TODOS LOS ESTILOS SE MANTIENEN EXACTAMENTE IGUAL
+           ESTILOS COMPLETOS (SIN CAMBIOS)
            ============================================= */
         :root {
             --bg: #0a0e17;
@@ -429,10 +429,8 @@
             "Türkiye": "Turkey", "Turkey": "Turkey",
             "Iran": "IR Iran", "IR Iran": "IR Iran",
             "Bosnia & Herzegovina": "Bosnia and Herzegovina", "Bosnia and Herzegovina": "Bosnia and Herzegovina",
-            "Czechia": "Czechia",
-            "Côte d'Ivoire": "Côte d'Ivoire",
-            "Cabo Verde": "Cabo Verde",
-            "DR Congo": "DR Congo",
+            "Czechia": "Czechia", "Côte d'Ivoire": "Côte d'Ivoire",
+            "Cabo Verde": "Cabo Verde", "DR Congo": "DR Congo",
             "England": "England", "France": "France", "Germany": "Germany",
             "Spain": "Spain", "Argentina": "Argentina", "Brazil": "Brazil",
             "Netherlands": "Netherlands", "Portugal": "Portugal", "Belgium": "Belgium",
@@ -900,14 +898,12 @@
         function colorFor(p) { return p >= 65 ? 'var(--green)' : p >= 42 ? 'var(--yellow)' : 'var(--accent)'; }
         function cardClassFor(p) { return p >= 65 ? 'high' : p >= 42 ? 'mid' : 'low'; }
 
-        // ⚡ NUEVA FUNCIÓN DE FUERZA DE EQUIPO (hash único)
         function getTeamStrength(name, key) {
             const db = TEAM_STRENGTH_DB[key];
             if (db) {
                 const s = db[name];
                 if (s) return { atk: s[0], def: s[1], homeAdv: s[2] || 1.06 };
             }
-            // Hash basado en la suma de códigos de caracteres (más granular)
             const hash = (name || 'a')
                 .split('')
                 .reduce((acc, c) => acc + c.charCodeAt(0), 0) % 13 - 6;
@@ -1399,7 +1395,7 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN ======================
+        // ====================== INICIALIZACIÓN (CORREGIDA) ======================
         async function initApp() {
             setApiStatus('live', '🔄 Conectando con BSD API...');
             try {
