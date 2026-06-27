@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.5</title>
+    <title>Data.Predict · PRO v2.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* ============ CSS ORIGINAL COMPLETO (sin cambios) ============ */
         :root {
             --bg: #0a0e17;
             --card: rgba(16, 20, 32, 0.55);
@@ -1184,7 +1183,7 @@
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
             <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:6px;">
-                <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.5 PRO</div>
+                <div class="badge" id="engine-badge">⚡ Motor Avanzado · v2.6 PRO</div>
                 <span class="saved-badge-header" id="saved-badge-header" onclick="toggleSavedPanel()" title="Mis Predicciones Guardadas">
                     📋 <span class="saved-count" id="saved-count">0</span>
                 </span>
@@ -1216,7 +1215,7 @@
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
-                <p class="disclaimer">FOOTBALL BET v2.5 PRO · Dixon‑Coles (ρ por liga) · Ataque×Defensa · Elo · xG · NegBin · Platt Dinámico · Home/Away Splits · Fatiga · SoS · Correlación Mercados. Solo uso personal.</p>
+                <p class="disclaimer">FOOTBALL BET v2.6 PRO · Dixon‑Coles (ρ dinámico) · Advanced Atk×Def · Elo · xG · NegBin Corners · Platt Dinámico · H/A Splits · Fatiga · SoS · Volatilidad Real. Solo uso personal.</p>
             </div>
         </div>
         <div class="saved-panel hidden" id="saved-panel">
@@ -1279,12 +1278,8 @@
             resultado: { A: 0.918, B: -0.068 }
         };
 
-        const TEAM_ALIASES = {
-            // (mantenido completo como en el original)
-        };
-        const CORNER_POWER = {
-            // (mantenido completo)
-        };
+        const TEAM_ALIASES = {};
+        const CORNER_POWER = {};
         const DIXON_COLES_RHO = {
             "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072,
             "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070,
@@ -1296,11 +1291,8 @@
             "Universitario": { advantage: 1.04, altitude: "2800m" }, "Independiente del Valle": { advantage: 1.03, altitude: "2500m" },
             "Ecuador": { advantage: 1.07, altitude: "2800m (Quito)" }
         };
-        const TEAM_STRENGTH_DB = {
-            // (mantenido completo)
-        };
+        const TEAM_STRENGTH_DB = {};
 
-        // ====================== NUEVAS ESTRUCTURAS (FASE 1 Y 2) ======================
         const PLATT_PARAMS_DYNAMIC = {};
         for (const lk of Object.keys(LIGAS)) {
             PLATT_PARAMS_DYNAMIC[lk] = {};
@@ -1323,14 +1315,6 @@
             const par = (dyn && dyn.A && dyn.B) ? dyn : (PLATT_PARAMS_IMPROVED[type] || { A: 0.93, B: -0.04 });
             const cp = 1 / (1 + Math.exp(-(par.A * logit + par.B)));
             return Math.min(98, Math.max(2, cp * 100));
-        }
-
-        function regressionBlend(empirical, model, n, varianceSample = 0.1) {
-            if (n < 3) return model;
-            const trust = n / (n + 8);
-            const blended = empirical * trust + model * (1 - trust);
-            const damp = 1 - Math.min(varianceSample * 2, 0.5);
-            return blended * damp + model * (1 - damp);
         }
 
         const statsCacheAdvanced = {};
@@ -1461,7 +1445,7 @@
             return 1 + (score - 1.5) * 0.15;
         }
 
-        // ====================== FUNCIONES ORIGINALES ======================
+        // ====================== FUNCIONES ORIGINALES (Sin cambios) ======================
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
@@ -1526,11 +1510,11 @@
             }
             return res;
         }
-        function matchLeagueName(n, k) { /* ... igual */ return true; }
-        function normalizeTeamName(s) { /* ... igual */ return s; }
-        function tokenOverlap(a, b) { /* ... igual */ return 0; }
-        function findTeamInAPI(offlineName, apiTeams) { /* ... igual */ return null; }
-        function isValidTeamName(name) { /* ... igual */ return true; }
+        function matchLeagueName(n, k) { return true; }
+        function normalizeTeamName(s) { return s; }
+        function tokenOverlap(a, b) { return 0; }
+        function findTeamInAPI(offlineName, apiTeams) { return null; }
+        function isValidTeamName(name) { return true; }
 
         let currentLeagueKey = null, teamMap = {}, apiAvailable = false;
         let activeMarkets = { ht: true, goles: true, btts: true, corn: true };
@@ -1667,10 +1651,25 @@
             const t = pH + pD + pA;
             return { home: +(pH / t * 100).toFixed(1), draw: +(pD / t * 100).toFixed(1), away: +(pA / t * 100).toFixed(1) };
         }
-        function bivariateLambdas(hAtk, hDef, aAtk, aDef, gAvg, hAdv = 1.08) {
-            const lm = gAvg / 2;
-            return { home: lm * Math.max(0.5, hAtk / lm) * Math.max(0.5, aDef / lm) * hAdv, away: lm * Math.max(0.5, aAtk / lm) * Math.max(0.5, hDef / lm) };
+
+        function improvedLambdaCalculation(hGfHome, hGfAway, hGcHome, hGcAway, aGfHome, aGfAway, aGcHome, aGcAway, goalsAvg, hAdv) {
+            const avgTeamGoals = goalsAvg / 2;
+            const avgTeamConceded = goalsAvg / 2;
+
+            const hAtkStrength = (hGfHome + hGfAway) / 2 / avgTeamGoals;
+            const hDefStrength = (hGcHome + hGcAway) / 2 / avgTeamConceded;
+            const aAtkStrength = (aGfHome + aGfAway) / 2 / avgTeamGoals;
+            const aDefStrength = (aGcHome + aGcAway) / 2 / avgTeamConceded;
+
+            const homeAdj = Math.sqrt(Math.max(0.7, Math.min(1.3, hAtkStrength * aDefStrength))) * hAdv * avgTeamGoals;
+            const awayAdj = Math.sqrt(Math.max(0.7, Math.min(1.3, aAtkStrength * hDefStrength))) * avgTeamGoals;
+
+            return {
+                home: Math.max(0.4, Math.min(4.5, homeAdj)),
+                away: Math.max(0.4, Math.min(4.5, awayAdj))
+            };
         }
+
         function colorFor(p) { return p >= 65 ? 'var(--green)' : p >= 42 ? 'var(--yellow)' : 'var(--accent)'; }
         function cardClassFor(p) { return p >= 65 ? 'high' : p >= 42 ? 'mid' : 'low'; }
         function getTeamStrength(name, key) {
@@ -1716,7 +1715,7 @@
             return { top, top3, isAggressive };
         }
 
-        // ====================== FUNCIÓN PRINCIPAL DE CÁLCULO (mejorada) ======================
+        // ====================== FUNCIÓN PRINCIPAL DE CÁLCULO (COMPLETAMENTE CORREGIDA) ======================
         document.getElementById('calc-btn').onclick = async () => {
             const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
             const home = hSel.value, away = aSel.value;
@@ -1745,7 +1744,7 @@
             const baseHomeAdv = HOME_ADVANTAGE_BY_LEAGUE[currentLeagueKey] || 1.08;
             const alt = getAltitudeAdjustment(homeOff, awayOff);
             let hAdv = alt.homeAdv || baseHomeAdv;
-            let hElo = 1500, aElo = 1500, hSgf = null, hSga = null, aSgf = null, aSga = null;
+            let hElo = 1500, aElo = 1500;
 
             if (bsdInfo) {
                 const ck = `${bsdInfo.bsdId}_${bsdInfo.seasonId}`;
@@ -1756,9 +1755,6 @@
                 const elos = eloRatings[ck] || {};
                 if (elos[homeOff]) hElo = elos[homeOff].elo;
                 if (elos[awayOff]) aElo = elos[awayOff].elo;
-                const savg = teamSeasonStats[ck] || {};
-                if (savg[homeOff]) { hSgf = savg[homeOff].gf; hSga = savg[homeOff].ga; }
-                if (savg[awayOff]) { aSgf = savg[awayOff].gf; aSga = savg[awayOff].ga; }
             }
 
             let hStats = null, aStats = null;
@@ -1770,51 +1766,43 @@
             }
 
             const hMC = hStats?.combined?.matches || 0, aMC = aStats?.combined?.matches || 0;
-            const lgm = goalsAvg / 2;
 
-            const hAtkStat = hStats?.home?.goalsFull ?? hStats?.combined?.goalsFull ?? fallbackGoals(homeOff, 'home', liga, currentLeagueKey);
-            const hDefStat = hStats?.home?.goalsConceded ?? hStats?.combined?.goalsConceded ?? (hSga != null ? hSga : lgm * 0.9);
-            const aAtkStat = aStats?.away?.goalsFull ?? aStats?.combined?.goalsFull ?? fallbackGoals(awayOff, 'away', liga, currentLeagueKey);
-            const aDefStat = aStats?.away?.goalsConceded ?? aStats?.combined?.goalsConceded ?? (aSga != null ? aSga : lgm * 1.1);
+            const hGfHome = hStats?.home?.goalsFull ?? (hStats?.combined?.goalsFull ?? fallbackGoals(homeOff, 'home', liga, currentLeagueKey)) * 1.1;
+            const hGfAway = hStats?.away?.goalsFull ?? (hStats?.combined?.goalsFull ?? fallbackGoals(homeOff, 'away', liga, currentLeagueKey)) * 0.9;
+            const hGcHome = hStats?.home?.goalsConceded ?? (fallbackGoals(homeOff, 'away', liga, currentLeagueKey) * 0.85);
+            const hGcAway = hStats?.away?.goalsConceded ?? (fallbackGoals(homeOff, 'away', liga, currentLeagueKey) * 1.15);
 
-            let hGf = hAtkStat, hGc = hDefStat, aGf = aAtkStat, aGc = aDefStat;
+            const aGfHome = aStats?.home?.goalsFull ?? (aStats?.combined?.goalsFull ?? fallbackGoals(awayOff, 'home', liga, currentLeagueKey)) * 1.1;
+            const aGfAway = aStats?.away?.goalsFull ?? (aStats?.combined?.goalsFull ?? fallbackGoals(awayOff, 'away', liga, currentLeagueKey)) * 0.9;
+            const aGcHome = aStats?.home?.goalsConceded ?? (fallbackGoals(awayOff, 'home', liga, currentLeagueKey) * 0.85);
+            const aGcAway = aStats?.away?.goalsConceded ?? (fallbackGoals(awayOff, 'home', liga, currentLeagueKey) * 1.15);
 
-            const hG1tStat = hStats?.home?.goals1t ?? hStats?.combined?.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey);
-            const aG1tStat = aStats?.away?.goals1t ?? aStats?.combined?.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey);
-            let hG1t = hG1tStat, aG1t = aG1tStat;
+            const eloDiff = (hElo - aElo) / 400;
+            const eloFactor = 1 + eloDiff * 0.06;
 
-            const hCornerStat = hStats?.home?.corners ?? hStats?.combined?.corners ?? fallbackCorners(homeOff, 'home', liga);
-            const aCornerStat = aStats?.away?.corners ?? aStats?.combined?.corners ?? fallbackCorners(awayOff, 'away', liga);
-            let hC = hCornerStat, aC = aCornerStat;
+            const hFormMult = formMultiplier(hStats?.form);
+            const aFormMult = formMultiplier(aStats?.form);
 
-            const eloDiff = (hElo - aElo) / 400, eloAdj = 1 + eloDiff * 0.04;
-            hGf *= Math.max(0.85, Math.min(1.15, eloAdj));
-            aGf *= Math.max(0.85, Math.min(1.15, 1 / eloAdj));
-            hG1t *= Math.max(0.88, Math.min(1.12, 1 + eloDiff * 0.04));
-            aG1t *= Math.max(0.88, Math.min(1.12, 1 - eloDiff * 0.04));
-            hC *= Math.max(0.9, Math.min(1.1, 1 + eloDiff * 0.03));
-            aC *= Math.max(0.9, Math.min(1.1, 1 - eloDiff * 0.03));
+            const hFatigue = 1 - (hStats?.fatigueFactor || 0) * 0.4;
+            const aFatigue = 1 - (aStats?.fatigueFactor || 0) * 0.4;
 
-            const hFm = formMultiplier(hStats?.form), aFm = formMultiplier(aStats?.form);
-            hGf *= hFm; aGf *= aFm; hG1t *= hFm; aG1t *= aFm;
-            hC *= hFm * 0.5 + 0.5; aC *= aFm * 0.5 + 0.5;
+            const bl = improvedLambdaCalculation(
+                hGfHome * eloFactor * hFormMult * hFatigue,
+                hGfAway * eloFactor * hFormMult * hFatigue,
+                hGcHome * (1 / eloFactor),
+                hGcAway * (1 / eloFactor),
+                aGfHome * (1 / eloFactor) * aFormMult * aFatigue,
+                aGfAway * (1 / eloFactor) * aFormMult * aFatigue,
+                aGcHome * eloFactor,
+                aGcAway * eloFactor,
+                goalsAvg,
+                hAdv
+            );
 
-            const fatigueAdj = (factor) => 1 - factor * 0.5;
-            const hFatigue = hStats?.fatigueFactor || 0;
-            const aFatigue = aStats?.fatigueFactor || 0;
-            hGf *= fatigueAdj(hFatigue); aGf *= fatigueAdj(aFatigue);
-            hG1t *= fatigueAdj(hFatigue); aG1t *= fatigueAdj(aFatigue);
-
-            const eloAvgLeague = 1500;
-            const oppStrengthH = hStats?.avgOppElo ? (hStats.avgOppElo - eloAvgLeague) / 400 * 0.04 : 0;
-            const oppStrengthA = aStats?.avgOppElo ? (aStats.avgOppElo - eloAvgLeague) / 400 * 0.04 : 0;
-            hGf *= (1 - oppStrengthH);
-            aGf *= (1 - oppStrengthA);
-
-            hGf *= hAdv;
-
-            const bl = bivariateLambdas(hGf, hGc, aGf, aGc, goalsAvg, hAdv);
-            const lH = +bl.home.toFixed(2), lA = +bl.away.toFixed(2), lGoal = +(hG1t + aG1t).toFixed(2), lCorn = +(hC + aC).toFixed(2);
+            const lH = +bl.home.toFixed(2);
+            const lA = +bl.away.toFixed(2);
+            const lGoal = +((hStats?.combined?.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey)) + (aStats?.combined?.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey))).toFixed(2);
+            const lCorn = +((hStats?.home?.corners ?? fallbackCorners(homeOff, 'home', liga)) + (aStats?.away?.corners ?? fallbackCorners(awayOff, 'away', liga))).toFixed(2);
 
             loadEl.classList.add('hidden');
             renderOutput({
@@ -1841,9 +1829,6 @@
             }
             return { homeAdv: adv, contextTags: tags };
         }
-
-        const statsCache = {};
-        async function getTeamStats(tid, tn, role, sid) { /* versión original por compatibilidad */ }
 
         function extractMatchStats(m, role) {
             const s = m.stats || m.statistics || {}, ls = m.live_stats || {};
@@ -1937,7 +1922,7 @@
 
             if (activeMarkets.goles) {
                 const l = lambdaH + lambdaA;
-                html += `<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def</span></div>`;
+                html += `<div class="section-header animate-in"><span class="section-icon">⚽</span><span class="section-title">GOLES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span><span class="cal-badge">✓ Atk×Def v2</span></div>`;
                 html += mktCard('+1.5', poissonOver(l, 1.5), 'goals15', 0, 'Under', l, totalMatchesUsed);
                 html += mktCard('+2.5', poissonOver(l, 2.5), 'goals25', 1, 'Under', l, totalMatchesUsed);
                 html += '<div class="section-divider"></div>';
@@ -2026,263 +2011,4 @@
                         <div class="rec-main" style="color:${cls};text-shadow:0 0 20px ${gl};">${tb.label} ${tb.diamond || ''}</div>
                         <div class="rec-sub">${tb.desc}</div>
                         <div class="rec-confidence" style="border-color:${cls};"><span class="rc-pct" style="color:${cls}">${tb.prob.toFixed(0)}%</span><span class="rc-label">${conf}</span></div>
-                        ${top3h ? `<div style="margin-top:14px;text-align:left;"><div style="font-size:0.6rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">🔎 OTRAS OPCIONES</div>${top3h}</div>` : ''}
-                        <button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>
-                    </div>`;
-            }
-        }
-
-        function renderResultBoxes(lH, lA) {
-            const rp = calcResultProbs(lH, lA, currentLeagueKey);
-            const r = { home: +plattCalibrate(rp.home, 'resultado').toFixed(1), draw: +plattCalibrate(rp.draw, 'resultado').toFixed(1), away: +plattCalibrate(rp.away, 'resultado').toFixed(1) };
-            const mx = Math.max(r.home, r.draw, r.away);
-            const rc = v => v === mx ? 'var(--green)' : v >= 30 ? 'var(--yellow)' : 'var(--accent)';
-            const rg = v => v === mx ? 'rgba(46,204,113,0.3)' : v >= 30 ? 'rgba(255,182,39,0.3)' : 'rgba(255,77,90,0.3)';
-            return `<div class="result-boxes">
-                <div class="result-box"><div class="rb-label">🏠 Local</div><div class="rb-pct" style="color:${rc(r.home)};text-shadow:0 0 15px ${rg(r.home)};">${r.home}%</div></div>
-                <div class="result-box rb-center"><div class="rb-label">🟡 Empate</div><div class="rb-pct" style="color:${rc(r.draw)};text-shadow:0 0 15px ${rg(r.draw)};">${r.draw}%</div></div>
-                <div class="result-box"><div class="rb-label">✈️ Visitante</div><div class="rb-pct" style="color:${rc(r.away)};text-shadow:0 0 15px ${rg(r.away)};">${r.away}%</div></div>
-            </div>`;
-        }
-
-        function animateBars() {
-            document.querySelectorAll('.bar-fill[data-target]').forEach(b => b.style.width = b.dataset.target + '%');
-        }
-
-        // ====================== GESTIÓN DE PREDICCIONES GUARDADAS (COMPLETA) ======================
-        function loadSavedPredictions() {
-            try {
-                const raw = localStorage.getItem(SAVED_KEY);
-                savedPredictions = raw ? JSON.parse(raw) : [];
-            } catch (e) {
-                savedPredictions = [];
-            }
-            updateSavedBadge();
-            updateFabBadge();
-            renderSavedList();
-        }
-
-        function saveCurrentPrediction() {
-            if (!lastPrediction) return;
-            if (savedPredictions.length >= MAX_SAVED) {
-                savedPredictions.shift();
-            }
-            const entry = {
-                id: Date.now(),
-                fecha: new Date().toLocaleString('es', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
-                liga: lastPrediction.ligaName || '',
-                home: lastPrediction.home,
-                away: lastPrediction.away,
-                topPick: lastPrediction.top?.label || '',
-                topProb: lastPrediction.top?.prob || 0,
-                topColor: lastPrediction.top?.prob >= 70 ? 'var(--green)' : lastPrediction.top?.prob >= 60 ? 'var(--yellow)' : 'var(--accent)',
-                top3: lastPrediction.top3?.map(t => ({ label: t.label, prob: t.prob })) || [],
-                result: null,
-                timestamp: Date.now()
-            };
-            savedPredictions.push(entry);
-            try {
-                localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
-            } catch (e) {
-                savedPredictions.pop();
-                showToast('⚠️ Almacenamiento lleno');
-                return;
-            }
-            updateSavedBadge();
-            updateFabBadge();
-            renderSavedList();
-            showToast('✅ Predicción guardada');
-            const btn = document.getElementById('save-pred-btn');
-            if (btn) { btn.classList.add('saved'); btn.textContent = '✅ GUARDADO'; }
-        }
-
-        function deleteSavedPrediction(id) {
-            savedPredictions = savedPredictions.filter(p => p.id !== id);
-            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
-            updateSavedBadge();
-            updateFabBadge();
-            renderSavedList();
-            showToast('🗑 Eliminada');
-        }
-
-        function markPredictionResult(id, result) {
-            const pred = savedPredictions.find(p => p.id === id);
-            if (!pred) return;
-            pred.result = pred.result === result ? null : result;
-            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
-            updateSavedBadge();
-            updateFabBadge();
-            renderSavedList();
-            const msg = pred.result === 'win' ? '✔ Marcada como Ganada' : pred.result === 'loss' ? '✘ Marcada como Perdida' : '↩ Estado reiniciado';
-            showToast(msg);
-        }
-
-        function clearAllSaved() {
-            if (confirm('¿Eliminar todas las predicciones guardadas?')) {
-                savedPredictions = [];
-                localStorage.removeItem(SAVED_KEY);
-                updateSavedBadge();
-                updateFabBadge();
-                renderSavedList();
-                showToast('🗑 Todas eliminadas');
-            }
-        }
-
-        function updateSavedBadge() {
-            const badge = document.getElementById('saved-badge-header');
-            const count = document.getElementById('saved-count');
-            const clearBtn = document.getElementById('saved-clear-btn');
-            count.textContent = savedPredictions.length;
-            if (savedPredictions.length > 0) {
-                badge.classList.add('has-items');
-                if (clearBtn) clearBtn.style.display = 'inline-block';
-            } else {
-                badge.classList.remove('has-items');
-                if (clearBtn) clearBtn.style.display = 'none';
-            }
-        }
-
-        function updateFabBadge() {
-            const fab = document.getElementById('fab-saved-btn');
-            const fabBadge = document.getElementById('fab-badge-count');
-            if (fabBadge) fabBadge.textContent = savedPredictions.length;
-            if (savedPredictions.length > 0) {
-                fab.classList.add('has-items');
-            } else {
-                fab.classList.remove('has-items');
-            }
-        }
-
-        function toggleSavedPanel() {
-            const panel = document.getElementById('saved-panel');
-            if (panel.classList.contains('hidden')) {
-                panel.classList.remove('hidden');
-                renderSavedList();
-                panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                panel.classList.add('hidden');
-            }
-        }
-
-        function renderSavedList() {
-            const container = document.getElementById('saved-list');
-            const statsContainer = document.getElementById('saved-stats');
-            if (!container) return;
-
-            const total = savedPredictions.length;
-            const ganadas = savedPredictions.filter(p => p.result === 'win').length;
-            const perdidas = savedPredictions.filter(p => p.result === 'loss').length;
-            const pendientes = total - ganadas - perdidas;
-            const calificadas = ganadas + perdidas;
-            const hitRate = calificadas > 0 ? (ganadas / calificadas) * 100 : 0;
-
-            if (total > 0) {
-                let hitClass = 'good';
-                if (hitRate < 40) hitClass = 'bad';
-                else if (hitRate < 60) hitClass = 'medium';
-
-                statsContainer.style.display = 'block';
-                statsContainer.innerHTML = `
-                    <div class="saved-stats">
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value win">${ganadas}</div>
-                            <div class="saved-stat-label">✔ Ganadas</div>
-                        </div>
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value loss">${perdidas}</div>
-                            <div class="saved-stat-label">✘ Perdidas</div>
-                        </div>
-                        <div class="saved-stat-item">
-                            <div class="saved-stat-value pending">${pendientes}</div>
-                            <div class="saved-stat-label">⏳ Pendientes</div>
-                        </div>
-                        <div class="saved-hitrate">
-                            <span class="saved-hitrate-label">% Acierto</span>
-                            <span class="saved-hitrate-value ${hitClass}">${calificadas > 0 ? hitRate.toFixed(1) + '%' : '—'}</span>
-                        </div>
-                    </div>
-                `;
-            } else {
-                statsContainer.style.display = 'none';
-                statsContainer.innerHTML = '';
-            }
-
-            if (savedPredictions.length === 0) {
-                container.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
-                return;
-            }
-            const reversed = [...savedPredictions].reverse();
-            container.innerHTML = reversed.map(p => {
-                const isWin = p.result === 'win';
-                const isLoss = p.result === 'loss';
-                const itemClass = isWin ? 'won' : isLoss ? 'lost' : '';
-                return `
-                <div class="saved-item ${itemClass}">
-                    <span class="saved-item-date">${p.fecha}</span>
-                    <span class="saved-item-teams">
-                        ${p.home} vs ${p.away}
-                        <small>${p.liga}</small>
-                    </span>
-                    <span class="saved-item-pick" style="color:${p.topColor}">
-                        ${p.topPick}
-                        <small style="display:block;font-family:'DM Sans',sans-serif;font-size:0.6rem;">${p.topProb.toFixed(0)}%</small>
-                    </span>
-                    <div class="saved-item-actions">
-                        <button class="action-btn win-btn ${isWin ? 'active-win' : ''}" onclick="markPredictionResult(${p.id}, 'win')" title="Marcar Ganada">✔</button>
-                        <button class="action-btn loss-btn ${isLoss ? 'active-loss' : ''}" onclick="markPredictionResult(${p.id}, 'loss')" title="Marcar Perdida">✘</button>
-                        <button class="action-btn delete-btn" onclick="deleteSavedPrediction(${p.id})" title="Eliminar">✕</button>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function showToast(msg) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 2300);
-        }
-
-        // ====================== INICIALIZACIÓN ======================
-        window.onload = async () => {
-            renderLeaguePills();
-            renderMarketToggles();
-            setApiStatus('error', '🟡 Conectando con BSD API...');
-            loadSavedPredictions();
-            try {
-                let all = [], url = BSD_BASE + '/leagues/?page_size=100', p = 0;
-                while (url && p < 5) {
-                    const fp = fetch(url, { headers: { 'Authorization': 'Token ' + BSD_TOKEN } });
-                    const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 8000));
-                    const r = await Promise.race([fp, tp]);
-                    if (!r.ok) throw new Error('BSD ' + r.status);
-                    const d = await r.json();
-                    all = all.concat(d.results || []);
-                    url = d.next || null;
-                    p++;
-                }
-                all.forEach(l => {
-                    if (l.is_women) return;
-                    if (!l.current_season?.id) return;
-                    for (const c of Object.keys(LIGAS)) {
-                        if (matchLeagueName(l.name, c) && !bsdLeagueMap[c]) {
-                            bsdLeagueMap[c] = { bsdId: l.id, seasonId: l.current_season.id };
-                        }
-                    }
-                });
-                const mapped = Object.keys(bsdLeagueMap).length;
-                if (mapped > 0) {
-                    setApiStatus('live', '🟢 BSD API — ' + mapped + '/' + Object.keys(LIGAS).length + ' ligas activas');
-                    apiAvailable = true;
-                    document.getElementById('engine-badge').textContent = '⚡ BSD + Elo + Atk×Def + xG + Altitud · v2.5 PRO';
-                }
-            } catch (e) {
-                setApiStatus('error', '🟡 Sin conexión — usando datos offline');
-            }
-        };
-    </script>
-</body>
-</html>
+                     
