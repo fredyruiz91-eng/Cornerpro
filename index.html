@@ -1445,11 +1445,54 @@
             return 1 + (score - 1.5) * 0.15;
         }
 
-        // ====================== FUNCIONES ORIGINALES (Sin cambios) ======================
+        // ====================== FUNCIONES DE MAPEO (AHORA IMPLEMENTADAS) ======================
+        function normalizeTeamName(s) {
+            return (s || '').toLowerCase()
+                .replace(/\b(fc|cf|ac|ssc|rcd|ud|cd|sc|rc|r\.|club|deportivo|calcio|as|ss|acf|fc|tsg|vfl|rkc|pec|nac|kv|kaa|krc|kvc|oh|rfc|estac|afc|if|bk|il|fk|sk|fc|1\.|fsv|sv|vfb|sc|rb|bsc|ksv|rsa)\b\.?/gi, '')
+                .replace(/[^a-záéíóúüñ0-9 ]/gi, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function tokenOverlap(a, b) {
+            const ta = new Set(a.split(' '));
+            const tb = new Set(b.split(' '));
+            let intersection = 0;
+            for (const t of ta) if (tb.has(t)) intersection++;
+            return intersection / Math.max(1, Math.min(ta.size, tb.size));
+        }
+
+        function findTeamInAPI(offlineName, apiTeams) {
+            const norm = normalizeTeamName(offlineName);
+            let best = null, bestScore = 0;
+            for (const t of apiTeams) {
+                const apiNorm = normalizeTeamName(t.name || t.short_name || '');
+                if (apiNorm === norm) return t;
+                const score = tokenOverlap(norm, apiNorm);
+                if (score > bestScore && score > 0.5) {
+                    bestScore = score;
+                    best = t;
+                }
+            }
+            return best || null;
+        }
+
+        function isValidTeamName(name) {
+            return name && name.trim().length > 0;
+        }
+
+        function matchLeagueName(n, k) {
+            const liga = LIGAS[k];
+            if (!liga) return false;
+            const names = [liga.bsdName, ...(liga.bsdNameAlt || [])];
+            return names.some(alt => n.toLowerCase().includes(alt.toLowerCase()));
+        }
+
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
             document.getElementById('api-status-text').textContent = t;
         }
+
         function renderLeaguePills() {
             const c = document.getElementById('league-pills');
             c.innerHTML = '';
@@ -1462,6 +1505,7 @@
                 c.appendChild(b);
             }
         }
+
         function renderMarketToggles() {
             const c = document.getElementById('market-toggles');
             const d = [{ key: 'ht', label: '⏱ Goles HT' }, { key: 'goles', label: '⚽ Goles +1.5/2.5' }, { key: 'btts', label: '🤝 BTTS' }, { key: 'corn', label: '⬡ Córners' }];
@@ -1486,6 +1530,7 @@
                 c.appendChild(b);
             });
         }
+
         async function bsdFetch(path, ms = API_TIMEOUT) {
             const fp = fetch(`${BSD_BASE}${path}`, { headers: { 'Authorization': `Token ${BSD_TOKEN}` } });
             const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
@@ -1493,6 +1538,7 @@
             if (!r.ok) throw new Error(`BSD ${r.status}`);
             return r.json();
         }
+
         async function bsdFetchAll(path, ms = API_TIMEOUT) {
             let res = [], url = `${BSD_BASE}${path}`, p = 0;
             while (url && p < 5) {
@@ -1510,11 +1556,6 @@
             }
             return res;
         }
-        function matchLeagueName(n, k) { return true; }
-        function normalizeTeamName(s) { return s; }
-        function tokenOverlap(a, b) { return 0; }
-        function findTeamInAPI(offlineName, apiTeams) { return null; }
-        function isValidTeamName(name) { return true; }
 
         let currentLeagueKey = null, teamMap = {}, apiAvailable = false;
         let activeMarkets = { ht: true, goles: true, btts: true, corn: true };
@@ -1542,8 +1583,8 @@
                 try {
                     setApiStatus('live', '🟢 Buscando IDs de equipos...');
                     let apiTeams = [];
-                    try { const d = await bsdFetch('/teams/?league=' + bsdLeagueMap[key].bsdId + '&page_size=200'); apiTeams = d.results || []; } catch (e) { }
-                    try { const d = await bsdFetch('/teams/?season=' + bsdLeagueMap[key].seasonId + '&page_size=200'); const extra = d.results || []; const ids = new Set(apiTeams.map(t => t.id)); extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); }); } catch (e) { }
+                    try { const d = await bsdFetch('/teams/?league=' + bsdLeagueMap[key].bsdId + '&page_size=200'); apiTeams = d.results || []; } catch (e) {}
+                    try { const d = await bsdFetch('/teams/?season=' + bsdLeagueMap[key].seasonId + '&page_size=200'); const extra = d.results || []; const ids = new Set(apiTeams.map(t => t.id)); extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); }); } catch (e) {}
                     if (apiTeams.length < 6) {
                         try {
                             const ev = await bsdFetchAll('/events/?season=' + bsdLeagueMap[key].seasonId + '&limit=100');
@@ -1555,7 +1596,7 @@
                             const fe = [...m.values()];
                             const ids = new Set(apiTeams.map(t => t.id));
                             fe.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
-                        } catch (e) { }
+                        } catch (e) {}
                     }
                     const uniq = Array.from(new Map(apiTeams.map(t => [t.id, t])).values());
                     let matched = 0;
@@ -1566,7 +1607,7 @@
                     });
                     fillSelects(teams, teamMap);
                     setApiStatus('live', `🟢 ${matched}/${teams.length} equipos vinculados a API`);
-                    if (matched > 4) try { await calculateEloAndSeasonStats(bsdLeagueMap[key].bsdId, bsdLeagueMap[key].seasonId); } catch (e) { }
+                    if (matched > 4) try { await calculateEloAndSeasonStats(bsdLeagueMap[key].bsdId, bsdLeagueMap[key].seasonId); } catch (e) {}
                     return;
                 } catch (e) { console.error(e); }
             }
@@ -1620,7 +1661,7 @@
                 eloRatings[ck] = ratings;
                 teamSeasonStats[ck] = {};
                 for (const [t, s] of Object.entries(goals)) if (s.p > 0) teamSeasonStats[ck][t] = { gf: s.gf / s.p, ga: s.ga / s.p };
-            } catch (e) { }
+            } catch (e) {}
         }
 
         function poissonExact(lambda, k) { let t = Math.exp(-lambda); for (let i = 0; i < k; i++) t *= lambda / (i + 1); return t; }
@@ -1655,19 +1696,13 @@
         function improvedLambdaCalculation(hGfHome, hGfAway, hGcHome, hGcAway, aGfHome, aGfAway, aGcHome, aGcAway, goalsAvg, hAdv) {
             const avgTeamGoals = goalsAvg / 2;
             const avgTeamConceded = goalsAvg / 2;
-
             const hAtkStrength = (hGfHome + hGfAway) / 2 / avgTeamGoals;
             const hDefStrength = (hGcHome + hGcAway) / 2 / avgTeamConceded;
             const aAtkStrength = (aGfHome + aGfAway) / 2 / avgTeamGoals;
             const aDefStrength = (aGcHome + aGcAway) / 2 / avgTeamConceded;
-
             const homeAdj = Math.sqrt(Math.max(0.7, Math.min(1.3, hAtkStrength * aDefStrength))) * hAdv * avgTeamGoals;
             const awayAdj = Math.sqrt(Math.max(0.7, Math.min(1.3, aAtkStrength * hDefStrength))) * avgTeamGoals;
-
-            return {
-                home: Math.max(0.4, Math.min(4.5, homeAdj)),
-                away: Math.max(0.4, Math.min(4.5, awayAdj))
-            };
+            return { home: Math.max(0.4, Math.min(4.5, homeAdj)), away: Math.max(0.4, Math.min(4.5, awayAdj)) };
         }
 
         function colorFor(p) { return p >= 65 ? 'var(--green)' : p >= 42 ? 'var(--yellow)' : 'var(--accent)'; }
@@ -1715,7 +1750,7 @@
             return { top, top3, isAggressive };
         }
 
-        // ====================== FUNCIÓN PRINCIPAL DE CÁLCULO (COMPLETAMENTE CORREGIDA) ======================
+        // ====================== FUNCIÓN PRINCIPAL DE CÁLCULO ======================
         document.getElementById('calc-btn').onclick = async () => {
             const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
             const home = hSel.value, away = aSel.value;
@@ -1750,7 +1785,7 @@
                 const ck = `${bsdInfo.bsdId}_${bsdInfo.seasonId}`;
                 if (!eloRatings[ck]) {
                     loadText('Calculando ratings Elo...', 'Análisis histórico');
-                    try { await calculateEloAndSeasonStats(bsdInfo.bsdId, bsdInfo.seasonId); } catch (e) { }
+                    try { await calculateEloAndSeasonStats(bsdInfo.bsdId, bsdInfo.seasonId); } catch (e) {}
                 }
                 const elos = eloRatings[ck] || {};
                 if (elos[homeOff]) hElo = elos[homeOff].elo;
@@ -1760,9 +1795,9 @@
             let hStats = null, aStats = null;
             if (homeId && awayId && seasonId && apiAvailable) {
                 loadText(`Analizando ${homeOff.split(' ').slice(-1)[0]}...`, `Últimos ${MATCHES_TO_USE} partidos`);
-                try { hStats = await getTeamStatsEnhanced(homeId, home, 'home', seasonId, null); } catch (e) { }
+                try { hStats = await getTeamStatsEnhanced(homeId, home, 'home', seasonId, null); } catch (e) {}
                 loadText(`Analizando ${awayOff.split(' ').slice(-1)[0]}...`, 'Modelo Ataque×Defensa + Platt Dinámico');
-                try { aStats = await getTeamStatsEnhanced(awayId, away, 'away', seasonId, null); } catch (e) { }
+                try { aStats = await getTeamStatsEnhanced(awayId, away, 'away', seasonId, null); } catch (e) {}
             }
 
             const hMC = hStats?.combined?.matches || 0, aMC = aStats?.combined?.matches || 0;
@@ -1861,6 +1896,18 @@
             if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
             const base = liga.cornersAvg / 2;
             return role === 'home' ? base * 1.10 : base * 0.90;
+        }
+
+        function renderResultBoxes(lambdaH, lambdaA) {
+            const rp = calcResultProbs(lambdaH, lambdaA, currentLeagueKey);
+            const h = +plattCalibrate(rp.home, 'resultado').toFixed(1);
+            const d = +plattCalibrate(rp.draw, 'resultado').toFixed(1);
+            const a = +plattCalibrate(rp.away, 'resultado').toFixed(1);
+            return `<div class="result-boxes animate-in">
+                <div class="result-box"><div class="rb-label">🏠 Local</div><div class="rb-pct" style="color:${colorFor(h)}">${h}%</div></div>
+                <div class="result-box rb-center"><div class="rb-label">🤝 Empate</div><div class="rb-pct" style="color:var(--yellow)">${d}%</div></div>
+                <div class="result-box"><div class="rb-label">✈️ Visitante</div><div class="rb-pct" style="color:${colorFor(a)}">${a}%</div></div>
+            </div>`;
         }
 
         function renderOutput(o) {
@@ -2011,4 +2058,215 @@
                         <div class="rec-main" style="color:${cls};text-shadow:0 0 20px ${gl};">${tb.label} ${tb.diamond || ''}</div>
                         <div class="rec-sub">${tb.desc}</div>
                         <div class="rec-confidence" style="border-color:${cls};"><span class="rc-pct" style="color:${cls}">${tb.prob.toFixed(0)}%</span><span class="rc-label">${conf}</span></div>
-                     
+                        ${top3h}
+                    </div>`;
+            }
+
+            // Botón guardar predicción
+            const saveBtnHtml = `<button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>`;
+            document.getElementById('recomendacion-container').insertAdjacentHTML('afterend', saveBtnHtml);
+        }
+
+        function animateBars() {
+            document.querySelectorAll('.bar-fill').forEach(bar => {
+                const target = bar.dataset.target;
+                if (target) bar.style.width = target + '%';
+            });
+        }
+
+        // ====================== GUARDADO DE PREDICCIONES ======================
+        function saveCurrentPrediction() {
+            if (!lastPrediction) return;
+            if (savedPredictions.length >= MAX_SAVED) {
+                showToast('⚠️ Máximo 15 predicciones guardadas');
+                return;
+            }
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const entry = {
+                id: Date.now(),
+                date: `${dateStr} ${timeStr}`,
+                home: lastPrediction.home,
+                away: lastPrediction.away,
+                ligaName: lastPrediction.ligaName,
+                pick: lastPrediction.top.label,
+                prob: lastPrediction.top.prob,
+                status: 'pending' // pending, won, lost
+            };
+            savedPredictions.unshift(entry);
+            if (savedPredictions.length > MAX_SAVED) savedPredictions = savedPredictions.slice(0, MAX_SAVED);
+            saveToStorage();
+            renderSavedPanel();
+            document.getElementById('save-pred-btn').classList.add('saved');
+            document.getElementById('save-pred-btn').textContent = '✅ GUARDADA';
+            showToast('✅ Predicción guardada');
+        }
+
+        function saveToStorage() {
+            localStorage.setItem(SAVED_KEY, JSON.stringify(savedPredictions));
+        }
+
+        function loadSavedPredictions() {
+            try {
+                const data = localStorage.getItem(SAVED_KEY);
+                if (data) savedPredictions = JSON.parse(data);
+                if (!Array.isArray(savedPredictions)) savedPredictions = [];
+            } catch (e) {
+                savedPredictions = [];
+            }
+            updateSavedBadges();
+            renderSavedPanel();
+        }
+
+        function updateSavedBadges() {
+            const count = savedPredictions.length;
+            document.getElementById('saved-count').textContent = count;
+            document.getElementById('fab-badge-count').textContent = count;
+            const badge = document.getElementById('saved-badge-header');
+            const fab = document.getElementById('fab-saved-btn');
+            if (count > 0) {
+                badge.classList.add('has-items');
+                fab.classList.add('has-items');
+            } else {
+                badge.classList.remove('has-items');
+                fab.classList.remove('has-items');
+            }
+        }
+
+        function renderSavedPanel() {
+            const panel = document.getElementById('saved-panel');
+            const list = document.getElementById('saved-list');
+            const statsEl = document.getElementById('saved-stats');
+            const clearBtn = document.getElementById('saved-clear-btn');
+
+            updateSavedBadges();
+
+            if (savedPredictions.length === 0) {
+                list.innerHTML = '<div class="saved-empty">Aún no has guardado ninguna predicción</div>';
+                statsEl.style.display = 'none';
+                clearBtn.style.display = 'none';
+                return;
+            }
+
+            clearBtn.style.display = 'inline-block';
+            const won = savedPredictions.filter(p => p.status === 'won').length;
+            const lost = savedPredictions.filter(p => p.status === 'lost').length;
+            const pending = savedPredictions.filter(p => p.status === 'pending').length;
+            const hitRate = won + lost > 0 ? (won / (won + lost) * 100) : 0;
+            const hitClass = hitRate >= 60 ? 'good' : hitRate >= 40 ? 'medium' : 'bad';
+
+            statsEl.style.display = 'grid';
+            statsEl.innerHTML = `
+                <div class="saved-stat-item"><div class="saved-stat-value win">${won}</div><div class="saved-stat-label">Ganadas</div></div>
+                <div class="saved-stat-item"><div class="saved-stat-value loss">${lost}</div><div class="saved-stat-label">Perdidas</div></div>
+                <div class="saved-stat-item"><div class="saved-stat-value pending">${pending}</div><div class="saved-stat-label">Pendientes</div></div>
+                <div class="saved-hitrate">
+                    <span class="saved-hitrate-label">Efectividad:</span>
+                    <span class="saved-hitrate-value ${hitClass}">${hitRate.toFixed(0)}%</span>
+                </div>
+            `;
+
+            list.innerHTML = savedPredictions.map(p => {
+                const statusClass = p.status === 'won' ? 'won' : p.status === 'lost' ? 'lost' : '';
+                const winActive = p.status === 'won' ? 'active-win' : '';
+                const lossActive = p.status === 'lost' ? 'active-loss' : '';
+                return `<div class="saved-item ${statusClass}">
+                    <div class="saved-item-date">${p.date}</div>
+                    <div class="saved-item-teams">${p.home} vs ${p.away}<small>${p.ligaName}</small></div>
+                    <div class="saved-item-pick" style="color:${colorFor(p.prob)}">${p.pick}<br><small>${p.prob}%</small></div>
+                    <div class="saved-item-actions">
+                        <button class="action-btn win-btn ${winActive}" onclick="markPrediction(${p.id}, 'won')" title="Ganada">✅</button>
+                        <button class="action-btn loss-btn ${lossActive}" onclick="markPrediction(${p.id}, 'lost')" title="Perdida">❌</button>
+                        <button class="action-btn delete-btn" onclick="deletePrediction(${p.id})" title="Eliminar">🗑</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function markPrediction(id, status) {
+            const pred = savedPredictions.find(p => p.id === id);
+            if (pred) {
+                pred.status = status;
+                saveToStorage();
+                renderSavedPanel();
+            }
+        }
+
+        function deletePrediction(id) {
+            savedPredictions = savedPredictions.filter(p => p.id !== id);
+            saveToStorage();
+            renderSavedPanel();
+            showToast('🗑 Predicción eliminada');
+        }
+
+        function clearAllSaved() {
+            if (confirm('¿Eliminar todas las predicciones guardadas?')) {
+                savedPredictions = [];
+                saveToStorage();
+                renderSavedPanel();
+                showToast('🗑 Historial limpiado');
+            }
+        }
+
+        function toggleSavedPanel() {
+            const panel = document.getElementById('saved-panel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                renderSavedPanel();
+                panel.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2200);
+        }
+
+        // ====================== INICIALIZACIÓN DE LA API ======================
+        async function initApp() {
+            setApiStatus('live', '🔄 Conectando con BSD API...');
+            try {
+                // Obtener ligas disponibles
+                const leaguesData = await bsdFetch('/leagues/?page_size=200');
+                const seasonsData = await bsdFetch('/seasons/?page_size=200');
+
+                // Mapear nombres a IDs
+                for (const [key, liga] of Object.entries(LIGAS)) {
+                    const apiLeague = leaguesData.results.find(l => {
+                        const apiName = (l.name || '').toLowerCase();
+                        return apiName.includes(liga.bsdName.toLowerCase()) ||
+                            (liga.bsdNameAlt && liga.bsdNameAlt.some(alt => apiName.includes(alt.toLowerCase())));
+                    });
+                    if (apiLeague) {
+                        const season = seasonsData.results.find(s => s.league_id === apiLeague.id);
+                        bsdLeagueMap[key] = { bsdId: apiLeague.id, seasonId: season?.id };
+                    }
+                }
+
+                apiAvailable = Object.keys(bsdLeagueMap).length > 0;
+                setApiStatus(apiAvailable ? 'live' : 'error',
+                    apiAvailable ? '🟢 API BSD conectada' : '🟡 Modo offline (API no disponible)');
+
+                // Seleccionar primera liga por defecto
+                const firstKey = Object.keys(LIGAS)[0];
+                if (firstKey) selectLeague(firstKey);
+            } catch (e) {
+                setApiStatus('error', '🔴 Error de conexión con BSD API');
+                console.error('Error initApp:', e);
+            }
+        }
+
+        // Al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLeaguePills();
+            renderMarketToggles();
+            initApp();
+            loadSavedPredictions();
+        });
+    </script>
+</body>
+</html>
