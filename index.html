@@ -6,6 +6,9 @@
     <title>Data.Predict · PRO v2.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* =============================================
+           TODOS LOS ESTILOS SE MANTIENEN EXACTAMENTE IGUAL
+           ============================================= */
         :root {
             --bg: #0a0e17;
             --card: rgba(16, 20, 32, 0.55);
@@ -420,7 +423,6 @@
         const MAX_SAVED = 15;
         const SAVED_KEY = 'footballbet_pro_saved';
 
-        // Alias actualizados con los nombres exactos de la API (World Cup 2026)
         const TEAM_ALIASES = {
             "South Korea": "Korea Republic", "Korea Republic": "Korea Republic",
             "USA": "United States", "United States": "United States",
@@ -897,15 +899,25 @@
 
         function colorFor(p) { return p >= 65 ? 'var(--green)' : p >= 42 ? 'var(--yellow)' : 'var(--accent)'; }
         function cardClassFor(p) { return p >= 65 ? 'high' : p >= 42 ? 'mid' : 'low'; }
+
+        // ⚡ NUEVA FUNCIÓN DE FUERZA DE EQUIPO (hash único)
         function getTeamStrength(name, key) {
-            const def = { atk: 1, def: 1, homeAdv: 1.06 };
             const db = TEAM_STRENGTH_DB[key];
-            if (!db) return def;
-            const s = db[name];
-            if (s) return { atk: s[0], def: s[1], homeAdv: s[2] || 1.06 };
-            const hash = (name || 'a').charCodeAt(0) % 7 - 3;
-            return { atk: 1 + hash * 0.06, def: 1 - hash * 0.04, homeAdv: 1.06 + hash * 0.01 };
+            if (db) {
+                const s = db[name];
+                if (s) return { atk: s[0], def: s[1], homeAdv: s[2] || 1.06 };
+            }
+            // Hash basado en la suma de códigos de caracteres (más granular)
+            const hash = (name || 'a')
+                .split('')
+                .reduce((acc, c) => acc + c.charCodeAt(0), 0) % 13 - 6;
+            return {
+                atk: 1 + hash * 0.05,
+                def: 1 - hash * 0.03,
+                homeAdv: 1.06 + hash * 0.01
+            };
         }
+
         function uncertaintyBandRealistic(lambda, n, type = 'goals', threshold = null) {
             const seLambda = Math.sqrt(lambda / Math.max(1, n));
             const delta = 1.44 * seLambda;
@@ -1022,7 +1034,7 @@
 
             const lH = +bl.home.toFixed(2), lA = +bl.away.toFixed(2);
             const lGoal = +((hStats?.combined?.goals1t ?? fallbackGoals1T(homeOff, 'home', liga, currentLeagueKey)) + (aStats?.combined?.goals1t ?? fallbackGoals1T(awayOff, 'away', liga, currentLeagueKey))).toFixed(2);
-            const lCorn = +((hStats?.home?.corners ?? fallbackCorners(homeOff, 'home', liga)) + (aStats?.away?.corners ?? fallbackCorners(awayOff, 'away', liga))).toFixed(2);
+            const lCorn = +((hStats?.home?.corners ?? fallbackCorners(homeOff, 'home', liga, currentLeagueKey)) + (aStats?.away?.corners ?? fallbackCorners(awayOff, 'away', liga, currentLeagueKey))).toFixed(2);
 
             loadEl.classList.add('hidden');
             renderOutput({
@@ -1074,10 +1086,12 @@
         function fallbackGoals1T(name, role, liga, key) {
             return fallbackGoals(name, role, liga, key) * (role === 'home' ? 0.44 : 0.40);
         }
-        function fallbackCorners(name, role, liga) {
+        function fallbackCorners(name, role, liga, key) {
             if (CORNER_POWER[name]?.[role]) return CORNER_POWER[name][role];
+            const s = getTeamStrength(name, key);
             const base = liga.cornersAvg / 2;
-            return role === 'home' ? base * 1.10 : base * 0.90;
+            const mult = role === 'home' ? s.atk * s.homeAdv * 1.05 : s.atk * 0.95;
+            return base * mult;
         }
 
         function renderResultBoxes(lambdaH, lambdaA) {
@@ -1385,7 +1399,7 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN FINAL ======================
+        // ====================== INICIALIZACIÓN ======================
         async function initApp() {
             setApiStatus('live', '🔄 Conectando con BSD API...');
             try {
@@ -1410,7 +1424,6 @@
                     }
                 }
 
-                // Forzar Mundial 2026 (ID 27)
                 if (!bsdLeagueMap["WC26"]) {
                     const wc = leaguesData.results.find(l => l.id === 27);
                     if (wc) {
