@@ -1242,6 +1242,39 @@
         const MAX_SAVED = 15;
         const SAVED_KEY = 'footballbet_pro_saved';
 
+        // ⭐ ALIAS DE EQUIPOS (API → Local)
+        const TEAM_ALIASES = {
+            "Czech Republic": "Czechia", "Czechia": "Czechia",
+            "Korea Republic": "Korea Republic",
+            "Iran": "IR Iran", "IR Iran": "IR Iran",
+            "Côte d'Ivoire": "Côte d'Ivoire", "Ivory Coast": "Côte d'Ivoire",
+            "Turkey": "Turkey", "Türkiye": "Turkey",
+            "Bosnia and Herzegovina": "Bosnia and Herzegovina", "Bosnia & Herzegovina": "Bosnia and Herzegovina",
+            "DR Congo": "DR Congo", "Congo DR": "DR Congo",
+            "Cabo Verde": "Cabo Verde", "Cape Verde": "Cabo Verde",
+            "Saudi Arabia": "Saudi Arabia",
+            "Argelia": "Argelia", "Algeria": "Argelia",
+            "Haiti": "Haiti", "Scotland": "Scotland",
+            "Paraguay": "Paraguay", "Australia": "Australia",
+            "Curaçao": "Curaçao", "Ecuador": "Ecuador",
+            "Japan": "Japan", "Sweden": "Sweden",
+            "Tunisia": "Tunisia", "Egypt": "Egypt",
+            "New Zealand": "New Zealand", "Uruguay": "Uruguay",
+            "Senegal": "Senegal", "Iraq": "Iraq",
+            "Norway": "Norway", "Jordan": "Jordan",
+            "Uzbekistan": "Uzbekistan", "Colombia": "Colombia",
+            "Croatia": "Croatia", "Ghana": "Ghana",
+            "Panama": "Panama", "United States": "United States", "USA": "United States",
+            "Mexico": "Mexico", "South Africa": "South Africa",
+            "Qatar": "Qatar", "Switzerland": "Switzerland",
+            "Brazil": "Brazil", "Morocco": "Morocco",
+            "Germany": "Germany", "Netherlands": "Netherlands",
+            "Belgium": "Belgium", "Spain": "Spain",
+            "France": "France", "Argentina": "Argentina",
+            "Portugal": "Portugal", "England": "England",
+            "Canada": "Canada", "Austria": "Austria"
+        };
+
         const LIGAS = {
             "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", cornersAvg: 10.1, goalsAvg: 2.85, negBinR: 5.4, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Premier League", teams: ["Arsenal FC", "Aston Villa FC", "AFC Bournemouth", "Brentford FC", "Brighton & Hove Albion FC", "Chelsea FC", "Crystal Palace FC", "Everton FC", "Fulham FC", "Liverpool FC", "Manchester City FC", "Manchester United FC", "Newcastle United FC", "Nottingham Forest FC", "Tottenham Hotspur FC", "West Ham United FC", "Wolverhampton Wanderers FC", "Leeds United", "Burnley FC", "Sunderland AFC"] },
             "BL1": { name: "🇩🇪 Bundesliga", cornersAvg: 9.8, goalsAvg: 3.00, negBinR: 5.9, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "Bundesliga", teams: ["Borussia Dortmund", "FC Bayern München", "RB Leipzig", "VfB Stuttgart", "TSG Hoffenheim", "Bayer 04 Leverkusen", "SC Freiburg", "Eintracht Frankfurt", "FC Augsburg", "1. FSV Mainz 05", "1. FC Union Berlin", "Borussia M'gladbach", "Hamburger SV", "1. FC Köln", "SV Werder Bremen", "VfL Wolfsburg", "1. FC Heidenheim", "FC St. Pauli"] },
@@ -1278,7 +1311,6 @@
             resultado: { A: 0.918, B: -0.068 }
         };
 
-        const TEAM_ALIASES = {};
         const CORNER_POWER = {};
         const DIXON_COLES_RHO = {
             "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072,
@@ -1445,7 +1477,6 @@
             return 1 + (score - 1.5) * 0.15;
         }
 
-        // ====================== FUNCIONES DE MAPEO (AHORA IMPLEMENTADAS) ======================
         function normalizeTeamName(s) {
             return (s || '').toLowerCase()
                 .replace(/\b(fc|cf|ac|ssc|rcd|ud|cd|sc|rc|r\.|club|deportivo|calcio|as|ss|acf|fc|tsg|vfl|rkc|pec|nac|kv|kaa|krc|kvc|oh|rfc|estac|afc|if|bk|il|fk|sk|fc|1\.|fsv|sv|vfb|sc|rb|bsc|ksv|rsa)\b\.?/gi, '')
@@ -1463,11 +1494,19 @@
         }
 
         function findTeamInAPI(offlineName, apiTeams) {
+            const alias = TEAM_ALIASES[offlineName];
+            if (alias) {
+                const directMatch = apiTeams.find(t => (t.name || '') === alias || (t.short_name || '') === alias);
+                if (directMatch) return directMatch;
+            }
             const norm = normalizeTeamName(offlineName);
             let best = null, bestScore = 0;
             for (const t of apiTeams) {
-                const apiNorm = normalizeTeamName(t.name || t.short_name || '');
+                const apiName = t.name || t.short_name || '';
+                const apiNorm = normalizeTeamName(apiName);
                 if (apiNorm === norm) return t;
+                const reverseAlias = TEAM_ALIASES[apiName] || TEAM_ALIASES[apiNorm];
+                if (reverseAlias && normalizeTeamName(reverseAlias) === norm) return t;
                 const score = tokenOverlap(norm, apiNorm);
                 if (score > bestScore && score > 0.5) {
                     bestScore = score;
@@ -1477,16 +1516,8 @@
             return best || null;
         }
 
-        function isValidTeamName(name) {
-            return name && name.trim().length > 0;
-        }
-
-        function matchLeagueName(n, k) {
-            const liga = LIGAS[k];
-            if (!liga) return false;
-            const names = [liga.bsdName, ...(liga.bsdNameAlt || [])];
-            return names.some(alt => n.toLowerCase().includes(alt.toLowerCase()));
-        }
+        function isValidTeamName(name) { return name && name.trim().length > 0; }
+        function matchLeagueName(n, k) { return true; }
 
         function setApiStatus(s, t) {
             document.getElementById('api-dot').className = 'api-dot ' + s;
@@ -1750,7 +1781,6 @@
             return { top, top3, isAggressive };
         }
 
-        // ====================== FUNCIÓN PRINCIPAL DE CÁLCULO ======================
         document.getElementById('calc-btn').onclick = async () => {
             const hSel = document.getElementById('home-team'), aSel = document.getElementById('away-team');
             const home = hSel.value, away = aSel.value;
@@ -2062,7 +2092,6 @@
                     </div>`;
             }
 
-            // Botón guardar predicción
             const saveBtnHtml = `<button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>`;
             document.getElementById('recomendacion-container').insertAdjacentHTML('afterend', saveBtnHtml);
         }
@@ -2092,7 +2121,7 @@
                 ligaName: lastPrediction.ligaName,
                 pick: lastPrediction.top.label,
                 prob: lastPrediction.top.prob,
-                status: 'pending' // pending, won, lost
+                status: 'pending'
             };
             savedPredictions.unshift(entry);
             if (savedPredictions.length > MAX_SAVED) savedPredictions = savedPredictions.slice(0, MAX_SAVED);
@@ -2226,41 +2255,64 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN DE LA API ======================
+        // ====================== INICIALIZACIÓN DE LA API (con fix Mundial 2026) ======================
         async function initApp() {
             setApiStatus('live', '🔄 Conectando con BSD API...');
             try {
-                // Obtener ligas disponibles
-                const leaguesData = await bsdFetch('/leagues/?page_size=200');
-                const seasonsData = await bsdFetch('/seasons/?page_size=200');
+                const [leaguesData, seasonsData] = await Promise.all([
+                    bsdFetch('/leagues/?page_size=200'),
+                    bsdFetch('/seasons/?page_size=200')
+                ]);
 
-                // Mapear nombres a IDs
                 for (const [key, liga] of Object.entries(LIGAS)) {
-                    const apiLeague = leaguesData.results.find(l => {
-                        const apiName = (l.name || '').toLowerCase();
-                        return apiName.includes(liga.bsdName.toLowerCase()) ||
-                            (liga.bsdNameAlt && liga.bsdNameAlt.some(alt => apiName.includes(alt.toLowerCase())));
-                    });
-                    if (apiLeague) {
-                        const season = seasonsData.results.find(s => s.league_id === apiLeague.id);
-                        bsdLeagueMap[key] = { bsdId: apiLeague.id, seasonId: season?.id };
+                    const namesToTry = [liga.bsdName, ...(liga.bsdNameAlt || [])];
+                    let matchedLeague = null;
+
+                    for (const name of namesToTry) {
+                        matchedLeague = leaguesData.results.find(l => {
+                            const ln = (l.name || '').toLowerCase();
+                            return ln.includes(name.toLowerCase()) || name.toLowerCase().includes(ln);
+                        });
+                        if (matchedLeague) break;
+                    }
+
+                    if (matchedLeague) {
+                        const season = seasonsData.results.find(s => s.league_id === matchedLeague.id);
+                        bsdLeagueMap[key] = { bsdId: matchedLeague.id, seasonId: season?.id };
+                    }
+                }
+
+                // ⚠️ FIX ESPECÍFICO MUNDIAL 2026 (ID 27)
+                if (!bsdLeagueMap["WC26"]) {
+                    const worldCupLeague = leaguesData.results.find(l => l.id === 27);
+                    if (worldCupLeague) {
+                        let wcSeason = seasonsData.results.find(s => s.league_id === 27);
+                        if (!wcSeason) {
+                            try {
+                                const wcSeasons = await bsdFetch('/seasons/?league=27');
+                                wcSeason = wcSeasons.results?.[0];
+                            } catch (e) {}
+                        }
+                        bsdLeagueMap["WC26"] = {
+                            bsdId: 27,
+                            seasonId: wcSeason?.id || null
+                        };
                     }
                 }
 
                 apiAvailable = Object.keys(bsdLeagueMap).length > 0;
                 setApiStatus(apiAvailable ? 'live' : 'error',
-                    apiAvailable ? '🟢 API BSD conectada' : '🟡 Modo offline (API no disponible)');
+                    apiAvailable ? `🟢 API BSD conectada (${Object.keys(bsdLeagueMap).length} ligas)` : '🟡 Modo offline');
 
-                // Seleccionar primera liga por defecto
                 const firstKey = Object.keys(LIGAS)[0];
                 if (firstKey) selectLeague(firstKey);
+
             } catch (e) {
                 setApiStatus('error', '🔴 Error de conexión con BSD API');
                 console.error('Error initApp:', e);
             }
         }
 
-        // Al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
             renderLeaguePills();
             renderMarketToggles();
