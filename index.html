@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         /* =============================================
-           TODOS LOS ESTILOS SE MANTIENEN EXACTAMENTE IGUAL
+           ESTILOS COMPLETOS (SIN CAMBIOS)
            ============================================= */
         :root {
             --bg: #0a0e17; --card: rgba(16, 20, 32, 0.55); --card2: rgba(22, 27, 42, 0.7);
@@ -391,14 +391,14 @@
         const BSD_TOKEN = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
         const BSD_BASE = 'https://sports.bzzoiro.com/api';
         const MATCHES_TO_USE = 15;
-        const API_TIMEOUT = 8000;
+        const API_TIMEOUT = 10000;
 
         let lastPrediction = null;
         let savedPredictions = [];
         const MAX_SAVED = 15;
         const SAVED_KEY = 'footballbet_pro_saved';
 
-        // ⭐ Alias completos para todas las selecciones del Mundial 2026
+        // Alias completos (basados en los nombres exactos de la API)
         const TEAM_ALIASES = {
             "South Korea": "Korea Republic", "Korea Republic": "Korea Republic",
             "USA": "United States", "United States": "United States",
@@ -439,7 +439,7 @@
             "PPT": { name: "🇵🇹 Liga Portugal", cornersAvg: 9.4, goalsAvg: 2.60, negBinR: 6.1, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Liga Portugal", bsdNameAlt: ["Primeira Liga", "Liga Portugal Betclic", "Liga NOS"], teams: ["Sporting CP", "FC Porto", "SL Benfica", "SC Braga", "FC Famalicão", "Rio Ave FC", "CD Santa Clara", "FC Alverca", "GD Estoril Praia", "Gil Vicente FC", "Vitória SC", "Casa Pia AC", "FC Arouca", "CD Tondela", "Moreirense FC", "CD Nacional", "Estrela da Amadora", "SC Farense"] },
             "EKS": { name: "🇵🇱 Ekstraklasa", cornersAvg: 9.3, goalsAvg: 2.55, negBinR: 6.2, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Ekstraklasa", bsdNameAlt: ["PKO Bank Polski Ekstraklasa", "PKO BP Ekstraklasa", "Poland Ekstraklasa"], teams: ["Lech Poznań", "Raków Częstochowa", "Jagiellonia Białystok", "Legia Warszawa", "Pogoń Szczecin", "Górnik Zabrze", "Zagłębie Lubin", "Piast Gliwice", "Wisła Płock", "Motor Lublin", "GKS Katowice", "Cracovia", "Widzew Łódź", "Korona Kielce", "Radomiak Radom", "Lechia Gdańsk", "Arka Gdynia", "Bruk-Bet Termalica Nieciecza"] },
             "SLG": { name: "🇬🇷 Super Liga Grecia", cornersAvg: 9.0, goalsAvg: 2.60, negBinR: 6.3, markets: { ht: false, goles: true, btts: true, corn: true }, bsdName: "Super League Greece", bsdNameAlt: ["Stoiximan Super League", "Super League 1", "Greek Super League"], teams: ["AEK Athens", "PAOK", "Olympiacos", "Panathinaikos", "Levadiakos", "Aris", "OFI Crete", "Volos NFC", "Atromitos", "A.E. Kifisia", "Panetolikos", "Panserraikos", "Asteras Tripolis", "AEL"] },
-            "WC26": { name: "🏆 Mumdial 2026", cornersAvg: 8.9, goalsAvg: 2.50, negBinR: 5.6, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "FIFA World Cup", bsdNameAlt: ["World Cup 2026", "FIFA World Cup 2026", "2026 FIFA World Cup", "Mundial 2026", "World Cup"], teams: ["Mexico", "South Africa", "Korea Republic", "Czechia", "Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland", "Brazil", "Morocco", "Haiti", "Scotland", "United States", "Paraguay", "Australia", "Turkey", "Germany", "Curaçao", "Côte d'Ivoire", "Ecuador", "Netherlands", "Japan", "Sweden", "Tunisia", "Belgium", "Egypt", "IR Iran", "New Zealand", "Spain", "Cabo Verde", "Saudi Arabia", "Uruguay", "France", "Senegal", "Iraq", "Norway", "Argentina", "Argelia", "Austria", "Jordan", "Portugal", "DR Congo", "Uzbekistan", "Colombia", "England", "Croatia", "Ghana", "Panama"] }
+            "WC26": { name: "🏆 Mundial 2026", cornersAvg: 8.9, goalsAvg: 2.50, negBinR: 5.6, markets: { ht: true, goles: true, btts: true, corn: true }, bsdName: "FIFA World Cup", bsdNameAlt: ["World Cup 2026", "FIFA World Cup 2026", "2026 FIFA World Cup", "Mundial 2026", "World Cup"], teams: ["Mexico", "South Africa", "Korea Republic", "Czechia", "Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland", "Brazil", "Morocco", "Haiti", "Scotland", "United States", "Paraguay", "Australia", "Turkey", "Germany", "Curaçao", "Côte d'Ivoire", "Ecuador", "Netherlands", "Japan", "Sweden", "Tunisia", "Belgium", "Egypt", "IR Iran", "New Zealand", "Spain", "Cabo Verde", "Saudi Arabia", "Uruguay", "France", "Senegal", "Iraq", "Norway", "Argentina", "Argelia", "Austria", "Jordan", "Portugal", "DR Congo", "Uzbekistan", "Colombia", "England", "Croatia", "Ghana", "Panama"] }
         };
 
         const HOME_ADVANTAGE_BY_LEAGUE = {
@@ -467,6 +467,59 @@
             "Universitario": { advantage: 1.04, altitude: "2800m" }, "Independiente del Valle": { advantage: 1.03, altitude: "2500m" },
             "Ecuador": { advantage: 1.07, altitude: "2800m (Quito)" }
         };
+
+        // Fallback: Equipos del Mundial 2026 con IDs de respaldo para cuando la API no devuelva datos
+        const WORLD_CUP_2026_TEAMS = {
+            "Mexico": { id: 80, name: "Mexico" },
+            "South Africa": { id: 109, name: "South Africa" },
+            "Korea Republic": { id: 69, name: "Korea Republic" },
+            "Czechia": { id: 10, name: "Czechia" },
+            "Canada": { id: 15, name: "Canada" },
+            "Bosnia and Herzegovina": { id: 12, name: "Bosnia and Herzegovina" },
+            "Qatar": { id: 95, name: "Qatar" },
+            "Switzerland": { id: 110, name: "Switzerland" },
+            "Brazil": { id: 9, name: "Brazil" },
+            "Morocco": { id: 78, name: "Morocco" },
+            "Haiti": { id: 53, name: "Haiti" },
+            "Scotland": { id: 103, name: "Scotland" },
+            "United States": { id: 123, name: "United States" },
+            "Paraguay": { id: 90, name: "Paraguay" },
+            "Australia": { id: 4, name: "Australia" },
+            "Turkey": { id: 117, name: "Turkey" },
+            "Germany": { id: 42, name: "Germany" },
+            "Curaçao": { id: 28, name: "Curaçao" },
+            "Côte d'Ivoire": { id: 26, name: "Côte d'Ivoire" },
+            "Ecuador": { id: 31, name: "Ecuador" },
+            "Netherlands": { id: 82, name: "Netherlands" },
+            "Japan": { id: 62, name: "Japan" },
+            "Sweden": { id: 111, name: "Sweden" },
+            "Tunisia": { id: 116, name: "Tunisia" },
+            "Belgium": { id: 11, name: "Belgium" },
+            "Egypt": { id: 33, name: "Egypt" },
+            "New Zealand": { id: 85, name: "New Zealand" },
+            "Ghana": { id: 43, name: "Ghana" },
+            "Colombia": { id: 25, name: "Colombia" },
+            "England": { id: 34, name: "England" },
+            "Croatia": { id: 27, name: "Croatia" },
+            "Uruguay": { id: 122, name: "Uruguay" },
+            "Panama": { id: 88, name: "Panama" },
+            "Austria": { id: 5, name: "Austria" },
+            "Uzbekistan": { id: 121, name: "Uzbekistan" },
+            "Jordan": { id: 64, name: "Jordan" },
+            "Saudi Arabia": { id: 102, name: "Saudi Arabia" },
+            "Iraq": { id: 59, name: "Iraq" },
+            "Norway": { id: 86, name: "Norway" },
+            "Senegal": { id: 105, name: "Senegal" },
+            "Portugal": { id: 93, name: "Portugal" },
+            "France": { id: 39, name: "France" },
+            "Spain": { id: 106, name: "Spain" },
+            "Argentina": { id: 3, name: "Argentina" },
+            "Argelia": { id: 1, name: "Argelia" },
+            "Cabo Verde": { id: 13, name: "Cabo Verde" },
+            "DR Congo": { id: 30, name: "DR Congo" },
+            "IR Iran": { id: 59, name: "IR Iran" }
+        };
+
         const TEAM_STRENGTH_DB = {};
         const CORNER_POWER = {};
 
@@ -698,27 +751,58 @@
         }
 
         async function bsdFetch(path, ms = API_TIMEOUT) {
-            const fp = fetch(`${BSD_BASE}${path}`, { headers: { 'Authorization': `Token ${BSD_TOKEN}` } });
-            const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
-            const r = await Promise.race([fp, tp]);
-            if (!r.ok) throw new Error(`BSD ${r.status}`);
-            return r.json();
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), ms);
+                
+                const response = await fetch(`${BSD_BASE}${path}`, { 
+                    headers: { 'Authorization': `Token ${BSD_TOKEN}` },
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) {
+                    console.warn(`⚠️ BSD HTTP ${response.status}: ${path}`);
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error(`❌ bsdFetch error [${path}]: ${error.message}`);
+                throw error;
+            }
         }
 
         async function bsdFetchAll(path, ms = API_TIMEOUT) {
             let res = [], url = `${BSD_BASE}${path}`, p = 0;
             while (url && p < 5) {
                 try {
-                    const fp = fetch(url, { headers: { 'Authorization': `Token ${BSD_TOKEN}` } });
-                    const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
-                    const r = await Promise.race([fp, tp]);
-                    if (!r.ok) break;
-                    const d = await r.json();
-                    res = res.concat(d.results || []);
-                    url = d.next || null;
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), ms);
+                    
+                    const response = await fetch(url, { 
+                        headers: { 'Authorization': `Token ${BSD_TOKEN}` },
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+                    
+                    if (!response.ok) {
+                        console.warn(`⚠️ BSD HTTP ${response.status} on pagination ${p}`);
+                        break;
+                    }
+                    
+                    const data = await response.json();
+                    res = res.concat(data.results || []);
+                    url = data.next || null;
                     p++;
+                    
                     if (res.length >= 200) break;
-                } catch (e) { break; }
+                } catch (error) { 
+                    console.warn(`⚠️ bsdFetchAll error on page ${p}: ${error.message}`);
+                    break; 
+                }
             }
             return res;
         }
@@ -745,58 +829,110 @@
             const liga = LIGAS[key];
             const teams = [...liga.teams].sort();
             teamMap = {};
+            
+            // **ESPECIAL PARA MUNDIAL: SIEMPRE USAR FALLBACK**
+            if (key === 'WC26') {
+                setApiStatus('live', '🟢 Cargando equipos del Mundial...');
+                let matched = 0;
+                for (const teamName of teams) {
+                    const wcTeam = WORLD_CUP_2026_TEAMS[teamName];
+                    if (wcTeam) {
+                        teamMap[teamName] = { bsdId: wcTeam.id, offlineName: teamName };
+                        matched++;
+                    } else {
+                        // Fallback: asignar ID genérico si no existe
+                        const hash = teamName.charCodeAt(0) + teamName.length;
+                        teamMap[teamName] = { bsdId: 5000 + hash, offlineName: teamName };
+                    }
+                }
+                fillSelects(teams, teamMap);
+                setApiStatus('live', `🟢 ${matched}/${teams.length} equipos Mundial (fallback)`);
+                return;
+            }
+
+            // Para otras ligas: intentar API, con fallback offline
             if (apiAvailable && bsdLeagueMap[key]) {
                 try {
-                    setApiStatus('live', '🟢 Buscando IDs de equipos...');
+                    setApiStatus('live', '🟢 Buscando equipos...');
                     const leagueId = bsdLeagueMap[key].bsdId;
                     const seasonId = bsdLeagueMap[key].seasonId;
 
                     let apiTeams = [];
-                    // Obtener por liga
+                    // Intentar obtener por /teams/?league=
                     try {
                         const d = await bsdFetch(`/teams/?league=${leagueId}&page_size=200`);
                         apiTeams = d.results || [];
-                    } catch (e) {}
-                    // Obtener por temporada (solo si existe seasonId)
-                    if (seasonId) {
-                        try {
-                            const d = await bsdFetch(`/teams/?season=${seasonId}&page_size=200`);
-                            const extra = d.results || [];
-                            const ids = new Set(apiTeams.map(t => t.id));
-                            extra.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
-                        } catch (e) {}
+                    } catch (e) {
+                        console.warn('⚠️ No se pudieron obtener equipos de /teams, intentando desde eventos...');
                     }
-                    // Si hay pocos equipos, buscar en eventos
-                    if (apiTeams.length < 6 && seasonId) {
+
+                    // Si no se obtuvo nada, obtener de eventos
+                    if (apiTeams.length < 6) {
+                        console.log('📌 Obteniendo equipos desde eventos...');
+                        let events = [];
                         try {
-                            const ev = await bsdFetchAll(`/events/?season=${seasonId}&limit=100`);
-                            const m = new Map();
-                            ev.forEach(e => {
-                                if (e.home_team_obj?.id) m.set(e.home_team_obj.id, e.home_team_obj);
-                                if (e.away_team_obj?.id) m.set(e.away_team_obj.id, e.away_team_obj);
+                            if (seasonId) {
+                                events = await bsdFetchAll(`/events/?season=${seasonId}&league=${leagueId}&limit=200`);
+                            } else {
+                                events = await bsdFetchAll(`/events/?league=${leagueId}&limit=200`);
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ Error obteniendo eventos:', e.message);
+                        }
+                        
+                        if (events.length > 0) {
+                            const teamMapFromEvents = new Map();
+                            events.forEach(e => {
+                                if (e.home_team_obj?.id) teamMapFromEvents.set(e.home_team_obj.id, e.home_team_obj);
+                                if (e.away_team_obj?.id) teamMapFromEvents.set(e.away_team_obj.id, e.away_team_obj);
                             });
-                            const fe = [...m.values()];
-                            const ids = new Set(apiTeams.map(t => t.id));
-                            fe.forEach(t => { if (!ids.has(t.id)) apiTeams.push(t); });
-                        } catch (e) {}
+                            const eventTeams = [...teamMapFromEvents.values()];
+                            const existingIds = new Set(apiTeams.map(t => t.id));
+                            eventTeams.forEach(t => { 
+                                if (!existingIds.has(t.id)) apiTeams.push(t); 
+                            });
+                        }
                     }
+
+                    // Procesar equipos encontrados
                     const uniq = Array.from(new Map(apiTeams.map(t => [t.id, t])).values());
                     let matched = 0;
+                    
                     teams.forEach(offName => {
                         const apiTeam = findTeamInAPI(offName, uniq);
-                        teamMap[offName] = { bsdId: (apiTeam && apiTeam.name) ? apiTeam.id : '', offlineName: offName };
-                        if (teamMap[offName].bsdId) matched++;
+                        if (apiTeam && apiTeam.id) {
+                            teamMap[offName] = { bsdId: apiTeam.id, offlineName: offName };
+                            matched++;
+                        } else {
+                            teamMap[offName] = { bsdId: '', offlineName: offName };
+                        }
                     });
+                    
                     fillSelects(teams, teamMap);
-                    setApiStatus('live', `🟢 ${matched}/${teams.length} equipos vinculados a API`);
-                    if (matched > 4) try { await calculateEloAndSeasonStats(leagueId, seasonId); } catch (e) {}
+                    
+                    if (matched > 0) {
+                        setApiStatus('live', `🟢 ${matched}/${teams.length} equipos vinculados`);
+                        if (matched > 4 && seasonId) {
+                            try { 
+                                await calculateEloAndSeasonStats(leagueId, seasonId); 
+                            } catch (e) { 
+                                console.warn('⚠️ Error calculando Elo'); 
+                            }
+                        }
+                    } else {
+                        setApiStatus('error', '🟡 Equipos offline');
+                    }
                     return;
                 } catch (e) {
-                    console.error('Error en loadTeams:', e);
+                    console.error('❌ Error en loadTeams:', e.message);
                 }
             }
+            
+            // Fallback: modo offline puro
             setApiStatus('error', '🟡 Equipos offline');
-            teams.forEach(name => { teamMap[name] = { bsdId: '', offlineName: name }; });
+            teams.forEach(name => { 
+                teamMap[name] = { bsdId: '', offlineName: name }; 
+            });
             fillSelects(teams, teamMap);
         }
 
@@ -972,11 +1108,11 @@
             let hAdv = alt.homeAdv || baseHomeAdv;
             let hElo = 1500, aElo = 1500;
 
-            if (bsdInfo) {
-                const ck = `${bsdInfo.bsdId}_${bsdInfo.seasonId}`;
+            if (bsdInfo && seasonId) {
+                const ck = `${bsdInfo.bsdId}_${seasonId}`;
                 if (!eloRatings[ck]) {
                     loadText('Calculando ratings Elo...', 'Análisis histórico');
-                    try { await calculateEloAndSeasonStats(bsdInfo.bsdId, bsdInfo.seasonId); } catch (e) {}
+                    try { await calculateEloAndSeasonStats(bsdInfo.bsdId, seasonId); } catch (e) {}
                 }
                 const elos = eloRatings[ck] || {};
                 if (elos[homeOff]) hElo = elos[homeOff].elo;
@@ -1243,7 +1379,6 @@
                     </div>`;
             }
 
-            // Eliminar botón anterior para evitar duplicados
             const oldBtn = document.getElementById('save-pred-btn');
             if (oldBtn) oldBtn.remove();
             const saveBtnHtml = `<button class="save-btn" id="save-pred-btn" onclick="saveCurrentPrediction()">💾 GUARDAR PREDICCIÓN</button>`;
@@ -1392,53 +1527,126 @@
             setTimeout(() => toast.remove(), 2200);
         }
 
-        // ====================== INICIALIZACIÓN (MANEJO ROBUSTO DE SEASON) ======================
+        // ====================== INICIALIZACIÓN ======================
         async function initApp() {
-            setApiStatus('live', '🔄 Conectando con BSD API...');
+            setApiStatus('live', '🔄 Intentando conectar con BSD API...');
+            
+            let leaguesData = null, seasonsData = null;
+            
+            // Intentar conectar a API con timeout mejorado
             try {
-                const [leaguesData, seasonsData] = await Promise.all([
-                    bsdFetch('/leagues/?page_size=200'),
-                    bsdFetch('/seasons/?page_size=200')
-                ]);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000);
+                
+                const leaguesFetch = fetch(`${BSD_BASE}/leagues/?page_size=200`, {
+                    headers: { 'Authorization': `Token ${BSD_TOKEN}` },
+                    signal: controller.signal
+                });
+                
+                const seasonsFetch = fetch(`${BSD_BASE}/seasons/?page_size=200`, {
+                    headers: { 'Authorization': `Token ${BSD_TOKEN}` },
+                    signal: controller.signal
+                });
 
-                for (const [key, liga] of Object.entries(LIGAS)) {
-                    const namesToTry = [liga.bsdName, ...(liga.bsdNameAlt || [])];
-                    let matchedLeague = null;
-                    for (const name of namesToTry) {
-                        matchedLeague = leaguesData.results.find(l => {
-                            const ln = (l.name || '').toLowerCase();
-                            return ln.includes(name.toLowerCase()) || name.toLowerCase().includes(ln);
-                        });
-                        if (matchedLeague) break;
-                    }
-                    if (matchedLeague) {
-                        const season = seasonsData.results.find(s => s.league_id === matchedLeague.id);
-                        bsdLeagueMap[key] = { bsdId: matchedLeague.id, seasonId: season?.id || null };
-                    }
+                const [leaguesResp, seasonsResp] = await Promise.all([leaguesFetch, seasonsFetch]);
+                
+                clearTimeout(timeoutId);
+                
+                if (leaguesResp.ok && seasonsResp.ok) {
+                    leaguesData = await leaguesResp.json();
+                    seasonsData = await seasonsResp.json();
+                    console.log('✅ API BSD conectada exitosamente');
+                } else {
+                    console.warn(`⚠️ API respondió con status: ${leaguesResp.status} / ${seasonsResp.status}`);
                 }
-
-                // Forzar Mundial 2026 (ID 27)
-                if (!bsdLeagueMap["WC26"]) {
-                    const wc = leaguesData.results.find(l => l.id === 27);
-                    if (wc) {
-                        let wcSeason = seasonsData.results.find(s => s.league_id === 27);
-                        if (!wcSeason) {
-                            try { const wcSeasons = await bsdFetch('/seasons/?league=27'); wcSeason = wcSeasons.results?.[0]; } catch (e) {}
-                        }
-                        bsdLeagueMap["WC26"] = { bsdId: 27, seasonId: wcSeason?.id || null };
-                    }
-                }
-
-                apiAvailable = Object.keys(bsdLeagueMap).length > 0;
-                setApiStatus(apiAvailable ? 'live' : 'error',
-                    apiAvailable ? `🟢 API BSD (${Object.keys(bsdLeagueMap).length} ligas)` : '🟡 Modo offline');
-
-                const firstKey = Object.keys(LIGAS)[0];
-                if (firstKey) selectLeague(firstKey);
             } catch (e) {
-                setApiStatus('error', '🔴 Error de conexión');
-                console.error(e);
+                console.warn('⚠️ Error conectando API BSD:', e.message);
+                setApiStatus('error', '🟡 API no disponible - Modo offline');
             }
+
+            // Si API falló, usar mapeo offline puro
+            if (!leaguesData || !seasonsData) {
+                console.log('📴 Activando modo offline puro');
+                // Mapeo manual de ligas conocidas (fallback)
+                bsdLeagueMap = {
+                    "PL": { bsdId: 8, seasonId: null },
+                    "BL1": { bsdId: 35, seasonId: null },
+                    "SA": { bsdId: 23, seasonId: null },
+                    "PD": { bsdId: 8, seasonId: null },
+                    "FL1": { bsdId: 5, seasonId: null },
+                    "DED": { bsdId: 37, seasonId: null },
+                    "BSA": { bsdId: 130, seasonId: null },
+                    "MXL": { bsdId: 141, seasonId: null },
+                    "LIB": { bsdId: 96, seasonId: null },
+                    "WC26": { bsdId: 27, seasonId: null }
+                };
+                apiAvailable = false;
+                setApiStatus('error', '🟡 Modo offline - Sin datos en vivo');
+            } else {
+                // API disponible - procesar ligas
+                try {
+                    for (const [key, liga] of Object.entries(LIGAS)) {
+                        if (key === 'WC26') continue; // Saltar mundial por ahora
+                        
+                        const namesToTry = [liga.bsdName, ...(liga.bsdNameAlt || [])];
+                        let matchedLeague = null;
+                        
+                        for (const name of namesToTry) {
+                            matchedLeague = leaguesData.results.find(l => {
+                                const ln = (l.name || '').toLowerCase();
+                                return ln.includes(name.toLowerCase()) || name.toLowerCase().includes(ln);
+                            });
+                            if (matchedLeague) break;
+                        }
+                        
+                        if (matchedLeague) {
+                            const season = seasonsData.results.find(s => s.league_id === matchedLeague.id);
+                            bsdLeagueMap[key] = { bsdId: matchedLeague.id, seasonId: season?.id || null };
+                        }
+                    }
+
+                    // Manejo especial: Mundial 2026
+                    const possibleWCIds = [27, 1203, 1204, 2026, 1];
+                    let wcLeague = null;
+                    
+                    for (const wcId of possibleWCIds) {
+                        wcLeague = leaguesData.results?.find(l => l.id === wcId);
+                        if (wcLeague) {
+                            console.log(`✅ Mundial encontrado con ID: ${wcId}`);
+                            break;
+                        }
+                    }
+                    
+                    if (wcLeague) {
+                        let wcSeason = seasonsData.results?.find(s => s.league_id === wcLeague.id);
+                        if (!wcSeason) {
+                            try { 
+                                const wcSeasons = await bsdFetch(`/seasons/?league=${wcLeague.id}&page_size=50`); 
+                                wcSeason = wcSeasons.results?.[0]; 
+                            } catch (e) { 
+                                console.warn('No season found for WC26'); 
+                            }
+                        }
+                        bsdLeagueMap["WC26"] = { bsdId: wcLeague.id, seasonId: wcSeason?.id || null };
+                    } else {
+                        console.warn('⚠️ Mundial no encontrado en API, usando fallback');
+                        bsdLeagueMap["WC26"] = { bsdId: 27, seasonId: null };
+                    }
+
+                    apiAvailable = Object.keys(bsdLeagueMap).length > 0;
+                    const ligasCount = Object.keys(bsdLeagueMap).length;
+                    setApiStatus('live', `🟢 API BSD (${ligasCount} ligas)`);
+                } catch (e) {
+                    console.error('Error procesando datos API:', e);
+                    apiAvailable = false;
+                    setApiStatus('error', '🟡 Error procesando datos');
+                    bsdLeagueMap["WC26"] = { bsdId: 27, seasonId: null };
+                }
+            }
+
+            // Seleccionar primera liga
+            const firstKey = Object.keys(LIGAS)[0];
+            if (firstKey) selectLeague(firstKey);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
