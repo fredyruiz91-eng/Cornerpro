@@ -351,9 +351,8 @@
             const lH = +(baseGoals * hStr.atk * aStr.def * hAdv).toFixed(2);
             const lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
             const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
-            // Cálculo REALISTA de córneres: media base por liga ajustada por fuerza ofensiva
             const lCorn = +(liga.cornAvg * (hStr.atk + aStr.atk) / 2).toFixed(2);
-            const cornR = liga.cornR || 18; // parámetro de dispersión calibrado
+            const cornR = liga.cornR || 18;
 
             document.getElementById('results').classList.remove('hidden');
             document.getElementById('loading-indicator').classList.remove('hidden');
@@ -378,7 +377,6 @@
                     </div>`;
 
                 let html = '';
-                // Goles
                 if (activeMarkets.goles) {
                     const l = lH + lA;
                     const g15 = plattCalibrate(poissonOver(l, 1.5), 'goals15'), g25 = plattCalibrate(poissonOver(l, 2.5), 'goals25');
@@ -386,20 +384,17 @@
                         <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>
                         <div class="market-card ${cardClassFor(g25)}"><div class="line-label">+2.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g25}" style="background:${colorFor(g25)};"></div></div></div><div class="pct-label" style="color:${colorFor(g25)}">${g25.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +2.5" data-pick="Over" onclick="guardarApuesta('Goles +2.5','Over',${g25.toFixed(0)})">💾 Guardar</button></div>`;
                 }
-                // HT
                 if (activeMarkets.ht) {
                     const g05 = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05'), g15 = plattCalibrate(poissonOver(lHT, 1.5), 'goals_ht15');
                     html += `<div class="section-header"><span class="section-title">⏱ 1er TIEMPO</span><span class="section-lambda">λ <span>${lHT}</span></span></div>
                         <div class="market-card ${cardClassFor(g05)}"><div class="line-label">+0.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g05}" style="background:${colorFor(g05)};"></div></div></div><div class="pct-label" style="color:${colorFor(g05)}">${g05.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +0.5" data-pick="Over" onclick="guardarApuesta('HT +0.5','Over',${g05.toFixed(0)})">💾 Guardar</button></div>
                         <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +1.5" data-pick="Over" onclick="guardarApuesta('HT +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>`;
                 }
-                // BTTS
                 if (activeMarkets.btts) {
                     const btts = plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
                     html += `<div class="section-header"><span class="section-title">🤝 AMBOS MARCAN</span></div>
                         <div class="market-card ${cardClassFor(btts)}"><div class="line-label">BTTS</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${btts}" style="background:${colorFor(btts)};"></div></div></div><div class="pct-label" style="color:${colorFor(btts)}">${btts.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="BTTS" data-pick="Sí" onclick="guardarApuesta('BTTS','Sí',${btts.toFixed(0)})">💾 Guardar</button></div>`;
                 }
-                // Córneres REALISTAS
                 if (activeMarkets.corn) {
                     html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES TOTALES</span><span class="section-lambda">μ <span>${lCorn.toFixed(1)}</span> (r=${cornR})</span></div>`;
                     [7.5, 8.5, 9.5, 10.5].forEach(line => {
