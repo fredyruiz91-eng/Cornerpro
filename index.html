@@ -104,6 +104,9 @@
             cursor: pointer; transition: all 0.25s ease;
         }
         .mkt-toggle.on { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.5); color: var(--green); }
+        .mkt-toggle.unavailable {
+            opacity: 0.4; pointer-events: none; text-decoration: line-through;
+        }
         .calc-btn {
             width: 100%; padding: 16px; border-radius: var(--radius-md); border: none;
             background: linear-gradient(135deg, var(--accent), #ff6b7a);
@@ -249,7 +252,6 @@
             "EKS": { "Legia Warszawa": { atk: 1.24, def: 0.90 }, "Raków Częstochowa": { atk: 1.20, def: 0.92 }, "Jagiellonia Białystok": { atk: 1.16, def: 0.95 }, "Lech Poznań": { atk: 1.12, def: 0.98 }, "Pogoń Szczecin": { atk: 1.08, def: 1.01 }, "Górnik Zabrze": { atk: 1.04, def: 1.04 }, "Zagłębie Lubin": { atk: 1.00, def: 1.07 }, "Piast Gliwice": { atk: 0.96, def: 1.10 }, "Wisła Płock": { atk: 0.92, def: 1.13 }, "Motor Lublin": { atk: 0.88, def: 1.16 }, "GKS Katowice": { atk: 0.84, def: 1.19 }, "Cracovia": { atk: 0.80, def: 1.22 }, "Widzew Łódź": { atk: 0.76, def: 1.25 }, "Korona Kielce": { atk: 0.72, def: 1.28 }, "Radomiak Radom": { atk: 0.68, def: 1.31 }, "Lechia Gdańsk": { atk: 0.64, def: 1.34 }, "Arka Gdynia": { atk: 0.60, def: 1.37 }, "Bruk-Bet Termalica Nieciecza": { atk: 0.56, def: 1.40 } },
             "SLG": { "AEK Athens": { atk: 1.24, def: 0.90 }, "PAOK": { atk: 1.20, def: 0.92 }, "Olympiacos": { atk: 1.18, def: 0.94 }, "Panathinaikos": { atk: 1.14, def: 0.96 }, "Levadiakos": { atk: 1.08, def: 1.00 }, "Aris": { atk: 1.04, def: 1.03 }, "OFI Crete": { atk: 1.00, def: 1.06 }, "Volos NFC": { atk: 0.96, def: 1.09 }, "Atromitos": { atk: 0.92, def: 1.12 }, "A.E. Kifisia": { atk: 0.88, def: 1.15 }, "Panetolikos": { atk: 0.84, def: 1.18 }, "Panserraikos": { atk: 0.80, def: 1.21 }, "Asteras Tripolis": { atk: 0.76, def: 1.24 }, "AEL": { atk: 0.72, def: 1.27 }, "Apollon Smyrnis": { atk: 0.68, def: 1.30 }, "PAS Giannina": { atk: 0.64, def: 1.33 }, "Kallithea": { atk: 0.60, def: 1.36 } },
             "WC26": {
-                // UEFA
                 "France": { atk: 1.32, def: 0.86 }, "Argentina": { atk: 1.28, def: 0.88 }, "Germany": { atk: 1.26, def: 0.90 },
                 "Brazil": { atk: 1.24, def: 0.92 }, "Spain": { atk: 1.20, def: 0.94 }, "England": { atk: 1.18, def: 0.96 },
                 "Netherlands": { atk: 1.16, def: 0.98 }, "Belgium": { atk: 1.12, def: 1.00 }, "Portugal": { atk: 1.10, def: 1.02 },
@@ -258,23 +260,18 @@
                 "Austria": { atk: 0.96, def: 1.16 }, "Denmark": { atk: 0.94, def: 1.18 }, "Sweden": { atk: 0.92, def: 1.20 },
                 "Czech Republic": { atk: 0.90, def: 1.22 }, "Poland": { atk: 0.88, def: 1.24 }, "Turkey": { atk: 0.86, def: 1.26 },
                 "Norway": { atk: 0.84, def: 1.28 },
-                // CONMEBOL (todos los 10)
                 "Ecuador": { atk: 0.82, def: 1.30 }, "Peru": { atk: 0.80, def: 1.32 },
                 "Chile": { atk: 0.78, def: 1.34 }, "Paraguay": { atk: 0.80, def: 1.31 },
                 "Bolivia": { atk: 0.74, def: 1.36 }, "Venezuela": { atk: 0.76, def: 1.33 },
-                // AFC
                 "Japan": { atk: 1.02, def: 1.00 }, "South Korea": { atk: 0.95, def: 1.05 }, "Australia": { atk: 0.90, def: 1.08 },
                 "Iran": { atk: 0.88, def: 1.10 }, "Saudi Arabia": { atk: 0.85, def: 1.12 }, "Qatar": { atk: 0.82, def: 1.14 },
                 "Iraq": { atk: 0.78, def: 1.18 },
-                // CAF
                 "Egypt": { atk: 0.86, def: 1.12 }, "Senegal": { atk: 0.84, def: 1.14 }, "Ghana": { atk: 0.80, def: 1.16 },
                 "Morocco": { atk: 0.88, def: 1.08 }, "Tunisia": { atk: 0.76, def: 1.18 }, "Cameroon": { atk: 0.78, def: 1.16 },
                 "Algeria": { atk: 0.82, def: 1.12 }, "Nigeria": { atk: 0.80, def: 1.14 }, "Ivory Coast": { atk: 0.78, def: 1.16 },
                 "South Africa": { atk: 0.74, def: 1.20 },
-                // CONCACAF
                 "United States": { atk: 0.92, def: 1.06 }, "Canada": { atk: 0.88, def: 1.10 },
                 "Costa Rica": { atk: 0.80, def: 1.14 }, "Jamaica": { atk: 0.78, def: 1.16 }, "Honduras": { atk: 0.74, def: 1.20 },
-                // OFC
                 "New Zealand": { atk: 0.70, def: 1.24 }
             }
         };
@@ -345,26 +342,48 @@
         // ========== INTERFAZ ==========
         function renderLeaguePills() {
             const c = document.getElementById('league-pills'); c.innerHTML = '';
-            for (const [k, v] of Object.entries(LIGAS)) { const b = document.createElement('button'); b.className = 'league-pill'; b.textContent = v.name; b.onclick = () => selectLeague(k); c.appendChild(b); }
+            for (const [k, v] of Object.entries(LIGAS)) {
+                const b = document.createElement('button');
+                b.className = 'league-pill';
+                b.textContent = v.name;
+                b.setAttribute('data-key', k);
+                b.onclick = (e) => selectLeague(k, e);
+                c.appendChild(b);
+            }
         }
+
         function renderMarketToggles() {
             const c = document.getElementById('market-toggles'); c.innerHTML = '';
             const liga = currentLeagueKey ? LIGAS[currentLeagueKey] : null;
             [{ key: 'goles', label: '⚽ Goles' }, { key: 'ht', label: '⏱ HT' }, { key: 'btts', label: '🤝 BTTS' }, { key: 'corn', label: '⬡ Corn' }].forEach(x => {
                 const b = document.createElement('button'); b.className = 'mkt-toggle'; b.textContent = x.label;
-                if (!liga || liga.markets[x.key]) { if (activeMarkets[x.key]) b.classList.add('on'); b.onclick = () => { activeMarkets[x.key] = !activeMarkets[x.key]; b.classList.toggle('on'); }; } else { b.classList.add('unavailable'); activeMarkets[x.key] = false; }
+                if (!liga || liga.markets[x.key]) {
+                    if (activeMarkets[x.key]) b.classList.add('on');
+                    b.onclick = () => { activeMarkets[x.key] = !activeMarkets[x.key]; b.classList.toggle('on'); };
+                } else {
+                    b.classList.add('unavailable');
+                    activeMarkets[x.key] = false;
+                }
                 c.appendChild(b);
             });
         }
-        function selectLeague(key) {
+
+        function selectLeague(key, e) {
             if (currentLeagueKey === key) return;
             currentLeagueKey = key;
             document.querySelectorAll('.league-pill').forEach(p => p.classList.remove('active'));
-            event.target.classList.add('active');
+            if (e && e.target) {
+                e.target.classList.add('active');
+            } else {
+                const pill = document.querySelector(`.league-pill[data-key="${key}"]`);
+                if (pill) pill.classList.add('active');
+            }
             const liga = LIGAS[key];
             activeMarkets = { goles: liga.markets.goles, ht: liga.markets.ht, btts: liga.markets.btts, corn: liga.markets.corn };
-            renderMarketToggles(); loadTeams(key);
+            renderMarketToggles();
+            loadTeams(key);
         }
+
         function loadTeams(key) {
             const h = document.getElementById('home-team'), a = document.getElementById('away-team');
             const teams = Object.keys(TEAM_STRENGTH_DB[key] || {}).sort();
@@ -464,7 +483,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderLeaguePills();
             renderMarketToggles();
-            document.querySelector('.league-pill')?.click();
+            const firstPill = document.querySelector('.league-pill');
+            if (firstPill) {
+                const key = firstPill.getAttribute('data-key');
+                selectLeague(key, null);
+            }
             renderSavedBets();
         });
     </script>
