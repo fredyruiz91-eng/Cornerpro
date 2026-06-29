@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.7 REALISTA</title>
+    <title>Data.Predict · PRO v2.7 COMPLETO</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -173,7 +173,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
-            <div class="badge">⚡ v2.7 REALISTA</div>
+            <div class="badge">⚡ v2.7 COMPLETO</div>
         </div>
         <div class="card">
             <label>Liga / Competencia</label>
@@ -199,7 +199,7 @@
     </div>
 
     <script>
-        // ========== BASE DE DATOS MEJORADA CON CÓRNERES REALISTAS ==========
+        // ========== BASE DE DATOS COMPLETA ==========
         const LIGAS = {
             "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", goalsAvg: 2.85, cornAvg: 10.5, cornR: 20, markets: { goles: true, ht: true, btts: true, corn: true } },
             "BL1": { name: "🇩🇪 Bundesliga", goalsAvg: 3.00, cornAvg: 10.0, cornR: 18, markets: { goles: true, ht: true, btts: true, corn: true } },
@@ -217,11 +217,10 @@
             "PPT": { name: "🇵🇹 Liga Portugal", goalsAvg: 2.60, cornAvg: 9.4, cornR: 17, markets: { goles: true, ht: false, btts: true, corn: true } },
             "EKS": { name: "🇵🇱 Ekstraklasa", goalsAvg: 2.55, cornAvg: 9.5, cornR: 17, markets: { goles: true, ht: false, btts: true, corn: true } },
             "SLG": { name: "🇬🇷 Super Liga Grecia", goalsAvg: 2.60, cornAvg: 9.0, cornR: 16, markets: { goles: true, ht: false, btts: true, corn: true } },
-            "WC26": { name: "🏆 Mundial 2026", goalsAvg: 2.50, cornAvg: 8.5, cornR: 15, markets: { goles: true, ht: true, btts: true, corn: true } }
+            "WC26": { name: "🏆 Mundial 2026", goalsAvg: 2.50, cornAvg: 9.0, cornR: 15, markets: { goles: true, ht: true, btts: true, corn: true } }
         };
 
         const TEAM_STRENGTH_DB = {
-            // ... (todas las demás ligas sin cambios)
             "PL": { "Arsenal FC": { atk: 1.32, def: 0.88 }, "Manchester City FC": { atk: 1.35, def: 0.82 }, "Liverpool FC": { atk: 1.28, def: 0.85 }, "Manchester United FC": { atk: 1.15, def: 0.92 }, "Chelsea FC": { atk: 1.18, def: 0.89 }, "Tottenham Hotspur FC": { atk: 1.22, def: 0.91 }, "Newcastle United FC": { atk: 1.12, def: 0.95 }, "Aston Villa FC": { atk: 1.10, def: 0.96 }, "Brighton & Hove Albion FC": { atk: 1.08, def: 0.98 }, "Brentford FC": { atk: 1.06, def: 0.99 }, "Fulham FC": { atk: 1.04, def: 1.02 }, "West Ham United FC": { atk: 0.98, def: 1.05 }, "Crystal Palace FC": { atk: 0.96, def: 1.06 }, "Everton FC": { atk: 0.94, def: 1.08 }, "Leicester City FC": { atk: 0.92, def: 1.09 }, "Wolverhampton Wanderers FC": { atk: 0.91, def: 1.10 }, "Nottingham Forest FC": { atk: 0.89, def: 1.12 }, "Ipswich Town FC": { atk: 0.87, def: 1.13 }, "Southampton FC": { atk: 0.85, def: 1.14 }, "Leeds United": { atk: 0.90, def: 1.11 } },
             "BL1": { "FC Bayern München": { atk: 1.38, def: 0.80 }, "Borussia Dortmund": { atk: 1.26, def: 0.88 }, "RB Leipzig": { atk: 1.20, def: 0.92 }, "VfB Stuttgart": { atk: 1.18, def: 0.94 }, "Bayer 04 Leverkusen": { atk: 1.15, def: 0.96 }, "TSG Hoffenheim": { atk: 1.08, def: 1.00 }, "SC Freiburg": { atk: 1.05, def: 1.02 }, "Eintracht Frankfurt": { atk: 1.02, def: 1.04 }, "FC Augsburg": { atk: 0.96, def: 1.08 }, "1. FSV Mainz 05": { atk: 0.94, def: 1.10 }, "1. FC Union Berlin": { atk: 0.91, def: 1.12 }, "Borussia M'gladbach": { atk: 0.89, def: 1.14 }, "Hamburger SV": { atk: 0.87, def: 1.15 }, "1. FC Köln": { atk: 0.85, def: 1.16 }, "SV Werder Bremen": { atk: 0.83, def: 1.17 }, "VfL Wolfsburg": { atk: 0.95, def: 1.09 }, "1. FC Heidenheim": { atk: 0.88, def: 1.13 }, "FC St. Pauli": { atk: 0.86, def: 1.15 } },
             "SA": { "Inter Milano": { atk: 1.32, def: 0.86 }, "AC Milan": { atk: 1.28, def: 0.88 }, "Juventus FC": { atk: 1.22, def: 0.90 }, "SS Lazio": { atk: 1.18, def: 0.92 }, "AS Roma": { atk: 1.15, def: 0.94 }, "ACF Fiorentina": { atk: 1.12, def: 0.96 }, "Atalanta BC": { atk: 1.10, def: 0.98 }, "SSC Napoli": { atk: 1.08, def: 1.00 }, "AC Monza": { atk: 1.02, def: 1.04 }, "Torino FC": { atk: 0.99, def: 1.06 }, "Bologna FC 1909": { atk: 0.97, def: 1.07 }, "Hellas Verona FC": { atk: 0.94, def: 1.09 }, "Udinese Calcio": { atk: 0.92, def: 1.11 }, "Como 1907": { atk: 0.90, def: 1.12 }, "Empoli FC": { atk: 0.88, def: 1.13 }, "Genoa CFC": { atk: 0.86, def: 1.14 }, "Cagliari Calcio": { atk: 0.84, def: 1.15 }, "US Lecce": { atk: 0.82, def: 1.16 }, "Parma Calcio 1913": { atk: 0.80, def: 1.17 }, "Sassuolo": { atk: 0.78, def: 1.18 } },
