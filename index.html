@@ -117,8 +117,20 @@
         .teams-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
         .team-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: white; text-align: center; }
         .result-boxes { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; margin-top: 16px; }
-        .result-box { background: rgba(20,25,40,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-md); padding: 12px 8px; text-align: center; }
+        .result-box {
+            background: rgba(20,25,40,0.3); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-md); padding: 12px 8px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+        }
         .rb-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; }
+        /* Estilo mejorado para el botón Guardar dentro de result-box */
+        .result-save-btn {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25);
+            color: #e0e4f0; padding: 6px 12px; border-radius: 20px; cursor: pointer;
+            font-size: 0.7rem; font-weight: 700; transition: all 0.2s ease; white-space: nowrap;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .result-save-btn:hover { background: rgba(46,204,113,0.25); border-color: rgba(46,204,113,0.6); color: var(--green); }
         .section-header { display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; }
         .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; }
         .section-lambda { margin-left: auto; font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; color: var(--muted); }
@@ -238,7 +250,6 @@
             "EKS": { "Legia Warszawa": { atk: 1.24, def: 0.90 }, "Raków Częstochowa": { atk: 1.20, def: 0.92 }, "Jagiellonia Białystok": { atk: 1.16, def: 0.95 }, "Lech Poznań": { atk: 1.12, def: 0.98 }, "Pogoń Szczecin": { atk: 1.08, def: 1.01 }, "Górnik Zabrze": { atk: 1.04, def: 1.04 }, "Zagłębie Lubin": { atk: 1.00, def: 1.07 }, "Piast Gliwice": { atk: 0.96, def: 1.10 }, "Wisła Płock": { atk: 0.92, def: 1.13 }, "Motor Lublin": { atk: 0.88, def: 1.16 }, "GKS Katowice": { atk: 0.84, def: 1.19 }, "Cracovia": { atk: 0.80, def: 1.22 }, "Widzew Łódź": { atk: 0.76, def: 1.25 }, "Korona Kielce": { atk: 0.72, def: 1.28 }, "Radomiak Radom": { atk: 0.68, def: 1.31 }, "Lechia Gdańsk": { atk: 0.64, def: 1.34 }, "Arka Gdynia": { atk: 0.60, def: 1.37 }, "Bruk-Bet Termalica Nieciecza": { atk: 0.56, def: 1.40 } },
             "SLG": { "AEK Athens": { atk: 1.24, def: 0.90 }, "PAOK": { atk: 1.20, def: 0.92 }, "Olympiacos": { atk: 1.18, def: 0.94 }, "Panathinaikos": { atk: 1.14, def: 0.96 }, "Levadiakos": { atk: 1.08, def: 1.00 }, "Aris": { atk: 1.04, def: 1.03 }, "OFI Crete": { atk: 1.00, def: 1.06 }, "Volos NFC": { atk: 0.96, def: 1.09 }, "Atromitos": { atk: 0.92, def: 1.12 }, "A.E. Kifisia": { atk: 0.88, def: 1.15 }, "Panetolikos": { atk: 0.84, def: 1.18 }, "Panserraikos": { atk: 0.80, def: 1.21 }, "Asteras Tripolis": { atk: 0.76, def: 1.24 }, "AEL": { atk: 0.72, def: 1.27 }, "Apollon Smyrnis": { atk: 0.68, def: 1.30 }, "PAS Giannina": { atk: 0.64, def: 1.33 }, "Kallithea": { atk: 0.60, def: 1.36 } },
             "WC26": {
-                // UEFA (16 equipos)
                 "France": { atk: 1.32, def: 0.86 }, "Argentina": { atk: 1.28, def: 0.88 }, "Germany": { atk: 1.26, def: 0.90 },
                 "Brazil": { atk: 1.24, def: 0.92 }, "Spain": { atk: 1.20, def: 0.94 }, "England": { atk: 1.18, def: 0.96 },
                 "Netherlands": { atk: 1.16, def: 0.98 }, "Belgium": { atk: 1.12, def: 1.00 }, "Portugal": { atk: 1.10, def: 1.02 },
@@ -247,22 +258,17 @@
                 "Austria": { atk: 0.96, def: 1.16 }, "Denmark": { atk: 0.94, def: 1.18 }, "Sweden": { atk: 0.92, def: 1.20 },
                 "Czech Republic": { atk: 0.90, def: 1.22 }, "Poland": { atk: 0.88, def: 1.24 }, "Turkey": { atk: 0.86, def: 1.26 },
                 "Norway": { atk: 0.84, def: 1.28 },
-                // CONMEBOL (6 equipos)
                 "Ecuador": { atk: 0.82, def: 1.30 }, "Peru": { atk: 0.80, def: 1.32 },
                 "Chile": { atk: 0.78, def: 1.34 },
-                // AFC (8 equipos)
                 "Japan": { atk: 1.02, def: 1.00 }, "South Korea": { atk: 0.95, def: 1.05 }, "Australia": { atk: 0.90, def: 1.08 },
                 "Iran": { atk: 0.88, def: 1.10 }, "Saudi Arabia": { atk: 0.85, def: 1.12 }, "Qatar": { atk: 0.82, def: 1.14 },
                 "Iraq": { atk: 0.78, def: 1.18 },
-                // CAF (9 equipos)
                 "Egypt": { atk: 0.86, def: 1.12 }, "Senegal": { atk: 0.84, def: 1.14 }, "Ghana": { atk: 0.80, def: 1.16 },
                 "Morocco": { atk: 0.88, def: 1.08 }, "Tunisia": { atk: 0.76, def: 1.18 }, "Cameroon": { atk: 0.78, def: 1.16 },
                 "Algeria": { atk: 0.82, def: 1.12 }, "Nigeria": { atk: 0.80, def: 1.14 }, "Ivory Coast": { atk: 0.78, def: 1.16 },
                 "South Africa": { atk: 0.74, def: 1.20 },
-                // CONCACAF (6 equipos)
                 "United States": { atk: 0.92, def: 1.06 }, "Canada": { atk: 0.88, def: 1.10 },
                 "Costa Rica": { atk: 0.80, def: 1.14 }, "Jamaica": { atk: 0.78, def: 1.16 }, "Honduras": { atk: 0.74, def: 1.20 },
-                // OFC (1 equipo)
                 "New Zealand": { atk: 0.70, def: 1.24 }
             }
         };
@@ -395,11 +401,24 @@
                     </div>`;
                 const rp = calcResultProbs(lH, lA, currentLeagueKey);
                 const hP = +plattCalibrate(rp.home, 'resultado').toFixed(1), dP = +plattCalibrate(rp.draw, 'resultado').toFixed(1), aP = +plattCalibrate(rp.away, 'resultado').toFixed(1);
+                // IMPORTANTE: Los botones de Guardar ahora usan la clase result-save-btn (más visibles)
                 document.getElementById('match-header-container').innerHTML += `
                     <div class="result-boxes animate-in">
-                        <div class="result-box"><div class="rb-label">LOCAL</div><div class="rb-pct" style="color:${colorFor(hP)}">${hP}%</div></div>
-                        <div class="result-box"><div class="rb-label">X</div><div class="rb-pct" style="color:var(--yellow)">${dP}%</div></div>
-                        <div class="result-box"><div class="rb-label">VISIT</div><div class="rb-pct" style="color:${colorFor(aP)}">${aP}%</div></div>
+                        <div class="result-box">
+                            <div class="rb-label">LOCAL</div>
+                            <div class="rb-pct" style="color:${colorFor(hP)}">${hP}%</div>
+                            <button class="result-save-btn" data-mercado="Resultado" data-pick="Local" onclick="guardarApuesta('Resultado','Local',${hP.toFixed(0)})">💾 Guardar</button>
+                        </div>
+                        <div class="result-box">
+                            <div class="rb-label">X</div>
+                            <div class="rb-pct" style="color:var(--yellow)">${dP}%</div>
+                            <button class="result-save-btn" data-mercado="Resultado" data-pick="Empate" onclick="guardarApuesta('Resultado','Empate',${dP.toFixed(0)})">💾 Guardar</button>
+                        </div>
+                        <div class="result-box">
+                            <div class="rb-label">VISIT</div>
+                            <div class="rb-pct" style="color:${colorFor(aP)}">${aP}%</div>
+                            <button class="result-save-btn" data-mercado="Resultado" data-pick="Visitante" onclick="guardarApuesta('Resultado','Visitante',${aP.toFixed(0)})">💾 Guardar</button>
+                        </div>
                     </div>`;
 
                 let html = '';
