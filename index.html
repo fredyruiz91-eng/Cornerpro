@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.7 ULTRA</title>
+    <title>Data.Predict · PRO v2.7 FINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -248,7 +248,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
-            <div class="badge">⚡ v2.7 ULTRA</div>
+            <div class="badge">⚡ v2.7 FINAL</div>
             <div class="badge-api offline" id="api-badge">🔗 API (---)</div>
         </div>
         <div class="card">
@@ -276,18 +276,24 @@
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
                 <div id="saved-bets-container"></div>
-                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.7 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzore + Local</p>
+                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.7 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local</p>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== CONFIGURACIÓN API ==========
-        let API_BASE = 'https://sports.bzzore.com/v2';
-        const API_KEY = '21adc3a0b3e12a5eda6e8ac0fe589919895d43c0';
-        const API_TIMEOUT = 5000; // 5 segundos
+        // ========== CONFIGURACIÓN API CORRECTA ==========
+        // 🎯 BZZOIRO (no Bzzore)
+        const API_URLS = [
+            'https://sports.bzzoiro.com/api/events',
+            'https://api.bzzoiro.com/events',
+            'https://bzzoiro.com/api/events'
+        ];
+        let API_BASE = API_URLS[0]; // URL principal
+        const API_KEY = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
+        const API_TIMEOUT = 5000;
         const CACHE_KEY = 'dataPredict_api_cache_v27';
-        const CACHE_TTL = 60 * 60 * 1000; // 1 hora
+        const CACHE_TTL = 60 * 60 * 1000;
 
         // ========== DIAGNÓSTICO ==========
         const diagLog = [];
@@ -302,20 +308,20 @@
             }
         }
 
-        // ========== CACHÉ LOCAL DE API ==========
+        // ========== CACHÉ LOCAL ==========
         function getApiCache(leagueId, home, away) {
             try {
                 const cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
                 const key = `${leagueId}_${home}_${away}`;
                 const data = cache[key];
                 if (data && Date.now() - data.timestamp < CACHE_TTL) {
-                    addDiagLog('📦', `Datos desde caché: ${key}`);
+                    addDiagLog('📦', `Caché: ${key}`);
                     return data.value;
                 }
                 delete cache[key];
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
             } catch (e) { 
-                addDiagLog('⚠️', `Error al leer caché: ${e.message}`);
+                addDiagLog('⚠️', `Error caché: ${e.message}`);
             }
             return null;
         }
@@ -326,13 +332,13 @@
                 const key = `${leagueId}_${home}_${away}`;
                 cache[key] = { value: data, timestamp: Date.now() };
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-                addDiagLog('💾', `Guardado en caché: ${key}`);
+                addDiagLog('💾', `Caché guardado: ${key}`);
             } catch (e) { 
-                addDiagLog('⚠️', `Error al guardar caché: ${e.message}`);
+                addDiagLog('⚠️', `Error guardar caché: ${e.message}`);
             }
         }
 
-        // ========== BASE DE DATOS LOCAL (FALLBACK) ==========
+        // ========== BASE DE DATOS LOCAL ==========
         const LIGAS = {
             "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", goalsAvg: 2.85, cornAvg: 10.5, cornR: 20, markets: { goles: true, ht: true, btts: true, corn: true } },
             "BL1": { name: "🇩🇪 Bundesliga", goalsAvg: 3.00, cornAvg: 10.0, cornR: 18, markets: { goles: true, ht: true, btts: true, corn: true } },
@@ -404,53 +410,47 @@
         let currentMatchHome = null, currentMatchAway = null, currentMatchLeagueName = null;
         let apiOnline = false;
 
-        // ========== FUNCIONES API MEJORADAS (SIN AbortController) ==========
-        async function timeoutFetch(url, options, timeout = 5000) {
-            addDiagLog('🔍', `Intentando: ${url}`);
-            
-            return new Promise((resolve, reject) => {
-                let timeoutId;
-                const timeoutPromise = new Promise((_, reject) => {
-                    timeoutId = setTimeout(() => {
-                        reject(new Error('TIMEOUT'));
-                    }, timeout);
-                });
-
-                fetch(url, options)
-                    .then(response => {
-                        clearTimeout(timeoutId);
-                        resolve(response);
-                    })
-                    .catch(error => {
-                        clearTimeout(timeoutId);
-                        reject(error);
-                    });
-            });
-        }
-
+        // ========== FUNCIONES API ==========
         async function testApiConnection() {
             const statusEl = document.getElementById('api-status');
             const badgeEl = document.getElementById('api-badge');
             
-            addDiagLog('🔌', `Conectando a: ${API_BASE}`);
+            addDiagLog('🔌', `Probando: ${API_BASE}`);
             
             try {
-                const response = await timeoutFetch(`${API_BASE}/ping`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                }, 5000);
+                const response = await new Promise((resolve, reject) => {
+                    let timeoutId;
+                    const timeoutPromise = new Promise((_, reject) => {
+                        timeoutId = setTimeout(() => {
+                            reject(new Error('TIMEOUT'));
+                        }, API_TIMEOUT);
+                    });
+
+                    fetch(`${API_BASE}/?league=27`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Token ${API_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            clearTimeout(timeoutId);
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            clearTimeout(timeoutId);
+                            reject(error);
+                        });
+                });
 
                 if (response.ok) {
                     apiOnline = true;
-                    statusEl.innerHTML = '<span class="api-status-icon">✅</span><span class="api-status-text">API conectada - Datos en tiempo real</span>';
+                    statusEl.innerHTML = '<span class="api-status-icon">✅</span><span class="api-status-text">API Bzzoiro conectada</span>';
                     statusEl.className = 'api-status online';
                     badgeEl.classList.remove('offline');
                     badgeEl.classList.add('online');
                     badgeEl.textContent = '🔗 API ONLINE';
-                    addDiagLog('✅', 'Conexión exitosa con API Bzzore');
+                    addDiagLog('✅', 'Conexión exitosa con Bzzoiro');
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -458,13 +458,13 @@
                 apiOnline = false;
                 const errorMsg = error.message;
                 
-                statusEl.innerHTML = `<span class="api-status-icon">⚠️</span><span class="api-status-text">API no disponible (${errorMsg})</span><button class="api-retry-btn" onclick="testApiConnection()">Reintentar</button>`;
+                statusEl.innerHTML = `<span class="api-status-icon">⚠️</span><span class="api-status-text">Bzzoiro no disponible (${errorMsg})</span><button class="api-retry-btn" onclick="testApiConnection()">Reintentar</button>`;
                 statusEl.className = 'api-status offline';
                 badgeEl.classList.remove('online');
                 badgeEl.classList.add('offline');
                 badgeEl.textContent = '🔗 API OFFLINE';
                 
-                addDiagLog('❌', `API no disponible: ${errorMsg}`);
+                addDiagLog('❌', `Bzzoiro no disponible: ${errorMsg}`);
                 addDiagLog('📊', 'Usando datos locales (fallback)');
             }
         }
@@ -476,18 +476,28 @@
             if (cachedData) return cachedData;
 
             try {
-                const response = await timeoutFetch(`${API_BASE}/matches`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        league: leagueId,
-                        home: homeTeam,
-                        away: awayTeam
+                const response = await new Promise((resolve, reject) => {
+                    let timeoutId;
+                    timeoutId = setTimeout(() => {
+                        reject(new Error('TIMEOUT'));
+                    }, API_TIMEOUT);
+
+                    fetch(`${API_BASE}/?league=${leagueId}&home=${homeTeam}&away=${awayTeam}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Token ${API_KEY}`,
+                            'Content-Type': 'application/json'
+                        }
                     })
-                }, 5000);
+                        .then(response => {
+                            clearTimeout(timeoutId);
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            clearTimeout(timeoutId);
+                            reject(error);
+                        });
+                });
 
                 if (!response.ok) {
                     addDiagLog('⚠️', `API error: HTTP ${response.status}`);
@@ -496,10 +506,10 @@
 
                 const data = await response.json();
                 setApiCache(leagueId, homeTeam, awayTeam, data);
-                addDiagLog('📡', `Datos API recibidos: ${homeTeam} vs ${awayTeam}`);
+                addDiagLog('📡', `API: ${homeTeam} vs ${awayTeam}`);
                 return data;
             } catch (error) {
-                addDiagLog('❌', `Error en fetch: ${error.message}`);
+                addDiagLog('❌', `Fetch error: ${error.message}`);
                 return null;
             }
         }
@@ -636,7 +646,7 @@
                 let hStr, aStr, baseGoals, hAdv;
 
                 if (apiData && apiData.home && apiData.away) {
-                    addDiagLog('📡', 'Usando datos de API');
+                    addDiagLog('📡', 'Usando datos API Bzzoiro');
                     hStr = { atk: apiData.home.attack || 1.0, def: apiData.home.defense || 1.0 };
                     aStr = { atk: apiData.away.attack || 1.0, def: apiData.away.defense || 1.0 };
                     baseGoals = apiData.league_goals_avg ? apiData.league_goals_avg / 2 : liga.goalsAvg / 2;
@@ -737,7 +747,8 @@
 
         // ========== INICIALIZACIÓN ==========
         document.addEventListener('DOMContentLoaded', async () => {
-            addDiagLog('🚀', 'Iniciando Data.Predict PRO v2.7 ULTRA');
+            addDiagLog('🚀', 'Data.Predict PRO v2.7 FINAL');
+            addDiagLog('🔍', 'Bzzoiro Sports Data API');
             renderLeaguePills();
             renderMarketToggles();
             const firstPill = document.querySelector('.league-pill');
@@ -747,7 +758,7 @@
             }
             renderSavedBets();
             
-            addDiagLog('🔌', 'Iniciando prueba de conexión API...');
+            addDiagLog('🔌', 'Conectando a Bzzoiro...');
             await testApiConnection();
         });
     </script>
