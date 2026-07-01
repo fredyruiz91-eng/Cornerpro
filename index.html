@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.7 COMPLETO</title>
+    <title>Data.Predict · PRO v2.7 ULTRA</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -53,9 +53,8 @@
         @keyframes particleDrift { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
         .container { width: 100%; max-width: 500px; position: relative; z-index: 1; }
         .header {
-            text-align: center; padding: 28px 20px 20px; margin-bottom: 8px;
-            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px);
-            border-radius: var(--radius-lg); border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
+            padding: 28px 20px 20px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06);
             position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.4);
         }
         .header::before {
@@ -79,16 +78,46 @@
             backdrop-filter: blur(10px); margin: 0 4px;
         }
         .badge-api {
-            display: inline-block; padding: 4px 14px; background: rgba(46, 204, 113, 0.1);
-            border: 1px solid rgba(46, 204, 113, 0.3); border-radius: 20px; font-size: 0.6rem;
-            font-weight: 700; letter-spacing: 1px; color: var(--green); text-transform: uppercase;
-            backdrop-filter: blur(10px); margin: 0 4px;
+            display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.6rem;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            backdrop-filter: blur(10px); margin: 0 4px; cursor: pointer; transition: all 0.3s ease;
         }
+        .badge-api.online {
+            background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.3); color: var(--green);
+        }
+        .badge-api.offline {
+            background: rgba(255, 77, 90, 0.1); border: 1px solid rgba(255, 77, 90, 0.3); color: var(--accent);
+        }
+        .badge-api:hover { transform: scale(1.05); }
         .card {
             background: rgba(20, 25, 40, 0.45); backdrop-filter: blur(20px); border-radius: var(--radius-lg);
             padding: 22px; border: 1px solid rgba(255, 255, 255, 0.06); margin-bottom: 14px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
+        .api-status {
+            font-size: 0.65rem; padding: 10px 12px; border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.03); margin-top: 8px; display: flex; align-items: center; gap: 8px;
+            flex-wrap: wrap; border: 1px solid rgba(255,255,255,0.06);
+        }
+        .api-status.online { color: var(--green); border: 1px solid rgba(46,204,113,0.2); background: rgba(46,204,113,0.05); }
+        .api-status.offline { color: var(--accent); border: 1px solid rgba(255,77,90,0.2); background: rgba(255,77,90,0.05); }
+        .api-status-icon { font-size: 1.2rem; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        .api-status-text { flex: 1; }
+        .api-retry-btn {
+            padding: 4px 10px; font-size: 0.65rem; border-radius: 12px; border: none;
+            background: rgba(255,255,255,0.1); color: var(--text); cursor: pointer;
+            transition: all 0.2s ease; white-space: nowrap;
+        }
+        .api-retry-btn:hover { background: rgba(46,204,113,0.25); color: var(--green); }
+        .diag-panel {
+            background: rgba(20,25,40,0.6); border: 1px solid rgba(77,171,247,0.3);
+            border-radius: var(--radius-md); padding: 12px; margin-top: 8px;
+            font-size: 0.65rem; color: var(--muted); max-height: 150px; overflow-y: auto;
+        }
+        .diag-line { display: flex; gap: 6px; padding: 2px 0; font-family: 'Courier New', monospace; }
+        .diag-icon { min-width: 20px; }
+        .diag-text { flex: 1; word-break: break-all; }
         .league-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
         .league-pill {
             padding: 6px 13px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
@@ -110,18 +139,14 @@
             cursor: pointer; transition: all 0.25s ease;
         }
         .mkt-toggle.on { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.5); color: var(--green); }
-        .mkt-toggle.unavailable {
-            opacity: 0.4; pointer-events: none; text-decoration: line-through;
-        }
+        .mkt-toggle.unavailable { opacity: 0.4; pointer-events: none; text-decoration: line-through; }
         .calc-btn {
             width: 100%; padding: 16px; border-radius: var(--radius-md); border: none;
             background: linear-gradient(135deg, var(--accent), #ff6b7a);
             color: white; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 3px;
             margin-top: 18px; cursor: pointer; box-shadow: 0 8px 30px rgba(255,77,90,0.4);
         }
-        .calc-btn:disabled {
-            opacity: 0.5; cursor: not-allowed;
-        }
+        .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .match-header {
             background: rgba(20,25,40,0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
             padding: 22px 18px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 14px;
@@ -158,7 +183,6 @@
         .bar-wrap { flex: 1; }
         .bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 4px; }
         .bar-fill { height: 100%; border-radius: 5px; transition: width 1.5s ease; }
-        .bar-sub { font-size: 0.62rem; color: var(--muted); }
         .pct-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: right; min-width: 48px; }
         .save-bet-btn {
             background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
@@ -200,17 +224,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-state { text-align: center; padding: 30px; }
-        .api-status {
-            font-size: 0.65rem;
-            color: var(--muted);
-            text-align: center;
-            margin-top: 8px;
-            padding: 6px;
-            border-radius: var(--radius-sm);
-            background: rgba(255,255,255,0.03);
-        }
-        .api-status.online { color: var(--green); border: 1px solid rgba(46,204,113,0.2); }
-        .api-status.offline { color: var(--accent); border: 1px solid rgba(255,77,90,0.2); }
         .clear-all-bets {
             background: rgba(255,77,90,0.15);
             border: 1px solid rgba(255,77,90,0.3);
@@ -235,8 +248,8 @@
     <div class="container">
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
-            <div class="badge">⚡ v2.7 COMPLETO</div>
-            <div class="badge-api">🔗 API BZZORE</div>
+            <div class="badge">⚡ v2.7 ULTRA</div>
+            <div class="badge-api offline" id="api-badge">🔗 API (---)</div>
         </div>
         <div class="card">
             <label>Liga / Competencia</label>
@@ -248,24 +261,76 @@
             <span class="markets-label">Mercados a calcular</span>
             <div class="market-toggles" id="market-toggles"></div>
             <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
-            <div class="api-status" id="api-status">🔌 Conectando a API...</div>
+            <div class="api-status" id="api-status">
+                <span class="api-status-icon">🔄</span>
+                <span class="api-status-text">Inicializando...</span>
+            </div>
+            <div class="diag-panel" id="diag-panel">
+                <div class="diag-line"><span class="diag-icon">ℹ️</span><span class="diag-text">Iniciando diagnóstico...</span></div>
+            </div>
         </div>
         <div id="results" class="hidden">
-            <div id="loading-indicator" class="card loading-state"><div class="spinner"></div><div>Calculando modelo con datos API...</div></div>
+            <div id="loading-indicator" class="card loading-state"><div class="spinner"></div><div>Calculando modelo con datos...</div></div>
             <div id="output" class="hidden">
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
                 <div id="saved-bets-container"></div>
-                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.7 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzore</p>
+                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.7 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzore + Local</p>
             </div>
         </div>
     </div>
 
     <script>
         // ========== CONFIGURACIÓN API ==========
-        const API_KEY = '3d62e7e48993262cddf921e75fcb4ea8be6f70be';
-        const API_BASE = 'https://sports.bzzore.com/v2'; // Ajusta según la URL real de Bzzore
+        let API_BASE = 'https://sports.bzzore.com/v2';
+        const API_KEY = '21adc3a0b3e12a5eda6e8ac0fe589919895d43c0';
+        const API_TIMEOUT = 5000; // 5 segundos
+        const CACHE_KEY = 'dataPredict_api_cache_v27';
+        const CACHE_TTL = 60 * 60 * 1000; // 1 hora
+
+        // ========== DIAGNÓSTICO ==========
+        const diagLog = [];
+        function addDiagLog(icon, message) {
+            diagLog.push({ icon, message, time: new Date().toLocaleTimeString() });
+            const panel = document.getElementById('diag-panel');
+            if (panel) {
+                panel.innerHTML = diagLog.map(d => 
+                    `<div class="diag-line"><span class="diag-icon">${d.icon}</span><span class="diag-text">[${d.time}] ${d.message}</span></div>`
+                ).join('');
+                panel.scrollTop = panel.scrollHeight;
+            }
+        }
+
+        // ========== CACHÉ LOCAL DE API ==========
+        function getApiCache(leagueId, home, away) {
+            try {
+                const cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
+                const key = `${leagueId}_${home}_${away}`;
+                const data = cache[key];
+                if (data && Date.now() - data.timestamp < CACHE_TTL) {
+                    addDiagLog('📦', `Datos desde caché: ${key}`);
+                    return data.value;
+                }
+                delete cache[key];
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+            } catch (e) { 
+                addDiagLog('⚠️', `Error al leer caché: ${e.message}`);
+            }
+            return null;
+        }
+
+        function setApiCache(leagueId, home, away, data) {
+            try {
+                const cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
+                const key = `${leagueId}_${home}_${away}`;
+                cache[key] = { value: data, timestamp: Date.now() };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+                addDiagLog('💾', `Guardado en caché: ${key}`);
+            } catch (e) { 
+                addDiagLog('⚠️', `Error al guardar caché: ${e.message}`);
+            }
+        }
 
         // ========== BASE DE DATOS LOCAL (FALLBACK) ==========
         const LIGAS = {
@@ -339,45 +404,79 @@
         let currentMatchHome = null, currentMatchAway = null, currentMatchLeagueName = null;
         let apiOnline = false;
 
-        // ========== FUNCIONES API ==========
+        // ========== FUNCIONES API MEJORADAS (SIN AbortController) ==========
+        async function timeoutFetch(url, options, timeout = 5000) {
+            addDiagLog('🔍', `Intentando: ${url}`);
+            
+            return new Promise((resolve, reject) => {
+                let timeoutId;
+                const timeoutPromise = new Promise((_, reject) => {
+                    timeoutId = setTimeout(() => {
+                        reject(new Error('TIMEOUT'));
+                    }, timeout);
+                });
+
+                fetch(url, options)
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        reject(error);
+                    });
+            });
+        }
+
         async function testApiConnection() {
             const statusEl = document.getElementById('api-status');
+            const badgeEl = document.getElementById('api-badge');
+            
+            addDiagLog('🔌', `Conectando a: ${API_BASE}`);
+            
             try {
-                statusEl.textContent = '🔄 Probando conexión API...';
-                statusEl.className = 'api-status';
-                
-                // Prueba simple de conexión
-                const response = await fetch(`${API_BASE}/ping`, {
+                const response = await timeoutFetch(`${API_BASE}/ping`, {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${API_KEY}`,
                         'Content-Type': 'application/json'
                     }
-                });
-                
+                }, 5000);
+
                 if (response.ok) {
                     apiOnline = true;
-                    statusEl.textContent = '✅ API conectada - Datos en tiempo real';
+                    statusEl.innerHTML = '<span class="api-status-icon">✅</span><span class="api-status-text">API conectada - Datos en tiempo real</span>';
                     statusEl.className = 'api-status online';
-                    console.log('✅ API Bzzore conectada exitosamente');
+                    badgeEl.classList.remove('offline');
+                    badgeEl.classList.add('online');
+                    badgeEl.textContent = '🔗 API ONLINE';
+                    addDiagLog('✅', 'Conexión exitosa con API Bzzore');
                 } else {
-                    apiOnline = false;
-                    statusEl.textContent = '⚠️ API no disponible - Usando datos locales';
-                    statusEl.className = 'api-status offline';
-                    console.warn('⚠️ API Bzzore no disponible, usando fallback local');
+                    throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
                 apiOnline = false;
-                statusEl.textContent = '⚠️ API no disponible - Usando datos locales';
+                const errorMsg = error.message;
+                
+                statusEl.innerHTML = `<span class="api-status-icon">⚠️</span><span class="api-status-text">API no disponible (${errorMsg})</span><button class="api-retry-btn" onclick="testApiConnection()">Reintentar</button>`;
                 statusEl.className = 'api-status offline';
-                console.warn('⚠️ Error conectando a API Bzzore:', error);
+                badgeEl.classList.remove('online');
+                badgeEl.classList.add('offline');
+                badgeEl.textContent = '🔗 API OFFLINE';
+                
+                addDiagLog('❌', `API no disponible: ${errorMsg}`);
+                addDiagLog('📊', 'Usando datos locales (fallback)');
             }
         }
 
         async function fetchMatchDataFromAPI(leagueId, homeTeam, awayTeam) {
             if (!apiOnline) return null;
-            
+
+            const cachedData = getApiCache(leagueId, homeTeam, awayTeam);
+            if (cachedData) return cachedData;
+
             try {
-                const response = await fetch(`${API_BASE}/matches`, {
+                const response = await timeoutFetch(`${API_BASE}/matches`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${API_KEY}`,
@@ -388,17 +487,19 @@
                         home: homeTeam,
                         away: awayTeam
                     })
-                });
-                
+                }, 5000);
+
                 if (!response.ok) {
-                    console.warn('API respondió con error:', response.status);
+                    addDiagLog('⚠️', `API error: HTTP ${response.status}`);
                     return null;
                 }
-                
+
                 const data = await response.json();
+                setApiCache(leagueId, homeTeam, awayTeam, data);
+                addDiagLog('📡', `Datos API recibidos: ${homeTeam} vs ${awayTeam}`);
                 return data;
             } catch (error) {
-                console.error('Error fetching from API:', error);
+                addDiagLog('❌', `Error en fetch: ${error.message}`);
                 return null;
             }
         }
@@ -524,7 +625,8 @@
             btn.textContent = '🔄 CALCULANDO...';
 
             try {
-                // Intentar obtener datos de la API
+                addDiagLog('📈', `Calculando: ${home} vs ${away}`);
+                
                 let apiData = null;
                 if (apiOnline) {
                     apiData = await fetchMatchDataFromAPI(currentLeagueKey, home, away);
@@ -534,15 +636,13 @@
                 let hStr, aStr, baseGoals, hAdv;
 
                 if (apiData && apiData.home && apiData.away) {
-                    // Usar datos de la API
-                    console.log('📊 Usando datos de API:', apiData);
+                    addDiagLog('📡', 'Usando datos de API');
                     hStr = { atk: apiData.home.attack || 1.0, def: apiData.home.defense || 1.0 };
                     aStr = { atk: apiData.away.attack || 1.0, def: apiData.away.defense || 1.0 };
                     baseGoals = apiData.league_goals_avg ? apiData.league_goals_avg / 2 : liga.goalsAvg / 2;
                     hAdv = apiData.home_advantage || HOME_ADVANTAGE[currentLeagueKey] || 1.08;
                 } else {
-                    // Fallback a datos locales
-                    console.log('📊 Usando datos locales (fallback)');
+                    addDiagLog('📊', 'Usando datos locales');
                     hStr = TEAM_STRENGTH_DB[currentLeagueKey][home] || { atk: 1, def: 1 };
                     aStr = TEAM_STRENGTH_DB[currentLeagueKey][away] || { atk: 1, def: 1 };
                     baseGoals = liga.goalsAvg / 2;
@@ -554,6 +654,8 @@
                 const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
                 const lCorn = +( (apiData && apiData.league_corners_avg) ? apiData.league_corners_avg / 2 : (liga.cornAvg * (hStr.atk + aStr.atk) / 2) ).toFixed(2);
                 const cornR = (apiData && apiData.corners_r) ? apiData.corners_r : (liga.cornR || 18);
+
+                addDiagLog('✅', `Cálculo completado`);
 
                 document.getElementById('results').classList.remove('hidden');
                 document.getElementById('loading-indicator').classList.remove('hidden');
@@ -626,14 +728,16 @@
                 }, 800);
             } catch (error) {
                 console.error('Error en cálculo:', error);
+                addDiagLog('❌', `Error: ${error.message}`);
                 btn.disabled = false;
                 btn.textContent = 'CALCULAR PROBABILIDADES';
-                alert('Error al calcular. Revisa la conexión con la API.');
+                alert('Error al calcular.');
             }
         };
 
         // ========== INICIALIZACIÓN ==========
         document.addEventListener('DOMContentLoaded', async () => {
+            addDiagLog('🚀', 'Iniciando Data.Predict PRO v2.7 ULTRA');
             renderLeaguePills();
             renderMarketToggles();
             const firstPill = document.querySelector('.league-pill');
@@ -643,7 +747,7 @@
             }
             renderSavedBets();
             
-            // Probar conexión con la API
+            addDiagLog('🔌', 'Iniciando prueba de conexión API...');
             await testApiConnection();
         });
     </script>
