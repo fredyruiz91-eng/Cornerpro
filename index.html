@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.7 FINAL</title>
+    <title>Data.Predict · PRO v2.8 FINAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -241,7 +241,6 @@
             background: rgba(255,77,90,0.25);
             border-color: var(--accent);
         }
-        /* ✅ NUEVO: estilo para el toggle de apuestas */
         .section-header:hover .section-lambda {
             color: var(--text) !important;
         }
@@ -256,7 +255,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
-            <div class="badge">⚡ v2.7 FINAL</div>
+            <div class="badge">⚡ v2.8 FINAL</div>
             <div class="badge-api offline" id="api-badge">🔗 API (---)</div>
         </div>
         <div class="card">
@@ -284,7 +283,7 @@
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
                 <div id="saved-bets-container"></div>
-                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.7 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local</p>
+                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.8 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local</p>
             </div>
         </div>
     </div>
@@ -299,7 +298,7 @@
         let API_BASE = API_URLS[0];
         const API_KEY = '21adc3a0b3e12a5eda6e8ac0fe589919895d43c0';
         const API_TIMEOUT = 5000;
-        const CACHE_KEY = 'dataPredict_api_cache_v27';
+        const CACHE_KEY = 'dataPredict_api_cache_v28';
         const CACHE_TTL = 60 * 60 * 1000;
 
         // ========== DIAGNÓSTICO ==========
@@ -482,7 +481,7 @@
         let activeMarkets = { goles: true, ht: true, btts: true, corn: true };
         let currentMatchHome = null, currentMatchAway = null, currentMatchLeagueName = null;
         let apiOnline = false;
-        let showSavedBets = true; // ✅ NUEVO: controla si se muestran las apuestas
+        let showSavedBets = true;
 
         // ========== FUNCIONES API ==========
         async function testApiConnection() {
@@ -615,7 +614,6 @@
             return Math.min(98, Math.max(2, (1 - poissonProb(lambda, Math.floor(th))) * 100)); 
         }
         
-        // ✅ CORREGIDA: combinatoria correcta para Binomial Negativa
         function negBinExact(mu, r, k) {
             if (k < 0) return 0;
             if (k === 0) return Math.pow(r / (r + mu), r);
@@ -635,7 +633,6 @@
             return Math.min(98, Math.max(2, (1 - cdf) * 100)); 
         }
         
-        // ✅ CORREGIDA: fórmula original de Dixon-Coles (1997)
         function dixonColesTau(x, y, lH, lA, rho) { 
             if (x === 0 && y === 0) return 1 - rho; 
             if (x === 0 && y === 1) return 1 + rho * lA; 
@@ -644,7 +641,6 @@
             return 1; 
         }
         
-        // ✅ CORREGIDA: fórmula probabilística válida para BTTS
         function calcBTTS(lH, lA, leagueKey) { 
             const rho = DIXON_COLES_RHO[leagueKey] || DIXON_COLES_RHO.default; 
             const p00 = poissonExact(lH, 0) * poissonExact(lA, 0) * dixonColesTau(0, 0, lH, lA, rho);
@@ -654,7 +650,6 @@
             return Math.min(98, Math.max(2, btts * 100)); 
         }
         
-        // ✅ MEJORADA: con validación de total
         function calcResultProbs(lH, lA, leagueKey) { 
             const rho = DIXON_COLES_RHO[leagueKey] || DIXON_COLES_RHO.default; 
             let pH = 0, pD = 0, pA = 0, total = 0; 
@@ -676,7 +671,7 @@
         function cardClassFor(p) { return p >= 65 ? 'high' : p >= 42 ? 'mid' : 'low'; }
 
         // ========== SISTEMA DE APUESTAS ==========
-        const STORAGE_KEY = 'dataPredict_bets_v27';
+        const STORAGE_KEY = 'dataPredict_bets_v28';
         function getSavedBets() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; } }
         function saveBetsToStorage(bets) { localStorage.setItem(STORAGE_KEY, JSON.stringify(bets)); }
         function addBet(betData) { const bets = getSavedBets(); betData.id = Date.now(); betData.fecha = new Date().toISOString(); betData.status = 'pending'; bets.unshift(betData); saveBetsToStorage(bets); renderSavedBets(); return betData; }
@@ -690,7 +685,6 @@
             setTimeout(() => document.querySelectorAll('.save-bet-btn, .result-save-btn').forEach(b => { if (b.dataset.mercado === mercado && b.dataset.pick === pick) { b.classList.add('saved'); b.textContent = '✅ Guardado'; setTimeout(() => { b.classList.remove('saved'); b.textContent = '💾 Guardar'; }, 1500); } }), 50);
         }
 
-        // ✅ MEJORADA: con toggle desplegar/ocultar
         function renderSavedBets() {
             const container = document.getElementById('saved-bets-container');
             if (!container) return;
@@ -722,7 +716,6 @@
             container.innerHTML = html;
         }
 
-        // ✅ NUEVA: toggle para mostrar/ocultar apuestas
         function toggleSavedBets() {
             showSavedBets = !showSavedBets;
             renderSavedBets();
@@ -821,10 +814,15 @@
                 const lH = +(baseGoals * hStr.atk * aStr.def * hAdv).toFixed(2);
                 const lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
                 const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
-                const lCorn = +( (apiData && apiData.league_corners_avg) ? apiData.league_corners_avg / 2 : (liga.cornAvg * (hStr.atk + aStr.atk) / 2) ).toFixed(2);
+                
+                // ✅ CORREGIDO: Córners con TOPE REALISTA (8.0 - 11.0)
+                const lCornRaw = (apiData && apiData.league_corners_avg) 
+                    ? apiData.league_corners_avg / 2 
+                    : (liga.cornAvg * (hStr.atk + aStr.atk) / 2);
+                const lCorn = +Math.min(11.0, Math.max(8.0, lCornRaw)).toFixed(2);
                 const cornR = (apiData && apiData.corners_r) ? apiData.corners_r : (liga.cornR || 18);
 
-                addDiagLog('✅', `Cálculo completado`);
+                addDiagLog('✅', `Cálculo completado: lCorn=${lCorn}, cornR=${cornR}`);
 
                 document.getElementById('results').classList.remove('hidden');
                 document.getElementById('loading-indicator').classList.remove('hidden');
@@ -861,8 +859,8 @@
                         </div>`;
 
                     let html = '';
+                    const l = lH + lA;
                     if (activeMarkets.goles) {
-                        const l = lH + lA;
                         const g15 = plattCalibrate(poissonOver(l, 1.5), 'goals15'), g25 = plattCalibrate(poissonOver(l, 2.5), 'goals25');
                         html += `<div class="section-header"><span class="section-title">⚽ GOLES TOTALES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span></div>
                             <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>
@@ -888,7 +886,38 @@
                     }
 
                     document.getElementById('all-markets-container').innerHTML = html;
-                    document.getElementById('recomendacion-container').innerHTML = `<div class="recomendacion animate-in"><div class="rec-main" style="color:${colorFor(plattCalibrate(poissonOver(lH+lA, 1.5), 'goals15'))}">OVER 1.5</div></div>`;
+                    
+                    // ✅ RECOMENDACIÓN INTELIGENTE (la línea más alta con >60%)
+                    const g15Rec = plattCalibrate(poissonOver(l, 1.5), 'goals15');
+                    const g25Rec = plattCalibrate(poissonOver(l, 2.5), 'goals25');
+                    const bttsRec = plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
+                    const g05htRec = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05');
+
+                    let bestPick = 'OVER 1.5';
+                    let bestProb = g15Rec;
+
+                    if (activeMarkets.goles && g25Rec > 60 && g25Rec > bestProb) { bestPick = 'OVER 2.5'; bestProb = g25Rec; }
+                    if (activeMarkets.btts && bttsRec > 60 && bttsRec > bestProb) { bestPick = 'BTTS SÍ'; bestProb = bttsRec; }
+                    if (activeMarkets.ht && g05htRec > 60 && g05htRec > bestProb) { bestPick = 'HT OVER 0.5'; bestProb = g05htRec; }
+                    if (activeMarkets.corn) {
+                        const cornLines = [7.5, 8.5, 9.5, 10.5];
+                        for (const line of cornLines) {
+                            const cornProb = plattCalibrate(negBinOver(lCorn, line, cornR), 'corners');
+                            if (cornProb > 60 && cornProb > bestProb) {
+                                bestPick = `CORNERS +${line}`;
+                                bestProb = cornProb;
+                            }
+                        }
+                    }
+
+                    document.getElementById('recomendacion-container').innerHTML = `
+                        <div class="recomendacion animate-in">
+                            <div style="font-size:0.7rem;color:var(--muted);margin-bottom:6px;">🎯 MEJOR PICK</div>
+                            <div class="rec-main" style="color:${colorFor(bestProb)}">${bestPick}</div>
+                            <div style="font-size:1.2rem;font-family:'Bebas Neue';color:${colorFor(bestProb)};margin-top:4px;">${bestProb.toFixed(0)}%</div>
+                            <div style="font-size:0.65rem;color:var(--muted);margin-top:8px;">Basado en todas las líneas calculadas</div>
+                        </div>`;
+                    
                     renderSavedBets();
                     setTimeout(() => document.querySelectorAll('.bar-fill').forEach(b => { if (b.dataset.target) b.style.width = b.dataset.target + '%'; }), 50);
                     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
@@ -906,7 +935,7 @@
 
         // ========== INICIALIZACIÓN ==========
         document.addEventListener('DOMContentLoaded', async () => {
-            addDiagLog('🚀', 'Data.Predict PRO v2.7 FINAL');
+            addDiagLog('🚀', 'Data.Predict PRO v2.8 FINAL');
             addDiagLog('🔍', 'Bzzoiro Sports Data API');
             renderLeaguePills();
             renderMarketToggles();
