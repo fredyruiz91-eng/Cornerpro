@@ -51,7 +51,31 @@
             background-size: 200% 200%; animation: particleDrift 30s linear infinite;
         }
         @keyframes particleDrift { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
-        .container { width: 100%; max-width: 500px; position: relative; z-index: 1; }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Responsive: más ancho en PC */
+        @media (min-width: 900px) {
+            .container {
+                max-width: 780px;
+            }
+            .logo {
+                font-size: 3.8rem;
+            }
+            .card, .header, .bets-section {
+                padding: 26px;
+            }
+            .market-card {
+                grid-template-columns: 60px 1fr 70px 90px;
+            }
+        }
+
         .header {
             background: rgba(20, 25, 40, 0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
             padding: 28px 20px 20px; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.06);
@@ -118,6 +142,7 @@
         .diag-line { display: flex; gap: 6px; padding: 2px 0; font-family: 'Courier New', monospace; }
         .diag-icon { min-width: 20px; }
         .diag-text { flex: 1; word-break: break-all; }
+
         .league-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
         .league-pill {
             padding: 6px 13px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
@@ -126,12 +151,33 @@
         }
         .league-pill:hover { border-color: var(--accent); color: var(--text); background: rgba(255,77,90,0.1); transform: translateY(-2px); }
         .league-pill.active { background: linear-gradient(135deg, rgba(255,77,90,0.25), rgba(77,171,247,0.2)); border-color: var(--accent); color: white; }
+
+        /* Selects originales (los dejamos por si los usas en otra parte) */
         select {
             width: 100%; padding: 12px 15px; border-radius: var(--radius-sm);
             border: 1px solid rgba(255,255,255,0.1); background: rgba(20,25,40,0.4);
             backdrop-filter: blur(15px); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
         }
+
+        /* Inputs para búsqueda de equipos (nuevo) */
+        input.team-search {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(20,25,40,0.4);
+            backdrop-filter: blur(15px);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            outline: none;
+        }
+        input.team-search::placeholder {
+            color: var(--muted);
+        }
+
         .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
         .market-toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
         .mkt-toggle {
             padding: 6px 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);
@@ -140,6 +186,7 @@
         }
         .mkt-toggle.on { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.5); color: var(--green); }
         .mkt-toggle.unavailable { opacity: 0.4; pointer-events: none; text-decoration: line-through; }
+
         .calc-btn {
             width: 100%; padding: 16px; border-radius: var(--radius-md); border: none;
             background: linear-gradient(135deg, var(--accent), #ff6b7a);
@@ -147,12 +194,14 @@
             margin-top: 18px; cursor: pointer; box-shadow: 0 8px 30px rgba(255,77,90,0.4);
         }
         .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
         .match-header {
             background: rgba(20,25,40,0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
             padding: 22px 18px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 14px;
         }
         .teams-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
         .team-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: white; text-align: center; }
+
         .result-boxes { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; margin-top: 16px; }
         .result-box {
             background: rgba(20,25,40,0.3); border: 1px solid rgba(255,255,255,0.06);
@@ -160,6 +209,7 @@
             display: flex; flex-direction: column; align-items: center; gap: 6px;
         }
         .rb-pct { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; }
+
         .result-save-btn {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.25);
             color: #e0e4f0; padding: 6px 12px; border-radius: 20px; cursor: pointer;
@@ -167,14 +217,19 @@
             font-family: 'DM Sans', sans-serif;
         }
         .result-save-btn:hover { background: rgba(46,204,113,0.25); border-color: rgba(46,204,113,0.6); color: var(--green); }
+
         .section-header { display: flex; align-items: center; gap: 10px; margin: 18px 0 10px; }
         .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 2px; }
         .section-lambda { margin-left: auto; font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; color: var(--muted); }
         .section-lambda span { color: var(--yellow); }
+        .section-header:hover .section-lambda {
+            color: var(--text) !important;
+        }
+
         .market-card {
             background: rgba(20,25,40,0.3); border-radius: var(--radius-md); padding: 14px 16px;
             margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.06);
-            display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 10px;
+            display: grid; grid-template-columns: 44px 1fr 48px 80px; align-items: center; gap: 10px;
         }
         .market-card.high { border-left: 3px solid var(--green); }
         .market-card.mid { border-left: 3px solid var(--yellow); }
@@ -184,6 +239,7 @@
         .bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 5px; overflow: hidden; margin-bottom: 4px; }
         .bar-fill { height: 100%; border-radius: 5px; transition: width 1.5s ease; }
         .pct-label { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: right; min-width: 48px; }
+
         .save-bet-btn {
             background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
             color: var(--muted); padding: 6px 10px; border-radius: 20px; cursor: pointer;
@@ -192,11 +248,13 @@
         }
         .save-bet-btn:hover { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.5); color: var(--green); }
         .save-bet-btn.saved { background: rgba(46,204,113,0.25); border-color: rgba(46,204,113,0.6); color: var(--green); }
+
         .recomendacion {
             background: rgba(20,25,40,0.5); border: 1px solid rgba(46,204,113,0.3);
             border-radius: var(--radius-lg); padding: 22px 20px; margin-top: 8px; text-align: center;
         }
         .rec-main { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: white; }
+
         .bets-section { background: rgba(20,25,40,0.45); backdrop-filter: blur(20px); border-radius: var(--radius-lg); padding: 22px; margin-top: 14px; }
         .bets-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; font-size: 0.7rem; color: var(--muted); }
         .bets-stats span { background: rgba(255,255,255,0.04); padding: 5px 10px; border-radius: 14px; }
@@ -210,9 +268,11 @@
         .btn-won:hover { background: rgba(46,204,113,0.3); border-color: var(--green); color: var(--green); }
         .btn-lost:hover { background: rgba(255,77,90,0.3); border-color: var(--accent); color: var(--accent); }
         .btn-delete:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); color: #fff; }
+
         .hidden { display: none; }
         .animate-in { animation: fadeUp 0.5s ease-out forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .spinner {
             border: 3px solid rgba(255,255,255,0.1);
             border-top-color: var(--accent);
@@ -224,6 +284,7 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-state { text-align: center; padding: 30px; }
+
         .clear-all-bets {
             background: rgba(255,77,90,0.15);
             border: 1px solid rgba(255,77,90,0.3);
@@ -241,12 +302,36 @@
             background: rgba(255,77,90,0.25);
             border-color: var(--accent);
         }
-        .section-header:hover .section-lambda {
-            color: var(--text) !important;
-        }
+
         .no-bets {
             font-size: 0.75rem;
             opacity: 0.8;
+        }
+
+        /* Ajustes móviles */
+        @media (max-width: 600px) {
+            .league-pill, .mkt-toggle, .save-bet-btn, .result-save-btn {
+                padding: 8px 14px;
+                font-size: 0.75rem;
+            }
+            .calc-btn {
+                padding: 18px;
+                font-size: 1.25rem;
+            }
+            .diag-panel {
+                max-height: 110px;
+                font-size: 0.6rem;
+            }
+            .market-card {
+                grid-template-columns: 40px 1fr 44px 70px;
+                padding: 12px;
+            }
+            .line-label {
+                font-size: 1.2rem;
+            }
+            .pct-label {
+                font-size: 1.35rem;
+            }
         }
     </style>
 </head>
@@ -258,16 +343,29 @@
             <div class="badge">⚡ v2.8 FINAL</div>
             <div class="badge-api offline" id="api-badge">🔗 API (---)</div>
         </div>
+
         <div class="card">
             <label>Liga / Competencia</label>
             <div class="league-pills" id="league-pills"></div>
+
             <div class="team-grid">
-                <div><label>🏠 Local</label><select id="home-team" disabled></select></div>
-                <div><label>✈️ Visitante</label><select id="away-team" disabled></select></div>
+                <div>
+                    <label>🏠 Local</label>
+                    <input id="home-team-input" class="team-search" list="home-teams" placeholder="Escribe para buscar..." disabled />
+                    <datalist id="home-teams"></datalist>
+                </div>
+                <div>
+                    <label>✈️ Visitante</label>
+                    <input id="away-team-input" class="team-search" list="away-teams" placeholder="Escribe para buscar..." disabled />
+                    <datalist id="away-teams"></datalist>
+                </div>
             </div>
+
             <span class="markets-label">Mercados a calcular</span>
             <div class="market-toggles" id="market-toggles"></div>
+
             <button class="calc-btn" id="calc-btn">CALCULAR PROBABILIDADES</button>
+
             <div class="api-status" id="api-status">
                 <span class="api-status-icon">🔄</span>
                 <span class="api-status-text">Inicializando...</span>
@@ -276,14 +374,21 @@
                 <div class="diag-line"><span class="diag-icon">ℹ️</span><span class="diag-text">Iniciando diagnóstico...</span></div>
             </div>
         </div>
+
         <div id="results" class="hidden">
-            <div id="loading-indicator" class="card loading-state"><div class="spinner"></div><div>Calculando modelo con datos...</div></div>
+            <div id="loading-indicator" class="card loading-state">
+                <div class="spinner"></div>
+                <div>Calculando modelo con datos...</div>
+            </div>
+
             <div id="output" class="hidden">
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
                 <div id="saved-bets-container"></div>
-                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">Data.Predict v2.8 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local</p>
+                <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">
+                    Data.Predict v2.8 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local
+                </p>
             </div>
         </div>
     </div>
@@ -674,7 +779,7 @@
         const STORAGE_KEY = 'dataPredict_bets_v28';
         function getSavedBets() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; } }
         function saveBetsToStorage(bets) { localStorage.setItem(STORAGE_KEY, JSON.stringify(bets)); }
-        function addBet(betData) { const bets = getSavedBets(); betData.id = Date.now(); betData.fecha = new Date().toISOString(); betData.status = 'pending'; bets.unshift(betData); saveBetsToStorage(bets); renderSavedBets(); return betData; }
+        function addBet(betData) { const bets = getSavedBets(); betData.id = Date.now(); betData.fecha = new Date().toISOString(); betData.status = 'pending'; bets.unshift(betData); saveBetsToStorage(bets); return betData; }
         function updateBetStatus(betId, newStatus) { const bets = getSavedBets(); const bet = bets.find(b => b.id === betId); if (bet) { bet.status = newStatus; saveBetsToStorage(bets); renderSavedBets(); } }
         function deleteBet(betId) { let bets = getSavedBets(); bets = bets.filter(b => b.id !== betId); saveBetsToStorage(bets); renderSavedBets(); }
         function clearAllBets() { if (confirm('¿Eliminar TODAS las apuestas?')) { saveBetsToStorage([]); renderSavedBets(); } }
@@ -682,7 +787,19 @@
         function guardarApuesta(mercado, pick, probabilidad) {
             if (!currentMatchHome || !currentMatchAway || !currentLeagueKey) { alert('Primero calcula un partido.'); return; }
             addBet({ partido: `${currentMatchHome} vs ${currentMatchAway}`, liga: currentLeagueKey, ligaNombre: currentMatchLeagueName, mercado, pick, probabilidad });
-            setTimeout(() => document.querySelectorAll('.save-bet-btn, .result-save-btn').forEach(b => { if (b.dataset.mercado === mercado && b.dataset.pick === pick) { b.classList.add('saved'); b.textContent = '✅ Guardado'; setTimeout(() => { b.classList.remove('saved'); b.textContent = '💾 Guardar'; }, 1500); } }), 50);
+            setTimeout(() => {
+                document.querySelectorAll('.save-bet-btn, .result-save-btn').forEach(b => {
+                    if (b.dataset.mercado === mercado && b.dataset.pick === pick) {
+                        b.classList.add('saved');
+                        b.textContent = '✅ Guardado';
+                        setTimeout(() => {
+                            b.classList.remove('saved');
+                            b.textContent = '💾 Guardar';
+                        }, 1500);
+                    }
+                });
+            }, 50);
+            renderSavedBets();
         }
 
         function renderSavedBets() {
@@ -767,20 +884,48 @@
         }
 
         function loadTeams(key) {
-            const h = document.getElementById('home-team'), a = document.getElementById('away-team');
+            const homeInput = document.getElementById('home-team-input');
+            const awayInput = document.getElementById('away-team-input');
+            const homeList = document.getElementById('home-teams');
+            const awayList = document.getElementById('away-teams');
+
             const teams = Object.keys(TEAM_STRENGTH_DB[key] || {}).sort();
-            h.innerHTML = a.innerHTML = '<option>— Seleccionar —</option>';
-            teams.forEach(n => { h.add(new Option(n, n)); a.add(new Option(n, n)); });
-            h.disabled = a.disabled = false;
+
+            homeList.innerHTML = awayList.innerHTML = '';
+            teams.forEach(n => {
+                const opt1 = document.createElement('option');
+                opt1.value = n;
+                homeList.appendChild(opt1);
+
+                const opt2 = document.createElement('option');
+                opt2.value = n;
+                awayList.appendChild(opt2);
+            });
+
+            homeInput.value = '';
+            awayInput.value = '';
+            homeInput.disabled = awayInput.disabled = false;
         }
 
         // ========== CÁLCULO PRINCIPAL ==========
         document.getElementById('calc-btn').onclick = async () => {
-            const home = document.getElementById('home-team').value, away = document.getElementById('away-team').value;
+            const home = document.getElementById('home-team-input').value.trim();
+            const away = document.getElementById('away-team-input').value.trim();
+
             if (!currentLeagueKey) { alert('Selecciona liga'); return; }
             if (!home || !away) { alert('Selecciona equipos'); return; }
             if (home === away) { alert('Equipos diferentes'); return; }
-            currentMatchHome = home; currentMatchAway = away; currentMatchLeagueName = LIGAS[currentLeagueKey].name;
+
+            // Validar que los equipos existan en la DB (opcional, pero recomendado)
+            const db = TEAM_STRENGTH_DB[currentLeagueKey] || {};
+            if (!db[home] || !db[away]) {
+                alert('Uno o ambos equipos no existen en esta liga.');
+                return;
+            }
+
+            currentMatchHome = home;
+            currentMatchAway = away;
+            currentMatchLeagueName = LIGAS[currentLeagueKey].name;
 
             const btn = document.getElementById('calc-btn');
             btn.disabled = true;
@@ -805,8 +950,8 @@
                     hAdv = apiData.home_advantage || HOME_ADVANTAGE[currentLeagueKey] || 1.08;
                 } else {
                     addDiagLog('📊', 'Usando datos locales');
-                    hStr = TEAM_STRENGTH_DB[currentLeagueKey][home] || { atk: 1, def: 1 };
-                    aStr = TEAM_STRENGTH_DB[currentLeagueKey][away] || { atk: 1, def: 1 };
+                    hStr = db[home] || { atk: 1, def: 1 };
+                    aStr = db[away] || { atk: 1, def: 1 };
                     baseGoals = liga.goalsAvg / 2;
                     hAdv = HOME_ADVANTAGE[currentLeagueKey] || 1.08;
                 }
@@ -815,7 +960,6 @@
                 const lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
                 const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
                 
-                // ✅ CORREGIDO: Córners con TOPE REALISTA (8.0 - 11.0)
                 const lCornRaw = (apiData && apiData.league_corners_avg) 
                     ? apiData.league_corners_avg / 2 
                     : (liga.cornAvg * (hStr.atk + aStr.atk) / 2);
@@ -837,8 +981,10 @@
                             <div style="text-align:center;font-size:0.7rem;color:var(--muted);">${liga.name} ${apiOnline ? '📡' : '📊'}</div>
                             <div class="teams-row"><div class="team-side"><div class="team-name">${home}</div></div><div class="vs-center">VS</div><div class="team-side"><div class="team-name">${away}</div></div></div>
                         </div>`;
+
                     const rp = calcResultProbs(lH, lA, currentLeagueKey);
                     const hP = +plattCalibrate(rp.home, 'resultado').toFixed(1), dP = +plattCalibrate(rp.draw, 'resultado').toFixed(1), aP = +plattCalibrate(rp.away, 'resultado').toFixed(1);
+
                     document.getElementById('match-header-container').innerHTML += `
                         <div class="result-boxes animate-in">
                             <div class="result-box">
@@ -887,7 +1033,6 @@
 
                     document.getElementById('all-markets-container').innerHTML = html;
                     
-                    // ✅ RECOMENDACIÓN INTELIGENTE (la línea más alta con >60%)
                     const g15Rec = plattCalibrate(poissonOver(l, 1.5), 'goals15');
                     const g25Rec = plattCalibrate(poissonOver(l, 2.5), 'goals25');
                     const bttsRec = plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
