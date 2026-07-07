@@ -195,6 +195,50 @@
         }
         .calc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        .bets-fab {
+            position: fixed; right: 18px; bottom: 22px; width: 58px; height: 58px; border-radius: 50%;
+            border: 1px solid rgba(77,171,247,0.4); background: linear-gradient(135deg, #2a3550, #1a2236);
+            box-shadow: 0 8px 26px rgba(0,0,0,0.5), 0 0 0 1px rgba(77,171,247,0.15);
+            cursor: pointer; z-index: 500; display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bets-fab:hover { transform: scale(1.08); box-shadow: 0 10px 30px rgba(77,171,247,0.35); }
+        .bets-fab .fab-badge {
+            position: absolute; top: -3px; right: -3px; background: var(--accent); color: white;
+            font-size: 0.65rem; font-weight: 700; min-width: 20px; height: 20px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; padding: 0 5px;
+            font-family: 'DM Sans', sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        /* ===== Hoja flotante de apuestas guardadas ===== */
+        .bets-modal-backdrop {
+            position: fixed; inset: 0; background: rgba(5,7,14,0.6); backdrop-filter: blur(2px);
+            z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+        }
+        .bets-modal-backdrop.open { opacity: 1; pointer-events: auto; }
+        .bets-modal-sheet {
+            position: fixed; left: 0; right: 0; bottom: 0; margin: 0 auto; width: 100%; max-width: 500px;
+            background: rgba(14,18,30,0.98); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.08); border-bottom: none;
+            border-radius: 24px 24px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            z-index: 999; max-height: 82vh; display: flex; flex-direction: column;
+            transform: translateY(105%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
+        }
+        .bets-modal-sheet.open { transform: translateY(0); }
+        @media (min-width: 900px) { .bets-modal-sheet { max-width: 780px; } }
+        .bets-modal-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 3px; margin: 10px auto 2px; flex-shrink: 0; }
+        .bets-modal-header {
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 10px 20px 14px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+        }
+        .bets-modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 1.5px; }
+        .bets-modal-close {
+            background: rgba(255,255,255,0.08); border: none; color: var(--text);
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .bets-modal-close:hover { background: rgba(255,77,90,0.25); }
+        .bets-modal-body { padding: 14px 20px 26px; overflow-y: auto; }
+
         .match-header {
             background: rgba(20,25,40,0.5); backdrop-filter: blur(25px); border-radius: var(--radius-lg);
             padding: 22px 18px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 14px;
@@ -375,6 +419,21 @@
             </div>
         </div>
 
+        <button class="bets-fab" id="bets-shortcut-btn" title="Ver mis apuestas guardadas">
+            📓
+            <span class="fab-badge" id="bets-count-badge">0</span>
+        </button>
+
+        <div class="bets-modal-backdrop" id="bets-modal-backdrop"></div>
+        <div class="bets-modal-sheet" id="bets-modal-sheet">
+            <div class="bets-modal-handle"></div>
+            <div class="bets-modal-header">
+                <span class="bets-modal-title">📓 Mis Apuestas Guardadas</span>
+                <button class="bets-modal-close" id="bets-modal-close">✕</button>
+            </div>
+            <div class="bets-modal-body" id="saved-bets-container"></div>
+        </div>
+
         <div id="results" class="hidden">
             <div id="loading-indicator" class="card loading-state">
                 <div class="spinner"></div>
@@ -385,7 +444,6 @@
                 <div id="match-header-container"></div>
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
-                <div id="saved-bets-container"></div>
                 <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">
                     Data.Predict v2.8 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local
                 </p>
@@ -508,7 +566,6 @@
         let activeMarkets = { goles: true, ht: true, btts: true, corn: true };
         let currentMatchHome = null, currentMatchAway = null, currentMatchLeagueName = null;
         let apiOnline = false;
-        let showSavedBets = true;
 
         // ========== FUNCIONES API ==========
         async function testApiConnection() {
@@ -726,38 +783,41 @@
 
         function renderSavedBets() {
             const container = document.getElementById('saved-bets-container');
+            const countBadge = document.getElementById('bets-count-badge');
             if (!container) return;
             const bets = getSavedBets();
             const stats = { total: bets.length, won: bets.filter(b => b.status === 'won').length, lost: bets.filter(b => b.status === 'lost').length, pending: bets.filter(b => b.status === 'pending').length };
             const resolved = stats.won + stats.lost;
             const winRate = resolved > 0 ? Math.round((stats.won / resolved) * 100) : 0;
-            
-            let html = `<div class="bets-section animate-in">
-                <div class="section-header" style="cursor:pointer;" onclick="toggleSavedBets()">
-                    <span class="section-title">📋 Mis Apuestas Guardadas</span>
-                    <span class="section-lambda" style="color:var(--muted);font-size:0.75rem;">${showSavedBets ? '▼' : '▶'} ${bets.length}</span>
-                </div>`;
-            
-            if (showSavedBets) {
-                if (bets.length) {
-                    html += `<div class="bets-stats"><span>📊 Total: <strong>${stats.total}</strong></span><span class="stat-win">✅ ${stats.won}</span><span class="stat-lose">❌ ${stats.lost}</span><span class="stat-pending">⏳ ${stats.pending}</span>${resolved ? `<span>🎯 ${winRate}%</span>` : ''}</div>`;
-                    bets.forEach(b => {
-                        const cls = b.status === 'won' ? 'won' : b.status === 'lost' ? 'lost' : 'pending';
-                        const emoji = b.status === 'won' ? '✅' : b.status === 'lost' ? '❌' : '⏳';
-                        html += `<div class="bet-item ${cls}"><div class="bet-info"><div class="bet-match">${b.partido}</div><div class="bet-detail">${b.ligaNombre} · ${b.mercado} · ${b.pick} ${emoji}</div><div class="bet-prob" style="color:${colorFor(b.probabilidad)}">${b.probabilidad.toFixed(0)}%</div></div><div class="bet-actions">${b.status !== 'won' ? `<button class="btn-won" onclick="updateBetStatus(${b.id},'won')">✅</button>` : ''}${b.status !== 'lost' ? `<button class="btn-lost" onclick="updateBetStatus(${b.id},'lost')">❌</button>` : ''}${b.status !== 'pending' ? `<button class="btn-pending" onclick="updateBetStatus(${b.id},'pending')">⏳</button>` : ''}<button class="btn-delete" onclick="deleteBet(${b.id})">🗑️</button></div></div>`;
-                    });
-                    html += `<button class="clear-all-bets" onclick="clearAllBets()">🗑️ Eliminar todas</button>`;
-                } else { 
-                    html += `<div class="no-bets" style="text-align:center;padding:20px;color:var(--muted);">📭 Sin apuestas. Usa 💾 <strong>Guardar</strong> en cualquier mercado.</div>`; 
-                }
+
+            if (countBadge) countBadge.textContent = stats.total;
+
+            let html = '';
+            if (bets.length) {
+                html += `<div class="bets-stats"><span>📊 Total: <strong>${stats.total}</strong></span><span class="stat-win">✅ ${stats.won}</span><span class="stat-lose">❌ ${stats.lost}</span><span class="stat-pending">⏳ ${stats.pending}</span>${resolved ? `<span>🎯 ${winRate}%</span>` : ''}</div>`;
+                bets.forEach(b => {
+                    const cls = b.status === 'won' ? 'won' : b.status === 'lost' ? 'lost' : 'pending';
+                    const emoji = b.status === 'won' ? '✅' : b.status === 'lost' ? '❌' : '⏳';
+                    html += `<div class="bet-item ${cls}"><div class="bet-info"><div class="bet-match">${b.partido}</div><div class="bet-detail">${b.ligaNombre} · ${b.mercado} · ${b.pick} ${emoji}</div><div class="bet-prob" style="color:${colorFor(b.probabilidad)}">${b.probabilidad.toFixed(0)}%</div></div><div class="bet-actions">${b.status !== 'won' ? `<button class="btn-won" onclick="updateBetStatus(${b.id},'won')">✅</button>` : ''}${b.status !== 'lost' ? `<button class="btn-lost" onclick="updateBetStatus(${b.id},'lost')">❌</button>` : ''}${b.status !== 'pending' ? `<button class="btn-pending" onclick="updateBetStatus(${b.id},'pending')">⏳</button>` : ''}<button class="btn-delete" onclick="deleteBet(${b.id})">🗑️</button></div></div>`;
+                });
+                html += `<button class="clear-all-bets" onclick="clearAllBets()">🗑️ Eliminar todas</button>`;
+            } else {
+                html += `<div class="no-bets" style="text-align:center;padding:20px;color:var(--muted);">📭 Sin apuestas. Usa 💾 <strong>Guardar</strong> en cualquier mercado.</div>`;
             }
-            html += `</div>`; 
             container.innerHTML = html;
         }
 
-        function toggleSavedBets() {
-            showSavedBets = !showSavedBets;
+        function openBetsModal() {
             renderSavedBets();
+            document.getElementById('bets-modal-backdrop').classList.add('open');
+            document.getElementById('bets-modal-sheet').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBetsModal() {
+            document.getElementById('bets-modal-backdrop').classList.remove('open');
+            document.getElementById('bets-modal-sheet').classList.remove('open');
+            document.body.style.overflow = '';
         }
 
         // ========== INTERFAZ ==========
@@ -1012,7 +1072,11 @@
                 selectLeague(key, null);
             }
             renderSavedBets();
-            
+
+            document.getElementById('bets-shortcut-btn').onclick = openBetsModal;
+            document.getElementById('bets-modal-close').onclick = closeBetsModal;
+            document.getElementById('bets-modal-backdrop').onclick = closeBetsModal;
+
             addDiagLog('🔌', 'Conectando a Bzzoiro...');
             await testApiConnection();
         });
