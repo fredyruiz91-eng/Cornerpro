@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data.Predict · PRO v2.8 FINAL</title>
+    <title>Data.Predict · PRO v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -60,7 +60,6 @@
             z-index: 1;
         }
 
-        /* Responsive: más ancho en PC */
         @media (min-width: 900px) {
             .container {
                 max-width: 780px;
@@ -152,14 +151,12 @@
         .league-pill:hover { border-color: var(--accent); color: var(--text); background: rgba(255,77,90,0.1); transform: translateY(-2px); }
         .league-pill.active { background: linear-gradient(135deg, rgba(255,77,90,0.25), rgba(77,171,247,0.2)); border-color: var(--accent); color: white; }
 
-        /* Selects originales (los dejamos por si los usas en otra parte) */
         select {
             width: 100%; padding: 12px 15px; border-radius: var(--radius-sm);
             border: 1px solid rgba(255,255,255,0.1); background: rgba(20,25,40,0.4);
             backdrop-filter: blur(15px); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
         }
 
-        /* Inputs para búsqueda de equipos (nuevo) */
         input.team-search {
             width: 100%;
             padding: 12px 15px;
@@ -210,7 +207,6 @@
             font-family: 'DM Sans', sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
 
-        /* ===== Hoja flotante de apuestas guardadas ===== */
         .bets-modal-backdrop {
             position: fixed; inset: 0; background: rgba(5,7,14,0.6); backdrop-filter: blur(2px);
             z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
@@ -352,7 +348,6 @@
             opacity: 0.8;
         }
 
-        /* Ajustes móviles */
         @media (max-width: 600px) {
             .league-pill, .mkt-toggle, .save-bet-btn, .result-save-btn {
                 padding: 8px 14px;
@@ -384,7 +379,7 @@
     <div class="container">
         <div class="header">
             <div class="logo">Data<span>Predict</span></div>
-            <div class="badge">⚡ v2.8 FINAL</div>
+            <div class="badge">⚡ v2.9</div>
             <div class="badge-api offline" id="api-badge">🔗 API (---)</div>
         </div>
 
@@ -445,24 +440,29 @@
                 <div id="all-markets-container"></div>
                 <div id="recomendacion-container"></div>
                 <p class="disclaimer" style="text-align:center;color:var(--muted);font-size:0.6rem;margin-top:20px;">
-                    Data.Predict v2.8 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local
+                    Data.Predict v3.0 · Dixon‑Coles · Córneres realistas · Datos vía API Bzzoiro + Local · Estimaciones estadísticas, no garantías
                 </p>
             </div>
         </div>
     </div>
 
     <script>
-    // ========== CONFIGURACIÓN API CORRECTA ==========
-    const API_URLS = [
-        'https://sports.bzzoiro.com/api/events',
-        'https://api.bzzoiro.com/events',
-        'https://bzzoiro.com/api/events'
-    ];
-    let API_BASE = API_URLS[0];
+    // ========== CONFIGURACIÓN API (Bzzoiro Sports Data, v2) ==========
+    // La base real de la API es .../api/v2/ (la versión anterior usaba .../api/events,
+    // que no existe → por eso siempre caía a "datos locales" sin importar la clave).
+    const API_BASE = 'https://sports.bzzoiro.com/api/v2';
+    // Consigue una clave gratis en https://sports.bzzoiro.com/register/ (cuenta → API key)
+    // y pégala aquí. La clave de ejemplo anterior no es una clave real de tu cuenta.
+    // NOTA DE SEGURIDAD: esta clave queda expuesta en el HTML/JS del cliente (visible para
+    // cualquiera que abra las herramientas de desarrollador). Si esta app se publica de
+    // verdad, la llamada a la API externa debería pasar por un backend/proxy propio que
+    // guarde la clave en el servidor, nunca en el front-end.
     const API_KEY = 'dd07cdbeed19f58195949f42b3836397a172cb11';
-    const API_TIMEOUT = 5000;
-    const CACHE_KEY = 'dataPredict_api_cache_v28';
+    const API_TIMEOUT = 6000;
+    const CACHE_KEY = 'dataPredict_api_cache_v29';
     const CACHE_TTL = 60 * 60 * 1000;
+    // Cache en memoria de nombre de equipo -> team_id de Bzzoiro (evita repetir /teams/?name=)
+    const teamIdCache = {};
 
     // ========== DIAGNÓSTICO ==========
     const diagLog = [];
@@ -695,10 +695,18 @@
     const DIXON_COLES_RHO = { "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070, "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "WC26": -0.055, "default": -0.13 };
     const PLATT_PARAMS = { goals15: { A: 0.951, B: -0.038 }, goals25: { A: 0.933, B: -0.055 }, btts: { A: 0.956, B: -0.034 }, corners: { A: 0.970, B: -0.022 }, goals_ht05: { A: 0.960, B: -0.030 }, goals_ht15: { A: 0.938, B: -0.048 }, resultado: { A: 0.918, B: -0.068 } };
 
+    // NOTA: el Mundial 2026 (11 jun–19 jul 2026) ya está en curso a la fecha de esta app.
+    // La versión anterior traía "semifinalistas" fijos y hardcodeados (France, Spain, England,
+    // Argentina), lo cual es un dato inventado que además bloqueaba el cálculo para cualquier
+    // otro cruce de selecciones. Eso es un bug, no una función: nunca hay que fijar en el
+    // código "quién sigue vivo" en un torneo real, porque se desactualiza de inmediato y
+    // además puede ser directamente falso. Se desactiva el bloqueo; si se quiere reflejar
+    // fases reales del torneo, ese dato debería venir de la API en vivo (apiData), no de una
+    // constante fija en el archivo.
     const WC26_STATE = {
-        phase: 'semifinals',
-        activeTeams: ['France', 'Spain', 'England', 'Argentina'],
-        blocked: true
+        phase: 'unknown',
+        activeTeams: [],
+        blocked: false
     };
 
     let currentLeagueKey = null;
@@ -707,64 +715,111 @@
     let apiOnline = false;
 
     // ========== FUNCIONES API ==========
+
+    // Helper genérico con timeout y manejo de error uniforme para toda la API v2.
+    async function apiGet(path) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+        let response;
+        try {
+            response = await fetch(`${API_BASE}${path}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Token ${API_KEY}` },
+                signal: controller.signal
+            });
+        } catch (err) {
+            clearTimeout(timeoutId);
+            if (err.name === 'AbortError') throw new Error('TIMEOUT');
+            throw err;
+        }
+        clearTimeout(timeoutId);
+        if (!response.ok) throw new Error(`HTTP ${response.status} en ${path}`);
+        return response.json();
+    }
+
     async function testApiConnection() {
         const statusEl = document.getElementById('api-status');
         const badgeEl = document.getElementById('api-badge');
-        
-        addDiagLog('🔌', `Probando: ${API_BASE}`);
-        
+
+        addDiagLog('🔌', `Probando: ${API_BASE}/events/live/`);
+
         try {
-            const response = await new Promise((resolve, reject) => {
-                let timeoutId;
-                const timeoutPromise = new Promise((_, reject) => {
-                    timeoutId = setTimeout(() => {
-                        reject(new Error('TIMEOUT'));
-                    }, API_TIMEOUT);
-                });
-
-                fetch(`${API_BASE}/?league=27`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Token ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(response => {
-                        clearTimeout(timeoutId);
-                        resolve(response);
-                    })
-                    .catch(error => {
-                        clearTimeout(timeoutId);
-                        reject(error);
-                    });
-            });
-
-            if (response.ok) {
-                apiOnline = true;
-                statusEl.innerHTML = '<span class="api-status-icon">✅</span><span class="api-status-text">API Bzzoiro conectada</span>';
-                statusEl.className = 'api-status online';
-                badgeEl.classList.remove('offline');
-                badgeEl.classList.add('online');
-                badgeEl.textContent = '🔗 API ONLINE';
-                addDiagLog('✅', 'Conexión exitosa con Bzzoiro');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
+            // Endpoint real, liviano y sin parámetros obligatorios: sirve como "ping".
+            await apiGet('/events/live/');
+            apiOnline = true;
+            statusEl.innerHTML = '<span class="api-status-icon">✅</span><span class="api-status-text">API Bzzoiro conectada</span>';
+            statusEl.className = 'api-status online';
+            badgeEl.classList.remove('offline');
+            badgeEl.classList.add('online');
+            badgeEl.textContent = '🔗 API ONLINE';
+            addDiagLog('✅', 'Conexión exitosa con Bzzoiro');
         } catch (error) {
             apiOnline = false;
             const errorMsg = error.message;
-            
+
             statusEl.innerHTML = `<span class="api-status-icon">⚠️</span><span class="api-status-text">Bzzoiro no disponible (${errorMsg})</span><button class="api-retry-btn" onclick="testApiConnection()">Reintentar</button>`;
             statusEl.className = 'api-status offline';
             badgeEl.classList.remove('online');
             badgeEl.classList.add('offline');
             badgeEl.textContent = '🔗 API OFFLINE';
-            
+
             addDiagLog('❌', `Bzzoiro no disponible: ${errorMsg}`);
+            if (errorMsg.includes('401') || errorMsg.includes('403')) {
+                addDiagLog('🔑', 'Revisa tu API_KEY: regístrate en sports.bzzoiro.com/register/');
+            }
+            if (errorMsg.includes('Failed to fetch') || errorMsg.includes('TIMEOUT')) {
+                addDiagLog('🌐', 'Puede ser CORS (bloqueo del navegador) o falta de red, no solo la API');
+            }
             addDiagLog('📊', 'Usando datos locales (fallback)');
         }
     }
 
+    // Busca el team_id de Bzzoiro a partir del nombre local del equipo.
+    async function findTeamId(name) {
+        if (teamIdCache[name] !== undefined) return teamIdCache[name];
+        try {
+            const data = await apiGet(`/teams/?name=${encodeURIComponent(name)}&limit=5`);
+            const results = data.results || [];
+            if (!results.length) { teamIdCache[name] = null; return null; }
+            const lower = name.toLowerCase();
+            const exact = results.find(t =>
+                (t.name || '').toLowerCase() === lower || (t.short_name || '').toLowerCase() === lower
+            );
+            const id = (exact || results[0]).id;
+            teamIdCache[name] = id;
+            return id;
+        } catch (err) {
+            addDiagLog('❌', `Buscando equipo "${name}": ${err.message}`);
+            return null;
+        }
+    }
+
+    // Busca, entre los próximos partidos del equipo local, el que sea contra el visitante.
+    async function findUpcomingEvent(homeId, awayId) {
+        const fmt = d => d.toISOString().slice(0, 10);
+        const today = fmt(new Date());
+        const future = fmt(new Date(Date.now() + 21 * 24 * 60 * 60 * 1000));
+        const data = await apiGet(`/teams/${homeId}/matches/?date_from=${today}&date_to=${future}&limit=50`);
+        const list = data.results || data.matches || [];
+        return list.find(m => m.away_team_id === awayId || m.home_team_id === awayId) || null;
+    }
+
+    // Trae la predicción ML ya calculada por Bzzoiro para un evento (si existe).
+    async function getPrediction(eventId) {
+        try {
+            return await apiGet(`/predictions/by-event/${eventId}/`);
+        } catch (err) {
+            try {
+                const data = await apiGet(`/predictions/?event=${eventId}&limit=1`);
+                return (data.results && data.results[0]) || null;
+            } catch (err2) {
+                addDiagLog('⚠️', `Sin predicción de Bzzoiro para event_id=${eventId}`);
+                return null;
+            }
+        }
+    }
+
+    // Punto de entrada: resuelve equipos → evento → predicción real, con caché local.
     async function fetchMatchDataFromAPI(leagueId, homeTeam, awayTeam) {
         if (!apiOnline) return null;
 
@@ -772,45 +827,43 @@
         if (cachedData) return cachedData;
 
         try {
-            const response = await new Promise((resolve, reject) => {
-                let timeoutId;
-                timeoutId = setTimeout(() => {
-                    reject(new Error('TIMEOUT'));
-                }, API_TIMEOUT);
-
-                fetch(`${API_BASE}/?league=${leagueId}&home=${homeTeam}&away=${awayTeam}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Token ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(response => {
-                        clearTimeout(timeoutId);
-                        resolve(response);
-                    })
-                    .catch(error => {
-                        clearTimeout(timeoutId);
-                        reject(error);
-                    });
-            });
-
-            if (!response.ok) {
-                addDiagLog('⚠️', `API error: HTTP ${response.status}`);
+            const [homeId, awayId] = await Promise.all([findTeamId(homeTeam), findTeamId(awayTeam)]);
+            if (!homeId || !awayId) {
+                addDiagLog('⚠️', 'No se encontró team_id de Bzzoiro para uno o ambos equipos');
                 return null;
             }
 
-            const data = await response.json();
-            setApiCache(leagueId, homeTeam, awayTeam, data);
-            addDiagLog('📡', `API: ${homeTeam} vs ${awayTeam}`);
-            return data;
+            const event = await findUpcomingEvent(homeId, awayId);
+            if (!event) {
+                addDiagLog('⚠️', 'No hay un partido próximo entre estos equipos en la API (puede que aún no esté programado)');
+                return null;
+            }
+
+            const pred = await getPrediction(event.id);
+            if (!pred || !pred.markets) {
+                addDiagLog('⚠️', 'Evento encontrado pero sin predicción ML todavía');
+                return null;
+            }
+
+            const result = {
+                source: 'bzzoiro',
+                event_id: event.id,
+                expected_goals: pred.markets.expected_goals || null,   // { home, away }
+                match_result: pred.markets.match_result || null,        // { prob_home, prob_draw, prob_away }
+                over_under: pred.markets.over_under || null,            // { prob_over_15, prob_over_25, prob_over_35 }
+                btts: pred.markets.btts || null                         // { prob_yes }
+            };
+
+            setApiCache(leagueId, homeTeam, awayTeam, result);
+            addDiagLog('📡', `Predicción Bzzoiro: xG ${result.expected_goals?.home ?? '?'} - ${result.expected_goals?.away ?? '?'}`);
+            return result;
         } catch (error) {
-            addDiagLog('❌', `Fetch error: ${error.message}`);
+            addDiagLog('❌', `Error API: ${error.message}`);
             return null;
         }
     }
 
-    // ========== FUNCIONES MATEMÁTICAS CORREGIDAS ==========
+    // ========== FUNCIONES MATEMÁTICAS ==========
     function plattCalibrate(raw, type) {
         const p = Math.max(0.001, Math.min(0.999, raw / 100));
         const logit = Math.log(p / (1 - p));
@@ -886,7 +939,7 @@
                 else pA += p; 
             } 
         }
-        const sum = pH + pD + pA;
+        const sum = (pH + pD + pA) || 1;
         return { home: +((pH / sum) * 100).toFixed(1), draw: +((pD / sum) * 100).toFixed(1), away: +((pA / sum) * 100).toFixed(1) }; 
     }
     
@@ -1012,6 +1065,10 @@
         activeMarkets = { goles: liga.markets.goles, ht: liga.markets.ht, btts: liga.markets.btts, corn: liga.markets.corn };
         renderMarketToggles();
         loadTeams(key);
+        // Al cambiar de liga se limpia el resultado anterior para evitar mostrar un
+        // partido calculado con una liga distinta a la seleccionada.
+        currentMatchHome = null; currentMatchAway = null; currentMatchLeagueName = null;
+        document.getElementById('results').classList.add('hidden');
     }
 
     function loadTeams(key) {
@@ -1071,31 +1128,39 @@
             }
 
             const liga = LIGAS[currentLeagueKey];
-            let hStr, aStr, baseGoals, hAdv;
+            // Los ratings locales (hStr/aStr) siempre se calculan: la API de Bzzoiro no
+            // entrega goles esperados de 1er tiempo ni de córneres, así que esos dos mercados
+            // siempre usan el motor local. Lo que sí puede venir de la API son los goles
+            // esperados (xG) totales de la predicción ML real, que son mejores que nuestra
+            // estimación local cuando están disponibles.
+            const hStr = db[home] || { atk: 1, def: 1 };
+            const aStr = db[away] || { atk: 1, def: 1 };
+            const baseGoals = liga.goalsAvg / 2;
+            const hAdv = HOME_ADVANTAGE[currentLeagueKey] || 1.08;
 
-            if (apiData && apiData.home && apiData.away) {
-                addDiagLog('📡', 'Usando datos API Bzzoiro');
-                hStr = { atk: apiData.home.attack || 1.0, def: apiData.home.defense || 1.0 };
-                aStr = { atk: apiData.away.attack || 1.0, def: apiData.away.defense || 1.0 };
-                baseGoals = apiData.league_goals_avg ? apiData.league_goals_avg / 2 : liga.goalsAvg / 2;
-                hAdv = apiData.home_advantage || HOME_ADVANTAGE[currentLeagueKey] || 1.08;
+            let lH, lA, usedApiGoals = false;
+            if (apiData && apiData.expected_goals && Number.isFinite(apiData.expected_goals.home) && Number.isFinite(apiData.expected_goals.away)) {
+                addDiagLog('📡', 'Usando xG real de la predicción ML de Bzzoiro');
+                lH = +apiData.expected_goals.home.toFixed(2);
+                lA = +apiData.expected_goals.away.toFixed(2);
+                usedApiGoals = true;
             } else {
-                addDiagLog('📊', 'Usando datos locales');
-                hStr = db[home] || { atk: 1, def: 1 };
-                aStr = db[away] || { atk: 1, def: 1 };
-                baseGoals = liga.goalsAvg / 2;
-                hAdv = HOME_ADVANTAGE[currentLeagueKey] || 1.08;
+                addDiagLog('📊', 'Usando modelo local (ratings de ataque/defensa)');
+                lH = +(baseGoals * hStr.atk * aStr.def * hAdv).toFixed(2);
+                lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
             }
-
-            const lH = +(baseGoals * hStr.atk * aStr.def * hAdv).toFixed(2);
-            const lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
             const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
-            
-            const apiCornersAvg = normalizeCornersAvg(apiData?.league_corners_avg);
-            const leagueCornersAvg = apiCornersAvg ?? Number(liga.cornAvg);
-            const lCornRaw = leagueCornersAvg * ((hStr.atk + aStr.atk) / 2);
+
+            const leagueCornersAvg = Number(liga.cornAvg);
+            // Mejora: los córneres no solo suben con más ataque, sino también cuando el rival
+            // tiene una defensa más floja (def > 1 = defensa débil = más presión sostenida =
+            // más córneres concedidos). Antes solo se usaba el promedio de ataque; ahora se
+            // combina con el promedio de "def" de ambos equipos para reflejar eso.
+            const attackPressure = (hStr.atk + aStr.atk) / 2;
+            const defenseWeakness = (hStr.def + aStr.def) / 2;
+            const lCornRaw = leagueCornersAvg * ((attackPressure + defenseWeakness) / 2);
             const lCorn = +Math.min(11.0, Math.max(8.0, lCornRaw)).toFixed(2);
-            const cornR = (apiData && apiData.corners_r) ? apiData.corners_r : (liga.cornR || 18);
+            const cornR = liga.cornR || 18; // Bzzoiro no expone un parámetro de dispersión de córneres
 
             addDiagLog('✅', `Cálculo completado: lCorn=${lCorn}, cornR=${cornR}`);
 
@@ -1113,12 +1178,22 @@
                         <div class="teams-row"><div class="team-side"><div class="team-name">${home}</div></div><div class="vs-center">VS</div><div class="team-side"><div class="team-name">${away}</div></div></div>
                     </div>`;
 
-                const rp = calcResultProbs(lH, lA, currentLeagueKey);
-                const hP = +plattCalibrate(rp.home, 'resultado').toFixed(1), dP = +plattCalibrate(rp.draw, 'resultado').toFixed(1), aP = +plattCalibrate(rp.away, 'resultado').toFixed(1);
-                const resultSum = hP + dP + aP;
-                const hPN = +(hP * 100 / resultSum).toFixed(1);
-                const dPN = +(dP * 100 / resultSum).toFixed(1);
-                const aPN = +(aP * 100 / resultSum).toFixed(1);
+                let hPN, dPN, aPN;
+                if (apiData && apiData.match_result) {
+                    // La API ya entrega probabilidades calibradas por su propio modelo ML
+                    // (CatBoost); son mejores que re-derivarlas nosotros desde xG + Poisson.
+                    addDiagLog('📡', 'Usando 1X2 calibrado de Bzzoiro');
+                    hPN = +apiData.match_result.prob_home.toFixed(1);
+                    dPN = +apiData.match_result.prob_draw.toFixed(1);
+                    aPN = +apiData.match_result.prob_away.toFixed(1);
+                } else {
+                    const rp = calcResultProbs(lH, lA, currentLeagueKey);
+                    const hP = +plattCalibrate(rp.home, 'resultado').toFixed(1), dP = +plattCalibrate(rp.draw, 'resultado').toFixed(1), aP = +plattCalibrate(rp.away, 'resultado').toFixed(1);
+                    const resultSum = (hP + dP + aP) || 1;
+                    hPN = +(hP * 100 / resultSum).toFixed(1);
+                    dPN = +(dP * 100 / resultSum).toFixed(1);
+                    aPN = +(aP * 100 / resultSum).toFixed(1);
+                }
 
                 document.getElementById('match-header-container').innerHTML += `
                     <div class="result-boxes animate-in">
@@ -1141,20 +1216,32 @@
 
                 let html = '';
                 const l = lH + lA;
+                const apiOU = apiData && apiData.over_under;
+                // Estas variables se calculan una sola vez aquí y se reutilizan tal cual en el
+                // bloque de "mejor pick" más abajo. Antes el pick se recalculaba por separado
+                // con solo el modelo local, así que si la API estaba activa el número mostrado
+                // en la tarjeta del mercado y el de "mejor pick" podían no coincidir.
+                let g15 = null, g25 = null, btts = null, g05 = null;
+
                 if (activeMarkets.goles) {
-                    const g15 = plattCalibrate(poissonOver(l, 1.5), 'goals15'), g25 = plattCalibrate(poissonOver(l, 2.5), 'goals25');
-                    html += `<div class="section-header"><span class="section-title">⚽ GOLES TOTALES</span><span class="section-lambda">λ <span>${l.toFixed(2)}</span></span></div>
+                    g15 = apiOU ? Math.min(98, Math.max(2, apiOU.prob_over_15)) : plattCalibrate(poissonOver(l, 1.5), 'goals15');
+                    g25 = apiOU ? Math.min(98, Math.max(2, apiOU.prob_over_25)) : plattCalibrate(poissonOver(l, 2.5), 'goals25');
+                    html += `<div class="section-header"><span class="section-title">⚽ GOLES TOTALES</span><span class="section-lambda">${apiOU ? 'xG API' : 'λ'} <span>${l.toFixed(2)}</span></span></div>
                         <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>
                         <div class="market-card ${cardClassFor(g25)}"><div class="line-label">+2.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g25}" style="background:${colorFor(g25)};"></div></div></div><div class="pct-label" style="color:${colorFor(g25)}">${g25.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +2.5" data-pick="Over" onclick="guardarApuesta('Goles +2.5','Over',${g25.toFixed(0)})">💾 Guardar</button></div>`;
                 }
                 if (activeMarkets.ht) {
-                    const g05 = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05'), g15 = plattCalibrate(poissonOver(lHT, 1.5), 'goals_ht15');
+                    // HT siempre local: Bzzoiro no separa expected_goals por 1er tiempo.
+                    g05 = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05');
+                    const g15ht = plattCalibrate(poissonOver(lHT, 1.5), 'goals_ht15');
                     html += `<div class="section-header"><span class="section-title">⏱ 1er TIEMPO</span><span class="section-lambda">λ <span>${lHT}</span></span></div>
                         <div class="market-card ${cardClassFor(g05)}"><div class="line-label">+0.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g05}" style="background:${colorFor(g05)};"></div></div></div><div class="pct-label" style="color:${colorFor(g05)}">${g05.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +0.5" data-pick="Over" onclick="guardarApuesta('HT +0.5','Over',${g05.toFixed(0)})">💾 Guardar</button></div>
-                        <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +1.5" data-pick="Over" onclick="guardarApuesta('HT +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>`;
+                        <div class="market-card ${cardClassFor(g15ht)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15ht}" style="background:${colorFor(g15ht)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15ht)}">${g15ht.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +1.5" data-pick="Over" onclick="guardarApuesta('HT +1.5','Over',${g15ht.toFixed(0)})">💾 Guardar</button></div>`;
                 }
                 if (activeMarkets.btts) {
-                    const btts = plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
+                    btts = (apiData && apiData.btts && Number.isFinite(apiData.btts.prob_yes))
+                        ? Math.min(98, Math.max(2, apiData.btts.prob_yes))
+                        : plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
                     html += `<div class="section-header"><span class="section-title">🤝 AMBOS MARCAN</span></div>
                         <div class="market-card ${cardClassFor(btts)}"><div class="line-label">BTTS</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${btts}" style="background:${colorFor(btts)};"></div></div></div><div class="pct-label" style="color:${colorFor(btts)}">${btts.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="BTTS" data-pick="Sí" onclick="guardarApuesta('BTTS','Sí',${btts.toFixed(0)})">💾 Guardar</button></div>`;
                 }
@@ -1167,11 +1254,8 @@
                 }
 
                 document.getElementById('all-markets-container').innerHTML = html;
-                
-                const g15Rec = plattCalibrate(poissonOver(l, 1.5), 'goals15');
-                const g25Rec = plattCalibrate(poissonOver(l, 2.5), 'goals25');
-                const bttsRec = plattCalibrate(calcBTTS(lH, lA, currentLeagueKey), 'btts');
-                const g05htRec = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05');
+
+                const g15Rec = g15, g25Rec = g25, bttsRec = btts, g05htRec = g05;
 
                 let bestPick = null;
                 let bestProb = -1;
@@ -1222,7 +1306,7 @@
 
     // ========== INICIALIZACIÓN ==========
     document.addEventListener('DOMContentLoaded', async () => {
-        addDiagLog('🚀', 'Data.Predict PRO v2.8 FINAL');
+        addDiagLog('🚀', 'Data.Predict PRO v3.0');
         addDiagLog('🔍', 'Bzzoiro Sports Data API');
         renderLeaguePills();
         renderMarketToggles();
@@ -1240,4 +1324,5 @@
         addDiagLog('🔌', 'Conectando a Bzzoiro...');
         await testApiConnection();
     });
-</script>
+</script></document_content>
+</html>
