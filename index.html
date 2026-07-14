@@ -799,7 +799,12 @@
         const fmt = d => d.toISOString().slice(0, 10);
         const today = fmt(new Date());
         const future = fmt(new Date(Date.now() + 21 * 24 * 60 * 60 * 1000));
-        const data = await apiGet(`/teams/${homeId}/matches/?date_from=${today}&date_to=${future}&limit=50`);
+        // CORRECCIÓN: el sub-recurso real de Bzzoiro es /fixtures/, no /matches/ (por eso
+        // salían los 404 en el panel de diagnóstico). Sin filtros de fecha, la API ya
+        // devuelve por defecto una ventana de ahora−3h a ahora+7d, pero mandamos date_from/
+        // date_to explícitos para cubrir un rango más amplio (hasta 21 días) y encontrar
+        // partidos programados con más antelación.
+        const data = await apiGet(`/teams/${homeId}/fixtures/?date_from=${today}&date_to=${future}&limit=50`);
         const list = data.results || data.matches || [];
         return list.find(m => m.away_team_id === awayId || m.home_team_id === awayId) || null;
     }
