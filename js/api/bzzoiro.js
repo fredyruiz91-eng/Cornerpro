@@ -21,7 +21,7 @@ const API_BASE = 'https://sports.bzzoiro.com/api/v2';
 // cualquiera que abra las herramientas de desarrollador). Si esta app se publica de
 // verdad, la llamada a la API externa debería pasar por un backend/proxy propio que
 // guarde la clave en el servidor, nunca en el front-end.
-const API_KEY = 'PEGA_AQUI_TU_API_KEY_DE_BZZOIRO';
+const API_KEY = 'dd07cdbeed19f58195949f42b3836397a172cb11';
 const API_TIMEOUT = 6000;
 const CACHE_KEY = 'dataPredict_api_cache_v29';
 const CACHE_TTL = 60 * 60 * 1000;
