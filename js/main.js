@@ -7,9 +7,9 @@
 // datos propios — solo orden y flujo.
 // ============================================================================
 
-import { LIGAS, HOME_ADVANTAGE, WC26_STATE } from './config/leagues.js';
+import { LIGAS, HOME_ADVANTAGE, WC26_STATE, CORNER_HOME_BIAS } from './config/leagues.js';
 import {
-plattCalibrate, poissonOver, negBinOver, calcBTTS, calcResultProbs, colorFor, cardClassFor
+plattCalibrate, poissonOver, negBinOver, calcBTTS, calcResultProbs, colorFor, cardClassFor, splitCornerLambda
 } from './models/stats.js';
 import { addDiagLog } from './utils/diag.js';
 import { state } from './state.js';
@@ -90,7 +90,11 @@ document.getElementById('calc-btn').onclick = async () => {
         const lCorn = +Math.min(11.0, Math.max(8.0, lCornRaw)).toFixed(2);
         const cornR = liga.cornR || 18; // Bzzoiro no expone un parámetro de dispersión de córneres
 
-        addDiagLog('✅', `Cálculo completado: lCorn=${lCorn}, cornR=${cornR}`);
+        // Reparto del total entre local y visitante (fórmula en models/stats.js,
+        // parámetro CORNER_HOME_BIAS en config/leagues.js).
+        const lCornSplit = splitCornerLambda(lCorn, hStr.atk, hStr.def, aStr.atk, aStr.def, CORNER_HOME_BIAS);
+
+        addDiagLog('✅', `Cálculo completado: lCorn=${lCorn} (local ${lCornSplit.home} / visita ${lCornSplit.away}), cornR=${cornR}`);
 
         document.getElementById('results').classList.remove('hidden');
         document.getElementById('loading-indicator').classList.remove('hidden');
@@ -178,6 +182,21 @@ document.getElementById('calc-btn').onclick = async () => {
                 [7.5, 8.5, 9.5, 10.5].forEach(line => {
                     const corn = plattCalibrate(negBinOver(lCorn, line, cornR), 'corners');
                     html += `<div class="market-card ${cardClassFor(corn)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${corn}" style="background:${colorFor(corn)};"></div></div></div><div class="pct-label" style="color:${colorFor(corn)}">${corn.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners +${line}" data-pick="Over" onclick="guardarApuesta('Corners +${line}','Over',${corn.toFixed(0)})">💾 Guardar</button></div>`;
+                });
+
+                // Córneres por equipo (usan la misma binomial negativa, con el total
+                // repartido vía splitCornerLambda). Líneas más bajas porque un solo
+                // equipo saca menos corners que el total del partido.
+                html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES · ${home}</span><span class="section-lambda">μ <span>${lCornSplit.home.toFixed(1)}</span></span></div>`;
+                [2.5, 3.5, 4.5].forEach(line => {
+                    const cornH = plattCalibrate(negBinOver(lCornSplit.home, line, cornR), 'corners');
+                    html += `<div class="market-card ${cardClassFor(cornH)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornH}" style="background:${colorFor(cornH)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornH)}">${cornH.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Local +${line}" data-pick="Over" onclick="guardarApuesta('Corners Local +${line}','Over',${cornH.toFixed(0)})">💾 Guardar</button></div>`;
+                });
+
+                html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES · ${away}</span><span class="section-lambda">μ <span>${lCornSplit.away.toFixed(1)}</span></span></div>`;
+                [2.5, 3.5, 4.5].forEach(line => {
+                    const cornA = plattCalibrate(negBinOver(lCornSplit.away, line, cornR), 'corners');
+                    html += `<div class="market-card ${cardClassFor(cornA)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornA}" style="background:${colorFor(cornA)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornA)}">${cornA.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Visitante +${line}" data-pick="Over" onclick="guardarApuesta('Corners Visitante +${line}','Over',${cornA.toFixed(0)})">💾 Guardar</button></div>`;
                 });
             }
 
