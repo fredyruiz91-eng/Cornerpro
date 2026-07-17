@@ -152,7 +152,7 @@ export function renderSavedBets() {
         });
         html += `<button class="clear-all-bets" onclick="clearAllBets()">🗑️ Eliminar todas</button>`;
     } else {
-        html += `<div class="no-bets" style="text-align:center;padding:20px;color:var(--muted);">📭 Sin apuestas. Usa 💾 <strong>Guardar</strong> en cualquier mercado.</div>`;
+        html += `<div class="no-bets" style="text-align:center;padding:20px;color:var(--muted);">📭 Sin apuestas. Usa 💾 </strong> en cualquier mercado.</div>`;
     }
     container.innerHTML = html;
 }
