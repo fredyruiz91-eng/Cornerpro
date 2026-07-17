@@ -38,7 +38,7 @@ export function renderLeaguePills() {
 export function renderMarketToggles() {
     const c = document.getElementById('market-toggles'); c.innerHTML = '';
     const liga = state.currentLeagueKey ? LIGAS[state.currentLeagueKey] : null;
-    [{ key: 'goles', label: '⚽ Goles' }, { key: 'ht', label: '⏱ HT' }, { key: 'btts', label: '🤝 BTTS' }, { key: 'corn', label: '⬡ Corn' }].forEach(x => {
+    [{ key: 'goles', label: '⚽ Goles' }, { key: 'btts', label: '🤝 BTTS' }, { key: 'corn', label: '⬡ Corn' }].forEach(x => {
         const b = document.createElement('button'); b.className = 'mkt-toggle'; b.textContent = x.label;
         if (!liga || liga.markets[x.key]) {
             if (state.activeMarkets[x.key]) b.classList.add('on');
