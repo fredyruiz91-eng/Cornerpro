@@ -131,7 +131,7 @@ document.getElementById('calc-btn').onclick = async () => {
                     <div class="result-box">
                         <div class="rb-label">LOCAL</div>
                         <div class="rb-pct" style="color:${colorFor(hPN)}">${hPN}%</div>
-                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Local" onclick="guardarApuesta('Resultado','Local',${hPN.toFixed(0)})">💾 Guardar</button>
+                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Local" onclick="guardarApuesta('Resultado','Local',${hPN.toFixed(0)})">💾</button>
                     </div>
                     <div class="result-box">
                         <div class="rb-label">X</div>
