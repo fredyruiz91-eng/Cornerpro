@@ -34,7 +34,12 @@ export function migrateOldBetsIfNeeded() {
 }
 export function getSavedBets() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; } }
 export function saveBetsToStorage(bets) { localStorage.setItem(STORAGE_KEY, JSON.stringify(bets)); }
-export function addBet(betData) { const bets = getSavedBets(); betData.id = Date.now(); betData.fecha = new Date().toISOString(); betData.status = 'pending'; bets.unshift(betData); saveBetsToStorage(bets); return betData; }
+let __betIdCounter = 0;
+function generarBetId() {
+    return Date.now() * 1000 + (__betIdCounter++ % 1000);
+}
+
+export function addBet(betData) { const bets = getSavedBets(); betData.id = generarBetId(); betData.fecha = new Date().toISOString(); betData.status = 'pending'; bets.unshift(betData); saveBetsToStorage(bets); return betData; }
 export function updateBetStatus(betId, newStatus) { const bets = getSavedBets(); const bet = bets.find(b => b.id === betId); if (bet) { bet.status = newStatus; saveBetsToStorage(bets); renderSavedBets(); } }
 export function deleteBet(betId) { let bets = getSavedBets(); bets = bets.filter(b => b.id !== betId); saveBetsToStorage(bets); renderSavedBets(); }
 export function clearAllBets() { if (confirm('¿Eliminar TODAS las apuestas?')) { saveBetsToStorage([]); renderSavedBets(); } }
