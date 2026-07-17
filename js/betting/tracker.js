@@ -80,7 +80,7 @@ export function guardarApuesta(mercado, pick, probabilidad) {
                 b.textContent = '✅ Guardado';
                 setTimeout(() => {
                     b.classList.remove('saved');
-                    b.textContent = '💾 Guardar';
+                    b.textContent = '💾 ';
                 }, 1500);
             }
         });
