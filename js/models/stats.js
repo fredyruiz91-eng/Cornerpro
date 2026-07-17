@@ -20,6 +20,7 @@
 //   colorFor/cardClassFor() -> solo puramente visual (umbrales de color).
 //   normalizeCornersAvg()   -> valida que un promedio de corners de la API sea
 //                              un número usable.
+//   splitCornerLambda()     -> NUEVO: reparte el total de corners entre local/visitante.
 // ============================================================================
 
 import { PLATT_PARAMS, DIXON_COLES_RHO } from '../config/leagues.js';
@@ -113,3 +114,17 @@ export function normalizeCornersAvg(v) {
     return n;
 }
 
+// Reparte el total de corners esperados de un partido (lCorn) entre local y visitante.
+// No es una distribución nueva: usa el mismo mu total, pero lo divide según qué tan
+// "generador de corners" es cada lado (su ataque contra la defensa rival) y un sesgo de
+// localía configurable (CORNER_HOME_BIAS en config/leagues.js).
+export function splitCornerLambda(totalCorners, homeAtk, homeDef, awayAtk, awayDef, homeBias) {
+    const homeFactor = (homeAtk + awayDef) / 2; // ataque local vs. defensa visitante
+    const awayFactor = (awayAtk + homeDef) / 2; // ataque visitante vs. defensa local
+    const rawHome = homeFactor * homeBias;
+    const rawAway = awayFactor;
+    const homeShare = (rawHome + rawAway) > 0 ? rawHome / (rawHome + rawAway) : 0.5;
+    const home = +(totalCorners * homeShare).toFixed(2);
+    const away = +(totalCorners - home).toFixed(2);
+    return { home, away };
+}
