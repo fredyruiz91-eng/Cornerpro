@@ -392,7 +392,12 @@ export const HOME_ADVANTAGE = { "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05,
 export const DIXON_COLES_RHO = { "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070, "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "WC26": -0.055, "USLC": -0.078, "ROU1": -0.082, "SPL": -0.075, "SPFL": -0.080, "SD2": -0.085, "VEIK": -0.078, "UCL": -0.070, "UEL": -0.078, "SB2": -0.088, "COPADELREY": -0.090, "COPPAITALIA": -0.090, "default": -0.13 };
 
 export const PLATT_PARAMS = { goals15: { A: 0.951, B: -0.038 }, goals25: { A: 0.933, B: -0.055 }, btts: { A: 0.956, B: -0.034 }, corners: { A: 0.970, B: -0.022 }, goals_ht05: { A: 0.960, B: -0.030 }, goals_ht15: { A: 0.938, B: -0.048 }, resultado: { A: 0.918, B: -0.068 } };
-
+// Parámetro ajustable: cuánto del total de corners esperados de un partido se lleva el
+// equipo LOCAL vs el VISITANTE, antes de ajustar por fuerza de ataque/defensa de cada uno.
+// 1.00 = reparto 50/50 de base; 1.12 = el local arranca con ~12% más peso (los locales
+// suelen generar más córneres por jugar más tiempo en campo rival). Si quieres afinar esto
+// con datos reales de una liga en particular, este es el único número que necesitas tocar.
+export const CORNER_HOME_BIAS = 1.12;
 // NOTA: el Mundial 2026 (11 jun–19 jul 2026) ya está en curso a la fecha de esta app.
 // La versión anterior traía "semifinalistas" fijos y hardcodeados (France, Spain, England,
 // Argentina), lo cual es un dato inventado que además bloqueaba el cálculo para cualquier
