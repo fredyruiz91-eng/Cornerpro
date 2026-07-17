@@ -131,17 +131,17 @@ document.getElementById('calc-btn').onclick = async () => {
                     <div class="result-box">
                         <div class="rb-label">LOCAL</div>
                         <div class="rb-pct" style="color:${colorFor(hPN)}">${hPN}%</div>
-                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Local" onclick="guardarApuesta('Resultado','Local',${hPN.toFixed(0)})">💾</button>
+                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Local" onclick="guardarApuesta('Resultado','Local',${hPN.toFixed(0)})">💾 </button>
                     </div>
                     <div class="result-box">
                         <div class="rb-label">X</div>
                         <div class="rb-pct" style="color:var(--yellow)">${dPN}%</div>
-                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Empate" onclick="guardarApuesta('Resultado','Empate',${dPN.toFixed(0)})">💾 Guardar</button>
+                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Empate" onclick="guardarApuesta('Resultado','Empate',${dPN.toFixed(0)})">💾 </button>
                     </div>
                     <div class="result-box">
                         <div class="rb-label">VISIT</div>
                         <div class="rb-pct" style="color:${colorFor(aPN)}">${aPN}%</div>
-                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Visitante" onclick="guardarApuesta('Resultado','Visitante',${aPN.toFixed(0)})">💾 Guardar</button>
+                        <button class="result-save-btn" data-mercado="Resultado" data-pick="Visitante" onclick="guardarApuesta('Resultado','Visitante',${aPN.toFixed(0)})">💾 </button>
                     </div>
                 </div>`;
 
@@ -158,8 +158,8 @@ document.getElementById('calc-btn').onclick = async () => {
                 g15 = apiOU ? Math.min(98, Math.max(2, apiOU.prob_over_15)) : plattCalibrate(poissonOver(l, 1.5), 'goals15');
                 g25 = apiOU ? Math.min(98, Math.max(2, apiOU.prob_over_25)) : plattCalibrate(poissonOver(l, 2.5), 'goals25');
                 html += `<div class="section-header"><span class="section-title">⚽ GOLES TOTALES</span><span class="section-lambda">${apiOU ? 'xG API' : 'λ'} <span>${l.toFixed(2)}</span></span></div>
-                    <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>
-                    <div class="market-card ${cardClassFor(g25)}"><div class="line-label">+2.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g25}" style="background:${colorFor(g25)};"></div></div></div><div class="pct-label" style="color:${colorFor(g25)}">${g25.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +2.5" data-pick="Over" onclick="guardarApuesta('Goles +2.5','Over',${g25.toFixed(0)})">💾 Guardar</button></div>`;
+                    <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 </button></div>
+                    <div class="market-card ${cardClassFor(g25)}"><div class="line-label">+2.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g25}" style="background:${colorFor(g25)};"></div></div></div><div class="pct-label" style="color:${colorFor(g25)}">${g25.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +2.5" data-pick="Over" onclick="guardarApuesta('Goles +2.5','Over',${g25.toFixed(0)})">💾 </button></div>`;
             
             }
             if (state.activeMarkets.btts) {
@@ -167,13 +167,13 @@ document.getElementById('calc-btn').onclick = async () => {
                     ? Math.min(98, Math.max(2, apiData.btts.prob_yes))
                     : plattCalibrate(calcBTTS(lH, lA, state.currentLeagueKey), 'btts');
                 html += `<div class="section-header"><span class="section-title">🤝 AMBOS MARCAN</span></div>
-                    <div class="market-card ${cardClassFor(btts)}"><div class="line-label">BTTS</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${btts}" style="background:${colorFor(btts)};"></div></div></div><div class="pct-label" style="color:${colorFor(btts)}">${btts.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="BTTS" data-pick="Sí" onclick="guardarApuesta('BTTS','Sí',${btts.toFixed(0)})">💾 Guardar</button></div>`;
+                    <div class="market-card ${cardClassFor(btts)}"><div class="line-label">BTTS</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${btts}" style="background:${colorFor(btts)};"></div></div></div><div class="pct-label" style="color:${colorFor(btts)}">${btts.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="BTTS" data-pick="Sí" onclick="guardarApuesta('BTTS','Sí',${btts.toFixed(0)})">💾 </button></div>`;
             }
             if (state.activeMarkets.corn) {
                 html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES TOTALES</span><span class="section-lambda">μ <span>${lCorn.toFixed(1)}</span> (r=${cornR})</span></div>`;
                 [7.5, 8.5, 9.5, 10.5].forEach(line => {
                     const corn = plattCalibrate(negBinOver(lCorn, line, cornR), 'corners');
-                    html += `<div class="market-card ${cardClassFor(corn)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${corn}" style="background:${colorFor(corn)};"></div></div></div><div class="pct-label" style="color:${colorFor(corn)}">${corn.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners +${line}" data-pick="Over" onclick="guardarApuesta('Corners +${line}','Over',${corn.toFixed(0)})">💾 Guardar</button></div>`;
+                    html += `<div class="market-card ${cardClassFor(corn)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${corn}" style="background:${colorFor(corn)};"></div></div></div><div class="pct-label" style="color:${colorFor(corn)}">${corn.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners +${line}" data-pick="Over" onclick="guardarApuesta('Corners +${line}','Over',${corn.toFixed(0)})">💾 </button></div>`;
                 });
 
                 // Córneres por equipo (usan la misma binomial negativa, con el total
@@ -182,13 +182,13 @@ document.getElementById('calc-btn').onclick = async () => {
                 html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES · ${home}</span><span class="section-lambda">μ <span>${lCornSplit.home.toFixed(1)}</span></span></div>`;
                 [2.5, 3.5, 4.5].forEach(line => {
                     const cornH = plattCalibrate(negBinOver(lCornSplit.home, line, cornR), 'corners');
-                    html += `<div class="market-card ${cardClassFor(cornH)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornH}" style="background:${colorFor(cornH)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornH)}">${cornH.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Local +${line}" data-pick="Over" onclick="guardarApuesta('Corners Local +${line}','Over',${cornH.toFixed(0)})">💾 Guardar</button></div>`;
+                    html += `<div class="market-card ${cardClassFor(cornH)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornH}" style="background:${colorFor(cornH)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornH)}">${cornH.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Local +${line}" data-pick="Over" onclick="guardarApuesta('Corners Local +${line}','Over',${cornH.toFixed(0)})">💾 </button></div>`;
                 });
 
                 html += `<div class="section-header"><span class="section-title">⬡ CÓRNERES · ${away}</span><span class="section-lambda">μ <span>${lCornSplit.away.toFixed(1)}</span></span></div>`;
                 [2.5, 3.5, 4.5].forEach(line => {
                     const cornA = plattCalibrate(negBinOver(lCornSplit.away, line, cornR), 'corners');
-                    html += `<div class="market-card ${cardClassFor(cornA)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornA}" style="background:${colorFor(cornA)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornA)}">${cornA.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Visitante +${line}" data-pick="Over" onclick="guardarApuesta('Corners Visitante +${line}','Over',${cornA.toFixed(0)})">💾 Guardar</button></div>`;
+                    html += `<div class="market-card ${cardClassFor(cornA)}"><div class="line-label">+${line}</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${cornA}" style="background:${colorFor(cornA)};"></div></div></div><div class="pct-label" style="color:${colorFor(cornA)}">${cornA.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Corners Visitante +${line}" data-pick="Over" onclick="guardarApuesta('Corners Visitante +${line}','Over',${cornA.toFixed(0)})">💾 </button></div>`;
                 });
             }
 
