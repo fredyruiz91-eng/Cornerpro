@@ -16,7 +16,7 @@
 
 export const state = {
     currentLeagueKey: null,
-    activeMarkets: { goles: true, ht: true, btts: true, corn: true },
+    activeMarkets: { goles: true, btts: true, corn: true },
     currentMatchHome: null,
     currentMatchAway: null,
     currentMatchLeagueName: null,
