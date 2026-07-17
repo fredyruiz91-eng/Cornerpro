@@ -77,7 +77,6 @@ document.getElementById('calc-btn').onclick = async () => {
             lH = +(baseGoals * hStr.atk * aStr.def * hAdv).toFixed(2);
             lA = +(baseGoals * aStr.atk * hStr.def).toFixed(2);
         }
-        const lHT = +((baseGoals * hStr.atk * aStr.def * hAdv * 0.40) + (baseGoals * aStr.atk * hStr.def * 0.40)).toFixed(2);
 
         const leagueCornersAvg = Number(liga.cornAvg);
         // Mejora: los córneres no solo suben con más ataque, sino también cuando el rival
@@ -153,7 +152,7 @@ document.getElementById('calc-btn').onclick = async () => {
             // bloque de "mejor pick" más abajo. Antes el pick se recalculaba por separado
             // con solo el modelo local, así que si la API estaba activa el número mostrado
             // en la tarjeta del mercado y el de "mejor pick" podían no coincidir.
-            let g15 = null, g25 = null, btts = null, g05 = null;
+            let g15 = null, g25 = null, btts = null;
 
             if (state.activeMarkets.goles) {
                 g15 = apiOU ? Math.min(98, Math.max(2, apiOU.prob_over_15)) : plattCalibrate(poissonOver(l, 1.5), 'goals15');
@@ -161,14 +160,7 @@ document.getElementById('calc-btn').onclick = async () => {
                 html += `<div class="section-header"><span class="section-title">⚽ GOLES TOTALES</span><span class="section-lambda">${apiOU ? 'xG API' : 'λ'} <span>${l.toFixed(2)}</span></span></div>
                     <div class="market-card ${cardClassFor(g15)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15}" style="background:${colorFor(g15)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15)}">${g15.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +1.5" data-pick="Over" onclick="guardarApuesta('Goles +1.5','Over',${g15.toFixed(0)})">💾 Guardar</button></div>
                     <div class="market-card ${cardClassFor(g25)}"><div class="line-label">+2.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g25}" style="background:${colorFor(g25)};"></div></div></div><div class="pct-label" style="color:${colorFor(g25)}">${g25.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="Goles +2.5" data-pick="Over" onclick="guardarApuesta('Goles +2.5','Over',${g25.toFixed(0)})">💾 Guardar</button></div>`;
-            }
-            if (state.activeMarkets.ht) {
-                // HT siempre local: Bzzoiro no separa expected_goals por 1er tiempo.
-                g05 = plattCalibrate(poissonOver(lHT, 0.5), 'goals_ht05');
-                const g15ht = plattCalibrate(poissonOver(lHT, 1.5), 'goals_ht15');
-                html += `<div class="section-header"><span class="section-title">⏱ 1er TIEMPO</span><span class="section-lambda">λ <span>${lHT}</span></span></div>
-                    <div class="market-card ${cardClassFor(g05)}"><div class="line-label">+0.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g05}" style="background:${colorFor(g05)};"></div></div></div><div class="pct-label" style="color:${colorFor(g05)}">${g05.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +0.5" data-pick="Over" onclick="guardarApuesta('HT +0.5','Over',${g05.toFixed(0)})">💾 Guardar</button></div>
-                    <div class="market-card ${cardClassFor(g15ht)}"><div class="line-label">+1.5</div><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" data-target="${g15ht}" style="background:${colorFor(g15ht)};"></div></div></div><div class="pct-label" style="color:${colorFor(g15ht)}">${g15ht.toFixed(0)}%</div><button class="save-bet-btn" data-mercado="HT +1.5" data-pick="Over" onclick="guardarApuesta('HT +1.5','Over',${g15ht.toFixed(0)})">💾 Guardar</button></div>`;
+            
             }
             if (state.activeMarkets.btts) {
                 btts = (apiData && apiData.btts && Number.isFinite(apiData.btts.prob_yes))
@@ -202,7 +194,7 @@ document.getElementById('calc-btn').onclick = async () => {
 
             document.getElementById('all-markets-container').innerHTML = html;
 
-            const g15Rec = g15, g25Rec = g25, bttsRec = btts, g05htRec = g05;
+            const g15Rec = g15, g25Rec = g25, bttsRec = btts;
 
             let bestPick = null;
             let bestProb = -1;
@@ -212,7 +204,6 @@ document.getElementById('calc-btn').onclick = async () => {
                 if (g25Rec > 60 && g25Rec > bestProb) { bestPick = 'OVER 2.5'; bestProb = g25Rec; }
             }
             if (state.activeMarkets.btts && bttsRec > 60 && bttsRec > bestProb) { bestPick = 'BTTS SÍ'; bestProb = bttsRec; }
-            if (state.activeMarkets.ht && g05htRec > 60 && g05htRec > bestProb) { bestPick = 'HT OVER 0.5'; bestProb = g05htRec; }
             if (state.activeMarkets.corn) {
                 const cornLines = [7.5, 8.5, 9.5, 10.5];
                 for (const line of cornLines) {
