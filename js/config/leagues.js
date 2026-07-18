@@ -337,18 +337,18 @@ export const TEAM_STRENGTH_DB = {
         "CD Eldense": { atk: 0.78, def: 1.19 }
     },
     "VEIK": {
-        "Kuopion Palloseura": { atk: 1.24, def: 0.88 },
-        "HJK Helsinki": { atk: 1.20, def: 0.90 },
-        "Ilves": { atk: 1.12, def: 0.96 },
-        "IF Gnistan": { atk: 1.08, def: 0.98 },
-        "Inter Turku": { atk: 1.02, def: 1.02 },
-        "VPS": { atk: 1.00, def: 1.03 },
-        "SJK Seinajoki": { atk: 0.98, def: 1.04 },
-        "IFK Mariehamn": { atk: 0.94, def: 1.08 },
-        "Lahti": { atk: 0.90, def: 1.10 },
-        "AC Oulu": { atk: 0.86, def: 1.13 },
-        "Turun Palloseura": { atk: 0.84, def: 1.14 },
-        "FF Jaro": { atk: 0.80, def: 1.18 }
+    "Kuopion Palloseura": { atk: 1.24, def: 0.88 },
+    "HJK": { atk: 1.20, def: 0.90 },
+    "Ilves": { atk: 1.12, def: 0.96 },
+    "IF Gnistan": { atk: 1.08, def: 0.98 },
+    "Inter Turku": { atk: 1.02, def: 1.02 },
+    "VPS": { atk: 1.00, def: 1.03 },
+    "SJK": { atk: 0.98, def: 1.04 },
+    "IFK Mariehamn": { atk: 0.94, def: 1.08 },
+    "FC Lahti": { atk: 0.90, def: 1.10 },
+    "AC Oulu": { atk: 0.86, def: 1.13 },
+    "Turun Palloseura": { atk: 0.84, def: 1.14 },
+    "FF Jaro": { atk: 0.80, def: 1.18 }
     },
     "UCL": {
         "Real Madrid": { atk: 1.38, def: 0.80 },
