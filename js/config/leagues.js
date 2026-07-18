@@ -338,17 +338,17 @@ export const TEAM_STRENGTH_DB = {
     },
     "VEIK": {
         "Kuopion Palloseura": { atk: 1.24, def: 0.88 },
-        "Helsinki": { atk: 1.20, def: 0.90 },
+        "HJK Helsinki": { atk: 1.20, def: 0.90 },
         "Ilves": { atk: 1.12, def: 0.96 },
-        "Gnistan": { atk: 1.08, def: 0.98 },
+        "IF Gnistan": { atk: 1.08, def: 0.98 },
         "Inter Turku": { atk: 1.02, def: 1.02 },
         "VPS": { atk: 1.00, def: 1.03 },
-        "SJK": { atk: 0.98, def: 1.04 },
-        "Mariehamn": { atk: 0.94, def: 1.08 },
+        "SJK Seinajoki": { atk: 0.98, def: 1.04 },
+        "IFK Mariehamn": { atk: 0.94, def: 1.08 },
         "Lahti": { atk: 0.90, def: 1.10 },
-        "Oulu": { atk: 0.86, def: 1.13 },
+        "AC Oulu": { atk: 0.86, def: 1.13 },
         "Turun Palloseura": { atk: 0.84, def: 1.14 },
-        "Jaro": { atk: 0.80, def: 1.18 }
+        "FF Jaro": { atk: 0.80, def: 1.18 }
     },
     "UCL": {
         "Real Madrid": { atk: 1.38, def: 0.80 },
