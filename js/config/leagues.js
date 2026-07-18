@@ -340,7 +340,7 @@ export const TEAM_STRENGTH_DB = {
         "Kuopion Palloseura": { atk: 1.24, def: 0.88 },
         "HJK": { atk: 1.20, def: 0.90 },
         "Ilves": { atk: 1.12, def: 0.96 },
-        "IF Gnistan": { atk: 1.08, def: 0.98 },
+        "Gnistan": { atk: 1.08, def: 0.98 },
         "Inter Turku": { atk: 1.02, def: 1.02 },
         "VPS": { atk: 1.00, def: 1.03 },
         "SJK": { atk: 0.98, def: 1.04 },
