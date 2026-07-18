@@ -42,7 +42,28 @@ export const LIGAS = {
 };
 
 export const TEAM_STRENGTH_DB = {
-    "PL": { "Arsenal FC": { atk: 1.32, def: 0.88 }, "Manchester City FC": { atk: 1.35, def: 0.82 }, "Liverpool FC": { atk: 1.28, def: 0.85 }, "Manchester United FC": { atk: 1.15, def: 0.92 }, "Chelsea FC": { atk: 1.18, def: 0.89 }, "Tottenham Hotspur FC": { atk: 1.22, def: 0.91 }, "Newcastle United FC": { atk: 1.12, def: 0.95 }, "Aston Villa FC": { atk: 1.10, def: 0.96 }, "Brighton & Hove Albion FC": { atk: 1.08, def: 0.98 }, "Brentford FC": { atk: 1.06, def: 0.99 }, "Fulham FC": { atk: 1.04, def: 1.02 }, "West Ham United FC": { atk: 0.98, def: 1.05 }, "Crystal Palace FC": { atk: 0.96, def: 1.06 }, "Everton FC": { atk: 0.94, def: 1.08 }, "Leicester City FC": { atk: 0.92, def: 1.09 }, "Wolverhampton Wanderers FC": { atk: 0.91, def: 1.10 }, "Nottingham Forest FC": { atk: 0.89, def: 1.12 }, "Ipswich Town FC": { atk: 0.87, def: 1.13 }, "Southampton FC": { atk: 0.85, def: 1.14 }, "Leeds United": { atk: 0.90, def: 1.11 } },
+"PL": {
+  "Arsenal": { atk: 1.32, def: 0.88 },
+  "Aston Villa": { atk: 1.10, def: 0.96 },
+  "Bournemouth": { atk: 0.96, def: 1.06 },
+  "Brentford": { atk: 1.06, def: 0.99 },
+  "Brighton & Hove Albion": { atk: 1.08, def: 0.98 },
+  "Chelsea": { atk: 1.18, def: 0.89 },
+  "Coventry City": { atk: 0.80, def: 1.18 },
+  "Crystal Palace": { atk: 0.96, def: 1.06 },
+  "Everton": { atk: 0.94, def: 1.08 },
+  "Fulham": { atk: 1.04, def: 1.02 },
+  "Hull City": { atk: 0.78, def: 1.22 },
+  "Ipswich Town": { atk: 0.87, def: 1.13 },
+  "Leeds United": { atk: 0.90, def: 1.11 },
+  "Liverpool FC": { atk: 1.28, def: 0.85 },
+  "Manchester City": { atk: 1.35, def: 0.82 },
+  "Manchester United": { atk: 1.15, def: 0.92 },
+  "Newcastle United": { atk: 1.12, def: 0.95 },
+  "Nottingham Forest": { atk: 0.89, def: 1.12 },
+  "Sunderland": { atk: 0.92, def: 1.10 },
+  "Tottenham Hotspur": { atk: 1.22, def: 0.91 }
+}
     "BL1": { "FC Bayern München": { atk: 1.38, def: 0.80 }, "Borussia Dortmund": { atk: 1.26, def: 0.88 }, "RB Leipzig": { atk: 1.20, def: 0.92 }, "VfB Stuttgart": { atk: 1.18, def: 0.94 }, "Bayer 04 Leverkusen": { atk: 1.15, def: 0.96 }, "TSG Hoffenheim": { atk: 1.08, def: 1.00 }, "SC Freiburg": { atk: 1.05, def: 1.02 }, "Eintracht Frankfurt": { atk: 1.02, def: 1.04 }, "FC Augsburg": { atk: 0.96, def: 1.08 }, "1. FSV Mainz 05": { atk: 0.94, def: 1.10 }, "1. FC Union Berlin": { atk: 0.91, def: 1.12 }, "Borussia M'gladbach": { atk: 0.89, def: 1.14 }, "Hamburger SV": { atk: 0.87, def: 1.15 }, "1. FC Köln": { atk: 0.85, def: 1.16 }, "SV Werder Bremen": { atk: 0.83, def: 1.17 }, "VfL Wolfsburg": { atk: 0.95, def: 1.09 }, "1. FC Heidenheim": { atk: 0.88, def: 1.13 }, "FC St. Pauli": { atk: 0.86, def: 1.15 } },
     "SA": { "Inter Milano": { atk: 1.32, def: 0.86 }, "AC Milan": { atk: 1.28, def: 0.88 }, "Juventus FC": { atk: 1.22, def: 0.90 }, "SS Lazio": { atk: 1.18, def: 0.92 }, "AS Roma": { atk: 1.15, def: 0.94 }, "ACF Fiorentina": { atk: 1.12, def: 0.96 }, "Atalanta BC": { atk: 1.10, def: 0.98 }, "SSC Napoli": { atk: 1.08, def: 1.00 }, "AC Monza": { atk: 1.02, def: 1.04 }, "Torino FC": { atk: 0.99, def: 1.06 }, "Bologna FC 1909": { atk: 0.97, def: 1.07 }, "Hellas Verona FC": { atk: 0.94, def: 1.09 }, "Udinese Calcio": { atk: 0.92, def: 1.11 }, "Como 1907": { atk: 0.90, def: 1.12 }, "Empoli FC": { atk: 0.88, def: 1.13 }, "Genoa CFC": { atk: 0.86, def: 1.14 }, "Cagliari Calcio": { atk: 0.84, def: 1.15 }, "US Lecce": { atk: 0.82, def: 1.16 }, "Parma Calcio 1913": { atk: 0.80, def: 1.17 }, "Sassuolo": { atk: 0.78, def: 1.18 } },
     "PD": { "Real Madrid CF": { atk: 1.35, def: 0.84 }, "FC Barcelona": { atk: 1.32, def: 0.86 }, "Atlético de Madrid": { atk: 1.20, def: 0.92 }, "Real Sociedad": { atk: 1.15, def: 0.95 }, "Villarreal CF": { atk: 1.12, def: 0.97 }, "Athletic Club": { atk: 1.08, def: 0.99 }, "Real Betis Balompié": { atk: 1.05, def: 1.01 }, "CA Osasuna": { atk: 1.02, def: 1.03 }, "Rayo Vallecano": { atk: 0.99, def: 1.05 }, "Girona FC": { atk: 0.96, def: 1.07 }, "Getafe CF": { atk: 0.94, def: 1.08 }, "Sevilla FC": { atk: 0.92, def: 1.10 }, "Valencia CF": { atk: 0.90, def: 1.11 }, "RCD Mallorca": { atk: 0.87, def: 1.13 }, "RC Celta de Vigo": { atk: 0.85, def: 1.14 }, "Deportivo Alavés": { atk: 0.83, def: 1.15 }, "UD Las Palmas": { atk: 0.81, def: 1.16 }, "RCD Espanyol de Barcelona": { atk: 0.79, def: 1.17 }, "CD Leganés": { atk: 0.77, def: 1.18 }, "Real Oviedo": { atk: 0.75, def: 1.19 } },
