@@ -10,14 +10,14 @@
 export const LIGAS = {
     "PL": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League", goalsAvg: 2.85, cornAvg: 10.5, cornR: 20, markets: { goles: true, btts: true, corn: true } },
     "BL1": { name: "🇩🇪 Bundesliga", goalsAvg: 3.00, cornAvg: 10.0, cornR: 18, markets: { goles: true, btts: true, corn: true } },
-    "SA": { name: "🇮🇹 Serie A", goalsAvg: 2.65, cornAvg: 10.2, cornR: 19, markets: { goles: true, btts: false, corn: true } },
+    "SA": { name: "🇮🇹 Serie A", goalsAvg: 2.65, cornAvg: 10.2, cornR: 19, markets: { goles: true, btts: true, corn: true } },
     "PD": { name: "🇪🇸 La Liga", goalsAvg: 2.55, cornAvg: 9.5, cornR: 17, markets: { goles: false, btts: true, corn: true } },
-    "FL1": { name: "🇫🇷 Ligue 1", goalsAvg: 2.70, cornAvg: 9.4, cornR: 17, markets: { goles: true, btts: false, corn: true } },
+    "FL1": { name: "🇫🇷 Ligue 1", goalsAvg: 2.70, cornAvg: 9.4, cornR: 17, markets: { goles: true, btts: true, corn: true } },
     "DED": { name: "🇳🇱 Eredivisie", goalsAvg: 3.10, cornAvg: 10.1, cornR: 18, markets: { goles: true, btts: true, corn: true } },
-    "BSA": { name: "🇧🇷 Brasileirão A", goalsAvg: 2.45, cornAvg: 10.3, cornR: 19, markets: { goles: true, btts: false, corn: true } },
+    "BSA": { name: "🇧🇷 Brasileirão A", goalsAvg: 2.45, cornAvg: 10.3, cornR: 19, markets: { goles: true, btts: true, corn: true } },
     "ELC": { name: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Championship", goalsAvg: 2.65, cornAvg: 10.5, cornR: 20, markets: { goles: true, btts: true, corn: true } },
     "JPL": { name: "🇧🇪 Jupiler Pro League", goalsAvg: 2.90, cornAvg: 9.8, cornR: 17, markets: { goles: true, btts: true, corn: true } },
-    "MXL": { name: "🇲🇽 Liga MX", goalsAvg: 2.70, cornAvg: 9.6, cornR: 17, markets: { goles: true, btts: false, corn: true } },
+    "MXL": { name: "🇲🇽 Liga MX", goalsAvg: 2.70, cornAvg: 9.6, cornR: 17, markets: { goles: true, btts: true, corn: true } },
     "LIB": { name: "🏆 Libertadores", goalsAvg: 2.50, cornAvg: 9.7, cornR: 18, markets: { goles: true, btts: true, corn: true } },
     "MLS": { name: "🇺🇸 MLS", goalsAvg: 3.00, cornAvg: 9.9, cornR: 18, markets: { goles: true, btts: true, corn: true } },
     "BSB": { name: "🇧🇷 Brasileirão B", goalsAvg: 2.30, cornAvg: 9.2, cornR: 16, markets: { goles: true, btts: true, corn: true } },
@@ -37,8 +37,8 @@ export const LIGAS = {
     // Copas: no son liga de doble vuelta con un pool fijo de rivales, así que en vez de
     // tener su propia base de equipos, "componen" (compositeOf) las bases de 2 divisiones
     // ya existentes. Ver nota al usuario sobre el alcance real de esta aproximación.
-    "COPADELREY": { name: "🏆 Copa del Rey", goalsAvg: 2.60, cornAvg: 9.6, cornR: 18, markets: { goles: true, ht: true, btts: true, corn: true }, compositeOf: ["PD", "SD2"] },
-    "COPPAITALIA": { name: "🏆 Coppa Italia", goalsAvg: 2.50, cornAvg: 9.4, cornR: 17, markets: { goles: true, ht: true, btts: true, corn: true }, compositeOf: ["SA", "SB2"] }
+    "COPADELREY": { name: "🏆 Copa del Rey", goalsAvg: 2.60, cornAvg: 9.6, cornR: 18, markets: { goles: true, btts: true, corn: true }, compositeOf: ["PD", "SD2"] },
+    "COPPAITALIA": { name: "🏆 Coppa Italia", goalsAvg: 2.50, cornAvg: 9.4, cornR: 17, markets: { goles: true, btts: true, corn: true }, compositeOf: ["SA", "SB2"] }
 };
 
 export const TEAM_STRENGTH_DB = {
