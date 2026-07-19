@@ -771,9 +771,9 @@ export const TEAM_STRENGTH_DB = {
   }
 };
 
-export const HOME_ADVANTAGE = { "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05, "FL1": 1.06, "DED": 1.08, "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06, "LIB": 1.10, "MLS": 1.11, "BSB": 1.10, "PPT": 1.06, "EKS": 1.05, "SLG": 1.05, "WC26": 1.04, "USLC": 1.09, "ROU1": 1.06, "SPL": 1.08, "SPFL": 1.07, "SD2": 1.05, "VEIK": 1.06, "UCL": 1.06, "UEL": 1.07, "SB2": 1.07, "COPADELREY": 1.03, "COPPAITALIA": 1.03 };
+export const HOME_ADVANTAGE = { "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05, "FL1": 1.06, "DED": 1.08, "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06, "LIB": 1.10, "MLS": 1.11, "BSB": 1.10, "PPT": 1.06, "EKS": 1.05, "SLG": 1.05, "USLC": 1.09, "ROU1": 1.06, "SPL": 1.08, "SPFL": 1.07, "SD2": 1.05, "VEIK": 1.06, "UCL": 1.06, "UEL": 1.07, "SB2": 1.07, "COPADELREY": 1.03, "COPPAITALIA": 1.03 };
 
-export const DIXON_COLES_RHO = { "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070, "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "WC26": -0.055, "USLC": -0.078, "ROU1": -0.082, "SPL": -0.075, "SPFL": -0.080, "SD2": -0.085, "VEIK": -0.078, "UCL": -0.070, "UEL": -0.078, "SB2": -0.088, "COPADELREY": -0.090, "COPPAITALIA": -0.090, "default": -0.13 };
+export const DIXON_COLES_RHO = { "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070, "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "USLC": -0.078, "ROU1": -0.082, "SPL": -0.075, "SPFL": -0.080, "SD2": -0.085, "VEIK": -0.078, "UCL": -0.070, "UEL": -0.078, "SB2": -0.088, "COPADELREY": -0.090, "COPPAITALIA": -0.090, "default": -0.13 };
 
 export const PLATT_PARAMS = { goals15: { A: 0.951, B: -0.038 }, goals25: { A: 0.933, B: -0.055 }, btts: { A: 0.956, B: -0.034 }, corners: { A: 0.970, B: -0.022 }, goals_ht05: { A: 0.960, B: -0.030 }, goals_ht15: { A: 0.938, B: -0.048 }, resultado: { A: 0.918, B: -0.068 } };
 
