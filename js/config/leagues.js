@@ -24,7 +24,6 @@ export const LIGAS = {
   "USLC": { "name": "🇺🇸 USL Championship", "goalsAvg": 3.05, "cornAvg": 9.7, "cornR": 18, "markets": { "goles": true, "btts": true, "corn": true } },
   "PPT": { "name": "🇵🇹 Liga Portugal", "goalsAvg": 2.60, "cornAvg": 9.4, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
   "EKS": { "name": "🇵🇱 Ekstraklasa", "goalsAvg": 2.55, "cornAvg": 9.5, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
-  "WC26": { "name": "🏆 Mundial 2026", "goalsAvg": 2.50, "cornAvg": 9.0, "cornR": 15, "markets": { "goles": true, "btts": true, "corn": true } },
   "SPL": { "name": "🇸🇦 Saudi Pro League", "goalsAvg": 2.90, "cornAvg": 9.6, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
   "SPFL": { "name": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Premiership", "goalsAvg": 2.75, "cornAvg": 10.2, "cornR": 19, "markets": { "goles": true, "btts": true, "corn": true } },
   "COPPAITALIA": { "name": "🏆 Coppa Italia", "goalsAvg": 2.50, "cornAvg": 9.4, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true }, "compositeOf": ["SA", "SB2"] },
