@@ -735,7 +735,7 @@ export const TEAM_STRENGTH_DB = {
     "SK Brann": { "atk": 1.16, "def": 0.94 },
     "Tromsø IL": { "atk": 1.00, "def": 1.02 },
     "Vålerenga IF": { "atk": 1.06, "def": 0.98 },
-    "Vikin Fk": { "atk": 0.80, "def": 1.16 }
+    "Viking Fk": { "atk": 0.80, "def": 1.16 }
   },
   "ALLSV": {
     "AIK": { "atk": 1.14, "def": 0.94 },
