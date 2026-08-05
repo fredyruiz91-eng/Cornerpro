@@ -24,7 +24,6 @@ export const LIGAS = {
     "PPT": { name: "🇵🇹 Liga Portugal", goalsAvg: 2.60, cornAvg: 9.4, cornR: 17, markets: { goles: true, ht: false, btts: true, corn: true } },
     "EKS": { name: "🇵🇱 Ekstraklasa", goalsAvg: 2.55, cornAvg: 9.5, cornR: 17, markets: { goles: true, ht: false, btts: true, corn: true } },
     "SLG": { name: "🇬🇷 Super Liga Grecia", goalsAvg: 2.60, cornAvg: 9.0, cornR: 16, markets: { goles: true, ht: false, btts: true, corn: true } },
-    "WC26": { name: "🏆 Mundial 2026", goalsAvg: 2.50, cornAvg: 9.0, cornR: 15, markets: { goles: true, ht: true, btts: true, corn: true } },
     "USLC": { name: "🇺🇸 USL Championship", goalsAvg: 3.05, cornAvg: 9.7, cornR: 18, markets: { goles: true, ht: true, btts: true, corn: true } },
     "ROU1": { name: "🇷🇴 Superliga (Rumanía)", goalsAvg: 2.55, cornAvg: 9.3, cornR: 17, markets: { goles: true, ht: true, btts: true, corn: true } },
     "SPL": { name: "🇸🇦 Saudi Pro League", goalsAvg: 2.90, cornAvg: 9.6, cornR: 17, markets: { goles: true, ht: true, btts: true, corn: true } },
@@ -34,6 +33,7 @@ export const LIGAS = {
     "UCL": { name: "⭐ Champions League", goalsAvg: 2.75, cornAvg: 10.0, cornR: 18, markets: { goles: true, ht: true, btts: true, corn: true } },
     "UEL": { name: "🟠 Europa League", goalsAvg: 2.65, cornAvg: 9.7, cornR: 17, markets: { goles: true, ht: true, btts: true, corn: true } },
     "SB2": { name: "🇮🇹 Serie B", goalsAvg: 2.40, cornAvg: 9.2, cornR: 16, markets: { goles: true, ht: true, btts: true, corn: true } },
+    "BET": { name: "🇨🇴 Liga BetPlay", goalsAvg: 2.35, cornAvg: 9.5, cornR: 17, markets: { goles: true, ht: true, btts: true, corn: true } },
     // Copas: no son liga de doble vuelta con un pool fijo de rivales, así que en vez de
     // tener su propia base de equipos, "componen" (compositeOf) las bases de 2 divisiones
     // ya existentes. Ver nota al usuario sobre el alcance real de esta aproximación.
@@ -189,54 +189,6 @@ export const TEAM_STRENGTH_DB = {
         "Apollon Smyrnis": { atk: 0.68, def: 1.30 },
         "PAS Giannina": { atk: 0.64, def: 1.33 },
         "Kallithea": { atk: 0.60, def: 1.36 }
-    },
-    "WC26": {
-        "France": { atk: 1.32, def: 0.86 },
-        "Argentina": { atk: 1.28, def: 0.88 },
-        "Germany": { atk: 1.26, def: 0.90 },
-        "Brazil": { atk: 1.24, def: 0.92 },
-        "Spain": { atk: 1.20, def: 0.94 },
-        "England": { atk: 1.18, def: 0.96 },
-        "Netherlands": { atk: 1.16, def: 0.98 },
-        "Belgium": { atk: 1.12, def: 1.00 },
-        "Portugal": { atk: 1.10, def: 1.02 },
-        "Uruguay": { atk: 1.08, def: 1.04 },
-        "Croatia": { atk: 1.06, def: 1.06 },
-        "Colombia": { atk: 1.02, def: 1.10 },
-        "Mexico": { atk: 1.00, def: 1.12 },
-        "Switzerland": { atk: 0.98, def: 1.14 },
-        "Austria": { atk: 0.96, def: 1.16 },
-        "Sweden": { atk: 0.92, def: 1.20 },
-        "Turkey": { atk: 0.86, def: 1.26 },
-        "Norway": { atk: 0.84, def: 1.28 },
-        "Ecuador": { atk: 0.82, def: 1.30 },
-        "Paraguay": { atk: 0.80, def: 1.31 },
-        "Japan": { atk: 1.02, def: 1.00 },
-        "South Korea": { atk: 0.95, def: 1.05 },
-        "Australia": { atk: 0.90, def: 1.08 },
-        "Iran": { atk: 0.88, def: 1.10 },
-        "Saudi Arabia": { atk: 0.85, def: 1.12 },
-        "Qatar": { atk: 0.82, def: 1.14 },
-        "Iraq": { atk: 0.78, def: 1.18 },
-        "Egypt": { atk: 0.86, def: 1.12 },
-        "Senegal": { atk: 0.84, def: 1.14 },
-        "Ghana": { atk: 0.80, def: 1.16 },
-        "Morocco": { atk: 0.88, def: 1.08 },
-        "Tunisia": { atk: 0.76, def: 1.18 },
-        "Algeria": { atk: 0.82, def: 1.12 },
-        "Ivory Coast": { atk: 0.78, def: 1.16 },
-        "United States": { atk: 0.92, def: 1.06 },
-        "Canada": { atk: 0.88, def: 1.10 },
-        "New Zealand": { atk: 0.70, def: 1.24 },
-        "Bosnia and Herzegovina": { atk: 0.92, def: 1.04 },
-        "Uzbekistan": { atk: 0.84, def: 1.10 },
-        "Panama": { atk: 0.76, def: 1.18 },
-        "Jordan": { atk: 0.80, def: 1.12 },
-        "Curacao": { atk: 0.76, def: 1.18 },
-        "Haiti": { atk: 0.74, def: 1.20 },
-        "Congo DR": { atk: 0.80, def: 1.14 },
-        "Scotland": { atk: 0.98, def: 1.02 },
-        "Cabo Verde": { atk: 0.82, def: 1.12 }
     },
     // Ratings calculados a partir de xGF/xGA reales por partido (tabla de posiciones
     // proporcionada), normalizados contra el promedio de la liga (~0.907 xG/equipo/partido).
@@ -421,32 +373,53 @@ export const TEAM_STRENGTH_DB = {
         "Reggiana": { atk: 0.86, def: 1.14 },
         "Carrarese": { atk: 0.82, def: 1.17 },
         "Spezia": { atk: 0.98, def: 1.05 }
+    },
+    "BET": {
+        "Atlético Nacional": { atk: 1.18, def: 0.90 },
+        "Millonarios": { atk: 1.15, def: 0.92 },
+        "América de Cali": { atk: 1.12, def: 0.94 },
+        "Junior": { atk: 1.10, def: 0.95 },
+        "Independiente Medellín": { atk: 1.08, def: 0.97 },
+        "Deportivo Cali": { atk: 1.05, def: 0.99 },
+        "Santa Fe": { atk: 1.02, def: 1.01 },
+        "Once Caldas": { atk: 1.00, def: 1.03 },
+        "Deportes Tolima": { atk: 0.98, def: 1.04 },
+        "Atlético Bucaramanga": { atk: 0.96, def: 1.06 },
+        "La Equidad": { atk: 0.94, def: 1.07 },
+        "Envigado": { atk: 0.92, def: 1.09 },
+        "Jaguares de Córdoba": { atk: 0.90, def: 1.11 },
+        "Boyacá Chicó": { atk: 0.88, def: 1.13 },
+        "Deportivo Pasto": { atk: 0.86, def: 1.15 },
+        "Atlético Huila": { atk: 0.84, def: 1.17 },
+        "Patriotas Boyacá": { atk: 0.82, def: 1.18 },
+        "Águilas Doradas": { atk: 0.80, def: 1.20 },
+        "Unión Magdalena": { atk: 0.78, def: 1.22 },
+        "Fortaleza CEIF": { atk: 0.76, def: 1.24 }
     }
 };
 
-export const HOME_ADVANTAGE = { "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05, "FL1": 1.06, "DED": 1.08, "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06, "LIB": 1.10, "MLS": 1.11, "BSB": 1.10, "PPT": 1.06, "EKS": 1.05, "SLG": 1.05, "WC26": 1.04, "USLC": 1.09, "ROU1": 1.06, "SPL": 1.08, "SPFL": 1.07, "SD2": 1.05, "VEIK": 1.06, "UCL": 1.06, "UEL": 1.07, "SB2": 1.07, "COPADELREY": 1.03, "COPPAITALIA": 1.03 };
-export const DIXON_COLES_RHO = { "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098, "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078, "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070, "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100, "WC26": -0.055, "USLC": -0.078, "ROU1": -0.082, "SPL": -0.075, "SPFL": -0.080, "SD2": -0.085, "VEIK": -0.078, "UCL": -0.070, "UEL": -0.078, "SB2": -0.088, "COPADELREY": -0.090, "COPPAITALIA": -0.090, "default": -0.13 };
+export const HOME_ADVANTAGE = {
+    "PL": 1.08, "BL1": 1.09, "SA": 1.04, "PD": 1.05, "FL1": 1.06,
+    "DED": 1.08, "BSA": 1.12, "ELC": 1.07, "JPL": 1.07, "MXL": 1.06,
+    "LIB": 1.10, "MLS": 1.11, "BSB": 1.10, "PPT": 1.06, "EKS": 1.05,
+    "SLG": 1.05, "USLC": 1.09, "ROU1": 1.06, "SPL": 1.08,
+    "SPFL": 1.07, "SD2": 1.05, "VEIK": 1.06, "UCL": 1.06, "UEL": 1.07,
+    "SB2": 1.07, "COPADELREY": 1.03, "COPPAITALIA": 1.03,
+    "BET": 1.06
+};
+
+export const DIXON_COLES_RHO = {
+    "PL": -0.065, "BL1": -0.085, "SA": -0.130, "PD": -0.098,
+    "FL1": -0.105, "DED": -0.072, "BSA": -0.090, "ELC": -0.078,
+    "JPL": -0.082, "MXL": -0.095, "LIB": -0.088, "MLS": -0.070,
+    "BSB": -0.092, "PPT": -0.080, "EKS": -0.085, "SLG": -0.100,
+    "USLC": -0.078, "ROU1": -0.082, "SPL": -0.075,
+    "SPFL": -0.080, "SD2": -0.085, "VEIK": -0.078, "UCL": -0.070,
+    "UEL": -0.078, "SB2": -0.088, "COPADELREY": -0.090, "COPPAITALIA": -0.090,
+    "BET": -0.095,
+    "default": -0.13
+};
 
 export const PLATT_PARAMS = { goals15: { A: 0.951, B: -0.038 }, goals25: { A: 0.933, B: -0.055 }, btts: { A: 0.956, B: -0.034 }, corners: { A: 0.970, B: -0.022 }, goals_ht05: { A: 0.960, B: -0.030 }, goals_ht15: { A: 0.938, B: -0.048 }, resultado: { A: 0.918, B: -0.068 } };
 
-// Parámetro ajustable: cuánto del total de corners esperados de un partido se lleva el
-// equipo LOCAL vs el VISITANTE, antes de ajustar por fuerza de ataque/defensa de cada uno.
-// 1.00 = reparto 50/50 de base; 1.12 = el local arranca con ~12% más peso (los locales
-// suelen generar más córneres por jugar más tiempo en campo rival). Si quieres afinar esto
-// con datos reales de una liga en particular, este es el único número que necesitas tocar.
 export const CORNER_HOME_BIAS = 1.12;
-
-// NOTA: el Mundial 2026 (11 jun–19 jul 2026) ya está en curso a la fecha de esta app.
-// La versión anterior traía "semifinalistas" fijos y hardcodeados (France, Spain, England,
-// Argentina), lo cual es un dato inventado que además bloqueaba el cálculo para cualquier
-// otro cruce de selecciones. Eso es un bug, no una función: nunca hay que fijar en el
-// código "quién sigue vivo" en un torneo real, porque se desactualiza de inmediato y
-// además puede ser directamente falso. Se desactiva el bloqueo; si se quiere reflejar
-// fases reales del torneo, ese dato debería venir de la API en vivo (apiData), no de una
-// constante fija en el archivo.
-export const WC26_STATE = {
-    phase: 'unknown',
-    activeTeams: [],
-    blocked: false
-};
-
