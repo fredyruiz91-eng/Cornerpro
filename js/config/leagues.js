@@ -482,7 +482,7 @@ export const TEAM_STRENGTH_DB = {
     "Real Valladolid": { "atk": 1.06, "def": 0.98 },
     "Sporting Gijón": { "atk": 0.98, "def": 1.03 }
   },
-  "Veikkausliiga": {
+  "Veik": {
   "AC Oulu": { "atk": 0.94, "def": 1.06 },
   "FC Lahti": { "atk": 0.90, "def": 1.08 },
   "FF Jaro": { "atk": 0.84, "def": 1.12 },
