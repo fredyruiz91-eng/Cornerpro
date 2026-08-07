@@ -491,9 +491,9 @@ export const TEAM_STRENGTH_DB = {
     "IFK Mariehamn": { "atk": 0.82, "def": 1.14 },
     "Ilves": { "atk": 1.10, "def": 0.96 },
     "Inter Turku": { "atk": 1.08, "def": 0.98 },
-    "Kuopion Palloseura": { "atk": 1.16, "def": 0.94 },
+    "KuPS": { "atk": 1.16, "def": 0.94 },
     "SJK": { "atk": 1.00, "def": 1.02 },
-    "Turun Palloseura": { "atk": 0.92, "def": 1.07 },
+    "TPS": { "atk": 0.92, "def": 1.07 },
     "VPS": { "atk": 1.02, "def": 1.01 }
   },  
     "UCL": {
