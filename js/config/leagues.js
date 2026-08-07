@@ -33,10 +33,9 @@ export const LIGAS = {
   "SB2": { "name": "🇮🇹 Serie B", "goalsAvg": 2.40, "cornAvg": 9.2, "cornR": 16, "markets": { "goles": true, "btts": true, "corn": true } },
   "COPADELREY": { "name": "🏆 Copa del Rey", "goalsAvg": 2.60, "cornAvg": 9.6, "cornR": 18, "markets": { "goles": true, "btts": true, "corn": true }, "compositeOf": ["PD", "SD2"] },
   "SD2": { "name": "🇪🇸 Segunda División", "goalsAvg": 2.45, "cornAvg": 9.4, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
-  "NPLQLD": { "name": "🇦🇺 NPL Queensland", "goalsAvg": 2.95, "cornAvg": 9.3, "cornR": 16, "markets": { "goles": true, "btts": true, "corn": false } },
   "ELITE": { "name": "🇳🇴 Eliteserien", "goalsAvg": 2.94, "cornAvg": 9.6, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": false } },
   "ALLSV": { "name": "🇸🇪 Allsvenskan", "goalsAvg": 2.83, "cornAvg": 9.4, "cornR": 16, "markets": { "goles": false, "btts": true, "corn": false } },
-"CPA": { "name": "🇨🇴 Categoría Primera A", "goalsAvg": 2.35, "cornAvg": 9.5, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
+  "CPA": { "name": "🇨🇴 Categoría Primera A", "goalsAvg": 2.35, "cornAvg": 9.5, "cornR": 17, "markets": { "goles": true, "btts": true, "corn": true } },
   "SUI1": { "name": "🇨🇭 Super League (Suiza)", "goalsAvg": 3.34, "cornAvg": 10.0, "cornR": 18, "markets": { "goles": true, "btts": true, "corn": true } }
 };
 
@@ -705,20 +704,6 @@ export const TEAM_STRENGTH_DB = {
     "Carnoux FC": { "atk": 0.82, "def": 1.14 },
     "Chateau Gontier": { "atk": 0.72, "def": 1.22 },
     "Château Malo US": { "atk": 0.70, "def": 1.24 }
-  },
-  "NPLQLD": {
-    "Brisbane City": { "atk": 1.02, "def": 1.00 },
-    "Brisbane Roar Youth": { "atk": 0.88, "def": 1.12 },
-    "Eastern Suburbs": { "atk": 1.00, "def": 1.02 },
-    "Gold Coast Knights": { "atk": 1.12, "def": 0.96 },
-    "Gold Coast United": { "atk": 0.92, "def": 1.08 },
-    "Magic United TFA": { "atk": 0.84, "def": 1.14 },
-    "Moreton City Excelsior FC": { "atk": 1.04, "def": 0.99 },
-    "Olympic FC": { "atk": 1.08, "def": 0.98 },
-    "Peninsula Power": { "atk": 1.06, "def": 0.99 },
-    "Queensland Lions FC": { "atk": 1.00, "def": 1.02 },
-    "Rochedale Rovers": { "atk": 0.90, "def": 1.09 },
-    "Wynnum Wolves FC": { "atk": 0.88, "def": 1.11 }
   },
   "ELITE": {
     "Aalesunds FK": { "atk": 0.98, "def": 1.04 },
